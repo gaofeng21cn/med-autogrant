@@ -30,6 +30,7 @@ from med_autogrant.opl_standard_pack_source_policy import (
     GENERATED_SURFACES,
     PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
     PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
+    REPO_VERIFICATION_SCRIPT_REFS,
     REQUIRED_DOMAIN_PACK_PATHS,
     RETIREMENT_EVIDENCE_REFS,
     TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
@@ -387,9 +388,16 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         classifications["repo_shell_verification_wrappers"]["source_refs"]
         == sorted(
             path.relative_to(REPO_ROOT).as_posix()
-            for path in (REPO_ROOT / "scripts").glob("*.sh")
-            if path.is_file()
+            for path in (REPO_ROOT / "scripts").iterdir()
+            if path.is_file() and path.suffix in {".py", ".sh"}
         )
+    )
+    assert classifications["repo_shell_verification_wrappers"]["source_refs"] == (
+        REPO_VERIFICATION_SCRIPT_REFS
+    )
+    assert (
+        classifications["repo_shell_verification_wrappers"]["allowed_role"]
+        == "repo_native_verification_hygiene_temp_env_bootstrap_quality_and_contract_check_entry"
     )
     assert (
         classifications["repo_shell_verification_wrappers"]["active_caller_status"]

@@ -7,7 +7,10 @@ from urllib.parse import urlparse
 
 import pytest
 
-from med_autogrant.opl_standard_pack_source_policy import ACTIVE_PATH_SCAN_POLICY
+from med_autogrant.opl_standard_pack_source_policy import (
+    ACTIVE_PATH_SCAN_POLICY,
+    REPO_VERIFICATION_SCRIPT_REFS,
+)
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
     build_physical_skeleton_follow_through,
 )
@@ -99,6 +102,9 @@ def test_repo_shell_wrappers_are_explicitly_classified_as_verification_wrappers(
     shell_wrapper_surface = classifications["repo_shell_verification_wrappers"]
 
     assert shell_wrapper_surface["classification"] == "repo_native_verification_wrapper"
+    assert shell_wrapper_surface["allowed_role"] == (
+        "repo_native_verification_hygiene_temp_env_bootstrap_quality_and_contract_check_entry"
+    )
     assert shell_wrapper_surface["active_caller_status"] == "active_repo_verification_entry"
     assert shell_wrapper_surface["target_owner_after_migration"] == "repo_hygiene_boundary"
     assert shell_wrapper_surface["authority_boundary"] == {
@@ -109,13 +115,36 @@ def test_repo_shell_wrappers_are_explicitly_classified_as_verification_wrappers(
         "can_claim_production_long_run_soak": False,
     }
 
+    active_repo_scripts = sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "scripts").iterdir()
+        if path.is_file() and path.suffix in {".py", ".sh"}
+    )
+    assert active_repo_scripts
+    assert REPO_VERIFICATION_SCRIPT_REFS == active_repo_scripts
+    assert shell_wrapper_surface["source_refs"] == active_repo_scripts
+
     active_shell_scripts = sorted(
         path.relative_to(REPO_ROOT).as_posix()
-        for path in (REPO_ROOT / "scripts").glob("*.sh")
-        if path.is_file()
+        for path in (REPO_ROOT / "scripts").iterdir()
+        if path.is_file() and path.suffix == ".sh"
+    )
+    active_python_helpers = sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "scripts").iterdir()
+        if path.is_file() and path.suffix == ".py"
     )
     assert active_shell_scripts
-    assert shell_wrapper_surface["source_refs"] == active_shell_scripts
+    assert active_python_helpers
+
+    nested_repo_scripts = sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "scripts").rglob("*")
+        if path.is_file()
+        and path.parent != REPO_ROOT / "scripts"
+        and path.suffix in {".py", ".sh"}
+    )
+    assert nested_repo_scripts == []
 
 
 def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_literal() -> None:

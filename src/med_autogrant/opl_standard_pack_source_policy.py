@@ -110,6 +110,19 @@ FORBIDDEN_PHYSICAL_RESIDUE_CLASSES = [
     "legacy_compat_alias_surface",
 ]
 
+REPO_VERIFICATION_SCRIPT_REFS = [
+    "scripts/check_generated_aggregate_sources.py",
+    "scripts/install-codex-plugin.sh",
+    "scripts/line_budget.py",
+    "scripts/opl-module-healthcheck.sh",
+    "scripts/repo-hygiene.sh",
+    "scripts/run-opl-quality-details.sh",
+    "scripts/run-pytest-clean.sh",
+    "scripts/run-python-clean.sh",
+    "scripts/run-structural-quality-gate.sh",
+    "scripts/verify.sh",
+]
+
 ACTIVE_PATH_SCAN_POLICY = {
     "surface_kind": "mag_active_path_scan_policy",
     "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
@@ -394,17 +407,10 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
     {
         "surface_id": "repo_shell_verification_wrappers",
         "classification": "repo_native_verification_wrapper",
-        "source_refs": [
-            "scripts/install-codex-plugin.sh",
-            "scripts/opl-module-healthcheck.sh",
-            "scripts/repo-hygiene.sh",
-            "scripts/run-opl-quality-details.sh",
-            "scripts/run-pytest-clean.sh",
-            "scripts/run-python-clean.sh",
-            "scripts/run-structural-quality-gate.sh",
-            "scripts/verify.sh",
-        ],
-        "allowed_role": "repo_native_verification_hygiene_temp_env_bootstrap_and_quality_entry",
+        "source_refs": REPO_VERIFICATION_SCRIPT_REFS,
+        "allowed_role": (
+            "repo_native_verification_hygiene_temp_env_bootstrap_quality_and_contract_check_entry"
+        ),
         "forbidden_roles": [
             "generic_scheduler_owner",
             "generic_daemon_owner",
