@@ -120,6 +120,82 @@
           ],
           "pattern_id": "json_hermes_default_executor",
           "policy": "manifest/contracts must keep Codex CLI as default executor"
+        },
+        {
+          "literal_parts": [
+            "\"generated_surface_owner\": \"",
+            "med-autogrant",
+            "\""
+          ],
+          "pattern_id": "json_generated_surface_owner_points_to_mag",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "\"generated_surface_owner\": \"",
+            "medautogrant",
+            "\""
+          ],
+          "pattern_id": "json_generated_surface_owner_points_to_mag_domain_id",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "\"generated_surface_owner_in_mag_allowed\": true"
+          ],
+          "pattern_id": "json_generated_surface_owner_in_mag_allowed_true",
+          "policy": "MAG must not re-open generated surface ownership after retirement"
+        },
+        {
+          "literal_parts": [
+            "\"generated_surface_owner_in_mag_allowed\": True"
+          ],
+          "pattern_id": "python_generated_surface_owner_in_mag_allowed_true",
+          "policy": "MAG must not re-open generated surface ownership after retirement"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_owner_in_mag_allowed",
+            " = true"
+          ],
+          "pattern_id": "toml_generated_surface_owner_in_mag_allowed_true",
+          "policy": "MAG must not re-open generated surface ownership after retirement"
+        },
+        {
+          "literal_parts": [
+            "\"domain_can_claim_generated_surface_owner\": true"
+          ],
+          "pattern_id": "json_domain_can_claim_generated_surface_owner_true",
+          "policy": "domain pack compiler input must keep generated surface ownership in OPL"
+        },
+        {
+          "literal_parts": [
+            "\"domain_can_claim_generated_surface_owner\": True"
+          ],
+          "pattern_id": "python_domain_can_claim_generated_surface_owner_true",
+          "policy": "domain pack compiler input must keep generated surface ownership in OPL"
+        },
+        {
+          "literal_parts": [
+            "domain_can_claim_generated_surface_owner",
+            " = true"
+          ],
+          "pattern_id": "toml_domain_can_claim_generated_surface_owner_true",
+          "policy": "domain pack compiler input must keep generated surface ownership in OPL"
+        },
+        {
+          "literal_parts": [
+            "\"mag_can_own_generated_wrapper\": true"
+          ],
+          "pattern_id": "json_mag_can_own_generated_wrapper_true",
+          "policy": "MAG authority boundary must not claim generated wrapper ownership"
+        },
+        {
+          "literal_parts": [
+            "\"mag_can_own_generated_wrapper\": True"
+          ],
+          "pattern_id": "python_mag_can_own_generated_wrapper_true",
+          "policy": "MAG authority boundary must not claim generated wrapper ownership"
         }
       ],
       "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",

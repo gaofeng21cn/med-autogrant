@@ -90,6 +90,16 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "local_manager_default_runtime_owner",
         "host_agent_default_runtime_owner",
         "json_hermes_default_executor",
+        "json_generated_surface_owner_points_to_mag",
+        "json_generated_surface_owner_points_to_mag_domain_id",
+        "json_generated_surface_owner_in_mag_allowed_true",
+        "python_generated_surface_owner_in_mag_allowed_true",
+        "toml_generated_surface_owner_in_mag_allowed_true",
+        "json_domain_can_claim_generated_surface_owner_true",
+        "python_domain_can_claim_generated_surface_owner_true",
+        "toml_domain_can_claim_generated_surface_owner_true",
+        "json_mag_can_own_generated_wrapper_true",
+        "python_mag_can_own_generated_wrapper_true",
     }
 
 
@@ -183,6 +193,29 @@ def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_litera
     assert any(
         match["pattern_id"] == "injected_policy_consumption_probe"
         for match in injected_scan["forbidden_default_caller_matches"]
+    )
+
+
+def test_active_path_scan_fails_closed_on_generated_surface_owner_resurrection() -> None:
+    probe_path = REPO_ROOT / "contracts" / "__active_path_scan_generated_owner_probe.json"
+    key = "generated_surface_owner" + "_in_mag_allowed"
+    probe_path.write_text(
+        f'{{"{key}": true}}\n',
+        encoding="utf-8",
+    )
+    try:
+        scan = build_physical_skeleton_follow_through()[
+            "active_path_scan_no_legacy_default_caller"
+        ]
+    finally:
+        probe_path.unlink(missing_ok=True)
+
+    assert scan["state"] == "failed"
+    assert scan["no_legacy_default_caller"] is False
+    assert any(
+        match["path"] == "contracts/__active_path_scan_generated_owner_probe.json"
+        and match["pattern_id"] == "json_generated_surface_owner_in_mag_allowed_true"
+        for match in scan["forbidden_default_caller_matches"]
     )
 
 

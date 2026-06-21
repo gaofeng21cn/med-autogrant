@@ -496,6 +496,16 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "local_manager_default_runtime_owner",
         "host_agent_default_runtime_owner",
         "json_hermes_default_executor",
+        "json_generated_surface_owner_points_to_mag",
+        "json_generated_surface_owner_points_to_mag_domain_id",
+        "json_generated_surface_owner_in_mag_allowed_true",
+        "python_generated_surface_owner_in_mag_allowed_true",
+        "toml_generated_surface_owner_in_mag_allowed_true",
+        "json_domain_can_claim_generated_surface_owner_true",
+        "python_domain_can_claim_generated_surface_owner_true",
+        "toml_domain_can_claim_generated_surface_owner_true",
+        "json_mag_can_own_generated_wrapper_true",
+        "python_mag_can_own_generated_wrapper_true",
     }
     assert active_path_scan_policy["authority_boundary"] == {
         "policy_can_authorize_physical_delete": False,
