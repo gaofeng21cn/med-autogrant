@@ -154,6 +154,9 @@ def build_private_functional_surface_policy(
                 "compatibility_alias_allowed": False,
                 "claims_physical_cleanup_complete": False,
             },
+            "retirement_readback_cleanup_guard": _retirement_readback_cleanup_guard(
+                retirement_evidence_refs
+            ),
             "authority_boundary": {
                 "mag_can_own_generic_runtime": False,
                 "mag_can_own_generated_wrapper": False,
@@ -214,6 +217,67 @@ def _physical_source_surface_classifications(
         )
         for surface in physical_source_surface_classifications
     ]
+
+
+def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> dict[str, Any]:
+    return {
+        "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+        "state": "readback_guard_available_physical_delete_not_authorized",
+        "readback_surface_ref": "product physical-morphology-guard",
+        "allowed_readback_outputs": [
+            "source_role_classification",
+            "missing_evidence_worklist",
+            "owner_delta_route",
+            "typed_blocker_ref_shape",
+            "no_resurrection_policy",
+        ],
+        "forbidden_readback_outputs": [
+            "physical_delete_operation",
+            "owner_receipt_signature",
+            "typed_blocker_instance_creation",
+            "grant_ready_or_submission_ready_claim",
+            "production_ready_claim",
+            "app_or_default_caller_cutover_claim",
+        ],
+        "required_before_cleanup_apply": [
+            *retirement_evidence_refs,
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+        ],
+        "false_ready_claim_guard_pattern_ids": [
+            "json_retirement_readback_cleanup_complete_true",
+            "python_retirement_readback_cleanup_complete_true",
+            "python_single_retirement_readback_cleanup_complete_true",
+            "toml_retirement_readback_cleanup_complete_true",
+            "yaml_retirement_readback_cleanup_complete_true",
+            "json_cleanup_readback_physical_delete_authorized_true",
+            "python_cleanup_readback_physical_delete_authorized_true",
+            "python_single_cleanup_readback_physical_delete_authorized_true",
+            "toml_cleanup_readback_physical_delete_authorized_true",
+            "yaml_cleanup_readback_physical_delete_authorized_true",
+            "json_claims_cleanup_readback_authorizes_delete_true",
+            "python_claims_cleanup_readback_authorizes_delete_true",
+            "python_single_claims_cleanup_readback_authorizes_delete_true",
+            "toml_claims_cleanup_readback_authorizes_delete_true",
+            "yaml_claims_cleanup_readback_authorizes_delete_true",
+        ],
+        "claims": {
+            "claims_retirement_cleanup_complete": False,
+            "claims_physical_delete_authorized": False,
+            "claims_owner_receipt_signed": False,
+            "claims_typed_blocker_created": False,
+            "claims_domain_ready": False,
+            "claims_production_ready": False,
+        },
+        "authority_boundary": {
+            "guard_can_identify_cleanup_candidates": True,
+            "guard_can_route_owner_delta": True,
+            "guard_can_authorize_physical_delete": False,
+            "guard_can_sign_owner_receipt": False,
+            "guard_can_create_typed_blocker": False,
+            "guard_can_claim_default_caller_cutover": False,
+            "guard_can_claim_app_or_live_readiness": False,
+        },
+    }
 
 
 def _with_physical_surface_lifecycle_fields(

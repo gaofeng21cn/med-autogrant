@@ -454,6 +454,39 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "compatibility_alias_allowed": False,
         "claims_physical_cleanup_complete": False,
     }
+    readback_guard = morphology["retirement_readback_cleanup_guard"]
+    assert readback_guard["guard_id"] == (
+        "mag.physical_morphology.retirement_readback_cleanup_guard.v1"
+    )
+    assert readback_guard["state"] == (
+        "readback_guard_available_physical_delete_not_authorized"
+    )
+    assert readback_guard["readback_surface_ref"] == "product physical-morphology-guard"
+    assert readback_guard["required_before_cleanup_apply"] == [
+        *RETIREMENT_EVIDENCE_REFS,
+        "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+    ]
+    assert "missing_evidence_worklist" in readback_guard["allowed_readback_outputs"]
+    assert "physical_delete_operation" in readback_guard["forbidden_readback_outputs"]
+    assert "owner_receipt_signature" in readback_guard["forbidden_readback_outputs"]
+    assert "typed_blocker_instance_creation" in readback_guard["forbidden_readback_outputs"]
+    assert readback_guard["claims"] == {
+        "claims_retirement_cleanup_complete": False,
+        "claims_physical_delete_authorized": False,
+        "claims_owner_receipt_signed": False,
+        "claims_typed_blocker_created": False,
+        "claims_domain_ready": False,
+        "claims_production_ready": False,
+    }
+    assert readback_guard["authority_boundary"] == {
+        "guard_can_identify_cleanup_candidates": True,
+        "guard_can_route_owner_delta": True,
+        "guard_can_authorize_physical_delete": False,
+        "guard_can_sign_owner_receipt": False,
+        "guard_can_create_typed_blocker": False,
+        "guard_can_claim_default_caller_cutover": False,
+        "guard_can_claim_app_or_live_readiness": False,
+    }
     assert morphology["no_resurrection_policy"]["compatibility_alias_allowed"] is False
     assert "grouped_cli_wrapper" in morphology["no_resurrection_policy"]["applies_to_surface_ids"]
     assert (
@@ -463,6 +496,12 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     )
     assert morphology["active_path_scan_policy"] == ACTIVE_PATH_SCAN_POLICY
     active_path_scan_policy = morphology["active_path_scan_policy"]
+    assert set(readback_guard["false_ready_claim_guard_pattern_ids"]).issubset(
+        {
+            pattern["pattern_id"]
+            for pattern in active_path_scan_policy["forbidden_default_caller_patterns"]
+        }
+    )
     assert active_path_scan_policy["policy_id"] == (
         "mag.active_path_scan.no_legacy_default_caller.policy.v1"
     )

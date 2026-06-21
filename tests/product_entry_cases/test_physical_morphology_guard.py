@@ -112,6 +112,29 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["retirement_gate"]["state"],
             "active_caller_migration_evidence_required",
         )
+        readback_guard = projection["retirement_readback_cleanup_guard"]
+        self.assertEqual(
+            readback_guard["guard_id"],
+            "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+        )
+        self.assertEqual(
+            readback_guard["state"],
+            "readback_guard_available_physical_delete_not_authorized",
+        )
+        self.assertTrue(readback_guard["readback_can_identify_cleanup_candidates"])
+        self.assertTrue(readback_guard["readback_can_route_owner_delta"])
+        self.assertFalse(readback_guard["readback_can_authorize_physical_delete"])
+        self.assertFalse(readback_guard["readback_can_sign_owner_receipt"])
+        self.assertFalse(readback_guard["readback_can_create_typed_blocker"])
+        self.assertIn("missing_evidence_worklist", readback_guard["allowed_outputs"])
+        self.assertIn("owner_receipt_signature", readback_guard["forbidden_outputs"])
+        self.assertIn(
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            readback_guard["required_next_evidence_refs"],
+        )
+        self.assertFalse(readback_guard["claims"]["claims_retirement_cleanup_complete"])
+        self.assertFalse(readback_guard["claims"]["claims_physical_delete_authorized"])
+        self.assertFalse(readback_guard["claims"]["claims_owner_receipt_signed"])
         self.assertFalse(projection["retirement_gate"]["compatibility_alias_allowed"])
         self.assertTrue(
             projection["retirement_gate"]["owner_receipt_or_typed_blocker_roundtrip_required"]
@@ -265,6 +288,20 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(
             projection["retirement_gate"]["state"],
             "eligible_for_owner_receipted_cleanup",
+        )
+        self.assertEqual(
+            projection["retirement_readback_cleanup_guard"]["required_next_evidence_refs"],
+            [],
+        )
+        self.assertFalse(
+            projection["retirement_readback_cleanup_guard"][
+                "readback_can_authorize_physical_delete"
+            ]
+        )
+        self.assertFalse(
+            projection["retirement_readback_cleanup_guard"]["claims"][
+                "claims_retirement_cleanup_complete"
+            ]
         )
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]

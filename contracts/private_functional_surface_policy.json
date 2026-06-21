@@ -831,6 +831,135 @@
         {
           "literal_parts": [
             "\"",
+            "retirement_readback_cleanup_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_retirement_readback_cleanup_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "retirement_readback_cleanup_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_retirement_readback_cleanup_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "retirement_readback_cleanup_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_retirement_readback_cleanup_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "retirement_readback_cleanup_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_retirement_readback_cleanup_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "retirement_readback_cleanup_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_retirement_readback_cleanup_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "retirement_readback_guard_satisfied",
+            "\": true"
+          ],
+          "pattern_id": "json_retirement_readback_guard_satisfied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "retirement_readback_guard_satisfied",
+            "\": True"
+          ],
+          "pattern_id": "python_retirement_readback_guard_satisfied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "retirement_readback_guard_satisfied",
+            "': True"
+          ],
+          "pattern_id": "python_single_retirement_readback_guard_satisfied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "retirement_readback_guard_satisfied",
+            " = true"
+          ],
+          "pattern_id": "toml_retirement_readback_guard_satisfied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "retirement_readback_guard_satisfied",
+            ": true"
+          ],
+          "pattern_id": "yaml_retirement_readback_guard_satisfied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "cleanup_readback_physical_delete_authorized",
+            "\": true"
+          ],
+          "pattern_id": "json_cleanup_readback_physical_delete_authorized_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "cleanup_readback_physical_delete_authorized",
+            "\": True"
+          ],
+          "pattern_id": "python_cleanup_readback_physical_delete_authorized_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "cleanup_readback_physical_delete_authorized",
+            "': True"
+          ],
+          "pattern_id": "python_single_cleanup_readback_physical_delete_authorized_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "cleanup_readback_physical_delete_authorized",
+            " = true"
+          ],
+          "pattern_id": "toml_cleanup_readback_physical_delete_authorized_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "cleanup_readback_physical_delete_authorized",
+            ": true"
+          ],
+          "pattern_id": "yaml_cleanup_readback_physical_delete_authorized_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
             "claims_private_wrapper_retired",
             "\": true"
           ],
@@ -955,6 +1084,92 @@
             ": true"
           ],
           "pattern_id": "yaml_claims_no_active_caller_complete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_cleanup_readback_authorizes_delete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_cleanup_readback_authorizes_delete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_cleanup_readback_authorizes_delete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_cleanup_readback_authorizes_delete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_cleanup_readback_authorizes_delete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_cleanup_readback_authorizes_delete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "claims_cleanup_readback_authorizes_delete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_cleanup_readback_authorizes_delete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "claims_cleanup_readback_authorizes_delete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_cleanup_readback_authorizes_delete_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_retirement_cleanup_applied",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_retirement_cleanup_applied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_retirement_cleanup_applied",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_retirement_cleanup_applied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_retirement_cleanup_applied",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_retirement_cleanup_applied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "claims_retirement_cleanup_applied",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_retirement_cleanup_applied_true",
+          "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
+        },
+        {
+          "literal_parts": [
+            "claims_retirement_cleanup_applied",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_retirement_cleanup_applied_true",
           "policy": "Private wrapper retirement requires explicit MAG owner receipt plus active-caller migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; repo source true flags are false-ready resurrection claims"
         },
         {
@@ -2228,6 +2443,68 @@
         "physical_morphology://no_active_compat_alias_or_facade_scan"
       ],
       "state": "active_caller_migration_evidence_required"
+    },
+    "retirement_readback_cleanup_guard": {
+      "allowed_readback_outputs": [
+        "source_role_classification",
+        "missing_evidence_worklist",
+        "owner_delta_route",
+        "typed_blocker_ref_shape",
+        "no_resurrection_policy"
+      ],
+      "authority_boundary": {
+        "guard_can_authorize_physical_delete": false,
+        "guard_can_claim_app_or_live_readiness": false,
+        "guard_can_claim_default_caller_cutover": false,
+        "guard_can_create_typed_blocker": false,
+        "guard_can_identify_cleanup_candidates": true,
+        "guard_can_route_owner_delta": true,
+        "guard_can_sign_owner_receipt": false
+      },
+      "claims": {
+        "claims_domain_ready": false,
+        "claims_owner_receipt_signed": false,
+        "claims_physical_delete_authorized": false,
+        "claims_production_ready": false,
+        "claims_retirement_cleanup_complete": false,
+        "claims_typed_blocker_created": false
+      },
+      "false_ready_claim_guard_pattern_ids": [
+        "json_retirement_readback_cleanup_complete_true",
+        "python_retirement_readback_cleanup_complete_true",
+        "python_single_retirement_readback_cleanup_complete_true",
+        "toml_retirement_readback_cleanup_complete_true",
+        "yaml_retirement_readback_cleanup_complete_true",
+        "json_cleanup_readback_physical_delete_authorized_true",
+        "python_cleanup_readback_physical_delete_authorized_true",
+        "python_single_cleanup_readback_physical_delete_authorized_true",
+        "toml_cleanup_readback_physical_delete_authorized_true",
+        "yaml_cleanup_readback_physical_delete_authorized_true",
+        "json_claims_cleanup_readback_authorizes_delete_true",
+        "python_claims_cleanup_readback_authorizes_delete_true",
+        "python_single_claims_cleanup_readback_authorizes_delete_true",
+        "toml_claims_cleanup_readback_authorizes_delete_true",
+        "yaml_claims_cleanup_readback_authorizes_delete_true"
+      ],
+      "forbidden_readback_outputs": [
+        "physical_delete_operation",
+        "owner_receipt_signature",
+        "typed_blocker_instance_creation",
+        "grant_ready_or_submission_ready_claim",
+        "production_ready_claim",
+        "app_or_default_caller_cutover_claim"
+      ],
+      "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+      "readback_surface_ref": "product physical-morphology-guard",
+      "required_before_cleanup_apply": [
+        "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+        "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+        "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+        "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+        "physical_morphology://no_active_compat_alias_or_facade_scan",
+        "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+      ],
+      "state": "readback_guard_available_physical_delete_not_authorized"
     },
     "state": "classified_no_generic_runtime_reflow",
     "surface_classifications": [

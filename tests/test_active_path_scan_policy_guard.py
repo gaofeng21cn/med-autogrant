@@ -438,6 +438,31 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "yaml_claims_private_platform_residue_retired_true",
         ),
         (
+            "__active_path_scan_retirement_readback_probe.json",
+            ['{"retirement_readback_', 'cleanup_complete": true}\n'],
+            "json_retirement_readback_cleanup_complete_true",
+        ),
+        (
+            "__active_path_scan_retirement_readback_probe.py",
+            ['PROBE = {"cleanup_readback_physical_', 'delete_authorized": True}\n'],
+            "python_cleanup_readback_physical_delete_authorized_true",
+        ),
+        (
+            "__active_path_scan_retirement_readback_probe.py",
+            ["PROBE = {'claims_cleanup_readback_", "authorizes_delete': True}\n"],
+            "python_single_claims_cleanup_readback_authorizes_delete_true",
+        ),
+        (
+            "__active_path_scan_retirement_readback_probe.toml",
+            ["retirement_readback_guard_", "satisfied = true\n"],
+            "toml_retirement_readback_guard_satisfied_true",
+        ),
+        (
+            "__active_path_scan_retirement_readback_probe.yaml",
+            ["claims_retirement_cleanup_", "applied: true\n"],
+            "yaml_claims_retirement_cleanup_applied_true",
+        ),
+        (
             "__active_path_scan_generated_hosted_surface_probe.json",
             ['{"app_workbench_live_', 'rendering_complete": true}\n'],
             "json_app_workbench_live_rendering_complete_true",

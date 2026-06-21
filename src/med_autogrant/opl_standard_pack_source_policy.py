@@ -152,9 +152,14 @@ PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_CLAIM_KEYS = [
     "tombstone_provenance_complete",
     "wrapper_retirement_gate_satisfied",
     "physical_morphology_cleanup_complete",
+    "retirement_readback_cleanup_complete",
+    "retirement_readback_guard_satisfied",
+    "cleanup_readback_physical_delete_authorized",
     "claims_private_wrapper_retired",
     "claims_private_platform_residue_retired",
     "claims_no_active_caller_complete",
+    "claims_cleanup_readback_authorizes_delete",
+    "claims_retirement_cleanup_applied",
 ]
 
 

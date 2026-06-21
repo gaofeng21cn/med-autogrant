@@ -137,6 +137,9 @@ def build_physical_morphology_guard_projection(
                 "or_generated_surface_owner_in_mag"
             ),
         },
+        "retirement_readback_cleanup_guard": _retirement_readback_cleanup_guard(
+            required_next_evidence_refs=required_next_evidence_refs,
+        ),
         "no_resurrection_policy": {
             "compatibility_alias_allowed": False,
             "facade_reexport_allowed": False,
@@ -264,6 +267,45 @@ def _deletion_readiness(
         "claims_grant_ready": False,
         "claims_submission_ready": False,
         "claims_production_ready": False,
+    }
+
+
+def _retirement_readback_cleanup_guard(
+    *,
+    required_next_evidence_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+        "state": "readback_guard_available_physical_delete_not_authorized",
+        "readback_can_identify_cleanup_candidates": True,
+        "readback_can_route_owner_delta": True,
+        "readback_can_authorize_physical_delete": False,
+        "readback_can_sign_owner_receipt": False,
+        "readback_can_create_typed_blocker": False,
+        "allowed_outputs": [
+            "source_role_classification",
+            "missing_evidence_worklist",
+            "owner_delta_route",
+            "typed_blocker_ref_shape",
+            "no_resurrection_policy",
+        ],
+        "forbidden_outputs": [
+            "physical_delete_operation",
+            "owner_receipt_signature",
+            "typed_blocker_instance_creation",
+            "grant_ready_or_submission_ready_claim",
+            "production_ready_claim",
+            "app_or_default_caller_cutover_claim",
+        ],
+        "required_next_evidence_refs": list(required_next_evidence_refs),
+        "claims": {
+            "claims_retirement_cleanup_complete": False,
+            "claims_physical_delete_authorized": False,
+            "claims_owner_receipt_signed": False,
+            "claims_typed_blocker_created": False,
+            "claims_domain_ready": False,
+            "claims_production_ready": False,
+        },
     }
 
 
