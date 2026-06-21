@@ -2903,11 +2903,12 @@
         "gate_can_create_alias_files": false,
         "gate_can_fix_missing_refs": false
       },
-      "checked_source_ref_count": 54,
+      "checked_source_ref_count": 55,
       "checked_source_refs": [
         "contracts/owner_receipt_contract.json",
         "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
         "scripts/check_generated_aggregate_sources.py",
+        "scripts/check_source_purity_guard.py",
         "scripts/install-codex-plugin.sh",
         "scripts/line_budget.py",
         "scripts/opl-module-healthcheck.sh",
@@ -3546,6 +3547,7 @@
         },
         "source_refs": [
           "scripts/check_generated_aggregate_sources.py",
+          "scripts/check_source_purity_guard.py",
           "scripts/install-codex-plugin.sh",
           "scripts/line_budget.py",
           "scripts/opl-module-healthcheck.sh",

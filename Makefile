@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-generated-aggregate-sources test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-generated-aggregate-sources test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -16,6 +16,9 @@ test-line-budget:
 test-line-budget-strict:
 	$(PYTHON_CLEAN) scripts/line_budget.py --strict
 
+test-source-purity-strict:
+	$(PYTHON_CLEAN) scripts/check_source_purity_guard.py --format json >/tmp/med-autogrant-source-purity-guard.json
+
 test-generated-aggregate-sources:
 	$(PYTHON_CLEAN) scripts/check_generated_aggregate_sources.py
 
@@ -26,6 +29,7 @@ test-meta:
 	./scripts/repo-hygiene.sh --fix
 	./scripts/repo-hygiene.sh
 	$(MAKE) test-generated-aggregate-sources
+	$(MAKE) test-source-purity-strict
 	$(PYTEST_CLEAN) -q -m meta
 
 test-cli-smoke:
@@ -43,6 +47,7 @@ test-structure:
 
 test-structure-strict:
 	make test-line-budget-strict
+	$(MAKE) test-source-purity-strict
 	./scripts/run-structural-quality-gate.sh --strict
 
 test-full:

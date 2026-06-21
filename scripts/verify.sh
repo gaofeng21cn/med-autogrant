@@ -35,12 +35,15 @@ case "$lane" in
   structure)
     make test-structure
     ;;
+  source-purity|source-purity:strict)
+    make test-source-purity-strict
+    ;;
   full)
     make test-full
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full|cleanup]" >&2
+    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|source-purity|source-purity:strict|full|cleanup]" >&2
     exit 2
     ;;
 esac

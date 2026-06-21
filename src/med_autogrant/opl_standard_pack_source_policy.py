@@ -112,6 +112,7 @@ FORBIDDEN_PHYSICAL_RESIDUE_CLASSES = [
 
 REPO_VERIFICATION_SCRIPT_REFS = [
     "scripts/check_generated_aggregate_sources.py",
+    "scripts/check_source_purity_guard.py",
     "scripts/install-codex-plugin.sh",
     "scripts/line_budget.py",
     "scripts/opl-module-healthcheck.sh",
