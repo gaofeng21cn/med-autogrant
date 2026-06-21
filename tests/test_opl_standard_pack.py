@@ -479,6 +479,16 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "claims_domain_ready": False,
         "claims_production_ready": False,
     }
+    compact_cleanup_summary = readback_guard["compact_cleanup_readiness_summary"]
+    assert compact_cleanup_summary["summary_id"] == (
+        "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
+    )
+    assert compact_cleanup_summary["cleanup_candidate_count"] == 7
+    assert compact_cleanup_summary["owner_delta_required"] is True
+    assert compact_cleanup_summary["can_apply_cleanup"] is False
+    assert compact_cleanup_summary["can_authorize_physical_delete"] is False
+    assert compact_cleanup_summary["can_claim_domain_ready"] is False
+    assert compact_cleanup_summary["can_claim_production_ready"] is False
     assert readback_guard["authority_boundary"] == {
         "guard_can_identify_cleanup_candidates": True,
         "guard_can_route_owner_delta": True,

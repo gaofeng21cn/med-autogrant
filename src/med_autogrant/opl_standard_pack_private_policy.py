@@ -346,6 +346,7 @@ def _physical_source_surface_classifications(
 
 
 def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> dict[str, Any]:
+    compact_summary = _compact_cleanup_readiness_summary(retirement_evidence_refs)
     return {
         "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
         "state": "readback_guard_available_physical_delete_not_authorized",
@@ -369,6 +370,7 @@ def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> d
             *retirement_evidence_refs,
             "owner_receipt://mag/physical_delete_or_tombstone_authorization",
         ],
+        "compact_cleanup_readiness_summary": compact_summary,
         "false_ready_claim_guard_pattern_ids": [
             "json_retirement_readback_cleanup_complete_true",
             "python_retirement_readback_cleanup_complete_true",
@@ -403,6 +405,42 @@ def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> d
             "guard_can_claim_default_caller_cutover": False,
             "guard_can_claim_app_or_live_readiness": False,
         },
+    }
+
+
+def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> dict[str, Any]:
+    missing_evidence_refs = [
+        *retirement_evidence_refs,
+        "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+    ]
+    return {
+        "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1",
+        "state": "cleanup_candidates_present_owner_delta_required",
+        "source_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/retirement_readback_cleanup_guard"
+        ),
+        "cleanup_candidate_count": 7,
+        "cleanup_candidate_surface_ids": [
+            "product_entry",
+            "grouped_cli_wrapper",
+            "status",
+            "user_loop",
+            "domain_handler",
+            "control_plane",
+            "lifecycle",
+        ],
+        "owner_delta_required": True,
+        "required_before_cleanup_apply": missing_evidence_refs,
+        "missing_evidence_refs": missing_evidence_refs,
+        "can_apply_cleanup": False,
+        "can_authorize_physical_delete": False,
+        "can_claim_default_caller_cutover_complete": False,
+        "can_claim_app_operator_consumption": False,
+        "can_claim_grant_ready": False,
+        "can_claim_submission_ready": False,
+        "can_claim_domain_ready": False,
+        "can_claim_production_ready": False,
     }
 
 

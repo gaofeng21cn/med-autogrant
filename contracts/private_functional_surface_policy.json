@@ -2856,6 +2856,46 @@
         "claims_retirement_cleanup_complete": false,
         "claims_typed_blocker_created": false
       },
+      "compact_cleanup_readiness_summary": {
+        "can_apply_cleanup": false,
+        "can_authorize_physical_delete": false,
+        "can_claim_app_operator_consumption": false,
+        "can_claim_default_caller_cutover_complete": false,
+        "can_claim_domain_ready": false,
+        "can_claim_grant_ready": false,
+        "can_claim_production_ready": false,
+        "can_claim_submission_ready": false,
+        "cleanup_candidate_count": 7,
+        "cleanup_candidate_surface_ids": [
+          "product_entry",
+          "grouped_cli_wrapper",
+          "status",
+          "user_loop",
+          "domain_handler",
+          "control_plane",
+          "lifecycle"
+        ],
+        "missing_evidence_refs": [
+          "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+          "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+          "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+          "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+          "physical_morphology://no_active_compat_alias_or_facade_scan",
+          "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+        ],
+        "owner_delta_required": true,
+        "required_before_cleanup_apply": [
+          "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+          "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+          "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+          "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+          "physical_morphology://no_active_compat_alias_or_facade_scan",
+          "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+        ],
+        "source_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard",
+        "state": "cleanup_candidates_present_owner_delta_required",
+        "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
+      },
       "false_ready_claim_guard_pattern_ids": [
         "json_retirement_readback_cleanup_complete_true",
         "python_retirement_readback_cleanup_complete_true",

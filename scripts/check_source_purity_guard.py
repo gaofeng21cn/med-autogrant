@@ -36,11 +36,22 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "strict_source_purity_no_second_truth_guard",
         context="physical_source_morphology_policy",
     )
+    retirement_guard = _require_mapping(
+        morphology,
+        "retirement_readback_cleanup_guard",
+        context="physical_source_morphology_policy",
+    )
+    compact_summary = _require_mapping(
+        retirement_guard,
+        "compact_cleanup_readiness_summary",
+        context="retirement_readback_cleanup_guard",
+    )
 
     failures = _collect_failures(
         active_path_scan=active_path_scan,
         source_ref_gate=source_ref_gate,
         strict_guard=strict_guard,
+        compact_summary=compact_summary,
     )
     return {
         "surface_kind": "mag_strict_source_purity_guard_readback",
@@ -51,6 +62,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "active_path_scan": active_path_scan,
         "source_ref_integrity_gate": source_ref_gate,
         "strict_source_purity_no_second_truth_guard": strict_guard,
+        "compact_cleanup_readiness_summary": compact_summary,
         "allowed_outputs": list(strict_guard["allowed_outputs"]),
         "forbidden_outputs": list(strict_guard["forbidden_outputs"]),
         "authority_boundary": {
@@ -72,6 +84,7 @@ def _collect_failures(
     active_path_scan: Mapping[str, Any],
     source_ref_gate: Mapping[str, Any],
     strict_guard: Mapping[str, Any],
+    compact_summary: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     failures: list[dict[str, Any]] = []
     if active_path_scan.get("state") != "passed":
@@ -113,6 +126,41 @@ def _collect_failures(
                 "check_id": "strict_guard_authority_boundary",
                 "state": "failed",
                 "authority_boundary": boundary,
+            }
+        )
+    for key in [
+        "can_apply_cleanup",
+        "can_authorize_physical_delete",
+        "can_claim_default_caller_cutover_complete",
+        "can_claim_app_operator_consumption",
+        "can_claim_grant_ready",
+        "can_claim_submission_ready",
+        "can_claim_domain_ready",
+        "can_claim_production_ready",
+    ]:
+        if compact_summary.get(key) is not False:
+            failures.append(
+                {
+                    "check_id": "compact_cleanup_readiness_false_ready_guard",
+                    "state": "failed",
+                    "key": key,
+                    "value": compact_summary.get(key),
+                }
+            )
+    if compact_summary.get("owner_delta_required") is not True:
+        failures.append(
+            {
+                "check_id": "compact_cleanup_readiness_owner_delta_required",
+                "state": "failed",
+                "owner_delta_required": compact_summary.get("owner_delta_required"),
+            }
+        )
+    if compact_summary.get("cleanup_candidate_count") != 7:
+        failures.append(
+            {
+                "check_id": "compact_cleanup_readiness_candidate_count",
+                "state": "failed",
+                "cleanup_candidate_count": compact_summary.get("cleanup_candidate_count"),
             }
         )
     return failures

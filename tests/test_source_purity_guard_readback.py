@@ -25,6 +25,24 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
     assert payload["strict_source_purity_no_second_truth_guard"]["guard_id"] == (
         "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1"
     )
+    summary = payload["compact_cleanup_readiness_summary"]
+    assert summary["summary_id"] == (
+        "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
+    )
+    assert summary["state"] == "cleanup_candidates_present_owner_delta_required"
+    assert summary["cleanup_candidate_count"] == 7
+    assert summary["owner_delta_required"] is True
+    assert summary["can_apply_cleanup"] is False
+    assert summary["can_authorize_physical_delete"] is False
+    assert summary["can_claim_default_caller_cutover_complete"] is False
+    assert summary["can_claim_app_operator_consumption"] is False
+    assert summary["can_claim_grant_ready"] is False
+    assert summary["can_claim_submission_ready"] is False
+    assert summary["can_claim_domain_ready"] is False
+    assert summary["can_claim_production_ready"] is False
+    assert "owner_receipt://mag/physical_delete_or_tombstone_authorization" in (
+        summary["missing_evidence_refs"]
+    )
     assert "missing_evidence_worklist" in payload["allowed_outputs"]
     assert "physical_delete_operation" in payload["forbidden_outputs"]
     assert payload["authority_boundary"] == {
@@ -58,3 +76,4 @@ def test_source_purity_guard_script_emits_json_readback() -> None:
     payload = json.loads(result.stdout)
     assert payload["surface_kind"] == "mag_strict_source_purity_guard_readback"
     assert payload["state"] == "passed_repo_source_guard_only"
+    assert payload["compact_cleanup_readiness_summary"]["can_apply_cleanup"] is False
