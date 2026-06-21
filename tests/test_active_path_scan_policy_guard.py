@@ -9,6 +9,7 @@ import pytest
 
 from med_autogrant.opl_standard_pack_source_policy import (
     ACTIVE_PATH_SCAN_POLICY,
+    DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     REPO_VERIFICATION_SCRIPT_REFS,
 )
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
@@ -131,6 +132,7 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "python_single_physical_delete_authorized_by_refs_true",
         "toml_physical_delete_authorized_by_refs_true",
         "yaml_physical_delete_authorized_by_refs_true",
+        *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     }
 
 
@@ -380,6 +382,31 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "__active_path_scan_physical_delete_false_ready_probe.yaml",
             ["physical_delete_authorized_", "by_refs: true\n"],
             "yaml_physical_delete_authorized_by_refs_true",
+        ),
+        (
+            "__active_path_scan_domain_readiness_false_ready_probe.json",
+            ['{"claims_grant_', 'ready": true}\n'],
+            "json_claims_grant_ready_true",
+        ),
+        (
+            "__active_path_scan_domain_readiness_false_ready_probe.py",
+            ['PROBE = {"claims_authoring_quality_', 'ready": True}\n'],
+            "python_claims_authoring_quality_ready_true",
+        ),
+        (
+            "__active_path_scan_domain_readiness_false_ready_probe.py",
+            ["PROBE = {'quality_ready_", "claimed': True}\n"],
+            "python_single_quality_ready_claimed_true",
+        ),
+        (
+            "__active_path_scan_domain_readiness_false_ready_probe.toml",
+            ["claims_submission_ready_", "export = true\n"],
+            "toml_claims_submission_ready_export_true",
+        ),
+        (
+            "__active_path_scan_domain_readiness_false_ready_probe.yaml",
+            ["production_ready_", "claimed: true\n"],
+            "yaml_production_ready_claimed_true",
         ),
     ],
 )

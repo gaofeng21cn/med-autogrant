@@ -123,6 +123,68 @@ REPO_VERIFICATION_SCRIPT_REFS = [
     "scripts/verify.sh",
 ]
 
+DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS = [
+    "claims_grant_ready",
+    "claims_fundability_ready",
+    "claims_authoring_quality_ready",
+    "claims_quality_ready",
+    "claims_export_ready",
+    "claims_submission_ready",
+    "claims_submission_ready_export",
+    "claims_production_ready",
+    "grant_ready_claimed",
+    "fundability_ready_claimed",
+    "authoring_quality_ready_claimed",
+    "quality_ready_claimed",
+    "export_ready_claimed",
+    "submission_ready_claimed",
+    "production_ready_claimed",
+]
+
+
+def _domain_readiness_false_ready_patterns() -> list[dict[str, object]]:
+    patterns: list[dict[str, object]] = []
+    for claim_key in DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS:
+        policy = (
+            "Domain readiness requires MAG owner verdicts, owner receipts, human-gate "
+            "receipts, or typed blockers; repo source true flags are false-ready claims"
+        )
+        patterns.extend(
+            [
+                {
+                    "pattern_id": f"json_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_single_{claim_key}_true",
+                    "literal_parts": ["'", claim_key, "': True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"toml_{claim_key}_true",
+                    "literal_parts": [claim_key, " = true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"yaml_{claim_key}_true",
+                    "literal_parts": [claim_key, ": true"],
+                    "policy": policy,
+                },
+            ]
+        )
+    return patterns
+
+
+DOMAIN_READINESS_FALSE_READY_PATTERN_IDS = [
+    pattern["pattern_id"] for pattern in _domain_readiness_false_ready_patterns()
+]
+
 ACTIVE_PATH_SCAN_POLICY = {
     "surface_kind": "mag_active_path_scan_policy",
     "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
@@ -445,6 +507,7 @@ ACTIVE_PATH_SCAN_POLICY = {
             "literal_parts": ["physical_delete_authorized_", "by_refs: true"],
             "policy": "Refs-only evidence cannot authorize physical delete",
         },
+        *_domain_readiness_false_ready_patterns(),
     ],
     "authority_boundary": {
         "policy_can_authorize_physical_delete": False,

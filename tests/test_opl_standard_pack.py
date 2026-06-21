@@ -25,6 +25,7 @@ from med_autogrant.opl_standard_pack_profiles import (
 from med_autogrant.opl_standard_pack_source_policy import (
     ACTIVE_PATH_SCAN_POLICY,
     ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION,
+    DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     FORBIDDEN_GENERIC_OWNER_ROLES,
     FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
     GENERATED_SURFACES,
@@ -537,6 +538,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "python_single_physical_delete_authorized_by_refs_true",
         "toml_physical_delete_authorized_by_refs_true",
         "yaml_physical_delete_authorized_by_refs_true",
+        *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     }
     assert active_path_scan_policy["authority_boundary"] == {
         "policy_can_authorize_physical_delete": False,

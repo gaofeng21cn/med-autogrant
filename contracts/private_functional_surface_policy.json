@@ -440,6 +440,651 @@
           ],
           "pattern_id": "yaml_physical_delete_authorized_by_refs_true",
           "policy": "Refs-only evidence cannot authorize physical delete"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_grant_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_grant_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_grant_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_grant_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_grant_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_grant_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_grant_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_grant_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_grant_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_grant_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_fundability_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_fundability_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_fundability_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_fundability_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_fundability_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_fundability_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_fundability_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_fundability_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_fundability_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_fundability_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_authoring_quality_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_authoring_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_authoring_quality_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_authoring_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_authoring_quality_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_authoring_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_authoring_quality_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_authoring_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_authoring_quality_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_authoring_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_quality_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_quality_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_quality_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_quality_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_quality_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_quality_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_export_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_export_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_export_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_export_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_export_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_export_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_export_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_export_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_export_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_export_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_submission_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_submission_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_submission_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_submission_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_submission_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_submission_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_submission_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_submission_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_submission_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_submission_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_submission_ready_export",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_submission_ready_export_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_submission_ready_export",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_submission_ready_export_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_submission_ready_export",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_submission_ready_export_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_submission_ready_export",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_submission_ready_export_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_submission_ready_export",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_submission_ready_export_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_production_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_production_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_production_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_production_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_production_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_production_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_production_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_production_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_production_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_production_ready_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "grant_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_grant_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "grant_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_grant_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "grant_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_grant_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "grant_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_grant_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "grant_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_grant_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "fundability_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_fundability_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "fundability_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_fundability_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "fundability_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_fundability_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "fundability_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_fundability_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "fundability_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_fundability_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "authoring_quality_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_authoring_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "authoring_quality_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_authoring_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "authoring_quality_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_authoring_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "authoring_quality_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_authoring_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "authoring_quality_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_authoring_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "quality_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "quality_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "quality_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "quality_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "quality_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_quality_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "export_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_export_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "export_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_export_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "export_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_export_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "export_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_export_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "export_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_export_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "submission_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_submission_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "submission_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_submission_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "submission_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_submission_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "submission_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_submission_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "submission_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_submission_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "production_ready_claimed",
+            "\": true"
+          ],
+          "pattern_id": "json_production_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "production_ready_claimed",
+            "\": True"
+          ],
+          "pattern_id": "python_production_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "production_ready_claimed",
+            "': True"
+          ],
+          "pattern_id": "python_single_production_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "production_ready_claimed",
+            " = true"
+          ],
+          "pattern_id": "toml_production_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "production_ready_claimed",
+            ": true"
+          ],
+          "pattern_id": "yaml_production_ready_claimed_true",
+          "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
         }
       ],
       "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
