@@ -13,6 +13,7 @@ from med_autogrant.opl_standard_pack_source_policy import (
     GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS,
     PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
     REPO_VERIFICATION_SCRIPT_REFS,
+    STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS,
 )
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
     build_physical_skeleton_follow_through,
@@ -137,6 +138,7 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         *PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
         *GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS,
         *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
+        *STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS,
     }
 
 
@@ -486,6 +488,31 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "__active_path_scan_generated_hosted_surface_probe.yaml",
             ["claims_app_operator_sustained_", "consumption_complete: true\n"],
             "yaml_claims_app_operator_sustained_consumption_complete_true",
+        ),
+        (
+            "__active_path_scan_strict_source_purity_probe.json",
+            ['{"strict_source_', 'purity_complete": true}\n'],
+            "json_strict_source_purity_complete_true",
+        ),
+        (
+            "__active_path_scan_strict_source_purity_probe.py",
+            ['PROBE = {"source_ref_integrity_', 'guard_satisfied": True}\n'],
+            "python_source_ref_integrity_guard_satisfied_true",
+        ),
+        (
+            "__active_path_scan_strict_source_purity_probe.py",
+            ["PROBE = {'source_ref_integrity_can_", "authorize_delete': True}\n"],
+            "python_single_source_ref_integrity_can_authorize_delete_true",
+        ),
+        (
+            "__active_path_scan_strict_source_purity_probe.toml",
+            ["active_path_scan_no_resurrection_", "complete = true\n"],
+            "toml_active_path_scan_no_resurrection_complete_true",
+        ),
+        (
+            "__active_path_scan_strict_source_purity_probe.yaml",
+            ["machine_source_guard_can_claim_", "domain_ready: true\n"],
+            "yaml_machine_source_guard_can_claim_domain_ready_true",
         ),
     ],
 )

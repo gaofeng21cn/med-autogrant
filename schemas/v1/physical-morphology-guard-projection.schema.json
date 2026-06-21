@@ -268,6 +268,143 @@
         }
       }
     },
+    "strictSourcePurityGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "guard_id",
+        "state",
+        "source_ref_integrity_state",
+        "source_ref_integrity_guard_ref",
+        "active_path_scan_policy_ref",
+        "contract_guard_ref",
+        "guard_role",
+        "allowed_readback_outputs",
+        "forbidden_readback_outputs",
+        "fail_closed_conditions",
+        "claims",
+        "authority_boundary"
+      ],
+      "properties": {
+        "guard_id": {
+          "const": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1"
+        },
+        "state": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "source_ref_integrity_state": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_ref_integrity_guard_ref": {
+          "const": "source_ref_integrity_guard"
+        },
+        "active_path_scan_policy_ref": {
+          "const": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/active_path_scan_policy"
+        },
+        "contract_guard_ref": {
+          "const": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/strict_source_purity_no_second_truth_guard"
+        },
+        "guard_role": {
+          "const": "source_ref_integrity_and_active_path_scan_are_no_second_truth_guards_not_readiness_or_delete_authority"
+        },
+        "allowed_readback_outputs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "forbidden_readback_outputs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "fail_closed_conditions": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "claims": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claims_strict_source_purity_complete",
+            "claims_source_ref_integrity_complete",
+            "claims_default_caller_cutover",
+            "claims_physical_delete_authorized",
+            "claims_grant_ready",
+            "claims_submission_ready",
+            "claims_production_ready"
+          ],
+          "properties": {
+            "claims_strict_source_purity_complete": {
+              "const": false
+            },
+            "claims_source_ref_integrity_complete": {
+              "const": false
+            },
+            "claims_default_caller_cutover": {
+              "const": false
+            },
+            "claims_physical_delete_authorized": {
+              "const": false
+            },
+            "claims_grant_ready": {
+              "const": false
+            },
+            "claims_submission_ready": {
+              "const": false
+            },
+            "claims_production_ready": {
+              "const": false
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "guard_can_write_grant_truth",
+            "guard_can_create_alias_files",
+            "guard_can_sign_owner_receipt",
+            "guard_can_create_typed_blocker",
+            "guard_can_authorize_physical_delete",
+            "guard_can_claim_default_caller_cutover",
+            "guard_can_claim_generated_hosted_live_consumption",
+            "guard_can_claim_grant_readiness",
+            "guard_can_claim_submission_ready",
+            "guard_can_claim_production_ready"
+          ],
+          "properties": {
+            "guard_can_write_grant_truth": {
+              "const": false
+            },
+            "guard_can_create_alias_files": {
+              "const": false
+            },
+            "guard_can_sign_owner_receipt": {
+              "const": false
+            },
+            "guard_can_create_typed_blocker": {
+              "const": false
+            },
+            "guard_can_authorize_physical_delete": {
+              "const": false
+            },
+            "guard_can_claim_default_caller_cutover": {
+              "const": false
+            },
+            "guard_can_claim_generated_hosted_live_consumption": {
+              "const": false
+            },
+            "guard_can_claim_grant_readiness": {
+              "const": false
+            },
+            "guard_can_claim_submission_ready": {
+              "const": false
+            },
+            "guard_can_claim_production_ready": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
     "physicalMorphologyGuardProjection": {
       "type": "object",
       "additionalProperties": false,
@@ -287,6 +424,7 @@
         "blocked_count",
         "allowed_items",
         "blocked_items",
+        "strict_source_purity_no_second_truth_guard",
         "summary",
         "claims",
         "authority_boundary"
@@ -344,6 +482,9 @@
           "items": {
             "$ref": "#/$defs/sourceItemProjection"
           }
+        },
+        "strict_source_purity_no_second_truth_guard": {
+          "$ref": "#/$defs/strictSourcePurityGuard"
         },
         "summary": {
           "$ref": "#/$defs/summary"

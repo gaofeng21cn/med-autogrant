@@ -2332,6 +2332,393 @@
           ],
           "pattern_id": "yaml_production_ready_claimed_true",
           "policy": "Domain readiness requires MAG owner verdicts, owner receipts, human-gate receipts, or typed blockers; repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "strict_source_purity_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_strict_source_purity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "strict_source_purity_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_strict_source_purity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "strict_source_purity_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_strict_source_purity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "strict_source_purity_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_strict_source_purity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "strict_source_purity_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_strict_source_purity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_purity_guard_satisfied",
+            "\": true"
+          ],
+          "pattern_id": "json_source_purity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_purity_guard_satisfied",
+            "\": True"
+          ],
+          "pattern_id": "python_source_purity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "source_purity_guard_satisfied",
+            "': True"
+          ],
+          "pattern_id": "python_single_source_purity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_purity_guard_satisfied",
+            " = true"
+          ],
+          "pattern_id": "toml_source_purity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_purity_guard_satisfied",
+            ": true"
+          ],
+          "pattern_id": "yaml_source_purity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "active_path_scan_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_active_path_scan_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "active_path_scan_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_active_path_scan_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "active_path_scan_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_active_path_scan_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "active_path_scan_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_active_path_scan_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "active_path_scan_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_active_path_scan_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "active_path_scan_no_resurrection_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_active_path_scan_no_resurrection_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "active_path_scan_no_resurrection_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_active_path_scan_no_resurrection_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "active_path_scan_no_resurrection_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_active_path_scan_no_resurrection_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "active_path_scan_no_resurrection_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_active_path_scan_no_resurrection_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "active_path_scan_no_resurrection_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_active_path_scan_no_resurrection_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_source_ref_integrity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_source_ref_integrity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "source_ref_integrity_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_source_ref_integrity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_source_ref_integrity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_source_ref_integrity_complete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_guard_satisfied",
+            "\": true"
+          ],
+          "pattern_id": "json_source_ref_integrity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_guard_satisfied",
+            "\": True"
+          ],
+          "pattern_id": "python_source_ref_integrity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "source_ref_integrity_guard_satisfied",
+            "': True"
+          ],
+          "pattern_id": "python_single_source_ref_integrity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_guard_satisfied",
+            " = true"
+          ],
+          "pattern_id": "toml_source_ref_integrity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_guard_satisfied",
+            ": true"
+          ],
+          "pattern_id": "yaml_source_ref_integrity_guard_satisfied_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_can_claim_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_source_ref_integrity_can_claim_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_can_claim_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_source_ref_integrity_can_claim_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "source_ref_integrity_can_claim_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_source_ref_integrity_can_claim_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_can_claim_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_source_ref_integrity_can_claim_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_can_claim_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_source_ref_integrity_can_claim_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_can_authorize_delete",
+            "\": true"
+          ],
+          "pattern_id": "json_source_ref_integrity_can_authorize_delete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "source_ref_integrity_can_authorize_delete",
+            "\": True"
+          ],
+          "pattern_id": "python_source_ref_integrity_can_authorize_delete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "source_ref_integrity_can_authorize_delete",
+            "': True"
+          ],
+          "pattern_id": "python_single_source_ref_integrity_can_authorize_delete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_can_authorize_delete",
+            " = true"
+          ],
+          "pattern_id": "toml_source_ref_integrity_can_authorize_delete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "source_ref_integrity_can_authorize_delete",
+            ": true"
+          ],
+          "pattern_id": "yaml_source_ref_integrity_can_authorize_delete_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "machine_source_guard_can_claim_domain_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_machine_source_guard_can_claim_domain_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "machine_source_guard_can_claim_domain_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_machine_source_guard_can_claim_domain_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "machine_source_guard_can_claim_domain_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_machine_source_guard_can_claim_domain_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "machine_source_guard_can_claim_domain_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_machine_source_guard_can_claim_domain_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        },
+        {
+          "literal_parts": [
+            "machine_source_guard_can_claim_domain_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_machine_source_guard_can_claim_domain_ready_true",
+          "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         }
       ],
       "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
@@ -2594,6 +2981,65 @@
       }
     },
     "state": "classified_no_generic_runtime_reflow",
+    "strict_source_purity_no_second_truth_guard": {
+      "allowed_outputs": [
+        "forbidden_literal_match_list",
+        "retired_surface_path_status",
+        "repo_local_source_ref_integrity_status",
+        "missing_evidence_worklist",
+        "owner_delta_route",
+        "typed_blocker_ref_shape",
+        "no_resurrection_policy"
+      ],
+      "authority_boundary": {
+        "guard_can_authorize_physical_delete": false,
+        "guard_can_claim_default_caller_cutover": false,
+        "guard_can_claim_generated_hosted_live_consumption": false,
+        "guard_can_claim_grant_readiness": false,
+        "guard_can_claim_production_ready": false,
+        "guard_can_claim_submission_ready": false,
+        "guard_can_create_alias_files": false,
+        "guard_can_create_typed_blocker": false,
+        "guard_can_sign_owner_receipt": false,
+        "guard_can_write_grant_truth": false
+      },
+      "fail_closed_conditions": [
+        "retired_active_path_exists",
+        "forbidden_default_caller_literal_match",
+        "source_ref_missing_or_external",
+        "human_doc_ref_used_as_machine_source_ref",
+        "source_purity_or_source_ref_true_flag_claims_ready_or_delete_authority"
+      ],
+      "forbidden_outputs": [
+        "grant_truth_write",
+        "owner_receipt_signature",
+        "typed_blocker_instance_creation",
+        "physical_delete_operation",
+        "default_caller_cutover_claim",
+        "generated_hosted_live_consumption_claim",
+        "grant_ready_or_submission_ready_claim",
+        "production_ready_claim"
+      ],
+      "guard_id": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+      "guard_role": "active_path_scan_and_source_ref_integrity_are_repo_machine_source_guards_not_grant_truth_or_physical_delete_authority",
+      "machine_roots_guarded": [
+        "src",
+        "tests",
+        "schemas",
+        "contracts",
+        "scripts",
+        "plugins",
+        "Makefile",
+        "pyproject.toml",
+        ".agents/plugins/marketplace.json"
+      ],
+      "readback_surface_refs": [
+        "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/active_path_scan_policy",
+        "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/source_ref_integrity_gate",
+        "product physical-morphology-guard#source_ref_integrity_guard"
+      ],
+      "state": "source_purity_guard_available_not_readiness_or_delete_authority"
+    },
     "surface_classifications": [
       {
         "active_caller_status": "active_domain_pack_or_handler_target",

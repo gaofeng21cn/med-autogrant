@@ -105,6 +105,9 @@ def build_physical_morphology_guard_projection(
         "missing_external_evidence_refs": missing_external_evidence_refs,
         "required_next_evidence_refs": required_next_evidence_refs,
         "source_ref_integrity_guard": source_ref_integrity,
+        "strict_source_purity_no_second_truth_guard": _strict_source_purity_no_second_truth_guard(
+            source_ref_integrity=source_ref_integrity,
+        ),
         "claims": {
             "claims_physical_morphology_cleanup_complete": False,
             "claims_ready_for_owner_receipted_cleanup": claims_ready_for_owner_receipted_cleanup,
@@ -278,6 +281,77 @@ def _source_ref_integrity_guard(items: list[dict[str, Any]]) -> dict[str, Any]:
             "guard_can_claim_default_caller_cutover": False,
             "guard_can_claim_app_or_live_readiness": False,
             "guard_can_claim_grant_readiness": False,
+            "guard_can_claim_production_ready": False,
+        },
+    }
+
+
+def _strict_source_purity_no_second_truth_guard(
+    *,
+    source_ref_integrity: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "guard_id": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+        "state": "passed" if source_ref_integrity["state"] == "passed" else "failed",
+        "source_ref_integrity_state": source_ref_integrity["state"],
+        "source_ref_integrity_guard_ref": "source_ref_integrity_guard",
+        "active_path_scan_policy_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/active_path_scan_policy"
+        ),
+        "contract_guard_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/"
+            "strict_source_purity_no_second_truth_guard"
+        ),
+        "guard_role": (
+            "source_ref_integrity_and_active_path_scan_are_no_second_truth_guards_"
+            "not_readiness_or_delete_authority"
+        ),
+        "allowed_readback_outputs": [
+            "source_ref_integrity_status",
+            "active_path_forbidden_literal_matches",
+            "retired_surface_path_status",
+            "missing_evidence_worklist",
+            "owner_delta_route",
+            "typed_blocker_ref_shape",
+            "no_resurrection_policy",
+        ],
+        "forbidden_readback_outputs": [
+            "grant_truth_write",
+            "owner_receipt_signature",
+            "typed_blocker_instance_creation",
+            "physical_delete_operation",
+            "default_caller_cutover_claim",
+            "generated_hosted_live_consumption_claim",
+            "grant_ready_or_submission_ready_claim",
+            "production_ready_claim",
+        ],
+        "fail_closed_conditions": [
+            "source_ref_integrity_failed",
+            "active_path_scan_forbidden_literal_match",
+            "retired_active_path_exists",
+            "machine_source_true_flag_claims_source_purity_ready_or_delete_authority",
+        ],
+        "claims": {
+            "claims_strict_source_purity_complete": False,
+            "claims_source_ref_integrity_complete": False,
+            "claims_default_caller_cutover": False,
+            "claims_physical_delete_authorized": False,
+            "claims_grant_ready": False,
+            "claims_submission_ready": False,
+            "claims_production_ready": False,
+        },
+        "authority_boundary": {
+            "guard_can_write_grant_truth": False,
+            "guard_can_create_alias_files": False,
+            "guard_can_sign_owner_receipt": False,
+            "guard_can_create_typed_blocker": False,
+            "guard_can_authorize_physical_delete": False,
+            "guard_can_claim_default_caller_cutover": False,
+            "guard_can_claim_generated_hosted_live_consumption": False,
+            "guard_can_claim_grant_readiness": False,
+            "guard_can_claim_submission_ready": False,
             "guard_can_claim_production_ready": False,
         },
     }

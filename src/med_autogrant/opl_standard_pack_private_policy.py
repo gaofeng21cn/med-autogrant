@@ -121,6 +121,9 @@ def build_private_functional_surface_policy(
             "source_ref_integrity_gate": _source_ref_integrity_gate(
                 physical_source_surface_classifications
             ),
+            "strict_source_purity_no_second_truth_guard": (
+                _strict_source_purity_no_second_truth_guard()
+            ),
             "forbidden_reflow_policy": (
                 "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
                 "executor_probe_or_compat_alias"
@@ -213,6 +216,80 @@ def _source_ref_integrity_gate(
             "gate_can_claim_app_or_live_readiness": False,
             "gate_can_claim_grant_readiness": False,
             "gate_can_claim_production_ready": False,
+        },
+    }
+
+
+def _strict_source_purity_no_second_truth_guard() -> dict[str, Any]:
+    return {
+        "guard_id": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+        "state": "source_purity_guard_available_not_readiness_or_delete_authority",
+        "guard_role": (
+            "active_path_scan_and_source_ref_integrity_are_repo_machine_source_guards_"
+            "not_grant_truth_or_physical_delete_authority"
+        ),
+        "readback_surface_refs": [
+            (
+                "contracts/private_functional_surface_policy.json#/"
+                "physical_source_morphology_policy/active_path_scan_policy"
+            ),
+            (
+                "contracts/private_functional_surface_policy.json#/"
+                "physical_source_morphology_policy/source_ref_integrity_gate"
+            ),
+            (
+                "product physical-morphology-guard"
+                "#source_ref_integrity_guard"
+            ),
+        ],
+        "machine_roots_guarded": [
+            "src",
+            "tests",
+            "schemas",
+            "contracts",
+            "scripts",
+            "plugins",
+            "Makefile",
+            "pyproject.toml",
+            ".agents/plugins/marketplace.json",
+        ],
+        "allowed_outputs": [
+            "forbidden_literal_match_list",
+            "retired_surface_path_status",
+            "repo_local_source_ref_integrity_status",
+            "missing_evidence_worklist",
+            "owner_delta_route",
+            "typed_blocker_ref_shape",
+            "no_resurrection_policy",
+        ],
+        "forbidden_outputs": [
+            "grant_truth_write",
+            "owner_receipt_signature",
+            "typed_blocker_instance_creation",
+            "physical_delete_operation",
+            "default_caller_cutover_claim",
+            "generated_hosted_live_consumption_claim",
+            "grant_ready_or_submission_ready_claim",
+            "production_ready_claim",
+        ],
+        "fail_closed_conditions": [
+            "retired_active_path_exists",
+            "forbidden_default_caller_literal_match",
+            "source_ref_missing_or_external",
+            "human_doc_ref_used_as_machine_source_ref",
+            "source_purity_or_source_ref_true_flag_claims_ready_or_delete_authority",
+        ],
+        "authority_boundary": {
+            "guard_can_write_grant_truth": False,
+            "guard_can_create_alias_files": False,
+            "guard_can_sign_owner_receipt": False,
+            "guard_can_create_typed_blocker": False,
+            "guard_can_authorize_physical_delete": False,
+            "guard_can_claim_default_caller_cutover": False,
+            "guard_can_claim_generated_hosted_live_consumption": False,
+            "guard_can_claim_grant_readiness": False,
+            "guard_can_claim_submission_ready": False,
+            "guard_can_claim_production_ready": False,
         },
     }
 

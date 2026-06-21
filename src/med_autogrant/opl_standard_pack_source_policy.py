@@ -179,6 +179,19 @@ GENERATED_HOSTED_SURFACE_FALSE_READY_CLAIM_KEYS = [
 ]
 
 
+STRICT_SOURCE_PURITY_FALSE_READY_CLAIM_KEYS = [
+    "strict_source_purity_complete",
+    "source_purity_guard_satisfied",
+    "active_path_scan_complete",
+    "active_path_scan_no_resurrection_complete",
+    "source_ref_integrity_complete",
+    "source_ref_integrity_guard_satisfied",
+    "source_ref_integrity_can_claim_ready",
+    "source_ref_integrity_can_authorize_delete",
+    "machine_source_guard_can_claim_domain_ready",
+]
+
+
 def _domain_readiness_false_ready_patterns() -> list[dict[str, object]]:
     patterns: list[dict[str, object]] = []
     for claim_key in DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS:
@@ -312,6 +325,51 @@ def _generated_hosted_surface_false_ready_patterns() -> list[dict[str, object]]:
 GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS = [
     pattern["pattern_id"]
     for pattern in _generated_hosted_surface_false_ready_patterns()
+]
+
+
+def _strict_source_purity_false_ready_patterns() -> list[dict[str, object]]:
+    patterns: list[dict[str, object]] = []
+    for claim_key in STRICT_SOURCE_PURITY_FALSE_READY_CLAIM_KEYS:
+        policy = (
+            "Strict source-purity and source-ref integrity scans are no-second-truth guards; "
+            "repo source true flags cannot claim readiness, default-caller cutover or delete authority"
+        )
+        patterns.extend(
+            [
+                {
+                    "pattern_id": f"json_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_single_{claim_key}_true",
+                    "literal_parts": ["'", claim_key, "': True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"toml_{claim_key}_true",
+                    "literal_parts": [claim_key, " = true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"yaml_{claim_key}_true",
+                    "literal_parts": [claim_key, ": true"],
+                    "policy": policy,
+                },
+            ]
+        )
+    return patterns
+
+
+STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS = [
+    pattern["pattern_id"]
+    for pattern in _strict_source_purity_false_ready_patterns()
 ]
 
 ACTIVE_PATH_SCAN_POLICY = {
@@ -639,6 +697,7 @@ ACTIVE_PATH_SCAN_POLICY = {
         *_private_wrapper_retirement_false_ready_patterns(),
         *_generated_hosted_surface_false_ready_patterns(),
         *_domain_readiness_false_ready_patterns(),
+        *_strict_source_purity_false_ready_patterns(),
     ],
     "authority_boundary": {
         "policy_can_authorize_physical_delete": False,

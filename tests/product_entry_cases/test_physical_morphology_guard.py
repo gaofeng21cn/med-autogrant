@@ -83,6 +83,37 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
                 "guard_can_claim_grant_readiness"
             ]
         )
+        strict_source_guard = projection["strict_source_purity_no_second_truth_guard"]
+        self.assertEqual(
+            strict_source_guard["guard_id"],
+            "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+        )
+        self.assertEqual(strict_source_guard["state"], "passed")
+        self.assertEqual(strict_source_guard["source_ref_integrity_state"], "passed")
+        self.assertEqual(
+            strict_source_guard["source_ref_integrity_guard_ref"],
+            "source_ref_integrity_guard",
+        )
+        self.assertIn(
+            "source_ref_integrity_status",
+            strict_source_guard["allowed_readback_outputs"],
+        )
+        self.assertIn(
+            "physical_delete_operation",
+            strict_source_guard["forbidden_readback_outputs"],
+        )
+        self.assertFalse(
+            strict_source_guard["claims"]["claims_strict_source_purity_complete"]
+        )
+        self.assertFalse(
+            strict_source_guard["claims"]["claims_source_ref_integrity_complete"]
+        )
+        self.assertFalse(
+            strict_source_guard["authority_boundary"]["guard_can_authorize_physical_delete"]
+        )
+        self.assertFalse(
+            strict_source_guard["authority_boundary"]["guard_can_claim_grant_readiness"]
+        )
         self.assertEqual(projection["summary"]["external_evidence_ref_count"], 0)
         self.assertIn(
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
@@ -280,6 +311,21 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         )
         self.assertEqual(source_ref_guard["state"], "failed")
         self.assertEqual(source_ref_guard["checked_source_ref_count"], 4)
+        self.assertEqual(
+            projection["strict_source_purity_no_second_truth_guard"]["state"],
+            "failed",
+        )
+        self.assertEqual(
+            projection["strict_source_purity_no_second_truth_guard"][
+                "source_ref_integrity_state"
+            ],
+            "failed",
+        )
+        self.assertFalse(
+            projection["strict_source_purity_no_second_truth_guard"]["authority_boundary"][
+                "guard_can_claim_production_ready"
+            ]
+        )
         invalid_by_module = {
             item["module_id"]: item["reason"]
             for item in source_ref_guard["invalid_source_refs"]

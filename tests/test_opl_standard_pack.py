@@ -36,6 +36,7 @@ from med_autogrant.opl_standard_pack_source_policy import (
     REPO_VERIFICATION_SCRIPT_REFS,
     REQUIRED_DOMAIN_PACK_PATHS,
     RETIREMENT_EVIDENCE_REFS,
+    STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS,
     TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
 )
 
@@ -532,6 +533,38 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "gate_can_claim_grant_readiness": False,
         "gate_can_claim_production_ready": False,
     }
+    strict_source_guard = morphology["strict_source_purity_no_second_truth_guard"]
+    assert strict_source_guard["guard_id"] == (
+        "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1"
+    )
+    assert strict_source_guard["state"] == (
+        "source_purity_guard_available_not_readiness_or_delete_authority"
+    )
+    assert strict_source_guard["machine_roots_guarded"] == [
+        "src",
+        "tests",
+        "schemas",
+        "contracts",
+        "scripts",
+        "plugins",
+        "Makefile",
+        "pyproject.toml",
+        ".agents/plugins/marketplace.json",
+    ]
+    assert "repo_local_source_ref_integrity_status" in strict_source_guard["allowed_outputs"]
+    assert "physical_delete_operation" in strict_source_guard["forbidden_outputs"]
+    assert strict_source_guard["authority_boundary"] == {
+        "guard_can_write_grant_truth": False,
+        "guard_can_create_alias_files": False,
+        "guard_can_sign_owner_receipt": False,
+        "guard_can_create_typed_blocker": False,
+        "guard_can_authorize_physical_delete": False,
+        "guard_can_claim_default_caller_cutover": False,
+        "guard_can_claim_generated_hosted_live_consumption": False,
+        "guard_can_claim_grant_readiness": False,
+        "guard_can_claim_submission_ready": False,
+        "guard_can_claim_production_ready": False,
+    }
     active_path_scan_policy = morphology["active_path_scan_policy"]
     assert set(readback_guard["false_ready_claim_guard_pattern_ids"]).issubset(
         {
@@ -619,6 +652,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         *PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
         *GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS,
         *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
+        *STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS,
     }
     assert active_path_scan_policy["authority_boundary"] == {
         "policy_can_authorize_physical_delete": False,
