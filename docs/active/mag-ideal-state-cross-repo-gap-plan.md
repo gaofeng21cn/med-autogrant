@@ -12,6 +12,8 @@ Last reviewed: `2026-06-12`
 
 差距按理想态判断，不按现有 MAG 代码是否还能运行判断。通用 runtime、runner、queue、session、journal、workspace/source intake、memory/package transport、workbench、observability、generic CLI/product-entry/status wrapper 和旧 product-sidecar wrapper 属于 OPL / shared family layer；MAG 只保留 grant authority、domain handler、refs-only adapter、diagnostic、fixture 或 tombstone。
 
+Live Evidence 后置是本文执行原则。功能/结构 lane 优先关闭 strict source-purity、purpose-first owner-delta / domain-thinning、refs-only package/memory/lifecycle boundary、product/status/user-loop/domain-handler shell 收薄、generated/default caller consumption guard 和 no-resurrection；这些工作不等待 Temporal long-soak、submission human-gate、App/operator sustained consumption、real workspace receipt scaleout 或 W7 live closing ref。后置 Live Evidence lane 仍负责 grant-ready、submission-ready、App sustained-consumption、provider long-soak、production-ready 和 physical delete owner authorization；schema completeness、stage replay projection、OPL ledger verification、provider completion、grouped CLI success、product-entry manifest success 或 refs-only accounting closeout 不能替代它们。
+
 本文不保存长篇执行 prompt、dated closeout checklist、receipt proof 流水、逐日期 command transcript 或 worktree closeout。每轮完成后只把当前状态、仍开放 gap、证据门和近期顺序折回本文；细节进入合同、history、specs lifecycle map 或提交历史。
 
 ## 当前唯一真相
