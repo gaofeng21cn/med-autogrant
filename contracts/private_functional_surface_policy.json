@@ -267,6 +267,30 @@
         },
         {
           "literal_parts": [
+            "'mag_claims_default_caller_",
+            "cutover_complete': True"
+          ],
+          "pattern_id": "python_single_mag_claims_default_caller_cutover_complete_true",
+          "policy": "MAG repo-local refs-only evidence cannot claim generated/default caller cutover complete"
+        },
+        {
+          "literal_parts": [
+            "mag_claims_default_caller_cutover_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_mag_claims_default_caller_cutover_complete_true",
+          "policy": "MAG repo-local refs-only evidence cannot claim generated/default caller cutover complete"
+        },
+        {
+          "literal_parts": [
+            "mag_claims_default_caller_",
+            "cutover_complete: true"
+          ],
+          "pattern_id": "yaml_mag_claims_default_caller_cutover_complete_true",
+          "policy": "MAG repo-local refs-only evidence cannot claim generated/default caller cutover complete"
+        },
+        {
+          "literal_parts": [
             "\"claims_external_default_caller_consumption_complete\": true"
           ],
           "pattern_id": "json_claims_external_default_caller_consumption_complete_true",
@@ -277,6 +301,30 @@
             "\"claims_external_default_caller_consumption_complete\": True"
           ],
           "pattern_id": "python_claims_external_default_caller_consumption_complete_true",
+          "policy": "External default-caller consumption completion requires external evidence, not MAG source claims"
+        },
+        {
+          "literal_parts": [
+            "'claims_external_default_caller_",
+            "consumption_complete': True"
+          ],
+          "pattern_id": "python_single_claims_external_default_caller_consumption_complete_true",
+          "policy": "External default-caller consumption completion requires external evidence, not MAG source claims"
+        },
+        {
+          "literal_parts": [
+            "claims_external_default_caller_consumption_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_external_default_caller_consumption_complete_true",
+          "policy": "External default-caller consumption completion requires external evidence, not MAG source claims"
+        },
+        {
+          "literal_parts": [
+            "claims_external_default_caller_",
+            "consumption_complete: true"
+          ],
+          "pattern_id": "yaml_claims_external_default_caller_consumption_complete_true",
           "policy": "External default-caller consumption completion requires external evidence, not MAG source claims"
         },
         {
@@ -295,6 +343,30 @@
         },
         {
           "literal_parts": [
+            "'claims_opl_generated_hosted_",
+            "production_caller_complete': True"
+          ],
+          "pattern_id": "python_single_claims_opl_generated_hosted_production_caller_complete_true",
+          "policy": "OPL generated/hosted production caller completion is an external evidence tail"
+        },
+        {
+          "literal_parts": [
+            "claims_opl_generated_hosted_production_caller_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_opl_generated_hosted_production_caller_complete_true",
+          "policy": "OPL generated/hosted production caller completion is an external evidence tail"
+        },
+        {
+          "literal_parts": [
+            "claims_opl_generated_hosted_",
+            "production_caller_complete: true"
+          ],
+          "pattern_id": "yaml_claims_opl_generated_hosted_production_caller_complete_true",
+          "policy": "OPL generated/hosted production caller completion is an external evidence tail"
+        },
+        {
+          "literal_parts": [
             "\"domain_repo_physical_delete_authorized\": true"
           ],
           "pattern_id": "json_domain_repo_physical_delete_authorized_true",
@@ -309,6 +381,30 @@
         },
         {
           "literal_parts": [
+            "'domain_repo_physical_",
+            "delete_authorized': True"
+          ],
+          "pattern_id": "python_single_domain_repo_physical_delete_authorized_true",
+          "policy": "Physical delete requires explicit MAG owner receipt, not refs-only source claims"
+        },
+        {
+          "literal_parts": [
+            "domain_repo_physical_delete_authorized",
+            " = true"
+          ],
+          "pattern_id": "toml_domain_repo_physical_delete_authorized_true",
+          "policy": "Physical delete requires explicit MAG owner receipt, not refs-only source claims"
+        },
+        {
+          "literal_parts": [
+            "domain_repo_physical_",
+            "delete_authorized: true"
+          ],
+          "pattern_id": "yaml_domain_repo_physical_delete_authorized_true",
+          "policy": "Physical delete requires explicit MAG owner receipt, not refs-only source claims"
+        },
+        {
+          "literal_parts": [
             "\"physical_delete_authorized_by_refs\": true"
           ],
           "pattern_id": "json_physical_delete_authorized_by_refs_true",
@@ -319,6 +415,30 @@
             "\"physical_delete_authorized_by_refs\": True"
           ],
           "pattern_id": "python_physical_delete_authorized_by_refs_true",
+          "policy": "Refs-only evidence cannot authorize physical delete"
+        },
+        {
+          "literal_parts": [
+            "'physical_delete_authorized_",
+            "by_refs': True"
+          ],
+          "pattern_id": "python_single_physical_delete_authorized_by_refs_true",
+          "policy": "Refs-only evidence cannot authorize physical delete"
+        },
+        {
+          "literal_parts": [
+            "physical_delete_authorized_by_refs",
+            " = true"
+          ],
+          "pattern_id": "toml_physical_delete_authorized_by_refs_true",
+          "policy": "Refs-only evidence cannot authorize physical delete"
+        },
+        {
+          "literal_parts": [
+            "physical_delete_authorized_",
+            "by_refs: true"
+          ],
+          "pattern_id": "yaml_physical_delete_authorized_by_refs_true",
           "policy": "Refs-only evidence cannot authorize physical delete"
         }
       ],

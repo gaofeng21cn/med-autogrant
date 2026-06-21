@@ -108,14 +108,29 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "python_mag_can_own_generated_wrapper_true",
         "json_mag_claims_default_caller_cutover_complete_true",
         "python_mag_claims_default_caller_cutover_complete_true",
+        "python_single_mag_claims_default_caller_cutover_complete_true",
+        "toml_mag_claims_default_caller_cutover_complete_true",
+        "yaml_mag_claims_default_caller_cutover_complete_true",
         "json_claims_external_default_caller_consumption_complete_true",
         "python_claims_external_default_caller_consumption_complete_true",
+        "python_single_claims_external_default_caller_consumption_complete_true",
+        "toml_claims_external_default_caller_consumption_complete_true",
+        "yaml_claims_external_default_caller_consumption_complete_true",
         "json_claims_opl_generated_hosted_production_caller_complete_true",
         "python_claims_opl_generated_hosted_production_caller_complete_true",
+        "python_single_claims_opl_generated_hosted_production_caller_complete_true",
+        "toml_claims_opl_generated_hosted_production_caller_complete_true",
+        "yaml_claims_opl_generated_hosted_production_caller_complete_true",
         "json_domain_repo_physical_delete_authorized_true",
         "python_domain_repo_physical_delete_authorized_true",
+        "python_single_domain_repo_physical_delete_authorized_true",
+        "toml_domain_repo_physical_delete_authorized_true",
+        "yaml_domain_repo_physical_delete_authorized_true",
         "json_physical_delete_authorized_by_refs_true",
         "python_physical_delete_authorized_by_refs_true",
+        "python_single_physical_delete_authorized_by_refs_true",
+        "toml_physical_delete_authorized_by_refs_true",
+        "yaml_physical_delete_authorized_by_refs_true",
     }
 
 
@@ -292,9 +307,39 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "python_claims_external_default_caller_consumption_complete_true",
         ),
         (
+            "__active_path_scan_default_caller_false_ready_probe.py",
+            ["PROBE = {'mag_claims_default_caller_", "cutover_complete': True}\n"],
+            "python_single_mag_claims_default_caller_cutover_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.toml",
+            ["claims_external_default_caller_", "consumption_complete = true\n"],
+            "toml_claims_external_default_caller_consumption_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.yaml",
+            ["mag_claims_default_caller_", "cutover_complete: true\n"],
+            "yaml_mag_claims_default_caller_cutover_complete_true",
+        ),
+        (
             "__active_path_scan_default_caller_false_ready_probe.json",
             ['{"claims_opl_generated_hosted_', 'production_caller_complete": true}\n'],
             "json_claims_opl_generated_hosted_production_caller_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.py",
+            ["PROBE = {'claims_opl_generated_hosted_", "production_caller_complete': True}\n"],
+            "python_single_claims_opl_generated_hosted_production_caller_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.toml",
+            ["claims_opl_generated_hosted_", "production_caller_complete = true\n"],
+            "toml_claims_opl_generated_hosted_production_caller_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.yaml",
+            ["claims_opl_generated_hosted_", "production_caller_complete: true\n"],
+            "yaml_claims_opl_generated_hosted_production_caller_complete_true",
         ),
         (
             "__active_path_scan_physical_delete_false_ready_probe.py",
@@ -302,9 +347,39 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "python_domain_repo_physical_delete_authorized_true",
         ),
         (
+            "__active_path_scan_physical_delete_false_ready_probe.py",
+            ["PROBE = {'domain_repo_physical_", "delete_authorized': True}\n"],
+            "python_single_domain_repo_physical_delete_authorized_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.toml",
+            ["domain_repo_physical_", "delete_authorized = true\n"],
+            "toml_domain_repo_physical_delete_authorized_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.yaml",
+            ["domain_repo_physical_", "delete_authorized: true\n"],
+            "yaml_domain_repo_physical_delete_authorized_true",
+        ),
+        (
             "__active_path_scan_physical_delete_false_ready_probe.json",
             ['{"physical_delete_authorized_', 'by_refs": true}\n'],
             "json_physical_delete_authorized_by_refs_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.py",
+            ["PROBE = {'physical_delete_authorized_", "by_refs': True}\n"],
+            "python_single_physical_delete_authorized_by_refs_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.toml",
+            ["physical_delete_authorized_", "by_refs = true\n"],
+            "toml_physical_delete_authorized_by_refs_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.yaml",
+            ["physical_delete_authorized_", "by_refs: true\n"],
+            "yaml_physical_delete_authorized_by_refs_true",
         ),
     ],
 )
