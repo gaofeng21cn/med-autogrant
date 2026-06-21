@@ -960,6 +960,522 @@
         {
           "literal_parts": [
             "\"",
+            "claims_app_workbench_live_rendering_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_app_workbench_live_rendering_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_app_workbench_live_rendering_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_app_workbench_live_rendering_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_app_workbench_live_rendering_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_app_operator_sustained_consumption_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_app_operator_sustained_consumption_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_app_operator_sustained_consumption_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_app_operator_sustained_consumption_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_app_operator_sustained_consumption_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_registry_discovery_live_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_registry_discovery_live_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_registry_discovery_live_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_registry_discovery_live_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_registry_discovery_live_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_generated_hosted_surface_live_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_generated_hosted_surface_live_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_generated_hosted_surface_live_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_generated_hosted_surface_live_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_generated_hosted_surface_live_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_default_caller_cutover_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_default_caller_cutover_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_default_caller_cutover_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_default_caller_cutover_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_default_caller_cutover_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_generated_surface_consumption_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_claims_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "claims_generated_surface_consumption_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_claims_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "claims_generated_surface_consumption_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_claims_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_generated_surface_consumption_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_claims_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "claims_generated_surface_consumption_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_claims_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "app_workbench_live_rendering_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "app_workbench_live_rendering_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "app_workbench_live_rendering_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "app_workbench_live_rendering_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "app_workbench_live_rendering_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_app_workbench_live_rendering_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "app_operator_sustained_consumption_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "app_operator_sustained_consumption_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "app_operator_sustained_consumption_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "app_operator_sustained_consumption_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "app_operator_sustained_consumption_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_app_operator_sustained_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "registry_discovery_live_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "registry_discovery_live_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "registry_discovery_live_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "registry_discovery_live_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "registry_discovery_live_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_registry_discovery_live_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "generated_hosted_surface_live_ready",
+            "\": true"
+          ],
+          "pattern_id": "json_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "generated_hosted_surface_live_ready",
+            "\": True"
+          ],
+          "pattern_id": "python_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "generated_hosted_surface_live_ready",
+            "': True"
+          ],
+          "pattern_id": "python_single_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "generated_hosted_surface_live_ready",
+            " = true"
+          ],
+          "pattern_id": "toml_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "generated_hosted_surface_live_ready",
+            ": true"
+          ],
+          "pattern_id": "yaml_generated_hosted_surface_live_ready_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "default_caller_cutover_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "default_caller_cutover_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "default_caller_cutover_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "default_caller_cutover_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "default_caller_cutover_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_default_caller_cutover_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "generated_surface_consumption_complete",
+            "\": true"
+          ],
+          "pattern_id": "json_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
+            "generated_surface_consumption_complete",
+            "\": True"
+          ],
+          "pattern_id": "python_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "'",
+            "generated_surface_consumption_complete",
+            "': True"
+          ],
+          "pattern_id": "python_single_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_consumption_complete",
+            " = true"
+          ],
+          "pattern_id": "toml_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_consumption_complete",
+            ": true"
+          ],
+          "pattern_id": "yaml_generated_surface_consumption_complete_true",
+          "policy": "Generated/hosted surface live consumption, App/workbench rendering, registry discovery and default-caller cutover are OPL/App external evidence tails; MAG repo source true flags are false-ready claims"
+        },
+        {
+          "literal_parts": [
+            "\"",
             "claims_grant_ready",
             "\": true"
           ],

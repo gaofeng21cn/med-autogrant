@@ -158,6 +158,22 @@ PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_CLAIM_KEYS = [
 ]
 
 
+GENERATED_HOSTED_SURFACE_FALSE_READY_CLAIM_KEYS = [
+    "claims_app_workbench_live_rendering_complete",
+    "claims_app_operator_sustained_consumption_complete",
+    "claims_registry_discovery_live_complete",
+    "claims_generated_hosted_surface_live_ready",
+    "claims_default_caller_cutover_complete",
+    "claims_generated_surface_consumption_complete",
+    "app_workbench_live_rendering_complete",
+    "app_operator_sustained_consumption_complete",
+    "registry_discovery_live_complete",
+    "generated_hosted_surface_live_ready",
+    "default_caller_cutover_complete",
+    "generated_surface_consumption_complete",
+]
+
+
 def _domain_readiness_false_ready_patterns() -> list[dict[str, object]]:
     patterns: list[dict[str, object]] = []
     for claim_key in DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS:
@@ -245,6 +261,52 @@ def _private_wrapper_retirement_false_ready_patterns() -> list[dict[str, object]
 PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS = [
     pattern["pattern_id"]
     for pattern in _private_wrapper_retirement_false_ready_patterns()
+]
+
+
+def _generated_hosted_surface_false_ready_patterns() -> list[dict[str, object]]:
+    patterns: list[dict[str, object]] = []
+    for claim_key in GENERATED_HOSTED_SURFACE_FALSE_READY_CLAIM_KEYS:
+        policy = (
+            "Generated/hosted surface live consumption, App/workbench rendering, registry discovery "
+            "and default-caller cutover are OPL/App external evidence tails; MAG repo source true "
+            "flags are false-ready claims"
+        )
+        patterns.extend(
+            [
+                {
+                    "pattern_id": f"json_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_single_{claim_key}_true",
+                    "literal_parts": ["'", claim_key, "': True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"toml_{claim_key}_true",
+                    "literal_parts": [claim_key, " = true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"yaml_{claim_key}_true",
+                    "literal_parts": [claim_key, ": true"],
+                    "policy": policy,
+                },
+            ]
+        )
+    return patterns
+
+
+GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS = [
+    pattern["pattern_id"]
+    for pattern in _generated_hosted_surface_false_ready_patterns()
 ]
 
 ACTIVE_PATH_SCAN_POLICY = {
@@ -570,6 +632,7 @@ ACTIVE_PATH_SCAN_POLICY = {
             "policy": "Refs-only evidence cannot authorize physical delete",
         },
         *_private_wrapper_retirement_false_ready_patterns(),
+        *_generated_hosted_surface_false_ready_patterns(),
         *_domain_readiness_false_ready_patterns(),
     ],
     "authority_boundary": {

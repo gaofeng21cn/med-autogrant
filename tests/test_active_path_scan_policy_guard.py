@@ -10,6 +10,7 @@ import pytest
 from med_autogrant.opl_standard_pack_source_policy import (
     ACTIVE_PATH_SCAN_POLICY,
     DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
+    GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS,
     PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
     REPO_VERIFICATION_SCRIPT_REFS,
 )
@@ -134,6 +135,7 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "toml_physical_delete_authorized_by_refs_true",
         "yaml_physical_delete_authorized_by_refs_true",
         *PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
+        *GENERATED_HOSTED_SURFACE_FALSE_READY_PATTERN_IDS,
         *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     }
 
@@ -434,6 +436,31 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "__active_path_scan_private_wrapper_retirement_probe.yaml",
             ["claims_private_platform_", "residue_retired: true\n"],
             "yaml_claims_private_platform_residue_retired_true",
+        ),
+        (
+            "__active_path_scan_generated_hosted_surface_probe.json",
+            ['{"app_workbench_live_', 'rendering_complete": true}\n'],
+            "json_app_workbench_live_rendering_complete_true",
+        ),
+        (
+            "__active_path_scan_generated_hosted_surface_probe.py",
+            ['PROBE = {"claims_registry_discovery_', 'live_complete": True}\n'],
+            "python_claims_registry_discovery_live_complete_true",
+        ),
+        (
+            "__active_path_scan_generated_hosted_surface_probe.py",
+            ["PROBE = {'claims_default_caller_", "cutover_complete': True}\n"],
+            "python_single_claims_default_caller_cutover_complete_true",
+        ),
+        (
+            "__active_path_scan_generated_hosted_surface_probe.toml",
+            ["generated_hosted_surface_", "live_ready = true\n"],
+            "toml_generated_hosted_surface_live_ready_true",
+        ),
+        (
+            "__active_path_scan_generated_hosted_surface_probe.yaml",
+            ["claims_app_operator_sustained_", "consumption_complete: true\n"],
+            "yaml_claims_app_operator_sustained_consumption_complete_true",
         ),
     ],
 )
