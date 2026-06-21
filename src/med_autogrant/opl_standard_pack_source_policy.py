@@ -195,6 +195,36 @@ ACTIVE_PATH_SCAN_POLICY = {
             "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
         },
         {
+            "pattern_id": "python_generated_surface_owner_points_to_mag",
+            "literal_parts": ["'generated_surface_owner': '", "med-autogrant", "'"],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
+            "pattern_id": "python_generated_surface_owner_points_to_mag_domain_id",
+            "literal_parts": ["'generated_surface_owner': '", "medautogrant", "'"],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
+            "pattern_id": "toml_generated_surface_owner_points_to_mag",
+            "literal_parts": ["generated_surface_owner", " = \"", "med-autogrant", "\""],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
+            "pattern_id": "toml_generated_surface_owner_points_to_mag_domain_id",
+            "literal_parts": ["generated_surface_owner", " = \"", "medautogrant", "\""],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
+            "pattern_id": "yaml_generated_surface_owner_points_to_mag",
+            "literal_parts": ["generated_surface_owner: ", "med-autogrant"],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
+            "pattern_id": "yaml_generated_surface_owner_points_to_mag_domain_id",
+            "literal_parts": ["generated_surface_owner: ", "medautogrant"],
+            "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG",
+        },
+        {
             "pattern_id": "json_generated_surface_owner_in_mag_allowed_true",
             "literal_parts": ["\"generated_surface_owner_in_mag_allowed\": true"],
             "policy": "MAG must not re-open generated surface ownership after retirement",

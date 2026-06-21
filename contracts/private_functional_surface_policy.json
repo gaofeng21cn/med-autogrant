@@ -141,6 +141,60 @@
         },
         {
           "literal_parts": [
+            "'generated_surface_owner': '",
+            "med-autogrant",
+            "'"
+          ],
+          "pattern_id": "python_generated_surface_owner_points_to_mag",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "'generated_surface_owner': '",
+            "medautogrant",
+            "'"
+          ],
+          "pattern_id": "python_generated_surface_owner_points_to_mag_domain_id",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_owner",
+            " = \"",
+            "med-autogrant",
+            "\""
+          ],
+          "pattern_id": "toml_generated_surface_owner_points_to_mag",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_owner",
+            " = \"",
+            "medautogrant",
+            "\""
+          ],
+          "pattern_id": "toml_generated_surface_owner_points_to_mag_domain_id",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_owner: ",
+            "med-autogrant"
+          ],
+          "pattern_id": "yaml_generated_surface_owner_points_to_mag",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
+            "generated_surface_owner: ",
+            "medautogrant"
+          ],
+          "pattern_id": "yaml_generated_surface_owner_points_to_mag_domain_id",
+          "policy": "generated/hosted surfaces stay owned by OPL Framework, not MAG"
+        },
+        {
+          "literal_parts": [
             "\"generated_surface_owner_in_mag_allowed\": true"
           ],
           "pattern_id": "json_generated_surface_owner_in_mag_allowed_true",

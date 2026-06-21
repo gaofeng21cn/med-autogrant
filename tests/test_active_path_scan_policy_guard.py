@@ -92,6 +92,12 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "json_hermes_default_executor",
         "json_generated_surface_owner_points_to_mag",
         "json_generated_surface_owner_points_to_mag_domain_id",
+        "python_generated_surface_owner_points_to_mag",
+        "python_generated_surface_owner_points_to_mag_domain_id",
+        "toml_generated_surface_owner_points_to_mag",
+        "toml_generated_surface_owner_points_to_mag_domain_id",
+        "yaml_generated_surface_owner_points_to_mag",
+        "yaml_generated_surface_owner_points_to_mag_domain_id",
         "json_generated_surface_owner_in_mag_allowed_true",
         "python_generated_surface_owner_in_mag_allowed_true",
         "toml_generated_surface_owner_in_mag_allowed_true",
@@ -215,6 +221,49 @@ def test_active_path_scan_fails_closed_on_generated_surface_owner_resurrection()
     assert any(
         match["path"] == "contracts/__active_path_scan_generated_owner_probe.json"
         and match["pattern_id"] == "json_generated_surface_owner_in_mag_allowed_true"
+        for match in scan["forbidden_default_caller_matches"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("probe_name", "probe_text_parts", "pattern_id"),
+    [
+        (
+            "__active_path_scan_generated_owner_probe.py",
+            ["PROBE = {'generated_surface_owner': '", "med-autogrant", "'}\n"],
+            "python_generated_surface_owner_points_to_mag",
+        ),
+        (
+            "__active_path_scan_generated_owner_probe.toml",
+            ["generated_surface_owner", ' = "', "medautogrant", '"\n'],
+            "toml_generated_surface_owner_points_to_mag_domain_id",
+        ),
+        (
+            "__active_path_scan_generated_owner_probe.yaml",
+            ["generated_surface_owner: ", "med-autogrant", "\n"],
+            "yaml_generated_surface_owner_points_to_mag",
+        ),
+    ],
+)
+def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurrection(
+    probe_name: str,
+    probe_text_parts: list[str],
+    pattern_id: str,
+) -> None:
+    probe_path = REPO_ROOT / "contracts" / probe_name
+    probe_path.write_text("".join(probe_text_parts), encoding="utf-8")
+    try:
+        scan = build_physical_skeleton_follow_through()[
+            "active_path_scan_no_legacy_default_caller"
+        ]
+    finally:
+        probe_path.unlink(missing_ok=True)
+
+    assert scan["state"] == "failed"
+    assert scan["no_legacy_default_caller"] is False
+    assert any(
+        match["path"] == f"contracts/{probe_name}"
+        and match["pattern_id"] == pattern_id
         for match in scan["forbidden_default_caller_matches"]
     )
 
