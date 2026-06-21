@@ -264,6 +264,76 @@ ACTIVE_PATH_SCAN_POLICY = {
             "literal_parts": ["\"mag_can_own_generated_wrapper\": True"],
             "policy": "MAG authority boundary must not claim generated wrapper ownership",
         },
+        {
+            "pattern_id": "json_mag_claims_default_caller_cutover_complete_true",
+            "literal_parts": ["\"mag_claims_default_caller_cutover_complete\": true"],
+            "policy": (
+                "MAG repo-local refs-only evidence cannot claim generated/default caller cutover complete"
+            ),
+        },
+        {
+            "pattern_id": "python_mag_claims_default_caller_cutover_complete_true",
+            "literal_parts": ["\"mag_claims_default_caller_cutover_complete\": True"],
+            "policy": (
+                "MAG repo-local refs-only evidence cannot claim generated/default caller cutover complete"
+            ),
+        },
+        {
+            "pattern_id": "json_claims_external_default_caller_consumption_complete_true",
+            "literal_parts": [
+                "\"claims_external_default_caller_consumption_complete\": true"
+            ],
+            "policy": (
+                "External default-caller consumption completion requires external evidence, not MAG source claims"
+            ),
+        },
+        {
+            "pattern_id": "python_claims_external_default_caller_consumption_complete_true",
+            "literal_parts": [
+                "\"claims_external_default_caller_consumption_complete\": True"
+            ],
+            "policy": (
+                "External default-caller consumption completion requires external evidence, not MAG source claims"
+            ),
+        },
+        {
+            "pattern_id": "json_claims_opl_generated_hosted_production_caller_complete_true",
+            "literal_parts": [
+                "\"claims_opl_generated_hosted_production_caller_complete\": true"
+            ],
+            "policy": (
+                "OPL generated/hosted production caller completion is an external evidence tail"
+            ),
+        },
+        {
+            "pattern_id": "python_claims_opl_generated_hosted_production_caller_complete_true",
+            "literal_parts": [
+                "\"claims_opl_generated_hosted_production_caller_complete\": True"
+            ],
+            "policy": (
+                "OPL generated/hosted production caller completion is an external evidence tail"
+            ),
+        },
+        {
+            "pattern_id": "json_domain_repo_physical_delete_authorized_true",
+            "literal_parts": ["\"domain_repo_physical_delete_authorized\": true"],
+            "policy": "Physical delete requires explicit MAG owner receipt, not refs-only source claims",
+        },
+        {
+            "pattern_id": "python_domain_repo_physical_delete_authorized_true",
+            "literal_parts": ["\"domain_repo_physical_delete_authorized\": True"],
+            "policy": "Physical delete requires explicit MAG owner receipt, not refs-only source claims",
+        },
+        {
+            "pattern_id": "json_physical_delete_authorized_by_refs_true",
+            "literal_parts": ["\"physical_delete_authorized_by_refs\": true"],
+            "policy": "Refs-only evidence cannot authorize physical delete",
+        },
+        {
+            "pattern_id": "python_physical_delete_authorized_by_refs_true",
+            "literal_parts": ["\"physical_delete_authorized_by_refs\": True"],
+            "policy": "Refs-only evidence cannot authorize physical delete",
+        },
     ],
     "authority_boundary": {
         "policy_can_authorize_physical_delete": False,

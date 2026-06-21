@@ -106,6 +106,16 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "toml_domain_can_claim_generated_surface_owner_true",
         "json_mag_can_own_generated_wrapper_true",
         "python_mag_can_own_generated_wrapper_true",
+        "json_mag_claims_default_caller_cutover_complete_true",
+        "python_mag_claims_default_caller_cutover_complete_true",
+        "json_claims_external_default_caller_consumption_complete_true",
+        "python_claims_external_default_caller_consumption_complete_true",
+        "json_claims_opl_generated_hosted_production_caller_complete_true",
+        "python_claims_opl_generated_hosted_production_caller_complete_true",
+        "json_domain_repo_physical_delete_authorized_true",
+        "python_domain_repo_physical_delete_authorized_true",
+        "json_physical_delete_authorized_by_refs_true",
+        "python_physical_delete_authorized_by_refs_true",
     }
 
 
@@ -246,6 +256,59 @@ def test_active_path_scan_fails_closed_on_generated_surface_owner_resurrection()
     ],
 )
 def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurrection(
+    probe_name: str,
+    probe_text_parts: list[str],
+    pattern_id: str,
+) -> None:
+    probe_path = REPO_ROOT / "contracts" / probe_name
+    probe_path.write_text("".join(probe_text_parts), encoding="utf-8")
+    try:
+        scan = build_physical_skeleton_follow_through()[
+            "active_path_scan_no_legacy_default_caller"
+        ]
+    finally:
+        probe_path.unlink(missing_ok=True)
+
+    assert scan["state"] == "failed"
+    assert scan["no_legacy_default_caller"] is False
+    assert any(
+        match["path"] == f"contracts/{probe_name}"
+        and match["pattern_id"] == pattern_id
+        for match in scan["forbidden_default_caller_matches"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("probe_name", "probe_text_parts", "pattern_id"),
+    [
+        (
+            "__active_path_scan_default_caller_false_ready_probe.json",
+            ['{"mag_claims_default_caller_', 'cutover_complete": true}\n'],
+            "json_mag_claims_default_caller_cutover_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.py",
+            ['PROBE = {"claims_external_default_caller_', 'consumption_complete": True}\n'],
+            "python_claims_external_default_caller_consumption_complete_true",
+        ),
+        (
+            "__active_path_scan_default_caller_false_ready_probe.json",
+            ['{"claims_opl_generated_hosted_', 'production_caller_complete": true}\n'],
+            "json_claims_opl_generated_hosted_production_caller_complete_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.py",
+            ['PROBE = {"domain_repo_physical_', 'delete_authorized": True}\n'],
+            "python_domain_repo_physical_delete_authorized_true",
+        ),
+        (
+            "__active_path_scan_physical_delete_false_ready_probe.json",
+            ['{"physical_delete_authorized_', 'by_refs": true}\n'],
+            "json_physical_delete_authorized_by_refs_true",
+        ),
+    ],
+)
+def test_active_path_scan_fails_closed_on_default_caller_false_ready_resurrection(
     probe_name: str,
     probe_text_parts: list[str],
     pattern_id: str,
