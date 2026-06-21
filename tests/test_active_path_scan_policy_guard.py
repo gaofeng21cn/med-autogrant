@@ -10,6 +10,7 @@ import pytest
 from med_autogrant.opl_standard_pack_source_policy import (
     ACTIVE_PATH_SCAN_POLICY,
     DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
+    PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
     REPO_VERIFICATION_SCRIPT_REFS,
 )
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
@@ -132,6 +133,7 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "python_single_physical_delete_authorized_by_refs_true",
         "toml_physical_delete_authorized_by_refs_true",
         "yaml_physical_delete_authorized_by_refs_true",
+        *PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS,
         *DOMAIN_READINESS_FALSE_READY_PATTERN_IDS,
     }
 
@@ -407,6 +409,31 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
             "__active_path_scan_domain_readiness_false_ready_probe.yaml",
             ["production_ready_", "claimed: true\n"],
             "yaml_production_ready_claimed_true",
+        ),
+        (
+            "__active_path_scan_private_wrapper_retirement_probe.json",
+            ['{"private_wrapper_', 'retirement_complete": true}\n'],
+            "json_private_wrapper_retirement_complete_true",
+        ),
+        (
+            "__active_path_scan_private_wrapper_retirement_probe.py",
+            ['PROBE = {"legacy_wrapper_', 'retirement_complete": True}\n'],
+            "python_legacy_wrapper_retirement_complete_true",
+        ),
+        (
+            "__active_path_scan_private_wrapper_retirement_probe.py",
+            ["PROBE = {'no_active_private_wrapper_", "caller_complete': True}\n"],
+            "python_single_no_active_private_wrapper_caller_complete_true",
+        ),
+        (
+            "__active_path_scan_private_wrapper_retirement_probe.toml",
+            ["tombstone_provenance_", "complete = true\n"],
+            "toml_tombstone_provenance_complete_true",
+        ),
+        (
+            "__active_path_scan_private_wrapper_retirement_probe.yaml",
+            ["claims_private_platform_", "residue_retired: true\n"],
+            "yaml_claims_private_platform_residue_retired_true",
         ),
     ],
 )

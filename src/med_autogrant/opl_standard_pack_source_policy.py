@@ -142,6 +142,22 @@ DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS = [
 ]
 
 
+PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_CLAIM_KEYS = [
+    "private_wrapper_retirement_complete",
+    "private_platform_residue_retired",
+    "legacy_wrapper_retirement_complete",
+    "generic_wrapper_retirement_complete",
+    "no_active_private_wrapper_caller_complete",
+    "no_active_legacy_wrapper_caller_complete",
+    "tombstone_provenance_complete",
+    "wrapper_retirement_gate_satisfied",
+    "physical_morphology_cleanup_complete",
+    "claims_private_wrapper_retired",
+    "claims_private_platform_residue_retired",
+    "claims_no_active_caller_complete",
+]
+
+
 def _domain_readiness_false_ready_patterns() -> list[dict[str, object]]:
     patterns: list[dict[str, object]] = []
     for claim_key in DOMAIN_READINESS_FALSE_READY_CLAIM_KEYS:
@@ -183,6 +199,52 @@ def _domain_readiness_false_ready_patterns() -> list[dict[str, object]]:
 
 DOMAIN_READINESS_FALSE_READY_PATTERN_IDS = [
     pattern["pattern_id"] for pattern in _domain_readiness_false_ready_patterns()
+]
+
+
+def _private_wrapper_retirement_false_ready_patterns() -> list[dict[str, object]]:
+    patterns: list[dict[str, object]] = []
+    for claim_key in PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_CLAIM_KEYS:
+        policy = (
+            "Private wrapper retirement requires explicit MAG owner receipt plus active-caller "
+            "migration, direct/hosted parity, no-forbidden-write and tombstone/provenance evidence; "
+            "repo source true flags are false-ready resurrection claims"
+        )
+        patterns.extend(
+            [
+                {
+                    "pattern_id": f"json_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_{claim_key}_true",
+                    "literal_parts": ["\"", claim_key, "\": True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"python_single_{claim_key}_true",
+                    "literal_parts": ["'", claim_key, "': True"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"toml_{claim_key}_true",
+                    "literal_parts": [claim_key, " = true"],
+                    "policy": policy,
+                },
+                {
+                    "pattern_id": f"yaml_{claim_key}_true",
+                    "literal_parts": [claim_key, ": true"],
+                    "policy": policy,
+                },
+            ]
+        )
+    return patterns
+
+
+PRIVATE_WRAPPER_RETIREMENT_FALSE_READY_PATTERN_IDS = [
+    pattern["pattern_id"]
+    for pattern in _private_wrapper_retirement_false_ready_patterns()
 ]
 
 ACTIVE_PATH_SCAN_POLICY = {
@@ -507,6 +569,7 @@ ACTIVE_PATH_SCAN_POLICY = {
             "literal_parts": ["physical_delete_authorized_", "by_refs: true"],
             "policy": "Refs-only evidence cannot authorize physical delete",
         },
+        *_private_wrapper_retirement_false_ready_patterns(),
         *_domain_readiness_false_ready_patterns(),
     ],
     "authority_boundary": {
