@@ -63,6 +63,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "opl-owner-payload-response": ("authority", "owner-payload-response"),
     "manifest-sustained-consumption-payload": ("authority", "manifest-consumption-payload"),
     "physical-morphology-guard": ("authority", "morphology-guard"),
+    "source-purity-guard-readback": ("authority", "source-purity"),
     "executor-first-closeout-bundle": ("authority", "executor-closeout-bundle"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),

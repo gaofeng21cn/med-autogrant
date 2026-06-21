@@ -14,6 +14,9 @@ from med_autogrant.foundry_series_cli import (
     build_foundry_series_validate,
 )
 from med_autogrant import mainline_status
+from med_autogrant.product_entry_parts.source_purity_guard_readback import (
+    build_source_purity_guard_readback,
+)
 
 
 def handle_foundry_status(args: argparse.Namespace) -> dict[str, Any]:
@@ -403,6 +406,10 @@ def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[s
         ],
         external_evidence_refs=args.external_evidence_ref or [],
     )
+
+
+def handle_product_source_purity_guard_readback(args: argparse.Namespace) -> dict[str, Any]:
+    return build_source_purity_guard_readback()
 
 
 def handle_product_executor_first_closeout_bundle(args: argparse.Namespace) -> dict[str, Any]:

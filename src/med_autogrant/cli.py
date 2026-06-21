@@ -71,6 +71,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_owner_receipt_evidence,
     handle_product_physical_morphology_guard,
     handle_product_receipt_readiness,
+    handle_product_source_purity_guard_readback,
     handle_refresh_funding_opportunities_cache,
     handle_select_project_profile,
     handle_stage_route_report,
@@ -415,6 +416,12 @@ def build_parser() -> argparse.ArgumentParser:
         "physical-morphology-guard",
         handle_product_physical_morphology_guard,
         "把 MAG source morphology 分类 refs 聚合成 physical morphology guard projection。",
+    )
+    _add_simple_command(
+        subparsers,
+        "source-purity-guard-readback",
+        handle_product_source_purity_guard_readback,
+        "输出 MAG strict source-purity no-second-truth guard readback。",
     )
     _add_product_executor_first_closeout_bundle_command(
         subparsers,

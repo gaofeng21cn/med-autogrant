@@ -139,6 +139,7 @@ def test_mag_skill_keeps_generic_shells_out_of_repo_local_public_commands() -> N
         "package submission-ready",
         "authority memory-proposal",
         "authority memory-decision",
+        "authority source-purity",
     )
     command_lines = [
         line

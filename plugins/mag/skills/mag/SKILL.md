@@ -23,8 +23,9 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 - `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli package submission-ready --input <input_path> --output-dir <output_dir> --format json`
 - `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli authority memory-proposal --input <input_path> --stage-id <stage_id> --source-ref <source_ref> --lesson-summary "<summary>" --format json`
 - `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli authority memory-decision --proposal <proposal_path> --decision accepted|rejected --decision-reason "<reason>" --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli authority source-purity --format json`
 
-OPL generated surface 负责 product manifest、status、user-loop、direct-entry、domain_handler 与 workbench shell。MAG repo-local code 只提供 grant truth、quality/export/package authority、memory accept/reject、owner receipt 和 grant-native helpers。当前 MCP projection 是 descriptor-only：`descriptor_only=true`、`public_runtime=false`，不能写成 public MCP runtime 已落地。
+OPL generated surface 负责 product manifest、status、user-loop、direct-entry、domain_handler 与 workbench shell。MAG repo-local code 只提供 grant truth、quality/export/package authority、memory accept/reject、owner receipt、grant-native helpers 和 strict source-purity guard readback。当前 MCP projection 是 descriptor-only：`descriptor_only=true`、`public_runtime=false`，不能写成 public MCP runtime 已落地。
 
 默认先由 OPL/App generated status 或 manifest 读取当前 funding call、task intent 和 draft 状态，再回到上述 MAG grant-native handler / authority target。
 

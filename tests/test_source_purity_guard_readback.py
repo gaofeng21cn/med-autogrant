@@ -6,7 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts.check_source_purity_guard import build_source_purity_guard_readback
+from med_autogrant.product_entry_parts.source_purity_guard_readback import (
+    build_source_purity_guard_readback,
+)
 
 
 pytestmark = pytest.mark.meta
@@ -77,3 +79,29 @@ def test_source_purity_guard_script_emits_json_readback() -> None:
     assert payload["surface_kind"] == "mag_strict_source_purity_guard_readback"
     assert payload["state"] == "passed_repo_source_guard_only"
     assert payload["compact_cleanup_readiness_summary"]["can_apply_cleanup"] is False
+
+
+def test_source_purity_guard_public_cli_emits_same_guard_readback() -> None:
+    result = subprocess.run(
+        [
+            str(REPO_ROOT / "scripts" / "run-python-clean.sh"),
+            "-m",
+            "med_autogrant.cli",
+            "authority",
+            "source-purity",
+            "--format",
+            "json",
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    payload = json.loads(result.stdout)
+    assert payload["surface_kind"] == "mag_strict_source_purity_guard_readback"
+    assert payload["state"] == "passed_repo_source_guard_only"
+    assert payload["failed_checks"] == []
+    assert payload["authority_boundary"]["readback_can_authorize_physical_delete"] is False
+    assert payload["authority_boundary"]["readback_can_claim_grant_readiness"] is False

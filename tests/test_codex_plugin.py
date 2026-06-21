@@ -61,6 +61,7 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
         "package submission-ready",
         "authority memory-proposal",
         "authority memory-decision",
+        "authority source-purity",
     ):
         assert (
             f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}"
