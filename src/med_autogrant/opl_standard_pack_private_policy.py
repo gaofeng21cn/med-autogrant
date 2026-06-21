@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.physical_morphology_guard import (
+    PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF,
+    PHYSICAL_MORPHOLOGY_SOURCE_REF_INTEGRITY_READBACK_REF,
+)
+
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
 
@@ -237,10 +242,7 @@ def _strict_source_purity_no_second_truth_guard() -> dict[str, Any]:
                 "contracts/private_functional_surface_policy.json#/"
                 "physical_source_morphology_policy/source_ref_integrity_gate"
             ),
-            (
-                "product physical-morphology-guard"
-                "#source_ref_integrity_guard"
-            ),
+            PHYSICAL_MORPHOLOGY_SOURCE_REF_INTEGRITY_READBACK_REF,
         ],
         "machine_roots_guarded": [
             "src",
@@ -347,7 +349,7 @@ def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> d
     return {
         "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
         "state": "readback_guard_available_physical_delete_not_authorized",
-        "readback_surface_ref": "product physical-morphology-guard",
+        "readback_surface_ref": PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF,
         "allowed_readback_outputs": [
             "source_role_classification",
             "missing_evidence_worklist",

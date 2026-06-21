@@ -64,6 +64,19 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
 
         self.assertEqual(projection["surface_kind"], "mag_physical_morphology_guard_projection")
         self.assertEqual(projection["state"], "allowed_evidence_gated")
+        self.assertEqual(projection["public_readback_ref"], "authority morphology-guard")
+        self.assertEqual(projection["internal_command_id"], "physical-morphology-guard")
+        self.assertTrue(
+            projection["readback_boundary"][
+                "internal_command_id_is_implementation_detail"
+            ]
+        )
+        self.assertFalse(
+            projection["readback_boundary"]["readback_can_authorize_physical_delete"]
+        )
+        self.assertFalse(
+            projection["readback_boundary"]["readback_can_sign_owner_receipt"]
+        )
         self.assertEqual(projection["allowed_count"], 5)
         self.assertEqual(projection["blocked_count"], 0)
         self.assertEqual(projection["blocked_items"], [])
@@ -93,6 +106,10 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(
             strict_source_guard["source_ref_integrity_guard_ref"],
             "source_ref_integrity_guard",
+        )
+        self.assertEqual(
+            strict_source_guard["public_readback_ref"],
+            "authority morphology-guard",
         )
         self.assertIn(
             "source_ref_integrity_status",
@@ -163,6 +180,10 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(
             readback_guard["guard_id"],
             "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+        )
+        self.assertEqual(
+            readback_guard["readback_surface_ref"],
+            "authority morphology-guard",
         )
         self.assertEqual(
             readback_guard["state"],

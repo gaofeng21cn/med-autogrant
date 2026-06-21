@@ -88,6 +88,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
         expected_payload = {
             "surface_kind": "mag_physical_morphology_guard_projection",
             "state": "allowed_evidence_gated",
+            "public_readback_ref": "authority morphology-guard",
         }
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -125,7 +126,9 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
+        payload = json.loads(stdout)
+        self.assertEqual(payload, expected_payload)
+        self.assertEqual(payload["public_readback_ref"], "authority morphology-guard")
         product_entry.build_physical_morphology_guard_projection.assert_called_once_with(
             source_items=[source_item],
             external_evidence_refs=["opl://receipts/mag/physical-morphology/parity.json"],

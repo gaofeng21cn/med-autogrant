@@ -462,7 +462,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert readback_guard["state"] == (
         "readback_guard_available_physical_delete_not_authorized"
     )
-    assert readback_guard["readback_surface_ref"] == "product physical-morphology-guard"
+    assert readback_guard["readback_surface_ref"] == "authority morphology-guard"
     assert readback_guard["required_before_cleanup_apply"] == [
         *RETIREMENT_EVIDENCE_REFS,
         "owner_receipt://mag/physical_delete_or_tombstone_authorization",

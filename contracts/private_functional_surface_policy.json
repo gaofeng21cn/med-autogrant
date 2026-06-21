@@ -2882,7 +2882,7 @@
         "app_or_default_caller_cutover_claim"
       ],
       "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
-      "readback_surface_ref": "product physical-morphology-guard",
+      "readback_surface_ref": "authority morphology-guard",
       "required_before_cleanup_apply": [
         "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
         "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3036,7 +3036,7 @@
       "readback_surface_refs": [
         "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/active_path_scan_policy",
         "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/source_ref_integrity_gate",
-        "product physical-morphology-guard#source_ref_integrity_guard"
+        "authority morphology-guard#source_ref_integrity_guard"
       ],
       "state": "source_purity_guard_available_not_readiness_or_delete_authority"
     },

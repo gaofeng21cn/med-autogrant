@@ -12,6 +12,10 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 
 PHYSICAL_MORPHOLOGY_GUARD_PROJECTION_KIND = "mag_physical_morphology_guard_projection"
+PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF = "authority morphology-guard"
+PHYSICAL_MORPHOLOGY_SOURCE_REF_INTEGRITY_READBACK_REF = (
+    f"{PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF}#source_ref_integrity_guard"
+)
 
 ALLOWED_PHYSICAL_MORPHOLOGY_ROLES = (
     "declarative_pack_surface",
@@ -89,6 +93,18 @@ def build_physical_morphology_guard_projection(
         "owner": TARGET_DOMAIN_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
         "projection_role": "repo_local_physical_morphology_refs_role_guard",
+        "public_readback_ref": PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF,
+        "internal_command_id": "physical-morphology-guard",
+        "readback_boundary": {
+            "public_cli_group": "authority",
+            "public_cli_command": "morphology-guard",
+            "internal_command_id_is_implementation_detail": True,
+            "readback_can_authorize_physical_delete": False,
+            "readback_can_sign_owner_receipt": False,
+            "readback_can_create_typed_blocker": False,
+            "readback_can_claim_grant_readiness": False,
+            "readback_can_claim_production_ready": False,
+        },
         "allowed_roles": list(ALLOWED_PHYSICAL_MORPHOLOGY_ROLES),
         "summary": {
             "source_item_count": len(items),
@@ -293,6 +309,7 @@ def _strict_source_purity_no_second_truth_guard(
     return {
         "guard_id": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
         "state": "passed" if source_ref_integrity["state"] == "passed" else "failed",
+        "public_readback_ref": PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF,
         "source_ref_integrity_state": source_ref_integrity["state"],
         "source_ref_integrity_guard_ref": "source_ref_integrity_guard",
         "active_path_scan_policy_ref": (
@@ -412,6 +429,7 @@ def _retirement_readback_cleanup_guard(
     return {
         "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
         "state": "readback_guard_available_physical_delete_not_authorized",
+        "readback_surface_ref": PHYSICAL_MORPHOLOGY_GUARD_PUBLIC_READBACK_REF,
         "readback_can_identify_cleanup_candidates": True,
         "readback_can_route_owner_delta": True,
         "readback_can_authorize_physical_delete": False,
