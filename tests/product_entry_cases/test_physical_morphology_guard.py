@@ -67,6 +67,22 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(projection["allowed_count"], 5)
         self.assertEqual(projection["blocked_count"], 0)
         self.assertEqual(projection["blocked_items"], [])
+        self.assertEqual(projection["source_ref_integrity_guard"]["state"], "passed")
+        self.assertEqual(
+            projection["source_ref_integrity_guard"]["checked_source_ref_count"],
+            5,
+        )
+        self.assertEqual(projection["source_ref_integrity_guard"]["invalid_source_refs"], [])
+        self.assertFalse(
+            projection["source_ref_integrity_guard"]["authority_boundary"][
+                "guard_can_authorize_physical_delete"
+            ]
+        )
+        self.assertFalse(
+            projection["source_ref_integrity_guard"]["authority_boundary"][
+                "guard_can_claim_grant_readiness"
+            ]
+        )
         self.assertEqual(projection["summary"]["external_evidence_ref_count"], 0)
         self.assertIn(
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
@@ -159,6 +175,14 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertFalse(
             projection["authority_boundary"]["can_declare_ready_for_owner_receipted_cleanup"]
         )
+        self.assertFalse(
+            projection["authority_boundary"]["source_ref_integrity_can_claim_runtime_ready"]
+        )
+        self.assertFalse(
+            projection["authority_boundary"][
+                "source_ref_integrity_can_authorize_physical_delete"
+            ]
+        )
 
     def test_forbidden_true_flags_fail_closed(self) -> None:
         from med_autogrant.product_entry_parts.physical_morphology_guard import (
@@ -214,6 +238,72 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         )
         self.assertFalse(
             projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
+        )
+
+    def test_invalid_source_ref_shape_blocks_cleanup_readback(self) -> None:
+        from med_autogrant.product_entry_parts.physical_morphology_guard import (
+            build_physical_morphology_guard_projection,
+        )
+
+        projection = build_physical_morphology_guard_projection(
+            source_items=[
+                _source_item(
+                    module_id="absolute_path",
+                    path="/tmp/mag/private-wrapper.py",
+                ),
+                _source_item(
+                    module_id="parent_traversal",
+                    path="../outside.py",
+                ),
+                _source_item(
+                    module_id="uri_ref",
+                    path="https://example.test/source.py",
+                ),
+                _source_item(
+                    module_id="human_doc",
+                    path="human_doc:docs/status.md",
+                ),
+            ],
+            external_evidence_refs=[
+                "opl://receipts/mag/physical-morphology/active-caller-migration.json",
+                "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
+                "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
+                "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
+            ],
+        )
+
+        self.assertEqual(projection["state"], "blocked_by_source_ref_integrity")
+        source_ref_guard = projection["source_ref_integrity_guard"]
+        self.assertEqual(
+            source_ref_guard["guard_id"],
+            "mag.physical_morphology.source_ref_integrity_guard.v1",
+        )
+        self.assertEqual(source_ref_guard["state"], "failed")
+        self.assertEqual(source_ref_guard["checked_source_ref_count"], 4)
+        invalid_by_module = {
+            item["module_id"]: item["reason"]
+            for item in source_ref_guard["invalid_source_refs"]
+        }
+        self.assertEqual(invalid_by_module["absolute_path"], "absolute_path")
+        self.assertEqual(invalid_by_module["parent_traversal"], "parent_directory_traversal")
+        self.assertEqual(invalid_by_module["uri_ref"], "uri_or_url")
+        self.assertEqual(invalid_by_module["human_doc"], "human_doc_ref_as_machine_source_ref")
+        self.assertFalse(
+            source_ref_guard["authority_boundary"]["guard_can_create_alias_files"]
+        )
+        self.assertFalse(
+            source_ref_guard["authority_boundary"]["guard_can_authorize_physical_delete"]
+        )
+        self.assertFalse(
+            source_ref_guard["authority_boundary"]["guard_can_claim_production_ready"]
+        )
+        self.assertFalse(
+            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
+        )
+        self.assertFalse(
+            projection["authority_boundary"][
+                "source_ref_integrity_can_authorize_physical_delete"
+            ]
         )
 
     def test_unclassified_runtime_owner_role_is_blocked(self) -> None:

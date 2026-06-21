@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from pathlib import PurePosixPath
 from typing import Any, Mapping
+from urllib.parse import urlparse
 
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
@@ -54,6 +56,7 @@ def build_physical_morphology_guard_projection(
     item_evidence_gated = [
         item for item in items if not item["evidence_refs"]
     ]
+    source_ref_integrity = _source_ref_integrity_guard(items)
     required_next_evidence_refs = _dedupe(
         [
             ref
@@ -70,11 +73,13 @@ def build_physical_morphology_guard_projection(
         not blocked_items
         and not item_evidence_gated
         and not missing_external_evidence_refs
+        and source_ref_integrity["state"] == "passed"
     )
     state = _projection_state(
         blocked_count=len(blocked_items),
         evidence_gated_count=len(item_evidence_gated),
         external_evidence_refs_complete=not missing_external_evidence_refs,
+        source_ref_integrity_passed=source_ref_integrity["state"] == "passed",
     )
 
     return {
@@ -99,6 +104,7 @@ def build_physical_morphology_guard_projection(
         "external_evidence_refs": explicit_external_refs,
         "missing_external_evidence_refs": missing_external_evidence_refs,
         "required_next_evidence_refs": required_next_evidence_refs,
+        "source_ref_integrity_guard": source_ref_integrity,
         "claims": {
             "claims_physical_morphology_cleanup_complete": False,
             "claims_ready_for_owner_receipted_cleanup": claims_ready_for_owner_receipted_cleanup,
@@ -120,6 +126,8 @@ def build_physical_morphology_guard_projection(
             "mag_restores_compatibility_alias": False,
             "can_declare_physical_cleanup_complete": False,
             "can_declare_ready_for_owner_receipted_cleanup": claims_ready_for_owner_receipted_cleanup,
+            "source_ref_integrity_can_claim_runtime_ready": False,
+            "source_ref_integrity_can_authorize_physical_delete": False,
         },
         "retirement_gate": {
             "gate_id": "mag.physical_morphology.retirement_gate.v1",
@@ -239,6 +247,59 @@ def _project_source_item(item: Mapping[str, Any], *, index: int) -> dict[str, An
     }
 
 
+def _source_ref_integrity_guard(items: list[dict[str, Any]]) -> dict[str, Any]:
+    invalid_refs = [
+        {
+            "path": item["path"],
+            "module_id": item["module_id"],
+            "reason": reason,
+        }
+        for item in items
+        for reason in _source_ref_integrity_violations(item["path"])
+    ]
+    state = "failed" if invalid_refs else "passed"
+    return {
+        "guard_id": "mag.physical_morphology.source_ref_integrity_guard.v1",
+        "state": state,
+        "checked_source_ref_count": len(items),
+        "invalid_source_refs": invalid_refs,
+        "required_ref_shape": "repo_local_relative_path",
+        "forbidden_ref_shapes": [
+            "absolute_path",
+            "parent_directory_traversal",
+            "uri_or_url",
+            "empty_ref",
+            "human_doc_ref_as_machine_source_ref",
+        ],
+        "authority_boundary": {
+            "guard_can_create_missing_refs": False,
+            "guard_can_create_alias_files": False,
+            "guard_can_authorize_physical_delete": False,
+            "guard_can_claim_default_caller_cutover": False,
+            "guard_can_claim_app_or_live_readiness": False,
+            "guard_can_claim_grant_readiness": False,
+            "guard_can_claim_production_ready": False,
+        },
+    }
+
+
+def _source_ref_integrity_violations(path: str) -> list[str]:
+    violations: list[str] = []
+    parsed = urlparse(path)
+    if parsed.scheme:
+        violations.append("uri_or_url")
+    candidate = PurePosixPath(path)
+    if candidate.is_absolute():
+        violations.append("absolute_path")
+    if not candidate.parts:
+        violations.append("empty_ref")
+    if ".." in candidate.parts:
+        violations.append("parent_directory_traversal")
+    if path.startswith("human_doc:"):
+        violations.append("human_doc_ref_as_machine_source_ref")
+    return violations
+
+
 def _deletion_readiness(
     *,
     module_id: str,
@@ -341,7 +402,10 @@ def _projection_state(
     blocked_count: int,
     evidence_gated_count: int,
     external_evidence_refs_complete: bool,
+    source_ref_integrity_passed: bool,
 ) -> str:
+    if not source_ref_integrity_passed:
+        return "blocked_by_source_ref_integrity"
     if blocked_count:
         return "blocked_fail_closed"
     if evidence_gated_count or not external_evidence_refs_complete:

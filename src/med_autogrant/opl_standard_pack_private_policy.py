@@ -118,6 +118,9 @@ def build_private_functional_surface_policy(
             ),
             "forbidden_residue_classes": forbidden_physical_residue_classes,
             "active_path_scan_policy": _active_path_scan_policy(active_path_scan_policy),
+            "source_ref_integrity_gate": _source_ref_integrity_gate(
+                physical_source_surface_classifications
+            ),
             "forbidden_reflow_policy": (
                 "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
                 "executor_probe_or_compat_alias"
@@ -166,6 +169,50 @@ def build_private_functional_surface_policy(
                 "opl_can_write_memory_body": False,
                 "opl_can_declare_export_ready": False,
             },
+        },
+    }
+
+
+def _source_ref_integrity_gate(
+    physical_source_surface_classifications: list[dict[str, Any]],
+) -> dict[str, Any]:
+    checked_refs = sorted(
+        {
+            str(ref)
+            for surface in physical_source_surface_classifications
+            for ref in surface.get("source_refs", [])
+        }
+    )
+    return {
+        "gate_id": "mag.physical_morphology.source_ref_integrity_gate.v1",
+        "state": "repo_local_source_refs_declared_no_second_truth",
+        "checked_source_ref_count": len(checked_refs),
+        "checked_source_refs": checked_refs,
+        "required_ref_shape": "repo_local_path_or_repo_local_contract_path",
+        "forbidden_ref_shapes": [
+            "absolute_path",
+            "parent_directory_traversal",
+            "uri_or_url",
+            "empty_ref",
+            "human_doc_ref_as_machine_source_ref",
+            "legacy_alias_ref_without_contract_owner",
+        ],
+        "validation_policy": {
+            "all_refs_must_be_repo_local": True,
+            "all_refs_must_exist_in_repo_checkout": True,
+            "human_doc_refs_do_not_count_as_machine_source_refs": True,
+            "docs_history_refs_allowed_only_for_tombstone_or_provenance": True,
+            "path_existence_can_claim_runtime_ready": False,
+            "path_existence_can_authorize_physical_delete": False,
+        },
+        "authority_boundary": {
+            "gate_can_fix_missing_refs": False,
+            "gate_can_create_alias_files": False,
+            "gate_can_authorize_physical_delete": False,
+            "gate_can_claim_default_caller_cutover": False,
+            "gate_can_claim_app_or_live_readiness": False,
+            "gate_can_claim_grant_readiness": False,
+            "gate_can_claim_production_ready": False,
         },
     }
 

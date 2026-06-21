@@ -495,6 +495,43 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "executor_probe_or_compat_alias"
     )
     assert morphology["active_path_scan_policy"] == ACTIVE_PATH_SCAN_POLICY
+    source_ref_integrity = morphology["source_ref_integrity_gate"]
+    assert source_ref_integrity["gate_id"] == (
+        "mag.physical_morphology.source_ref_integrity_gate.v1"
+    )
+    assert source_ref_integrity["state"] == "repo_local_source_refs_declared_no_second_truth"
+    checked_refs = source_ref_integrity["checked_source_refs"]
+    assert source_ref_integrity["checked_source_ref_count"] == len(checked_refs)
+    assert checked_refs == sorted(
+        {
+            ref
+            for surface in morphology["surface_classifications"]
+            for ref in surface["source_refs"]
+        }
+    )
+    for ref in checked_refs:
+        assert not ref.startswith("human_doc:"), ref
+        assert not Path(ref).is_absolute(), ref
+        assert ".." not in Path(ref).parts, ref
+        assert "://" not in ref, ref
+        assert (REPO_ROOT / ref).exists(), ref
+    assert source_ref_integrity["validation_policy"] == {
+        "all_refs_must_be_repo_local": True,
+        "all_refs_must_exist_in_repo_checkout": True,
+        "human_doc_refs_do_not_count_as_machine_source_refs": True,
+        "docs_history_refs_allowed_only_for_tombstone_or_provenance": True,
+        "path_existence_can_claim_runtime_ready": False,
+        "path_existence_can_authorize_physical_delete": False,
+    }
+    assert source_ref_integrity["authority_boundary"] == {
+        "gate_can_fix_missing_refs": False,
+        "gate_can_create_alias_files": False,
+        "gate_can_authorize_physical_delete": False,
+        "gate_can_claim_default_caller_cutover": False,
+        "gate_can_claim_app_or_live_readiness": False,
+        "gate_can_claim_grant_readiness": False,
+        "gate_can_claim_production_ready": False,
+    }
     active_path_scan_policy = morphology["active_path_scan_policy"]
     assert set(readback_guard["false_ready_claim_guard_pattern_ids"]).issubset(
         {
