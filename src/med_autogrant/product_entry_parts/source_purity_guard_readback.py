@@ -34,6 +34,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "strict_source_purity_no_second_truth_guard",
         context="physical_source_morphology_policy",
     )
+    repo_shell_guard = _repo_shell_verification_wrapper_guard(morphology)
     retirement_guard = _require_mapping(
         morphology,
         "retirement_readback_cleanup_guard",
@@ -54,6 +55,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         active_path_scan=active_path_scan,
         source_ref_gate=source_ref_gate,
         strict_guard=strict_guard,
+        repo_shell_guard=repo_shell_guard,
         compact_summary=compact_summary,
         owner_delta_work_order_pack=owner_delta_work_order_pack,
     )
@@ -66,6 +68,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "active_path_scan": active_path_scan,
         "source_ref_integrity_gate": source_ref_gate,
         "strict_source_purity_no_second_truth_guard": strict_guard,
+        "repo_shell_verification_wrapper_guard": repo_shell_guard,
         "compact_cleanup_readiness_summary": compact_summary,
         "owner_delta_work_order_pack": owner_delta_work_order_pack,
         "allowed_outputs": list(strict_guard["allowed_outputs"]),
@@ -89,6 +92,7 @@ def _collect_failures(
     active_path_scan: Mapping[str, Any],
     source_ref_gate: Mapping[str, Any],
     strict_guard: Mapping[str, Any],
+    repo_shell_guard: Mapping[str, Any],
     compact_summary: Mapping[str, Any],
     owner_delta_work_order_pack: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
@@ -132,6 +136,17 @@ def _collect_failures(
                 "check_id": "strict_guard_authority_boundary",
                 "state": "failed",
                 "authority_boundary": boundary,
+            }
+        )
+    if repo_shell_guard.get("state") != "passed_repo_native_verification_wrapper_classified":
+        failures.append(
+            {
+                "check_id": "repo_shell_verification_wrapper_guard",
+                "state": repo_shell_guard.get("state"),
+                "unclassified_script_refs": repo_shell_guard.get("unclassified_script_refs"),
+                "stale_classified_script_refs": repo_shell_guard.get(
+                    "stale_classified_script_refs"
+                ),
             }
         )
     for key in [
@@ -233,6 +248,99 @@ def _invalid_source_refs(source_ref_gate: Mapping[str, Any]) -> list[dict[str, s
         elif not (REPO_ROOT / path).exists():
             invalid.append({"ref": ref, "reason": "missing_repo_local_source_ref"})
     return invalid
+
+
+def _repo_shell_verification_wrapper_guard(
+    morphology: Mapping[str, Any],
+) -> dict[str, Any]:
+    classifications = morphology.get("surface_classifications")
+    surface: Mapping[str, Any] | None = None
+    if isinstance(classifications, list):
+        for item in classifications:
+            if isinstance(item, Mapping) and item.get("surface_id") == "repo_shell_verification_wrappers":
+                surface = item
+                break
+    if surface is None:
+        return {
+            "surface_kind": "mag_repo_shell_verification_wrapper_guard",
+            "state": "missing_repo_shell_verification_wrapper_classification",
+            "checked_script_refs": _active_repo_script_refs(),
+            "classified_script_refs": [],
+            "unclassified_script_refs": _active_repo_script_refs(),
+            "stale_classified_script_refs": [],
+            "authority_boundary": {},
+        }
+
+    checked_script_refs = _active_repo_script_refs()
+    classified_script_refs = sorted(
+        str(item)
+        for item in surface.get("source_refs") or []
+        if isinstance(item, str)
+    )
+    unclassified_script_refs = sorted(set(checked_script_refs) - set(classified_script_refs))
+    stale_classified_script_refs = sorted(set(classified_script_refs) - set(checked_script_refs))
+    authority_boundary = _require_mapping(
+        surface,
+        "authority_boundary",
+        context="repo_shell_verification_wrappers",
+    )
+    retirement_gate = _require_mapping(
+        surface,
+        "retirement_gate",
+        context="repo_shell_verification_wrappers",
+    )
+    boundary_false = all(value is False for value in authority_boundary.values())
+    retirement_gate_ok = (
+        retirement_gate.get("compatibility_alias_allowed") is False
+        and retirement_gate.get("state")
+        == "retained_repo_native_verification_entry_do_not_promote_to_runtime_owner"
+    )
+    classified_as_wrapper = (
+        surface.get("classification") == "repo_native_verification_wrapper"
+        and surface.get("active_caller_status") == "active_repo_verification_entry"
+    )
+    state = (
+        "passed_repo_native_verification_wrapper_classified"
+        if classified_as_wrapper
+        and boundary_false
+        and retirement_gate_ok
+        and not unclassified_script_refs
+        and not stale_classified_script_refs
+        else "failed_repo_native_verification_wrapper_classification"
+    )
+    return {
+        "surface_kind": "mag_repo_shell_verification_wrapper_guard",
+        "state": state,
+        "surface_id": "repo_shell_verification_wrappers",
+        "classification": surface.get("classification"),
+        "active_caller_status": surface.get("active_caller_status"),
+        "allowed_role": surface.get("allowed_role"),
+        "target_owner_after_migration": surface.get("target_owner_after_migration"),
+        "checked_script_refs": checked_script_refs,
+        "classified_script_refs": classified_script_refs,
+        "unclassified_script_refs": unclassified_script_refs,
+        "stale_classified_script_refs": stale_classified_script_refs,
+        "authority_boundary": dict(authority_boundary),
+        "retirement_gate": dict(retirement_gate),
+        "false_ready_guard": {
+            "repo_shell_guard_can_claim_runtime_owner": False,
+            "repo_shell_guard_can_claim_generated_wrapper_owner": False,
+            "repo_shell_guard_can_authorize_physical_delete": False,
+            "repo_shell_guard_can_claim_grant_ready": False,
+            "repo_shell_guard_can_claim_production_ready": False,
+        },
+    }
+
+
+def _active_repo_script_refs() -> list[str]:
+    scripts_dir = REPO_ROOT / "scripts"
+    if not scripts_dir.is_dir():
+        return []
+    return sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in scripts_dir.iterdir()
+        if path.is_file() and path.suffix in {".py", ".sh"}
+    )
 
 
 def _load_private_surface_policy() -> dict[str, Any]:
