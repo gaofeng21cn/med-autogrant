@@ -468,6 +468,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "owner_receipt://mag/physical_delete_or_tombstone_authorization",
     ]
     assert "missing_evidence_worklist" in readback_guard["allowed_readback_outputs"]
+    assert "owner_delta_work_order_pack" in readback_guard["allowed_readback_outputs"]
     assert "physical_delete_operation" in readback_guard["forbidden_readback_outputs"]
     assert "owner_receipt_signature" in readback_guard["forbidden_readback_outputs"]
     assert "typed_blocker_instance_creation" in readback_guard["forbidden_readback_outputs"]
@@ -489,6 +490,32 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert compact_cleanup_summary["can_authorize_physical_delete"] is False
     assert compact_cleanup_summary["can_claim_domain_ready"] is False
     assert compact_cleanup_summary["can_claim_production_ready"] is False
+    owner_delta_work_order = compact_cleanup_summary["owner_delta_work_order_pack"]
+    assert owner_delta_work_order["surface_kind"] == "mag_cleanup_owner_delta_work_order_pack"
+    assert owner_delta_work_order["state"] == "owner_delta_required_cleanup_not_authorized"
+    assert owner_delta_work_order["cleanup_candidate_count"] == 7
+    assert owner_delta_work_order["owner_delta_route_count"] == 7
+    assert {
+        route["surface_id"] for route in owner_delta_work_order["owner_delta_routes"]
+    } == set(compact_cleanup_summary["cleanup_candidate_surface_ids"])
+    assert all(
+        route["typed_blocker_ref_shape"].startswith(
+            "typed_blocker://mag/physical_morphology_cleanup/"
+        )
+        for route in owner_delta_work_order["owner_delta_routes"]
+    )
+    assert owner_delta_work_order["authority_boundary"] == {
+        "work_order_can_write_grant_truth": False,
+        "work_order_can_sign_owner_receipt": False,
+        "work_order_can_create_typed_blocker_instance": False,
+        "work_order_can_authorize_physical_delete": False,
+        "work_order_can_claim_default_caller_cutover": False,
+        "work_order_can_claim_app_operator_consumption": False,
+        "work_order_can_claim_grant_ready": False,
+        "work_order_can_claim_submission_ready": False,
+        "work_order_can_claim_domain_ready": False,
+        "work_order_can_claim_production_ready": False,
+    }
     assert readback_guard["authority_boundary"] == {
         "guard_can_identify_cleanup_candidates": True,
         "guard_can_route_owner_delta": True,

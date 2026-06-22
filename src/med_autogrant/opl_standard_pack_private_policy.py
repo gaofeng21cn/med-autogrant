@@ -355,6 +355,7 @@ def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> d
             "source_role_classification",
             "missing_evidence_worklist",
             "owner_delta_route",
+            "owner_delta_work_order_pack",
             "typed_blocker_ref_shape",
             "no_resurrection_policy",
         ],
@@ -413,6 +414,15 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         *retirement_evidence_refs,
         "owner_receipt://mag/physical_delete_or_tombstone_authorization",
     ]
+    cleanup_candidate_surface_ids = [
+        "product_entry",
+        "grouped_cli_wrapper",
+        "status",
+        "user_loop",
+        "domain_handler",
+        "control_plane",
+        "lifecycle",
+    ]
     return {
         "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1",
         "state": "cleanup_candidates_present_owner_delta_required",
@@ -421,18 +431,14 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
             "physical_source_morphology_policy/retirement_readback_cleanup_guard"
         ),
         "cleanup_candidate_count": 7,
-        "cleanup_candidate_surface_ids": [
-            "product_entry",
-            "grouped_cli_wrapper",
-            "status",
-            "user_loop",
-            "domain_handler",
-            "control_plane",
-            "lifecycle",
-        ],
+        "cleanup_candidate_surface_ids": cleanup_candidate_surface_ids,
         "owner_delta_required": True,
         "required_before_cleanup_apply": missing_evidence_refs,
         "missing_evidence_refs": missing_evidence_refs,
+        "owner_delta_work_order_pack": _cleanup_owner_delta_work_order_pack(
+            cleanup_candidate_surface_ids=cleanup_candidate_surface_ids,
+            missing_evidence_refs=missing_evidence_refs,
+        ),
         "can_apply_cleanup": False,
         "can_authorize_physical_delete": False,
         "can_claim_default_caller_cutover_complete": False,
@@ -441,6 +447,57 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         "can_claim_submission_ready": False,
         "can_claim_domain_ready": False,
         "can_claim_production_ready": False,
+    }
+
+
+def _cleanup_owner_delta_work_order_pack(
+    *,
+    cleanup_candidate_surface_ids: list[str],
+    missing_evidence_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_cleanup_owner_delta_work_order_pack",
+        "pack_id": "mag.physical_morphology.cleanup_owner_delta_work_order_pack.v1",
+        "state": "owner_delta_required_cleanup_not_authorized",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "source_summary_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/retirement_readback_cleanup_guard/"
+            "compact_cleanup_readiness_summary"
+        ),
+        "cleanup_candidate_count": len(cleanup_candidate_surface_ids),
+        "owner_delta_route_count": len(cleanup_candidate_surface_ids),
+        "owner_delta_routes": [
+            {
+                "surface_id": surface_id,
+                "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+                "required_delta": (
+                    "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_"
+                    "and_physical_delete_owner_receipt_or_domain_typed_blocker_refs"
+                ),
+                "required_evidence_refs": list(missing_evidence_refs),
+                "owner_receipt_ref_shape": (
+                    f"owner_receipt://mag/{surface_id}/physical_delete_or_tombstone_authorization"
+                ),
+                "typed_blocker_ref_shape": (
+                    f"typed_blocker://mag/physical_morphology_cleanup/{surface_id}/"
+                    "requires-owner-receipt-or-evidence"
+                ),
+            }
+            for surface_id in cleanup_candidate_surface_ids
+        ],
+        "authority_boundary": {
+            "work_order_can_write_grant_truth": False,
+            "work_order_can_sign_owner_receipt": False,
+            "work_order_can_create_typed_blocker_instance": False,
+            "work_order_can_authorize_physical_delete": False,
+            "work_order_can_claim_default_caller_cutover": False,
+            "work_order_can_claim_app_operator_consumption": False,
+            "work_order_can_claim_grant_ready": False,
+            "work_order_can_claim_submission_ready": False,
+            "work_order_can_claim_domain_ready": False,
+            "work_order_can_claim_production_ready": False,
+        },
     }
 
 

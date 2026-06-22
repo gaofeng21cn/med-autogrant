@@ -44,12 +44,18 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "compact_cleanup_readiness_summary",
         context="retirement_readback_cleanup_guard",
     )
+    owner_delta_work_order_pack = _require_mapping(
+        compact_summary,
+        "owner_delta_work_order_pack",
+        context="compact_cleanup_readiness_summary",
+    )
 
     failures = _collect_failures(
         active_path_scan=active_path_scan,
         source_ref_gate=source_ref_gate,
         strict_guard=strict_guard,
         compact_summary=compact_summary,
+        owner_delta_work_order_pack=owner_delta_work_order_pack,
     )
     return {
         "surface_kind": "mag_strict_source_purity_guard_readback",
@@ -61,6 +67,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         "source_ref_integrity_gate": source_ref_gate,
         "strict_source_purity_no_second_truth_guard": strict_guard,
         "compact_cleanup_readiness_summary": compact_summary,
+        "owner_delta_work_order_pack": owner_delta_work_order_pack,
         "allowed_outputs": list(strict_guard["allowed_outputs"]),
         "forbidden_outputs": list(strict_guard["forbidden_outputs"]),
         "authority_boundary": {
@@ -83,6 +90,7 @@ def _collect_failures(
     source_ref_gate: Mapping[str, Any],
     strict_guard: Mapping[str, Any],
     compact_summary: Mapping[str, Any],
+    owner_delta_work_order_pack: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     failures: list[dict[str, Any]] = []
     if active_path_scan.get("state") != "passed":
@@ -161,6 +169,46 @@ def _collect_failures(
                 "cleanup_candidate_count": compact_summary.get("cleanup_candidate_count"),
             }
         )
+    route_count = owner_delta_work_order_pack.get("owner_delta_route_count")
+    candidate_count = compact_summary.get("cleanup_candidate_count")
+    if route_count != candidate_count:
+        failures.append(
+            {
+                "check_id": "owner_delta_work_order_route_count",
+                "state": "failed",
+                "owner_delta_route_count": route_count,
+                "cleanup_candidate_count": candidate_count,
+            }
+        )
+    work_order_boundary = owner_delta_work_order_pack.get("authority_boundary")
+    if not isinstance(work_order_boundary, Mapping) or any(
+        bool(value) for value in work_order_boundary.values()
+    ):
+        failures.append(
+            {
+                "check_id": "owner_delta_work_order_authority_boundary",
+                "state": "failed",
+                "authority_boundary": work_order_boundary,
+            }
+        )
+    for route in owner_delta_work_order_pack.get("owner_delta_routes") or []:
+        if not isinstance(route, Mapping):
+            failures.append(
+                {
+                    "check_id": "owner_delta_work_order_route_shape",
+                    "state": "failed",
+                    "route": route,
+                }
+            )
+            continue
+        if not route.get("owner_receipt_ref_shape") or not route.get("typed_blocker_ref_shape"):
+            failures.append(
+                {
+                    "check_id": "owner_delta_work_order_route_ref_shape",
+                    "state": "failed",
+                    "surface_id": route.get("surface_id"),
+                }
+            )
     return failures
 
 

@@ -2836,6 +2836,7 @@
         "source_role_classification",
         "missing_evidence_worklist",
         "owner_delta_route",
+        "owner_delta_work_order_pack",
         "typed_blocker_ref_shape",
         "no_resurrection_policy"
       ],
@@ -2884,6 +2885,134 @@
           "owner_receipt://mag/physical_delete_or_tombstone_authorization"
         ],
         "owner_delta_required": true,
+        "owner_delta_work_order_pack": {
+          "authority_boundary": {
+            "work_order_can_authorize_physical_delete": false,
+            "work_order_can_claim_app_operator_consumption": false,
+            "work_order_can_claim_default_caller_cutover": false,
+            "work_order_can_claim_domain_ready": false,
+            "work_order_can_claim_grant_ready": false,
+            "work_order_can_claim_production_ready": false,
+            "work_order_can_claim_submission_ready": false,
+            "work_order_can_create_typed_blocker_instance": false,
+            "work_order_can_sign_owner_receipt": false,
+            "work_order_can_write_grant_truth": false
+          },
+          "cleanup_candidate_count": 7,
+          "owner_delta_route_count": 7,
+          "owner_delta_routes": [
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/product_entry/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "product_entry",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/product_entry/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/grouped_cli_wrapper/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "grouped_cli_wrapper",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/grouped_cli_wrapper/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/status/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "status",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/status/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/user_loop/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "user_loop",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/user_loop/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/domain_handler/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "domain_handler",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/domain_handler/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/control_plane/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "control_plane",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/control_plane/requires-owner-receipt-or-evidence"
+            },
+            {
+              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
+              "owner_receipt_ref_shape": "owner_receipt://mag/lifecycle/physical_delete_or_tombstone_authorization",
+              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
+              "required_evidence_refs": [
+                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+                "physical_morphology://no_active_compat_alias_or_facade_scan",
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+              ],
+              "surface_id": "lifecycle",
+              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/lifecycle/requires-owner-receipt-or-evidence"
+            }
+          ],
+          "pack_id": "mag.physical_morphology.cleanup_owner_delta_work_order_pack.v1",
+          "source_summary_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary",
+          "state": "owner_delta_required_cleanup_not_authorized",
+          "surface_kind": "mag_cleanup_owner_delta_work_order_pack",
+          "target_domain_id": "med-autogrant"
+        },
         "required_before_cleanup_apply": [
           "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
           "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",

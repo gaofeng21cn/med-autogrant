@@ -45,6 +45,40 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
     assert "owner_receipt://mag/physical_delete_or_tombstone_authorization" in (
         summary["missing_evidence_refs"]
     )
+    work_order = payload["owner_delta_work_order_pack"]
+    assert work_order == summary["owner_delta_work_order_pack"]
+    assert work_order["surface_kind"] == "mag_cleanup_owner_delta_work_order_pack"
+    assert work_order["state"] == "owner_delta_required_cleanup_not_authorized"
+    assert work_order["cleanup_candidate_count"] == 7
+    assert work_order["owner_delta_route_count"] == 7
+    assert {
+        route["surface_id"] for route in work_order["owner_delta_routes"]
+    } == set(summary["cleanup_candidate_surface_ids"])
+    for route in work_order["owner_delta_routes"]:
+        assert route["next_owner"] == "med-autogrant_owner_receipt_or_typed_blocker_surface"
+        assert route["owner_receipt_ref_shape"].startswith("owner_receipt://mag/")
+        assert route["owner_receipt_ref_shape"].endswith(
+            "/physical_delete_or_tombstone_authorization"
+        )
+        assert route["typed_blocker_ref_shape"].startswith(
+            "typed_blocker://mag/physical_morphology_cleanup/"
+        )
+        assert route["typed_blocker_ref_shape"].endswith(
+            "/requires-owner-receipt-or-evidence"
+        )
+        assert route["required_evidence_refs"] == summary["missing_evidence_refs"]
+    assert work_order["authority_boundary"] == {
+        "work_order_can_write_grant_truth": False,
+        "work_order_can_sign_owner_receipt": False,
+        "work_order_can_create_typed_blocker_instance": False,
+        "work_order_can_authorize_physical_delete": False,
+        "work_order_can_claim_default_caller_cutover": False,
+        "work_order_can_claim_app_operator_consumption": False,
+        "work_order_can_claim_grant_ready": False,
+        "work_order_can_claim_submission_ready": False,
+        "work_order_can_claim_domain_ready": False,
+        "work_order_can_claim_production_ready": False,
+    }
     assert "missing_evidence_worklist" in payload["allowed_outputs"]
     assert "physical_delete_operation" in payload["forbidden_outputs"]
     assert payload["authority_boundary"] == {
@@ -79,6 +113,10 @@ def test_source_purity_guard_script_emits_json_readback() -> None:
     assert payload["surface_kind"] == "mag_strict_source_purity_guard_readback"
     assert payload["state"] == "passed_repo_source_guard_only"
     assert payload["compact_cleanup_readiness_summary"]["can_apply_cleanup"] is False
+    assert (
+        payload["owner_delta_work_order_pack"]["owner_delta_route_count"]
+        == payload["compact_cleanup_readiness_summary"]["cleanup_candidate_count"]
+    )
 
 
 def test_source_purity_guard_public_cli_emits_same_guard_readback() -> None:
@@ -105,3 +143,6 @@ def test_source_purity_guard_public_cli_emits_same_guard_readback() -> None:
     assert payload["failed_checks"] == []
     assert payload["authority_boundary"]["readback_can_authorize_physical_delete"] is False
     assert payload["authority_boundary"]["readback_can_claim_grant_readiness"] is False
+    assert payload["owner_delta_work_order_pack"]["authority_boundary"][
+        "work_order_can_create_typed_blocker_instance"
+    ] is False
