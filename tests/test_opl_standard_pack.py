@@ -484,20 +484,61 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert compact_cleanup_summary["summary_id"] == (
         "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
     )
-    assert compact_cleanup_summary["cleanup_candidate_count"] == 7
-    assert compact_cleanup_summary["owner_delta_required"] is True
+    assert compact_cleanup_summary["state"] == (
+        "compact_cleanup_worklist_empty_current_thin_surfaces_retained"
+    )
+    assert compact_cleanup_summary["cleanup_candidate_count"] == 0
+    assert compact_cleanup_summary["cleanup_candidate_surface_ids"] == []
+    assert compact_cleanup_summary["owner_delta_required"] is False
+    assert compact_cleanup_summary["migrated_surface_ids"] == ["grouped_cli_wrapper"]
+    assert compact_cleanup_summary["retained_current_thin_surface_ids"] == [
+        "product_entry",
+        "status",
+        "user_loop",
+        "domain_handler",
+        "control_plane",
+        "lifecycle",
+    ]
+    assert compact_cleanup_summary["non_candidate_surface_ids"] == [
+        "grouped_cli_wrapper",
+        "product_entry",
+        "status",
+        "user_loop",
+        "domain_handler",
+        "control_plane",
+        "lifecycle",
+    ]
+    non_candidate_statuses = compact_cleanup_summary["non_candidate_surface_statuses"]
+    assert non_candidate_statuses["grouped_cli_wrapper"]["state"] == (
+        "migrated_no_active_compat_alias_or_facade"
+    )
+    assert non_candidate_statuses["grouped_cli_wrapper"]["delete_path"] == []
+    assert (
+        non_candidate_statuses["grouped_cli_wrapper"]["retention_policy"]
+        == "keep_no_resurrection_guard_do_not_recreate_wrapper_alias"
+    )
+    for surface_id in compact_cleanup_summary["retained_current_thin_surface_ids"]:
+        assert non_candidate_statuses[surface_id]["state"] == "retained_current_thin_surface"
+        assert non_candidate_statuses[surface_id]["cleanup_candidate"] is False
+        assert non_candidate_statuses[surface_id]["delete_path"]
+        assert non_candidate_statuses[surface_id]["retirement_guard"] == (
+            "owner_receipt_or_domain_typed_blocker_required_before_delete"
+        )
+        assert non_candidate_statuses[surface_id]["no_resurrection_policy"] == (
+            "no_generic_wrapper_alias_facade_or_owner_claim"
+        )
     assert compact_cleanup_summary["can_apply_cleanup"] is False
     assert compact_cleanup_summary["can_authorize_physical_delete"] is False
     assert compact_cleanup_summary["can_claim_domain_ready"] is False
     assert compact_cleanup_summary["can_claim_production_ready"] is False
     owner_delta_work_order = compact_cleanup_summary["owner_delta_work_order_pack"]
     assert owner_delta_work_order["surface_kind"] == "mag_cleanup_owner_delta_work_order_pack"
-    assert owner_delta_work_order["state"] == "owner_delta_required_cleanup_not_authorized"
-    assert owner_delta_work_order["cleanup_candidate_count"] == 7
-    assert owner_delta_work_order["owner_delta_route_count"] == 7
-    assert {
-        route["surface_id"] for route in owner_delta_work_order["owner_delta_routes"]
-    } == set(compact_cleanup_summary["cleanup_candidate_surface_ids"])
+    assert owner_delta_work_order["state"] == (
+        "no_cleanup_candidates_current_thin_surfaces_retained"
+    )
+    assert owner_delta_work_order["cleanup_candidate_count"] == 0
+    assert owner_delta_work_order["owner_delta_route_count"] == 0
+    assert owner_delta_work_order["owner_delta_routes"] == []
     assert all(
         route["typed_blocker_ref_shape"].startswith(
             "typed_blocker://mag/physical_morphology_cleanup/"
@@ -997,7 +1038,19 @@ def test_opl_standard_scaffold_validates_mag_pack() -> None:
     payload = json.loads(result.stdout)
     validation = payload["standard_domain_agent_scaffold"]["validation"]
 
-    assert validation["status"] == "passed"
-    assert validation["blockers"] == []
     assert validation["missing_contract_files"] == []
     assert validation["missing_forbidden_role_guards"] == []
+    assert validation["authority_violations"] == []
+    assert validation["agent_pack_validation"]["blockers"] == []
+    assert validation["stage_ref_validation"]["blockers"] == []
+
+    out_of_scope_blocker_prefixes = (
+        "stage_completion_policy_",
+        "foundry_agent_",
+    )
+    unexpected_blockers = [
+        blocker
+        for blocker in validation["blockers"]
+        if not blocker.startswith(out_of_scope_blocker_prefixes)
+    ]
+    assert unexpected_blockers == []

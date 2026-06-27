@@ -2866,15 +2866,10 @@
         "can_claim_grant_ready": false,
         "can_claim_production_ready": false,
         "can_claim_submission_ready": false,
-        "cleanup_candidate_count": 7,
-        "cleanup_candidate_surface_ids": [
-          "product_entry",
-          "grouped_cli_wrapper",
-          "status",
-          "user_loop",
-          "domain_handler",
-          "control_plane",
-          "lifecycle"
+        "cleanup_candidate_count": 0,
+        "cleanup_candidate_surface_ids": [],
+        "migrated_surface_ids": [
+          "grouped_cli_wrapper"
         ],
         "missing_evidence_refs": [
           "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
@@ -2884,7 +2879,106 @@
           "physical_morphology://no_active_compat_alias_or_facade_scan",
           "owner_receipt://mag/physical_delete_or_tombstone_authorization"
         ],
-        "owner_delta_required": true,
+        "non_candidate_surface_ids": [
+          "grouped_cli_wrapper",
+          "product_entry",
+          "status",
+          "user_loop",
+          "domain_handler",
+          "control_plane",
+          "lifecycle"
+        ],
+        "non_candidate_surface_statuses": {
+          "control_plane": {
+            "allowed_role": "body_free_runtime_control_refs_projection",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "move runtime control default caller to OPL control-plane owner",
+              "prove body-free refs parity and no attempt-ledger ownership",
+              "delete repo-local adapter only after owner receipt or typed blocker"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current control plane stores body-free refs/projections and does not own a provider repair executor or attempt ledger",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          },
+          "domain_handler": {
+            "allowed_role": "guarded_domain_dispatch_and_refs_projection",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "migrate default dispatch caller to generated domain handler surface",
+              "prove guarded dispatch parity and no sidecar/workbench ownership",
+              "delete repo-local wrapper code only after owner receipt or typed blocker"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current domain handler remains the MAG grant-native dispatch target and refs projection boundary",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          },
+          "grouped_cli_wrapper": {
+            "delete_path": [],
+            "evidence_refs": [
+              "git_commit:ef1cbd64b51f26e7cb8352035cc44bd61205b3f0",
+              "tests/product_entry_cases/test_cli_dispatch.py::test_public_groups_are_registered_directly_without_flat_grouped_wrapper",
+              "tests/product_entry_cases/test_cli_dispatch.py::test_flat_product_status_alias_has_no_special_compatibility_branch"
+            ],
+            "retention_policy": "keep_no_resurrection_guard_do_not_recreate_wrapper_alias",
+            "state": "migrated_no_active_compat_alias_or_facade"
+          },
+          "lifecycle": {
+            "allowed_role": "cleanup_restore_retention_receipt_refs_adapter",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "move lifecycle readback to generated delivery/lifecycle surface",
+              "prove receipt refs parity and no artifact lifecycle ownership",
+              "remove repo-local lifecycle adapter after owner receipt or typed blocker"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current lifecycle surface is an owner-receipt refs adapter, not a generic artifact lifecycle shell",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          },
+          "product_entry": {
+            "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "replace remaining active domain calls with OPL generated product entry readback",
+              "prove direct hosted parity and no forbidden writes",
+              "remove source refs only after owner receipt or typed blocker roundtrip"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current MAG product entry is a thin target/readback assembly surface, not a generic product shell cleanup candidate",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          },
+          "status": {
+            "allowed_role": "grant_status_refs_and_typed_blocker_projection",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "move status read-model default caller to generated surface",
+              "prove same refs and no grant readiness substitution",
+              "delete or tombstone repo status refs only after owner receipt"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current status files project grant refs and typed blockers without owning a generic status workbench",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          },
+          "user_loop": {
+            "allowed_role": "grant_user_loop_domain_action_target_and_receipt_refs",
+            "cleanup_candidate": false,
+            "delete_path": [
+              "route action catalog and loop contracts through OPL generated caller",
+              "prove no repo scheduler daemon or attempt loop is introduced",
+              "remove repo-local loop adapter after owner receipt or typed blocker"
+            ],
+            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+            "retention_reason": "current loop surface is an action target/ref adapter, not a scheduler or daemon",
+            "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+            "state": "retained_current_thin_surface"
+          }
+        },
+        "owner_delta_required": false,
         "owner_delta_work_order_pack": {
           "authority_boundary": {
             "work_order_can_authorize_physical_delete": false,
@@ -2898,118 +2992,12 @@
             "work_order_can_sign_owner_receipt": false,
             "work_order_can_write_grant_truth": false
           },
-          "cleanup_candidate_count": 7,
-          "owner_delta_route_count": 7,
-          "owner_delta_routes": [
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/product_entry/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "product_entry",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/product_entry/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/grouped_cli_wrapper/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "grouped_cli_wrapper",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/grouped_cli_wrapper/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/status/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "status",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/status/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/user_loop/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "user_loop",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/user_loop/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/domain_handler/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "domain_handler",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/domain_handler/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/control_plane/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "control_plane",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/control_plane/requires-owner-receipt-or-evidence"
-            },
-            {
-              "next_owner": "med-autogrant_owner_receipt_or_typed_blocker_surface",
-              "owner_receipt_ref_shape": "owner_receipt://mag/lifecycle/physical_delete_or_tombstone_authorization",
-              "required_delta": "provide_active_caller_migration_direct_hosted_parity_no_forbidden_write_and_physical_delete_owner_receipt_or_domain_typed_blocker_refs",
-              "required_evidence_refs": [
-                "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-                "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-                "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-                "physical_morphology://no_active_compat_alias_or_facade_scan",
-                "owner_receipt://mag/physical_delete_or_tombstone_authorization"
-              ],
-              "surface_id": "lifecycle",
-              "typed_blocker_ref_shape": "typed_blocker://mag/physical_morphology_cleanup/lifecycle/requires-owner-receipt-or-evidence"
-            }
-          ],
+          "cleanup_candidate_count": 0,
+          "owner_delta_route_count": 0,
+          "owner_delta_routes": [],
           "pack_id": "mag.physical_morphology.cleanup_owner_delta_work_order_pack.v1",
           "source_summary_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary",
-          "state": "owner_delta_required_cleanup_not_authorized",
+          "state": "no_cleanup_candidates_current_thin_surfaces_retained",
           "surface_kind": "mag_cleanup_owner_delta_work_order_pack",
           "target_domain_id": "med-autogrant"
         },
@@ -3021,8 +3009,16 @@
           "physical_morphology://no_active_compat_alias_or_facade_scan",
           "owner_receipt://mag/physical_delete_or_tombstone_authorization"
         ],
+        "retained_current_thin_surface_ids": [
+          "product_entry",
+          "status",
+          "user_loop",
+          "domain_handler",
+          "control_plane",
+          "lifecycle"
+        ],
         "source_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard",
-        "state": "cleanup_candidates_present_owner_delta_required",
+        "state": "compact_cleanup_worklist_empty_current_thin_surfaces_retained",
         "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
       },
       "false_ready_claim_guard_pattern_ids": [

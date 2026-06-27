@@ -168,20 +168,33 @@ def _collect_failures(
                     "value": compact_summary.get(key),
                 }
             )
-    if compact_summary.get("owner_delta_required") is not True:
+    candidate_ids = compact_summary.get("cleanup_candidate_surface_ids")
+    if not isinstance(candidate_ids, list):
         failures.append(
             {
-                "check_id": "compact_cleanup_readiness_owner_delta_required",
+                "check_id": "compact_cleanup_readiness_candidate_ids",
                 "state": "failed",
-                "owner_delta_required": compact_summary.get("owner_delta_required"),
+                "cleanup_candidate_surface_ids": candidate_ids,
             }
         )
-    if compact_summary.get("cleanup_candidate_count") != 7:
+        candidate_ids = []
+    if compact_summary.get("cleanup_candidate_count") != len(candidate_ids):
         failures.append(
             {
                 "check_id": "compact_cleanup_readiness_candidate_count",
                 "state": "failed",
                 "cleanup_candidate_count": compact_summary.get("cleanup_candidate_count"),
+                "cleanup_candidate_surface_id_count": len(candidate_ids),
+            }
+        )
+    owner_delta_required = bool(candidate_ids)
+    if compact_summary.get("owner_delta_required") is not owner_delta_required:
+        failures.append(
+            {
+                "check_id": "compact_cleanup_readiness_owner_delta_required",
+                "state": "failed",
+                "owner_delta_required": compact_summary.get("owner_delta_required"),
+                "expected_owner_delta_required": owner_delta_required,
             }
         )
     route_count = owner_delta_work_order_pack.get("owner_delta_route_count")

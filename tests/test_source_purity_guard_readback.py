@@ -56,9 +56,39 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
     assert summary["summary_id"] == (
         "mag.physical_morphology.compact_cleanup_readiness_summary.v1"
     )
-    assert summary["state"] == "cleanup_candidates_present_owner_delta_required"
-    assert summary["cleanup_candidate_count"] == 7
-    assert summary["owner_delta_required"] is True
+    assert summary["state"] == "compact_cleanup_worklist_empty_current_thin_surfaces_retained"
+    assert summary["cleanup_candidate_count"] == 0
+    assert summary["cleanup_candidate_surface_ids"] == []
+    assert summary["owner_delta_required"] is False
+    assert summary["migrated_surface_ids"] == ["grouped_cli_wrapper"]
+    assert summary["retained_current_thin_surface_ids"] == [
+        "product_entry",
+        "status",
+        "user_loop",
+        "domain_handler",
+        "control_plane",
+        "lifecycle",
+    ]
+    assert summary["non_candidate_surface_ids"] == [
+        "grouped_cli_wrapper",
+        "product_entry",
+        "status",
+        "user_loop",
+        "domain_handler",
+        "control_plane",
+        "lifecycle",
+    ]
+    grouped_cli = summary["non_candidate_surface_statuses"]["grouped_cli_wrapper"]
+    assert grouped_cli["state"] == "migrated_no_active_compat_alias_or_facade"
+    assert grouped_cli["delete_path"] == []
+    for surface_id in summary["retained_current_thin_surface_ids"]:
+        status = summary["non_candidate_surface_statuses"][surface_id]
+        assert status["state"] == "retained_current_thin_surface"
+        assert status["cleanup_candidate"] is False
+        assert status["delete_path"]
+        assert status["retirement_guard"] == (
+            "owner_receipt_or_domain_typed_blocker_required_before_delete"
+        )
     assert summary["can_apply_cleanup"] is False
     assert summary["can_authorize_physical_delete"] is False
     assert summary["can_claim_default_caller_cutover_complete"] is False
@@ -73,12 +103,10 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
     work_order = payload["owner_delta_work_order_pack"]
     assert work_order == summary["owner_delta_work_order_pack"]
     assert work_order["surface_kind"] == "mag_cleanup_owner_delta_work_order_pack"
-    assert work_order["state"] == "owner_delta_required_cleanup_not_authorized"
-    assert work_order["cleanup_candidate_count"] == 7
-    assert work_order["owner_delta_route_count"] == 7
-    assert {
-        route["surface_id"] for route in work_order["owner_delta_routes"]
-    } == set(summary["cleanup_candidate_surface_ids"])
+    assert work_order["state"] == "no_cleanup_candidates_current_thin_surfaces_retained"
+    assert work_order["cleanup_candidate_count"] == 0
+    assert work_order["owner_delta_route_count"] == 0
+    assert work_order["owner_delta_routes"] == []
     for route in work_order["owner_delta_routes"]:
         assert route["next_owner"] == "med-autogrant_owner_receipt_or_typed_blocker_surface"
         assert route["owner_receipt_ref_shape"].startswith("owner_receipt://mag/")

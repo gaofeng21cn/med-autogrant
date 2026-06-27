@@ -414,25 +414,118 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         *retirement_evidence_refs,
         "owner_receipt://mag/physical_delete_or_tombstone_authorization",
     ]
-    cleanup_candidate_surface_ids = [
+    cleanup_candidate_surface_ids: list[str] = []
+    migrated_surface_ids = ["grouped_cli_wrapper"]
+    retained_current_thin_surface_ids = [
         "product_entry",
-        "grouped_cli_wrapper",
         "status",
         "user_loop",
         "domain_handler",
         "control_plane",
         "lifecycle",
     ]
+    non_candidate_surface_ids = [
+        *migrated_surface_ids,
+        *retained_current_thin_surface_ids,
+    ]
     return {
         "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1",
-        "state": "cleanup_candidates_present_owner_delta_required",
+        "state": "compact_cleanup_worklist_empty_current_thin_surfaces_retained",
         "source_ref": (
             "contracts/private_functional_surface_policy.json#/"
             "physical_source_morphology_policy/retirement_readback_cleanup_guard"
         ),
-        "cleanup_candidate_count": 7,
+        "cleanup_candidate_count": len(cleanup_candidate_surface_ids),
         "cleanup_candidate_surface_ids": cleanup_candidate_surface_ids,
-        "owner_delta_required": True,
+        "owner_delta_required": False,
+        "non_candidate_surface_ids": non_candidate_surface_ids,
+        "migrated_surface_ids": migrated_surface_ids,
+        "retained_current_thin_surface_ids": retained_current_thin_surface_ids,
+        "non_candidate_surface_statuses": {
+            "grouped_cli_wrapper": {
+                "state": "migrated_no_active_compat_alias_or_facade",
+                "evidence_refs": [
+                    "git_commit:ef1cbd64b51f26e7cb8352035cc44bd61205b3f0",
+                    "tests/product_entry_cases/test_cli_dispatch.py::"
+                    "test_public_groups_are_registered_directly_without_flat_grouped_wrapper",
+                    "tests/product_entry_cases/test_cli_dispatch.py::"
+                    "test_flat_product_status_alias_has_no_special_compatibility_branch",
+                ],
+                "delete_path": [],
+                "retention_policy": "keep_no_resurrection_guard_do_not_recreate_wrapper_alias",
+            },
+            "product_entry": _retained_current_thin_surface_status(
+                allowed_role="grant_handler_target_receipt_refs_and_typed_blockers",
+                retention_reason=(
+                    "current MAG product entry is a thin target/readback assembly surface, not "
+                    "a generic product shell cleanup candidate"
+                ),
+                patchable_delete_path=[
+                    "replace remaining active domain calls with OPL generated product entry readback",
+                    "prove direct hosted parity and no forbidden writes",
+                    "remove source refs only after owner receipt or typed blocker roundtrip",
+                ],
+            ),
+            "status": _retained_current_thin_surface_status(
+                allowed_role="grant_status_refs_and_typed_blocker_projection",
+                retention_reason=(
+                    "current status files project grant refs and typed blockers without owning a "
+                    "generic status workbench"
+                ),
+                patchable_delete_path=[
+                    "move status read-model default caller to generated surface",
+                    "prove same refs and no grant readiness substitution",
+                    "delete or tombstone repo status refs only after owner receipt",
+                ],
+            ),
+            "user_loop": _retained_current_thin_surface_status(
+                allowed_role="grant_user_loop_domain_action_target_and_receipt_refs",
+                retention_reason=(
+                    "current loop surface is an action target/ref adapter, not a scheduler or daemon"
+                ),
+                patchable_delete_path=[
+                    "route action catalog and loop contracts through OPL generated caller",
+                    "prove no repo scheduler daemon or attempt loop is introduced",
+                    "remove repo-local loop adapter after owner receipt or typed blocker",
+                ],
+            ),
+            "domain_handler": _retained_current_thin_surface_status(
+                allowed_role="guarded_domain_dispatch_and_refs_projection",
+                retention_reason=(
+                    "current domain handler remains the MAG grant-native dispatch target and refs "
+                    "projection boundary"
+                ),
+                patchable_delete_path=[
+                    "migrate default dispatch caller to generated domain handler surface",
+                    "prove guarded dispatch parity and no sidecar/workbench ownership",
+                    "delete repo-local wrapper code only after owner receipt or typed blocker",
+                ],
+            ),
+            "control_plane": _retained_current_thin_surface_status(
+                allowed_role="body_free_runtime_control_refs_projection",
+                retention_reason=(
+                    "current control plane stores body-free refs/projections and does not own a "
+                    "provider repair executor or attempt ledger"
+                ),
+                patchable_delete_path=[
+                    "move runtime control default caller to OPL control-plane owner",
+                    "prove body-free refs parity and no attempt-ledger ownership",
+                    "delete repo-local adapter only after owner receipt or typed blocker",
+                ],
+            ),
+            "lifecycle": _retained_current_thin_surface_status(
+                allowed_role="cleanup_restore_retention_receipt_refs_adapter",
+                retention_reason=(
+                    "current lifecycle surface is an owner-receipt refs adapter, not a generic "
+                    "artifact lifecycle shell"
+                ),
+                patchable_delete_path=[
+                    "move lifecycle readback to generated delivery/lifecycle surface",
+                    "prove receipt refs parity and no artifact lifecycle ownership",
+                    "remove repo-local lifecycle adapter after owner receipt or typed blocker",
+                ],
+            ),
+        },
         "required_before_cleanup_apply": missing_evidence_refs,
         "missing_evidence_refs": missing_evidence_refs,
         "owner_delta_work_order_pack": _cleanup_owner_delta_work_order_pack(
@@ -450,15 +543,37 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
     }
 
 
+def _retained_current_thin_surface_status(
+    *,
+    allowed_role: str,
+    retention_reason: str,
+    patchable_delete_path: list[str],
+) -> dict[str, Any]:
+    return {
+        "state": "retained_current_thin_surface",
+        "allowed_role": allowed_role,
+        "retention_reason": retention_reason,
+        "cleanup_candidate": False,
+        "delete_path": patchable_delete_path,
+        "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+        "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+    }
+
+
 def _cleanup_owner_delta_work_order_pack(
     *,
     cleanup_candidate_surface_ids: list[str],
     missing_evidence_refs: list[str],
 ) -> dict[str, Any]:
+    state = (
+        "no_cleanup_candidates_current_thin_surfaces_retained"
+        if not cleanup_candidate_surface_ids
+        else "owner_delta_required_cleanup_not_authorized"
+    )
     return {
         "surface_kind": "mag_cleanup_owner_delta_work_order_pack",
         "pack_id": "mag.physical_morphology.cleanup_owner_delta_work_order_pack.v1",
-        "state": "owner_delta_required_cleanup_not_authorized",
+        "state": state,
         "target_domain_id": TARGET_DOMAIN_ID,
         "source_summary_ref": (
             "contracts/private_functional_surface_policy.json#/"
