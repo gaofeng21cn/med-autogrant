@@ -44,6 +44,7 @@ SERIES_DESIGN_PROFILE = {
     "stage_pack_sections": [
         "prompts",
         "stages",
+        "stage_completion_policy",
         "skills",
         "knowledge",
         "quality_gates",

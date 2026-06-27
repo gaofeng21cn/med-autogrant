@@ -96,6 +96,8 @@ def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
     assert series["shared_policy_release"] == SHARED_POLICY_RELEASE
     assert series["series_design_profile"] == SERIES_DESIGN_PROFILE
     assert series["domain_specific_profile"] == DOMAIN_SPECIFIC_PROFILE
+    assert "stage_completion_policy" in series["required_stage_packets"]
+    assert "stage_completion_policy" in series["series_design_profile"]["stage_pack_sections"]
 
 
 def _assert_workspace_topology_profile(series: dict[str, object]) -> None:
@@ -474,6 +476,34 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         assert stage_contract["monitor_freshness_refs"]
         assert stage_contract["replay_evidence_refs"]
         assert stage_contract["stage_production_evidence_refs"]
+        completion_policy = stage_contract["stage_completion_policy"]
+        assert completion_policy["surface_kind"] == "domain_stage_completion_policy"
+        assert completion_policy["version"] == "domain-stage-completion-policy.v1"
+        assert completion_policy["completion_judgment_owner"] == "domain_stage"
+        assert completion_policy["closeout_packet_required"] is True
+        assert completion_policy["provider_completion_is_domain_completion"] is False
+        assert completion_policy["opl_content_judgment_allowed"] is False
+        assert completion_policy["next_stage_transition_owner"] == "opl_runtime"
+        assert set(completion_policy["required_closeout_outcomes"]) >= {
+            "completed_and_continue",
+            "completed_and_wait_owner",
+            "route_back",
+            "blocked",
+            "rejected",
+        }
+        assert set(completion_policy["accepted_closeout_ref_fields"]) >= {
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref",
+        }
+        assert completion_policy["authority_boundary"] == {
+            "opl_can_decide_domain_completion": False,
+            "provider_completion_counts_as_stage_complete": False,
+            "file_presence_counts_as_stage_complete": False,
+            "suite_pass_counts_as_stage_complete": False,
+            "conformance_pass_counts_as_stage_complete": False,
+        }
         assert any(ref["role"] == "opl_provider_stage_launch_trigger" for ref in stage_contract["trigger_refs"])
         expected_receipt = stage_contract["expected_receipt_refs"][0]
         assert expected_receipt["owner"] == "med-autogrant"
@@ -567,13 +597,9 @@ def test_opl_standard_scaffold_validates_mag_pack() -> None:
     assert validation["agent_pack_validation"]["blockers"] == []
     assert validation["stage_ref_validation"]["blockers"] == []
 
-    out_of_scope_blocker_prefixes = (
-        "stage_completion_policy_",
-        "foundry_agent_",
-    )
-    unexpected_blockers = [
+    stage_completion_blockers = [
         blocker
         for blocker in validation["blockers"]
-        if not blocker.startswith(out_of_scope_blocker_prefixes)
+        if "stage_completion_policy" in blocker
     ]
-    assert unexpected_blockers == []
+    assert stage_completion_blockers == []

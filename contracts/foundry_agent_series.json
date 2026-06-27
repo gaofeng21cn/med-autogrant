@@ -140,6 +140,7 @@
     "user_stage_log_contract",
     "progress_delta_policy",
     "typed_blocker_lineage_policy",
+    "stage_completion_policy",
     "effective_current_context",
     "owner_receipt_or_typed_blocker_closeout"
   ],
@@ -178,6 +179,7 @@
     "stage_pack_sections": [
       "prompts",
       "stages",
+      "stage_completion_policy",
       "skills",
       "knowledge",
       "quality_gates"

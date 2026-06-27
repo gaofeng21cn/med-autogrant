@@ -284,6 +284,7 @@ def _foundry_agent_series_contract(stage_control_plane: Mapping[str, Any]) -> di
             "user_stage_log_contract",
             "progress_delta_policy",
             "typed_blocker_lineage_policy",
+            "stage_completion_policy",
             "effective_current_context",
             "owner_receipt_or_typed_blocker_closeout",
         ],

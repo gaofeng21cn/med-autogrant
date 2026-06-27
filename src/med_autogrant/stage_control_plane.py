@@ -121,6 +121,41 @@ TYPED_BLOCKER_LINEAGE_POLICY = {
         "opl_can_claim_deliverable_progress_from_platform_repair": False,
     },
 }
+
+STAGE_COMPLETION_POLICY: dict[str, Any] = {
+    "surface_kind": "domain_stage_completion_policy",
+    "version": "domain-stage-completion-policy.v1",
+    "owner": "one-person-lab",
+    "standard_agent_requirement": (
+        "domain_stage_owns_completion_judgment_and_emits_standard_closeout_packet"
+    ),
+    "completion_judgment_owner": "domain_stage",
+    "closeout_packet_required": True,
+    "provider_completion_is_domain_completion": False,
+    "opl_content_judgment_allowed": False,
+    "next_stage_transition_owner": "opl_runtime",
+    "required_closeout_outcomes": [
+        "completed_and_continue",
+        "completed_and_wait_owner",
+        "route_back",
+        "blocked",
+        "rejected",
+    ],
+    "accepted_closeout_ref_fields": [
+        "owner_receipt_ref",
+        "typed_blocker_ref",
+        "human_gate_ref",
+        "route_back_ref",
+    ],
+    "authority_boundary": {
+        "opl_can_decide_domain_completion": False,
+        "provider_completion_counts_as_stage_complete": False,
+        "file_presence_counts_as_stage_complete": False,
+        "suite_pass_counts_as_stage_complete": False,
+        "conformance_pass_counts_as_stage_complete": False,
+    },
+}
+
 STAGE_OUTPUT_ROLE_BY_STAGE_ID: dict[str, str] = {
     "call_and_candidate_intake": "call_candidate_intake_manifest_ref",
     "fundability_strategy": "fundability_strategy_owner_receipt_ref",
@@ -389,6 +424,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
             "progress_delta_policy": PROGRESS_DELTA_POLICY,
             "typed_blocker_lineage_policy": TYPED_BLOCKER_LINEAGE_POLICY,
+            "stage_completion_policy": STAGE_COMPLETION_POLICY,
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
                 "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
@@ -747,6 +783,7 @@ def build_mag_family_stage_control_plane(
                 "stage_production_evidence_closeout",
                 "stage_contract.user_stage_log_contract",
                 "stage_contract.stage_native_artifact_contract",
+                "stage_contract.stage_completion_policy",
             ],
             "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
         },
