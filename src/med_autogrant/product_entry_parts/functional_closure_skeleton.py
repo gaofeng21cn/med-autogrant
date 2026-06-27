@@ -216,15 +216,12 @@ def build_physical_skeleton_follow_through(
 
 def _build_retired_public_command_scan() -> dict[str, Any]:
     from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
-    from med_autogrant.public_cli import (
-        PUBLIC_THREE_TOKEN_COMMANDS,
-        PUBLIC_TO_INTERNAL_COMMAND,
-    )
+    from med_autogrant.public_cli import INTERNAL_TO_PUBLIC_COMMAND
 
     active_domain_entry_commands = set(SERVICE_SAFE_DOMAIN_COMMANDS)
     active_public_cli_command_labels = {
-        " ".join(tokens) for tokens in PUBLIC_TO_INTERNAL_COMMAND
-    } | {" ".join(tokens) for tokens in PUBLIC_THREE_TOKEN_COMMANDS}
+        " ".join(tokens) for tokens in INTERNAL_TO_PUBLIC_COMMAND.values()
+    }
     command_status = [
         _retired_public_command_status(
             command,
@@ -251,8 +248,8 @@ def _build_retired_public_command_scan() -> dict[str, Any]:
         "active_catalogs": {
             "domain_entry_command_count": len(active_domain_entry_commands),
             "public_grouped_cli_command_count": len(active_public_cli_command_labels),
-            "flat_internal_command_aliases_rejected_by_cli_normalizer": True,
-            "flat_internal_command_alias_count": len(PUBLIC_TO_INTERNAL_COMMAND),
+            "flat_internal_command_aliases_rejected_by_cli_parser": True,
+            "flat_internal_command_alias_count": len(INTERNAL_TO_PUBLIC_COMMAND),
             "negative_test_refs": [
                 "tests/product_entry_cases/test_cli_dispatch.py::ProductEntryCliDispatchTest::test_flat_product_status_alias_has_no_special_compatibility_branch",
             ],

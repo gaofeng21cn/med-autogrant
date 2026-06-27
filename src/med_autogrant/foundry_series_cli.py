@@ -6,10 +6,10 @@ from typing import Any, Mapping
 
 from med_autogrant.public_cli import (
     GENERATED_SURFACE_COMMAND_REFS,
+    INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_GROUP_ALIASES,
     PUBLIC_GROUP_COMMANDS,
-    PUBLIC_TO_INTERNAL_COMMAND,
 )
 
 
@@ -106,7 +106,7 @@ def build_foundry_series_validate() -> dict[str, Any]:
     missing_command_surface_ops = [
         operation
         for operation in EXPECTED_OPERATIONS
-        if ("foundry", operation) not in PUBLIC_TO_INTERNAL_COMMAND
+        if INTERNAL_TO_PUBLIC_COMMAND.get(f"foundry-{operation}") != ("foundry", operation)
     ]
     problems = [f"missing_identity_field:{field}" for field in missing_fields]
     problems.extend(

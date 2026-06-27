@@ -9,13 +9,12 @@ from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstra
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 from med_autogrant.public_cli import (
+    INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
     PUBLIC_GROUP_ALIASES,
     PUBLIC_GROUP_COMMANDS,
     PUBLIC_TOP_LEVEL_COMMANDS,
-    PUBLIC_THREE_TOKEN_COMMANDS,
-    PUBLIC_TO_INTERNAL_COMMAND,
 )
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
@@ -110,12 +109,89 @@ from med_autogrant.cli_parts.parser_adders import (
 )
 
 
-RETIRED_FLAT_COMMANDS = frozenset(PUBLIC_TO_INTERNAL_COMMAND.values())
+RETIRED_FLAT_COMMANDS = frozenset(INTERNAL_TO_PUBLIC_COMMAND)
+
+
+class _PublicCommandSubparsers:
+    def __init__(
+        self,
+        root_subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    ) -> None:
+        self._root_subparsers = root_subparsers
+        self._group_subparsers: dict[
+            str, argparse._SubParsersAction[argparse.ArgumentParser]
+        ] = {}
+
+    def add_parser(self, name: str, **kwargs: object) -> argparse.ArgumentParser:
+        public_tokens = INTERNAL_TO_PUBLIC_COMMAND.get(name)
+        if public_tokens is None:
+            command = self._root_subparsers.add_parser(name, **kwargs)
+            command.set_defaults(command=name)
+            return command
+
+        group, subcommand = public_tokens
+        command = self._group_subparsers_for(group).add_parser(subcommand, **kwargs)
+        command.set_defaults(command=name)
+        if group == "foundry" and subcommand in PUBLIC_TOP_LEVEL_COMMANDS:
+            alias = self._root_subparsers.add_parser(subcommand, **kwargs)
+            alias.set_defaults(command=name)
+            return _MirrorArgumentParser(primary=command, mirrors=(alias,))
+        return command
+
+    def _group_subparsers_for(
+        self,
+        group: str,
+    ) -> argparse._SubParsersAction[argparse.ArgumentParser]:
+        existing = self._group_subparsers.get(group)
+        if existing is not None:
+            return existing
+        aliases = [
+            alias
+            for alias, target_group in PUBLIC_GROUP_ALIASES.items()
+            if target_group == group
+        ]
+        group_parser = self._root_subparsers.add_parser(
+            group,
+            aliases=aliases,
+            help=PUBLIC_COMMAND_GROUP_SUMMARIES[group],
+        )
+        group_subparsers = group_parser.add_subparsers(
+            dest="public_command",
+            required=True,
+        )
+        self._group_subparsers[group] = group_subparsers
+        return group_subparsers
+
+
+class _MirrorArgumentParser:
+    def __init__(
+        self,
+        *,
+        primary: argparse.ArgumentParser,
+        mirrors: tuple[argparse.ArgumentParser, ...],
+    ) -> None:
+        self._primary = primary
+        self._mirrors = mirrors
+
+    def __getattr__(self, name: str) -> object:
+        return getattr(self._primary, name)
+
+    def add_argument(self, *args: object, **kwargs: object) -> object:
+        result = self._primary.add_argument(*args, **kwargs)
+        for mirror in self._mirrors:
+            mirror.add_argument(*args, **kwargs)
+        return result
+
+    def set_defaults(self, **kwargs: object) -> None:
+        self._primary.set_defaults(**kwargs)
+        for mirror in self._mirrors:
+            mirror.set_defaults(**kwargs)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="medautogrant")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    root_subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = _PublicCommandSubparsers(root_subparsers)
 
     _add_simple_command(
         subparsers,
@@ -489,21 +565,11 @@ def _maybe_handle_public_help(argv: list[str]) -> int | None:
     return None
 
 
-def _normalize_public_command_argv(argv: list[str]) -> list[str]:
+def _reject_retired_flat_command(argv: list[str]) -> None:
     if not argv:
-        return argv
+        return
     if argv[0] in RETIRED_FLAT_COMMANDS:
         raise SystemExit(f"argument command: invalid choice: '{argv[0]}'")
-    if argv[0] in PUBLIC_TOP_LEVEL_COMMANDS:
-        return [PUBLIC_TOP_LEVEL_COMMANDS[argv[0]], *argv[1:]]
-    group = PUBLIC_GROUP_ALIASES.get(argv[0], argv[0])
-    if group != argv[0]:
-        argv = [group, *argv[1:]]
-    if len(argv) >= 3 and (argv[0], argv[1], argv[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
-        return [PUBLIC_THREE_TOKEN_COMMANDS[(argv[0], argv[1], argv[2])], *argv[3:]]
-    if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
-        return [PUBLIC_TO_INTERNAL_COMMAND[(argv[0], argv[1])], *argv[2:]]
-    return argv
 
 
 def entrypoint() -> None:
@@ -515,8 +581,9 @@ def main(argv: list[str] | None = None) -> int:
     help_result = _maybe_handle_public_help(resolved_argv)
     if help_result is not None:
         return help_result
+    _reject_retired_flat_command(resolved_argv)
     parser = build_parser()
-    args = parser.parse_args(_normalize_public_command_argv(resolved_argv))
+    args = parser.parse_args(resolved_argv)
     try:
         payload = args.handler(args)
     except WorkspaceError as exc:

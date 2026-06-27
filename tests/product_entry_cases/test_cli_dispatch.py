@@ -8,7 +8,8 @@ from contextlib import (
 )
 from io import StringIO
 from unittest.mock import patch
-from med_autogrant.cli import main
+from argparse import _SubParsersAction
+from med_autogrant.cli import build_parser, main
 from med_autogrant.public_cli import public_cli_command
 from support.cli import public_cli_argv
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
@@ -24,6 +25,25 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def test_public_groups_are_registered_directly_without_flat_grouped_wrapper(self) -> None:
+        parser = build_parser()
+        root_subparsers = next(
+            action for action in parser._actions if isinstance(action, _SubParsersAction)
+        )
+
+        self.assertIn("workspace", root_subparsers.choices)
+        self.assertIn("authority", root_subparsers.choices)
+        self.assertIn("domain-handler", root_subparsers.choices)
+        self.assertNotIn("validate-workspace", root_subparsers.choices)
+        workspace_parser = root_subparsers.choices["workspace"]
+        workspace_subparsers = next(
+            action
+            for action in workspace_parser._actions
+            if isinstance(action, _SubParsersAction)
+        )
+        self.assertIn("validate", workspace_subparsers.choices)
+        self.assertNotIn("validate-workspace", workspace_subparsers.choices)
 
     def test_product_group_is_retired_from_public_cli(self) -> None:
         for command in (
@@ -49,7 +69,13 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
                 )
                 self.assertEqual(exit_code, 2)
                 self.assertEqual(stdout, "")
-                self.assertIn(f"invalid choice: '{command[0]}'", stderr)
+                if command[0] == "workspace":
+                    self.assertIn(
+                        f"argument public_command: invalid choice: '{command[1]}'",
+                        stderr,
+                    )
+                else:
+                    self.assertIn(f"invalid choice: '{command[0]}'", stderr)
 
     def test_flat_product_status_alias_has_no_special_compatibility_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

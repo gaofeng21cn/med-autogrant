@@ -270,7 +270,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertTrue(
             retired_command_scan["active_catalogs"][
-                "flat_internal_command_aliases_rejected_by_cli_normalizer"
+                "flat_internal_command_aliases_rejected_by_cli_parser"
             ]
         )
         self.assertGreater(retired_command_scan["active_catalogs"]["domain_entry_command_count"], 0)

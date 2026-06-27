@@ -83,17 +83,11 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "build-submission-ready-package": ("package", "submission-ready"),
 }
 
-PUBLIC_TO_INTERNAL_COMMAND: Final[dict[tuple[str, str], str]] = {
-    value: key for key, value in INTERNAL_TO_PUBLIC_COMMAND.items()
-}
-
 PUBLIC_TOP_LEVEL_COMMANDS: Final[dict[str, str]] = {
     subcommand: internal
     for internal, (group, subcommand) in INTERNAL_TO_PUBLIC_COMMAND.items()
     if group == "foundry"
 }
-
-PUBLIC_THREE_TOKEN_COMMANDS: Final[dict[tuple[str, str, str], str]] = {}
 
 GENERATED_SURFACE_COMMAND_REFS: Final[dict[str, str]] = {
     "grant-progress": "opl://generated-surfaces/mag/inspect-progress",
