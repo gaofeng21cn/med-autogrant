@@ -28,9 +28,11 @@ from med_autogrant.opl_standard_pack_private_policy import (
     build_private_functional_surface_policy,
 )
 from med_autogrant.opl_standard_pack_profiles import (
+    AGENT_MEMBERSHIP_PROJECTION_POLICY,
     DOMAIN_SPECIFIC_PROFILE,
     SERIES_DESIGN_PROFILE,
     SHARED_POLICY_RELEASE,
+    STANDARD_PUBLIC_PROJECTION_POLICY,
     WORKSPACE_TOPOLOGY_PROFILE,
 )
 from med_autogrant.opl_standard_pack_source_policy import (
@@ -261,6 +263,8 @@ def _foundry_agent_series_contract(stage_control_plane: Mapping[str, Any]) -> di
             "domain_contract_version_pin_does_not_authorize_domain_truth": True,
         },
         "shared_policy_release": SHARED_POLICY_RELEASE,
+        "agent_membership_projection_policy": AGENT_MEMBERSHIP_PROJECTION_POLICY,
+        "standard_public_projection_policy": STANDARD_PUBLIC_PROJECTION_POLICY,
         "series_design_profile": SERIES_DESIGN_PROFILE,
         "domain_specific_profile": DOMAIN_SPECIFIC_PROFILE,
         "workspace_topology_profile": WORKSPACE_TOPOLOGY_PROFILE,

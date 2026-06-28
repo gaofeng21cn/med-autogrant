@@ -14,9 +14,11 @@ from med_autogrant.opl_standard_pack_handoff_refs import (
     AHE_PATCH_LOOP_REF_KEYS,
 )
 from med_autogrant.opl_standard_pack_profiles import (
+    AGENT_MEMBERSHIP_PROJECTION_POLICY,
     DOMAIN_SPECIFIC_PROFILE,
     SERIES_DESIGN_PROFILE,
     SHARED_POLICY_RELEASE,
+    STANDARD_PUBLIC_PROJECTION_POLICY,
     WORKSPACE_TOPOLOGY_PROFILE,
 )
 from med_autogrant.opl_standard_pack_source_policy import (
@@ -94,6 +96,8 @@ def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
         "domain_contract_version_pin_does_not_authorize_domain_truth": True,
     }
     assert series["shared_policy_release"] == SHARED_POLICY_RELEASE
+    assert series["agent_membership_projection_policy"] == AGENT_MEMBERSHIP_PROJECTION_POLICY
+    assert series["standard_public_projection_policy"] == STANDARD_PUBLIC_PROJECTION_POLICY
     assert series["series_design_profile"] == SERIES_DESIGN_PROFILE
     assert series["domain_specific_profile"] == DOMAIN_SPECIFIC_PROFILE
     assert "stage_completion_policy" in series["required_stage_packets"]

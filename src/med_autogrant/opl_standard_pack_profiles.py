@@ -5,7 +5,7 @@ SHARED_POLICY_RELEASE = {
         "contracts/opl-framework/foundry-agent-series-policy-release.json"
     ),
     "policy_bundle_fingerprint": (
-        "sha256:5d77102e99e6e49acd88714cd94dcafe0969b8f2a5529928d753002ac3d4619d"
+        "sha256:503f515e8fa08b3f81ce28cac461368c609d4565de239c9f95c3f910cb758ed5"
     ),
     "fingerprint_algorithm": "sha256:stable-json",
     "domain_contract_policy_release_pin_required": True,
@@ -46,6 +46,7 @@ SERIES_DESIGN_PROFILE = {
         "stages",
         "stage_completion_policy",
         "skills",
+        "tools",
         "knowledge",
         "quality_gates",
     ],
@@ -54,6 +55,8 @@ SERIES_DESIGN_PROFILE = {
         "blocked_shape": "domain_owned_typed_blocker_ref",
         "route_back_shape": "route_back_or_human_gate_ref",
         "provider_completion_is_closeout": False,
+        "completion_judgment_owner": "domain_stage",
+        "opl_content_judgment_allowed": False,
     },
     "authority_invariants": {
         "opl_can_infer_domain_output": False,
@@ -62,6 +65,44 @@ SERIES_DESIGN_PROFILE = {
         "opl_can_authorize_quality_or_export": False,
         "domain_owns_input_truth_and_output_authority": True,
     },
+}
+
+AGENT_MEMBERSHIP_PROJECTION_POLICY = {
+    "surface_kind": "opl_foundry_agent_membership_projection_policy",
+    "version": "foundry-agent-membership-projection.v1",
+    "policy_id": "standard_agent_membership_not_surface_origin",
+    "default_membership": "standard_domain_agent",
+    "public_agent_list_must_not_split_by_generated_surface": True,
+    "public_agent_list_must_not_split_by_plugin_transport": True,
+    "generated_surface_is_membership_axis": False,
+    "generated_surface_is_status_axis": False,
+    "plugin_transport_is_membership_axis": False,
+    "plugin_transport_is_status_axis": False,
+    "generated_surface_only_field_public_default": False,
+}
+
+STANDARD_PUBLIC_PROJECTION_POLICY = {
+    "surface_kind": "opl_foundry_agent_standard_public_projection_policy",
+    "version": "foundry-agent-standard-public-projection.v1",
+    "policy_id": "standard_agent_public_foundry_surface_is_opl_generated_hosted_series",
+    "standard_public_foundry_surface": "opl_generated_hosted_series",
+    "canonical_inspect_command_pattern": "opl foundry agents inspect <agent_id>",
+    "allowed_active_public_foundry_surfaces": [
+        "opl_foundry_agent_series_spine",
+        "opl_family_hosted_surfaces",
+    ],
+    "active_public_projection_allows_non_opl_foundry_cli": False,
+    "active_public_projection_allows_domain_owned_cli_as_standard_surface": False,
+    "active_public_projection_allows_retired_surface_aliases": False,
+    "active_public_projection_allows_compatibility_aliases": False,
+    "active_public_projection_allows_legacy_json_aliases": False,
+    "minimal_authority_functions_are_membership_axis": False,
+    "domain_owned_helpers_are_membership_axis": False,
+    "allowed_domain_owned_helper_context": "minimal_authority_functions_only",
+    "non_standard_surface_retention_contexts": [
+        "history",
+        "tombstone",
+    ],
 }
 
 DOMAIN_SPECIFIC_PROFILE = {
