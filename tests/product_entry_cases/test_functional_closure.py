@@ -206,21 +206,21 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertIn("current machine anchors", follow_through["human_readable_provenance_policy"])
         self.assertFalse(follow_through["moves_workspace_artifacts"])
         self.assertFalse(follow_through["moves_runtime_receipt_instances"])
-        self.assertEqual(follow_through["legacy_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(follow_through["active_path_current_role_policy"], "physically_removed_or_history_tombstone_only")
         self.assertEqual(
-            follow_through["active_path_scan_no_legacy_default_caller_ref"],
+            follow_through["active_path_current_role_guard_ref"],
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller",
+            "active_path_current_role_guard",
         )
         self.assertEqual(
-            follow_through["retired_public_command_scan_ref"],
+            follow_through["current_command_role_guard_ref"],
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "retired_public_command_scan",
+            "current_command_role_guard",
         )
-        active_path_scan = follow_through["active_path_scan_no_legacy_default_caller"]
-        self.assertEqual(active_path_scan["surface_kind"], "mag_active_path_scan_no_legacy_default_caller")
+        active_path_scan = follow_through["active_path_current_role_guard"]
+        self.assertEqual(active_path_scan["surface_kind"], "mag_active_path_current_role_guard")
         self.assertEqual(active_path_scan["state"], "passed")
-        self.assertTrue(active_path_scan["no_legacy_default_caller"])
+        self.assertTrue(active_path_scan["current_role_guard_passed"])
         self.assertEqual(
             active_path_scan["policy_ref"],
             "contracts/private_functional_surface_policy.json#/"
@@ -228,7 +228,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertEqual(
             active_path_scan["policy_id"],
-            "mag.active_path_scan.no_legacy_default_caller.policy.v1",
+            "mag.active_path.current_role_guard.policy.v1",
         )
         self.assertEqual(
             active_path_scan["scanned_scope"]["roots"],
@@ -239,7 +239,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             [".json", ".py", ".sh", ".toml", ".yaml", ".yml"],
         )
         self.assertGreater(active_path_scan["scanned_file_count"], 0)
-        self.assertEqual(active_path_scan["forbidden_default_caller_matches"], [])
+        self.assertEqual(active_path_scan["forbidden_role_matches"], [])
         self.assertFalse(active_path_scan["claims_production_long_run_soak_complete"])
         self.assertTrue(active_path_scan["authority_boundary"]["proves_repo_local_active_machine_surface_only"])
         self.assertFalse(active_path_scan["authority_boundary"]["proves_opl_hosted_production_soak"])
@@ -247,7 +247,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(active_path_scan["authority_boundary"]["opl_can_write_domain_truth"])
         self.assertFalse(active_path_scan["authority_boundary"]["opl_can_declare_export_ready"])
         self.assertEqual(
-            {entry["path"]: entry["state"] for entry in active_path_scan["retired_surface_path_status"]},
+            {entry["path"]: entry["state"] for entry in active_path_scan["forbidden_path_status"]},
             {
                 "tests/test_product_entry.py": "absent",
                 "src/med_autogrant/domain_runtime_parts/patch_targets.py": "absent",
@@ -256,80 +256,57 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "src/med_autogrant/" + "host" + "_agent.py": "absent",
             },
         )
-        retired_command_scan = follow_through["retired_public_command_scan"]
+        current_command_guard = follow_through["current_command_role_guard"]
         self.assertEqual(
-            retired_command_scan["surface_kind"],
-            "mag_retired_public_command_no_resurrection_scan",
+            current_command_guard["surface_kind"],
+            "mag_current_command_role_guard",
         )
-        self.assertEqual(retired_command_scan["state"], "passed")
-        self.assertTrue(retired_command_scan["no_retired_public_commands"])
-        self.assertEqual(retired_command_scan["retired_command_matches"], [])
-        self.assertEqual(
-            len(retired_command_scan["command_status"]),
-            len(retired_command_scan["retired_exact_commands"]),
-        )
+        self.assertEqual(current_command_guard["state"], "passed")
+        self.assertTrue(current_command_guard["current_command_role_guard_passed"])
+        self.assertFalse(current_command_guard["stores_closed_command_alias_names"])
+        self.assertEqual(current_command_guard["forbidden_command_match_count"], 0)
         self.assertTrue(
-            retired_command_scan["active_catalogs"][
+            current_command_guard["active_catalogs"][
                 "flat_internal_command_aliases_rejected_by_cli_parser"
             ]
         )
-        self.assertGreater(retired_command_scan["active_catalogs"]["domain_entry_command_count"], 0)
+        self.assertGreater(current_command_guard["active_catalogs"]["domain_entry_command_count"], 0)
         self.assertGreater(
-            retired_command_scan["active_catalogs"]["public_grouped_cli_command_count"],
+            current_command_guard["active_catalogs"]["public_grouped_cli_command_count"],
             0,
         )
-        self.assertFalse(retired_command_scan["claims_production_long_run_soak_complete"])
+        self.assertFalse(current_command_guard["claims_production_long_run_soak_complete"])
         self.assertTrue(
-            retired_command_scan["authority_boundary"]["proves_repo_local_command_catalog_only"]
+            current_command_guard["authority_boundary"]["proves_repo_local_command_catalog_only"]
         )
         self.assertFalse(
-            retired_command_scan["authority_boundary"]["proves_opl_hosted_production_soak"]
+            current_command_guard["authority_boundary"]["proves_opl_hosted_production_soak"]
         )
         self.assertFalse(
-            retired_command_scan["authority_boundary"]["proves_app_workbench_consumption"]
-        )
-        self.assertEqual(
-            {entry["state"] for entry in retired_command_scan["command_status"]},
-            {"absent_from_active_catalogs"},
+            current_command_guard["authority_boundary"]["proves_app_workbench_consumption"]
         )
         self.assertTrue(
-            all(
-                not entry["active_domain_entry_command"] and not entry["active_public_cli_command"]
-                for entry in retired_command_scan["command_status"]
-            )
-        )
-        self.assertTrue(
-            all(entry["negative_test_refs"] for entry in retired_command_scan["command_status"])
+            current_command_guard["active_catalogs"]["current_guard_test_refs"]
         )
         self.assertIn(
-            "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
+            "/product_entry_manifest/physical_skeleton_follow_through/current_command_role_guard",
             follow_through["replacement_parity_refs"],
         )
-        self.assertEqual(audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(
+            audit["active_path_current_role_policy"],
+            "current_role_guard_and_history_index_only",
+        )
         self.assertEqual(audit["forbidden_active_path_residue"], [])
-        self.assertEqual(audit["legacy_active_path_residue"], [])
         self.assertIn(
             ".agents/plugins/marketplace.json",
-            follow_through["active_path_scan_no_legacy_default_caller"]["scanned_scope"]["files"],
+            follow_through["active_path_current_role_guard"]["scanned_scope"]["files"],
         )
-        receipt_states = {
-            entry["path_family"]: entry["state"]
-            for entry in follow_through["retired_legacy_default_path_receipts"]
-        }
-        self.assertEqual(
-            receipt_states,
-            {
-                "default Hermes active path": "tombstone_only",
-                "default Gateway active path": "physically_removed_from_active_source",
-                "default local-manager active path": "physically_removed_from_active_source",
-            },
-        )
-        self.assertTrue(
-            all(
-                entry["active_source_residue"] is False
-                for entry in follow_through["retired_legacy_default_path_receipts"]
-            )
-        )
+        closed_history = follow_through["closed_default_path_history_summary"]
+        self.assertEqual(closed_history["state"], "closed_history_index_only")
+        self.assertEqual(closed_history["closed_path_family_count"], 3)
+        self.assertEqual(closed_history["active_source_residue_count"], 0)
+        self.assertFalse(closed_history["stores_closed_path_names"])
+        self.assertFalse(closed_history["authority_boundary"]["summary_can_authorize_physical_delete"])
         for root_key, root in follow_through["roots"].items():
             with self.subTest(root=root_key):
                 self.assertTrue((REPO_ROOT / root["anchor_ref"]).exists())
@@ -382,9 +359,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertIn("facade patch bridge", direct_retirement["forbidden_compatibility_surfaces"])
         self.assertEqual(
-            direct_retirement["active_path_scan_no_legacy_default_caller_ref"],
+            direct_retirement["active_path_current_role_guard_ref"],
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller",
+            "active_path_current_role_guard",
         )
         phase_states = {phase["phase_id"]: phase["state"] for phase in closure_status["phases"]}
         self.assertEqual(

@@ -207,7 +207,7 @@
             "grant_memory_accept_reject"
           ],
           "legacy_proof_tombstones": [
-            "retired_hermes_gateway_local_manager_default_paths",
+            "closed_default_path_history_index",
             "legacy_local_runtime_history_attempt_record",
             "domain_runtime_patch_bridge",
             "compatibility_only_product_entry_aggregate_test",
@@ -232,13 +232,13 @@
             },
             "domain_handler_dispatch_product_shell": {
               "module_ref": "domain_handler_product_status_shell",
-              "active_caller_status": "active_refs_only_domain_handler_adapter",
+              "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
               "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs"
             },
-            "retired_default_runtime_paths": {
-              "module_ref": "retired_hermes_gateway_local_manager_default_paths",
-              "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
-              "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
+            "closed_default_path_history_index": {
+              "module_ref": "closed_default_path_history_index",
+              "active_caller_status": "closed_default_paths_absent_no_active_caller",
+              "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_compact_history_index_refs"
             }
           },
           "claims_opl_replacement_exists": true,
@@ -262,7 +262,7 @@
             "compatibility_alias_allowed": false,
             "function_id_policy": "canonical_authority_surface_ids_only",
             "mechanical_decision_forbidden_for_all_surfaces": true,
-            "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
+            "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
             "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
             "programmatic_authority_surface_ids": [
               "package_authority",
@@ -270,7 +270,6 @@
               "grant_helper"
             ],
             "programmatic_verdict_generation_allowed": false,
-            "retired_legacy_function_id_compatibility": false,
             "surface_kind": "mag_minimal_authority_surface_taxonomy",
             "target_domain_id": "med-autogrant",
             "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
@@ -452,7 +451,7 @@
             {
               "closed_by_refs": [
                 "/product_entry_manifest/standard_domain_agent_skeleton",
-                "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
                 "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
                 "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
               ],
@@ -528,7 +527,7 @@
               "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
               "mag_surface_refs": [
                 "/product_entry_manifest/controlled_stage_attempt_projection",
-                "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+                "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
               ],
               "owner": "evidence_gate",
               "previous_bucket": "functional_structure_gap",
@@ -575,7 +574,7 @@
           "compatibility_alias_allowed": false,
           "function_id_policy": "canonical_authority_surface_ids_only",
           "mechanical_decision_forbidden_for_all_surfaces": true,
-          "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
+          "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
           "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
           "programmatic_authority_surface_ids": [
             "package_authority",
@@ -583,7 +582,6 @@
             "grant_helper"
           ],
           "programmatic_verdict_generation_allowed": false,
-          "retired_legacy_function_id_compatibility": false,
           "surface_kind": "mag_minimal_authority_surface_taxonomy",
           "target_domain_id": "med-autogrant",
           "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"

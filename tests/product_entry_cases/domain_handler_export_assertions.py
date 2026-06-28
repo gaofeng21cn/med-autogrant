@@ -365,11 +365,11 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
     )
     retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
     testcase.assertEqual(
-        retire_modules["retired_hermes_gateway_local_manager_default_paths"]["active_caller_status"],
-        "legacy_default_runtime_paths_absent_no_active_caller",
+        retire_modules["closed_default_path_history_index"]["active_caller_status"],
+        "closed_default_paths_absent_no_active_caller",
     )
     no_active_caller_evidence = retire_modules[
-        "retired_hermes_gateway_local_manager_default_paths"
+        "closed_default_path_history_index"
     ]["no_active_caller_evidence"]
     testcase.assertEqual(
         no_active_caller_evidence["status"],
@@ -378,13 +378,11 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
     testcase.assertTrue(no_active_caller_evidence["no_active_caller_observed"])
     testcase.assertFalse(no_active_caller_evidence["physical_delete_authorized"])
     testcase.assertEqual(
-        retire_modules["retired_hermes_gateway_local_manager_default_paths"]["code_paths"],
+        retire_modules["closed_default_path_history_index"]["code_paths"],
         [
-            "src/med_autogrant/gateway.py:absent",
-            "src/med_autogrant/local_manager.py:absent",
             (
                 "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:"
-                "retired_legacy_default_path_receipts"
+                "closed_default_path_history_summary"
             ),
         ],
     )
@@ -654,8 +652,8 @@ def assert_domain_handler_output_guard_and_follow_through(testcase: Any, export:
             "/product_entry_manifest/owner_receipt_contract",
             "/product_entry_manifest/grant_transition_oracle",
             "/product_entry_manifest/controlled_soak_no_regression_attempt",
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
-            "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
+            "/product_entry_manifest/physical_skeleton_follow_through/current_command_role_guard",
         ],
     )
     testcase.assertEqual(
@@ -676,19 +674,12 @@ def assert_domain_handler_output_guard_and_follow_through(testcase: Any, export:
             "docs/status.md#旧面退役校准",
         ],
     )
-    testcase.assertEqual(physical_follow_through["legacy_active_path_residue"], [])
-    removed_residue = [
-        item
-        for item in physical_follow_through["retired_legacy_default_path_receipts"]
-        if item["state"] == "physically_removed_from_active_source"
-    ]
-    testcase.assertEqual(
-        [item["domain_owner_handoff_receipt_refs"] for item in removed_residue],
-        [
-            ["mag://owner-handoff/default-gateway-active-path-retired"],
-            ["mag://owner-handoff/default-local-manager-active-path-retired"],
-        ],
-    )
+    testcase.assertEqual(physical_follow_through["forbidden_active_path_residue"], [])
+    closed_history = physical_follow_through["closed_default_path_history_summary"]
+    testcase.assertEqual(closed_history["state"], "closed_history_index_only")
+    testcase.assertEqual(closed_history["closed_path_family_count"], 3)
+    testcase.assertEqual(closed_history["active_source_residue_count"], 0)
+    testcase.assertFalse(closed_history["stores_closed_path_names"])
     testcase.assertEqual(
         export["ideal_state_closure_status"]["surface_kind"],
         "mag_ideal_state_closure_status",

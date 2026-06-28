@@ -130,13 +130,11 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
                     "MAG_keeps_guarded_domain_adapter_refs"
                 ),
             },
-            "retired_default_runtime_paths": {
-                "module_ref": "retired_hermes_gateway_local_manager_default_paths",
-                "active_caller_status": (
-                    "legacy_default_runtime_paths_absent_no_active_caller"
-                ),
+            "closed_default_path_history_index": {
+                "module_ref": "closed_default_path_history_index",
+                "active_caller_status": "closed_default_paths_absent_no_active_caller",
                 "migration_action": (
-                    "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
+                    "OPL_owns_generic_executor_adapter_MAG_keeps_only_compact_history_index_refs"
                 ),
             },
         },
@@ -203,7 +201,7 @@ def _build_no_active_caller_evidence_summary(
         "active_caller_module_ids": active_caller_module_ids,
         "scan_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ),
         "physical_delete_authorized": False,
         "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",

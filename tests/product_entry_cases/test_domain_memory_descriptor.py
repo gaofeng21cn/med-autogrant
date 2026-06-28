@@ -192,20 +192,16 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
         self.assertEqual(layout_audit["surface_kind"], "mag_repo_source_layout_audit")
         self.assertEqual(layout_audit["layout_state"], "declarative_grant_pack_follow_through_landed")
         self.assertEqual(layout_audit["boundary_keys"], ["agent", "contracts", "runtime", "docs"])
-        self.assertEqual(layout_audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
-        self.assertEqual(layout_audit["forbidden_active_path_residue"], [])
-        self.assertEqual(layout_audit["legacy_active_path_residue"], [])
         self.assertEqual(
-            {
-                entry["path_family"]: entry["state"]
-                for entry in layout_audit["retired_legacy_default_path_receipts"]
-            },
-            {
-                "default Hermes active path": "tombstone_only",
-                "default Gateway active path": "physically_removed_from_active_source",
-                "default local-manager active path": "physically_removed_from_active_source",
-            },
+            layout_audit["active_path_current_role_policy"],
+            "current_role_guard_and_history_index_only",
         )
+        self.assertEqual(layout_audit["forbidden_active_path_residue"], [])
+        closed_history = layout_audit["closed_default_path_history_summary"]
+        self.assertEqual(closed_history["state"], "closed_history_index_only")
+        self.assertEqual(closed_history["closed_path_family_count"], 3)
+        self.assertEqual(closed_history["active_source_residue_count"], 0)
+        self.assertFalse(closed_history["stores_closed_path_names"])
         for ref_status in layout_audit["source_ref_status"]:
             with self.subTest(source_ref=ref_status["path"]):
                 self.assertTrue(ref_status["exists"])

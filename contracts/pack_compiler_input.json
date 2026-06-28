@@ -81,12 +81,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "fundability_verdict",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "ai_first_grant_review_or_fundability_stage_artifact",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -110,7 +110,6 @@
       "programmatic_role": "validator_and_verdict_ref_materializer",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/family_stage_control_plane/stages",
         "/product_entry_manifest/grant_transition_oracle"
@@ -148,12 +147,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "quality_verdict",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "ai_authored_critique_or_quality_closure_artifact",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -177,7 +176,6 @@
       "programmatic_role": "critique_artifact_aggregator_and_guard",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/grant_authoring_readiness",
         "/product_entry_manifest/controlled_stage_attempt_projection"
@@ -215,12 +213,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "export_verdict",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "ai_or_owner_backed_package_export_stage_artifact",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -244,7 +242,6 @@
       "programmatic_role": "export_stage_ref_validator_and_blocker",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "package submission-ready",
         "/product_entry_manifest/artifact_locator_contract"
@@ -282,12 +279,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "package_authority",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "mag_owner_receipt_or_package_stage_authority",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -311,7 +308,6 @@
       "programmatic_role": "package_materializer_and_owner_receipt_guard",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/artifact_locator_contract",
         "/product_entry_manifest/lifecycle_guarded_apply_proof"
@@ -349,12 +345,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "memory_accept_reject",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "ai_first_grant_strategy_memory_stage_artifact",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -378,7 +374,6 @@
       "programmatic_role": "memory_receipt_writer_and_refs_projection",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/domain_memory_descriptor_locator",
         "/product_entry_manifest/controlled_domain_memory_apply_proof"
@@ -416,12 +411,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "owner_receipt_signer",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "mag_owner_receipt_schema_and_domain_provenance",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -445,7 +440,6 @@
       "programmatic_role": "receipt_schema_signer_and_blocker_guard",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/owner_receipt_contract",
         "/product_entry_manifest/controlled_soak_no_regression_attempt"
@@ -483,12 +477,12 @@
         "controller_route_state",
         "runtime_queue_state"
       ],
+      "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
       "function_id": "grant_helper",
       "function_id_policy": "canonical_authority_surface_id_only",
       "generated_by_opl": false,
       "judgment_owner": "deterministic_grant_metadata_route_and_blocker_policy",
       "mechanical_decision_forbidden": true,
-      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "opl_generated_wrapper_allowed": true,
       "output_boundary": {
         "allowed_return_shapes": [
@@ -512,7 +506,6 @@
       "programmatic_role": "grant_metadata_route_blocker_helper",
       "programmatic_verdict_generation_allowed": false,
       "retention_class": "mag_minimal_authority_function",
-      "retired_legacy_function_id_compatibility": false,
       "source_refs": [
         "/product_entry_manifest/family_action_catalog",
         "/product_entry_manifest/grant_transition_oracle"
@@ -539,9 +532,9 @@
       "grant_helper"
     ],
     "compatibility_alias_allowed": false,
+    "forbidden_role_policy": "forbid_compatibility_alias_function_ids",
     "function_id_policy": "canonical_authority_surface_ids_only",
     "mechanical_decision_forbidden_for_all_surfaces": true,
-    "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
     "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
     "programmatic_authority_surface_ids": [
       "package_authority",
@@ -549,7 +542,6 @@
       "grant_helper"
     ],
     "programmatic_verdict_generation_allowed": false,
-    "retired_legacy_function_id_compatibility": false,
     "surface_kind": "mag_minimal_authority_surface_taxonomy",
     "target_domain_id": "med-autogrant",
     "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"

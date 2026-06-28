@@ -3145,8 +3145,9 @@
             "layout_state",
             "boundary_keys",
             "physical_move_required",
-            "retired_active_path_policy",
+            "active_path_current_role_policy",
             "forbidden_active_path_residue",
+            "closed_default_path_history_summary",
             "source_ref_status"
           ],
           "properties": {
@@ -3166,8 +3167,38 @@
             "physical_move_required": {
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
-            "retired_active_path_policy": {
-              "const": "physically_removed_or_history_tombstone_only"
+            "active_path_current_role_policy": {
+              "const": "current_role_guard_and_history_index_only"
+            },
+            "closed_default_path_history_summary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "surface_kind",
+                "state",
+                "closed_path_family_count",
+                "active_source_residue_count",
+                "stores_closed_path_names",
+                "authority_boundary"
+              ],
+              "properties": {
+                "surface_kind": {
+                  "const": "mag_closed_default_path_history_summary"
+                },
+                "state": {
+                  "const": "closed_history_index_only"
+                },
+                "closed_path_family_count": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "active_source_residue_count": {
+                  "const": 0
+                },
+                "stores_closed_path_names": {
+                  "const": false
+                }
+              }
             },
             "source_ref_status": {
               "type": "array",
@@ -3922,8 +3953,8 @@
             "additionalProperties": true,
             "required": [
               "surface_kind", "authority_surface_id", "function_id", "owner",
-              "retired_legacy_function_id_compatibility", "compatibility_alias_allowed",
-              "function_id_policy", "no_resurrection_policy",
+              "compatibility_alias_allowed",
+              "function_id_policy", "forbidden_role_policy",
               "retention_class", "generated_by_opl", "opl_generated_wrapper_allowed",
               "work_mode", "judgment_owner", "programmatic_role",
               "ai_stage_artifact_required", "mechanical_decision_forbidden",
@@ -3948,10 +3979,9 @@
                 ]
               },
               "owner": {"const": "med-autogrant"},
-              "retired_legacy_function_id_compatibility": {"const": false},
               "compatibility_alias_allowed": {"const": false},
               "function_id_policy": {"const": "canonical_authority_surface_id_only"},
-              "no_resurrection_policy": {"const": "do_not_restore_legacy_function_id_compatibility"},
+              "forbidden_role_policy": {"const": "forbid_compatibility_alias_function_ids"},
               "retention_class": {"const": "mag_minimal_authority_function"},
               "generated_by_opl": {"const": false},
               "opl_generated_wrapper_allowed": {"const": true},
@@ -3991,16 +4021,15 @@
           "required": [
             "ai_first_judgment_surface_ids",
             "programmatic_authority_surface_ids",
-            "retired_legacy_function_id_compatibility", "compatibility_alias_allowed",
-            "function_id_policy", "no_resurrection_policy",
+            "compatibility_alias_allowed",
+            "function_id_policy", "forbidden_role_policy",
             "mechanical_decision_forbidden_for_all_surfaces",
             "programmatic_verdict_generation_allowed"
           ],
           "properties": {
-            "retired_legacy_function_id_compatibility": {"const": false},
             "compatibility_alias_allowed": {"const": false},
             "function_id_policy": {"const": "canonical_authority_surface_ids_only"},
-            "no_resurrection_policy": {"const": "do_not_restore_legacy_function_id_compatibility"},
+            "forbidden_role_policy": {"const": "forbid_compatibility_alias_function_ids"},
             "mechanical_decision_forbidden_for_all_surfaces": {"const": true},
             "programmatic_verdict_generation_allowed": {"const": false}
           }
@@ -4118,11 +4147,13 @@
         "moves_workspace_artifacts",
         "moves_runtime_receipt_instances",
         "moves_memory_body",
-        "active_path_scan_no_legacy_default_caller_ref",
-        "active_path_scan_no_legacy_default_caller",
-        "legacy_active_path_policy",
-        "legacy_active_path_residue",
-        "retired_legacy_default_path_receipts"
+        "active_path_current_role_guard_ref",
+        "active_path_current_role_guard",
+        "active_path_current_role_policy",
+        "forbidden_active_path_residue",
+        "current_command_role_guard_ref",
+        "current_command_role_guard",
+        "closed_default_path_history_summary"
       ],
       "properties": {
         "surface_kind": {
@@ -4134,10 +4165,10 @@
         "moves_workspace_artifacts": {"const": false},
         "moves_runtime_receipt_instances": {"const": false},
         "moves_memory_body": {"const": false},
-        "active_path_scan_no_legacy_default_caller_ref": {
-          "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+        "active_path_current_role_guard_ref": {
+          "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
         },
-        "active_path_scan_no_legacy_default_caller": {
+        "active_path_current_role_guard": {
           "type": "object",
           "additionalProperties": true,
           "required": [
@@ -4145,21 +4176,21 @@
             "scan_id",
             "target_domain_id",
             "state",
-            "no_legacy_default_caller",
+            "current_role_guard_passed",
             "scanned_scope",
             "scanned_file_count",
-            "forbidden_default_caller_patterns",
-            "forbidden_default_caller_matches",
-            "retired_surface_path_status",
+            "forbidden_role_patterns",
+            "forbidden_role_matches",
+            "forbidden_path_status",
             "claims_production_long_run_soak_complete",
             "authority_boundary"
           ],
           "properties": {
             "surface_kind": {
-              "const": "mag_active_path_scan_no_legacy_default_caller"
+              "const": "mag_active_path_current_role_guard"
             },
             "scan_id": {
-              "const": "mag.active_path_scan.no_legacy_default_caller.v1"
+              "const": "mag.active_path.current_role_guard.v1"
             },
             "target_domain_id": {
               "const": "med-autogrant"
@@ -4167,7 +4198,7 @@
             "state": {
               "const": "passed"
             },
-            "no_legacy_default_caller": {
+            "current_role_guard_passed": {
               "const": true
             },
             "scanned_scope": {
@@ -4186,7 +4217,7 @@
                 "scans_repo_source_only": {"const": true}
               }
             },
-            "forbidden_default_caller_matches": {
+            "forbidden_role_matches": {
               "type": "array",
               "maxItems": 0
             },
@@ -4213,34 +4244,78 @@
             }
           }
         },
-        "legacy_active_path_policy": {
+        "active_path_current_role_policy": {
           "const": "physically_removed_or_history_tombstone_only"
         },
-        "legacy_active_path_residue": {
+        "forbidden_active_path_residue": {
           "type": "array",
           "maxItems": 0
         },
-        "retired_legacy_default_path_receipts": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": true,
-            "required": ["path_family", "state", "active_source_residue", "evidence_ref"],
-            "properties": {
-              "path_family": {
-                "enum": [
-                  "default Hermes active path",
-                  "default Gateway active path",
-                  "default local-manager active path"
-                ]
-              },
-              "state": {
-                "enum": ["physically_removed_from_active_source", "tombstone_only"]
-              },
-              "active_source_residue": {"const": false}
+        "current_command_role_guard_ref": {
+          "const": "/product_entry_manifest/physical_skeleton_follow_through/current_command_role_guard"
+        },
+        "current_command_role_guard": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "scan_id",
+            "target_domain_id",
+            "state",
+            "current_command_role_guard_passed",
+            "stores_closed_command_alias_names",
+            "forbidden_command_match_count",
+            "active_catalogs",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_current_command_role_guard"
+            },
+            "scan_id": {
+              "const": "mag.current_command_role_guard.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "state": {
+              "const": "passed"
+            },
+            "current_command_role_guard_passed": {
+              "const": true
+            },
+            "stores_closed_command_alias_names": {
+              "const": false
+            },
+            "forbidden_command_match_count": {
+              "const": 0
             }
-          },
-          "minItems": 3
+          }
+        },
+        "closed_default_path_history_summary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "state",
+            "closed_path_family_count",
+            "active_source_residue_count",
+            "stores_closed_path_names"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_closed_default_path_history_summary"
+            },
+            "state": {
+              "const": "closed_history_index_only"
+            },
+            "active_source_residue_count": {
+              "const": 0
+            },
+            "stores_closed_path_names": {
+              "const": false
+            }
+          }
         }
       }
     },
@@ -4501,7 +4576,7 @@
             "forbidden_compatibility_surfaces",
             "current_manifest_surface_ref",
             "current_audit_surface_ref",
-            "active_path_scan_no_legacy_default_caller_ref"
+            "active_path_current_role_guard_ref"
           ],
           "properties": {
             "state": {
@@ -4519,8 +4594,8 @@
             "current_audit_surface_ref": {
               "const": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
             },
-            "active_path_scan_no_legacy_default_caller_ref": {
-              "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard_ref": {
+              "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
             }
           }
         },
@@ -5304,7 +5379,7 @@
               "required": [
                 "legacy_local_runtime_history_attempt_record",
                 "domain_handler_dispatch_product_shell",
-                "retired_default_runtime_paths"
+                "closed_default_path_history_index"
               ],
               "properties": {
                 "legacy_local_runtime_history_attempt_record": {
@@ -5335,17 +5410,17 @@
                     }
                   }
                 },
-                "retired_default_runtime_paths": {
+                "closed_default_path_history_index": {
                   "type": "object",
                   "additionalProperties": true,
                   "required": ["module_ref", "active_caller_status", "migration_action"],
                   "properties": {
-                    "module_ref": {"const": "retired_hermes_gateway_local_manager_default_paths"},
+                    "module_ref": {"const": "closed_default_path_history_index"},
                     "active_caller_status": {
-                      "const": "legacy_default_runtime_paths_absent_no_active_caller"
+                      "const": "closed_default_paths_absent_no_active_caller"
                     },
                     "migration_action": {
-                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
+                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_only_compact_history_index_refs"
                     }
                   }
                 }

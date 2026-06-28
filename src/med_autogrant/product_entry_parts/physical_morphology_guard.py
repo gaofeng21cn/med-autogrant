@@ -329,7 +329,7 @@ def _strict_source_purity_no_second_truth_guard(
         "allowed_readback_outputs": [
             "source_ref_integrity_status",
             "active_path_forbidden_literal_matches",
-            "retired_surface_path_status",
+            "forbidden_path_status",
             "missing_evidence_worklist",
             "owner_delta_route",
             "typed_blocker_ref_shape",

@@ -389,11 +389,11 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert set(readback_guard["false_ready_claim_guard_pattern_ids"]).issubset(
         {
             pattern["pattern_id"]
-            for pattern in active_path_scan_policy["forbidden_default_caller_patterns"]
+            for pattern in active_path_scan_policy["forbidden_role_patterns"]
         }
     )
     assert active_path_scan_policy["policy_id"] == (
-        "mag.active_path_scan.no_legacy_default_caller.policy.v1"
+        "mag.active_path.current_role_guard.policy.v1"
     )
     assert active_path_scan_policy["roots"] == [
         "src",
@@ -418,7 +418,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     ]
     assert {
         pattern["pattern_id"]
-        for pattern in active_path_scan_policy["forbidden_default_caller_patterns"]
+        for pattern in active_path_scan_policy["forbidden_role_patterns"]
     } == {
         "domain_runtime_patch_bridge_import",
         "hermes_default_runtime_owner",
@@ -493,5 +493,5 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     ]
     assert classifications["legacy_runtime_residue"]["evidence_refs"] == [
         "/product_entry_manifest/physical_skeleton_follow_through/"
-        "active_path_scan_no_legacy_default_caller"
+        "active_path_current_role_guard"
     ]

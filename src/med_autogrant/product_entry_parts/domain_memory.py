@@ -10,7 +10,7 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_operator_projection_contract,
 )
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
-    build_retired_legacy_default_path_receipts,
+    build_closed_default_path_history_summary,
 )
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
@@ -481,10 +481,9 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
             "README refs are retained for human orientation/provenance only and are not required "
             "semantic pack compiler inputs or current machine source refs."
         ),
-        "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
-        "legacy_active_path_residue": [],
-        "retired_legacy_default_path_receipts": build_retired_legacy_default_path_receipts(),
+        "active_path_current_role_policy": "current_role_guard_and_history_index_only",
         "forbidden_active_path_residue": [],
+        "closed_default_path_history_summary": build_closed_default_path_history_summary(),
         "source_ref_status": [
             {
                 "boundary": boundary,

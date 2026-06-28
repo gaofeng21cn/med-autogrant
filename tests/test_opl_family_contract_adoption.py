@@ -636,14 +636,13 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
     assert audit["physical_move_required"] == (
         "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof"
     )
-    assert audit["retired_active_path_policy"] == "physically_removed_or_history_tombstone_only"
+    assert audit["active_path_current_role_policy"] == "current_role_guard_and_history_index_only"
     assert audit["forbidden_active_path_residue"] == []
-    assert audit["legacy_active_path_residue"] == []
-    assert {entry["path_family"]: entry["state"] for entry in audit["retired_legacy_default_path_receipts"]} == {
-        "default Hermes active path": "tombstone_only",
-        "default Gateway active path": "physically_removed_from_active_source",
-        "default local-manager active path": "physically_removed_from_active_source",
-    }
+    closed_history = audit["closed_default_path_history_summary"]
+    assert closed_history["state"] == "closed_history_index_only"
+    assert closed_history["closed_path_family_count"] == 3
+    assert closed_history["active_source_residue_count"] == 0
+    assert closed_history["stores_closed_path_names"] is False
     for boundary in audit["boundary_keys"]:
         assert (REPO_ROOT / boundary).is_dir()
         assert boundary in audit["source_refs_by_boundary"]

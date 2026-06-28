@@ -49,7 +49,14 @@
         "pyproject.toml",
         ".agents/plugins/marketplace.json"
       ],
-      "forbidden_default_caller_patterns": [
+      "forbidden_active_paths": [
+        "tests/test_product_entry.py",
+        "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+        "src/med_autogrant/gateway.py",
+        "src/med_autogrant/local_manager.py",
+        "src/med_autogrant/host_agent.py"
+      ],
+      "forbidden_role_patterns": [
         {
           "literal_parts": [
             "med_autogrant.domain_runtime_parts",
@@ -2465,44 +2472,44 @@
         {
           "literal_parts": [
             "\"",
-            "active_path_scan_no_resurrection_complete",
+            "active_path_current_role_guard_complete",
             "\": true"
           ],
-          "pattern_id": "json_active_path_scan_no_resurrection_complete_true",
+          "pattern_id": "json_active_path_current_role_guard_complete_true",
           "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         },
         {
           "literal_parts": [
             "\"",
-            "active_path_scan_no_resurrection_complete",
+            "active_path_current_role_guard_complete",
             "\": True"
           ],
-          "pattern_id": "python_active_path_scan_no_resurrection_complete_true",
+          "pattern_id": "python_active_path_current_role_guard_complete_true",
           "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         },
         {
           "literal_parts": [
             "'",
-            "active_path_scan_no_resurrection_complete",
+            "active_path_current_role_guard_complete",
             "': True"
           ],
-          "pattern_id": "python_single_active_path_scan_no_resurrection_complete_true",
+          "pattern_id": "python_single_active_path_current_role_guard_complete_true",
           "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         },
         {
           "literal_parts": [
-            "active_path_scan_no_resurrection_complete",
+            "active_path_current_role_guard_complete",
             " = true"
           ],
-          "pattern_id": "toml_active_path_scan_no_resurrection_complete_true",
+          "pattern_id": "toml_active_path_current_role_guard_complete_true",
           "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         },
         {
           "literal_parts": [
-            "active_path_scan_no_resurrection_complete",
+            "active_path_current_role_guard_complete",
             ": true"
           ],
-          "pattern_id": "yaml_active_path_scan_no_resurrection_complete_true",
+          "pattern_id": "yaml_active_path_current_role_guard_complete_true",
           "policy": "Strict source-purity and source-ref integrity scans are no-second-truth guards; repo source true flags cannot claim readiness, default-caller cutover or delete authority"
         },
         {
@@ -2722,14 +2729,7 @@
         }
       ],
       "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
-      "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
-      "retired_active_paths": [
-        "tests/test_product_entry.py",
-        "src/med_autogrant/domain_runtime_parts/patch_targets.py",
-        "src/med_autogrant/gateway.py",
-        "src/med_autogrant/local_manager.py",
-        "src/med_autogrant/host_agent.py"
-      ],
+      "policy_id": "mag.active_path.current_role_guard.policy.v1",
       "roots": [
         "src",
         "tests",
@@ -2739,7 +2739,7 @@
         "plugins"
       ],
       "scans_repo_source_only": true,
-      "state": "contract_owned_no_resurrection_scan_policy",
+      "state": "contract_owned_current_role_guard_policy",
       "suffixes": [
         ".json",
         ".py",
@@ -3149,7 +3149,7 @@
     "strict_source_purity_no_second_truth_guard": {
       "allowed_outputs": [
         "forbidden_literal_match_list",
-        "retired_surface_path_status",
+        "forbidden_path_status",
         "repo_local_source_ref_integrity_status",
         "missing_evidence_worklist",
         "owner_delta_route",
@@ -3730,7 +3730,7 @@
         "allowed_role": "history_or_tombstone_only",
         "classification": "legacy_proof_tombstone",
         "evidence_refs": [
-          "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+          "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
         ],
         "forbidden_roles": [
           "legacy_local_persistence_surface",

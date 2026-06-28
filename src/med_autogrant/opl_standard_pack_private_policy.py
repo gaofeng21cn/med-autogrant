@@ -256,7 +256,7 @@ def _strict_source_purity_no_second_truth_guard() -> dict[str, Any]:
         ],
         "allowed_outputs": [
             "forbidden_literal_match_list",
-            "retired_surface_path_status",
+            "forbidden_path_status",
             "repo_local_source_ref_integrity_status",
             "missing_evidence_worklist",
             "owner_delta_route",
@@ -307,14 +307,14 @@ def _active_path_scan_policy(policy: Mapping[str, Any]) -> dict[str, Any]:
         "excludes_human_docs": bool(policy["excludes_human_docs"]),
         "human_doc_policy": str(policy["human_doc_policy"]),
         "scans_repo_source_only": bool(policy["scans_repo_source_only"]),
-        "retired_active_paths": [str(item) for item in policy["retired_active_paths"]],
-        "forbidden_default_caller_patterns": [
+        "forbidden_active_paths": [str(item) for item in policy["forbidden_active_paths"]],
+        "forbidden_role_patterns": [
             {
                 "pattern_id": str(pattern["pattern_id"]),
                 "literal_parts": [str(item) for item in pattern["literal_parts"]],
                 "policy": str(pattern["policy"]),
             }
-            for pattern in policy["forbidden_default_caller_patterns"]
+            for pattern in policy["forbidden_role_patterns"]
         ],
         "authority_boundary": {
             "policy_can_authorize_physical_delete": False,

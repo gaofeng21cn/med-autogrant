@@ -50,7 +50,7 @@ def build_mag_consumer_thinning_contract(
 ) -> dict[str, Any]:
     active_path_scan = {}
     if physical_skeleton_follow_through is not None:
-        candidate = physical_skeleton_follow_through.get("active_path_scan_no_legacy_default_caller")
+        candidate = physical_skeleton_follow_through.get("active_path_current_role_guard")
         if isinstance(candidate, Mapping):
             active_path_scan = dict(candidate)
     return {
@@ -177,7 +177,7 @@ def build_mag_consumer_thinning_contract(
         "forbidden_mag_generic_owner_roles": list(FORBIDDEN_MAG_GENERIC_OWNER_ROLES),
         "guarded_by_active_path_scan_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ),
         "active_path_scan_state": active_path_scan.get("state", "not_available"),
         "authority_boundary": {
@@ -341,7 +341,7 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
                 closed_by_refs=[
                     "/product_entry_manifest/standard_domain_agent_skeleton",
                     "/product_entry_manifest/physical_skeleton_follow_through/"
-                    "active_path_scan_no_legacy_default_caller",
+                    "active_path_current_role_guard",
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "generated_surface_handoff",
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -418,7 +418,7 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
                 mag_surface_refs=[
                     "/product_entry_manifest/controlled_stage_attempt_projection",
                     "/product_entry_manifest/physical_skeleton_follow_through/"
-                    "active_path_scan_no_legacy_default_caller",
+                    "active_path_current_role_guard",
                 ],
             ),
         ],

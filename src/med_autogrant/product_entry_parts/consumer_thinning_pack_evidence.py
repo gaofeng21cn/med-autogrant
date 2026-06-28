@@ -96,7 +96,7 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
                 evidence_class="continuous_no_forbidden_write",
                 required_refs=[
                     "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
-                    "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                    "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
                 ],
                 required_receipt_shapes=[
                     "no_forbidden_write_scan_receipt",

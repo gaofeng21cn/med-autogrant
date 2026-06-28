@@ -26,32 +26,28 @@ def build_retire_or_tombstone_surfaces(
 
     return [
         build_retired_functional_module_audit_item(
-            "retired_hermes_gateway_local_manager_default_paths",
+            "closed_default_path_history_index",
             code_paths=[
-                "src/med_autogrant/gateway.py:absent",
-                "src/med_autogrant/local_manager.py:absent",
-                "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts",
+                "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:closed_default_path_history_summary",
             ],
             active_callers=[],
-            active_caller_status="legacy_default_runtime_paths_absent_no_active_caller",
+            active_caller_status="closed_default_paths_absent_no_active_caller",
             migration_action=(
-                "Keep only tombstone and MAG owner-handoff receipt refs for retired default "
-                "Hermes/Gateway/local-manager paths; explicit non-default executor use goes "
-                "through OPL executor adapter refs."
+                "Keep only compact history index refs for closed default paths; explicit non-default "
+                "executor use goes through OPL executor adapter refs."
             ),
             retention_reason=(
-                "No default Hermes/Gateway/local-manager path remains as active source residue or "
-                "compatibility surface; receipt refs are body-free provenance only."
+                "No closed default path remains as active source residue or compatibility surface; "
+                "history refs are body-free provenance only."
             ),
             cannot_absorb_reason=(
-                "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution "
-                "remains a separate non-default executor adapter receipt path, not this retired "
-                "default path."
+                "Default runtime ownership must not stay in MAG. Explicit non-default executor "
+                "selection remains a separate adapter receipt path, not this closed default path."
             ),
             evidence_refs=[
                 (
                     "/product_entry_manifest/physical_skeleton_follow_through/"
-                    "retired_legacy_default_path_receipts"
+                    "closed_default_path_history_summary"
                 ),
                 "docs/status.md#旧面退役校准",
             ],
@@ -170,7 +166,7 @@ def build_retire_or_tombstone_surfaces(
             ),
             evidence_refs=[
                 "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
-                "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             ],
             exit_gate=build_legacy_exit_gate(
                 gate_id="mag.legacy.repo_owned_scheduler_daemon.exit.v1",

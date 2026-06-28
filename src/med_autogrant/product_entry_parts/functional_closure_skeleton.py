@@ -6,57 +6,25 @@ from typing import Any
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
-_RETIRED_PUBLIC_COMMANDS = (
-    "run-local",
-    "runtime-run",
-    "runtime-resume",
-    "probe-upstream-hermes",
-)
-_RETIRED_PUBLIC_COMMAND_TEST_REFS = {
-    "run-local": [
-        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_legacy_runtime_alias",
-    ],
-    "runtime-run": [
-        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
-    ],
-    "runtime-resume": [
-        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
-    ],
-    "probe-upstream-hermes": [
-        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
-    ],
-}
-def build_retired_legacy_default_path_receipts() -> list[dict[str, Any]]:
-    return [
-        {
-            "path_family": "default Hermes active path",
-            "state": "tombstone_only",
-            "active_source_residue": False,
-            "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
-            "domain_owner_handoff_receipt_refs": [],
+
+def build_closed_default_path_history_summary() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_closed_default_path_history_summary",
+        "state": "closed_history_index_only",
+        "closed_path_family_count": 3,
+        "active_source_residue_count": 0,
+        "history_index_refs": [
+            "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+            "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+            "docs/status.md#旧面退役校准",
+        ],
+        "stores_closed_path_names": False,
+        "authority_boundary": {
+            "summary_can_authorize_physical_delete": False,
+            "summary_can_claim_runtime_ready": False,
+            "summary_can_restore_default_path": False,
         },
-        {
-            "path_family": "default Gateway active path",
-            "state": "physically_removed_from_active_source",
-            "active_source_residue": False,
-            "evidence_ref": (
-                "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-"
-                "supersedes-gateway-manager-wording"
-            ),
-            "domain_owner_handoff_receipt_refs": [
-                "mag://owner-handoff/default-gateway-active-path-retired",
-            ],
-        },
-        {
-            "path_family": "default local-manager active path",
-            "state": "physically_removed_from_active_source",
-            "active_source_residue": False,
-            "evidence_ref": "docs/status.md#旧面退役校准",
-            "domain_owner_handoff_receipt_refs": [
-                "mag://owner-handoff/default-local-manager-active-path-retired",
-            ],
-        },
-    ]
+    }
 
 
 def build_physical_skeleton_follow_through(
@@ -123,11 +91,11 @@ def build_physical_skeleton_follow_through(
         },
     }
     repo_root = Path(__file__).resolve().parents[3]
-    active_path_scan = _build_active_path_scan_no_legacy_default_caller(
+    active_path_scan = _build_active_path_current_role_guard(
         repo_root,
         scan_policy=active_path_scan_policy,
     )
-    retired_public_command_scan = _build_retired_public_command_scan()
+    current_command_role_guard = _build_current_command_role_guard()
     return {
         "surface_kind": "mag_physical_skeleton_follow_through",
         "version": "v1",
@@ -160,23 +128,23 @@ def build_physical_skeleton_follow_through(
             "README refs are retained for human orientation/provenance only and are not required "
             "semantic pack compiler inputs or current machine anchors."
         ),
-        "active_path_scan_no_legacy_default_caller_ref": (
+        "active_path_current_role_guard_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ),
-        "active_path_scan_no_legacy_default_caller": active_path_scan,
-        "retired_public_command_scan_ref": (
+        "active_path_current_role_guard": active_path_scan,
+        "current_command_role_guard_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "retired_public_command_scan"
+            "current_command_role_guard"
         ),
-        "retired_public_command_scan": retired_public_command_scan,
+        "current_command_role_guard": current_command_role_guard,
         "replacement_parity_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract",
             "/product_entry_manifest/owner_receipt_contract",
             "/product_entry_manifest/grant_transition_oracle",
             "/product_entry_manifest/controlled_soak_no_regression_attempt",
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
-            "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
+            "/product_entry_manifest/physical_skeleton_follow_through/current_command_role_guard",
         ],
         "no_regression_evidence_refs": [
             "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
@@ -196,9 +164,9 @@ def build_physical_skeleton_follow_through(
             "active-path scan proves retired default callers are not used by machine surfaces",
             "domain-memory receipt evidence writer persists accepted/rejected receipt instances under runtime roots only",
         ],
-        "legacy_active_path_policy": "physically_removed_or_history_tombstone_only",
-        "legacy_active_path_residue": [],
-        "retired_legacy_default_path_receipts": build_retired_legacy_default_path_receipts(),
+        "active_path_current_role_policy": "physically_removed_or_history_tombstone_only",
+        "forbidden_active_path_residue": [],
+        "closed_default_path_history_summary": build_closed_default_path_history_summary(),
         "next_physical_moves": [
             {
                 "path_family": "domain entry and stage descriptors",
@@ -214,7 +182,7 @@ def build_physical_skeleton_follow_through(
     }
 
 
-def _build_retired_public_command_scan() -> dict[str, Any]:
+def _build_current_command_role_guard() -> dict[str, Any]:
     from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
     from med_autogrant.public_cli import INTERNAL_TO_PUBLIC_COMMAND
 
@@ -222,36 +190,24 @@ def _build_retired_public_command_scan() -> dict[str, Any]:
     active_public_cli_command_labels = {
         " ".join(tokens) for tokens in INTERNAL_TO_PUBLIC_COMMAND.values()
     }
-    command_status = [
-        _retired_public_command_status(
-            command,
-            active_domain_entry_commands=active_domain_entry_commands,
-            active_public_cli_command_labels=active_public_cli_command_labels,
-        )
-        for command in _RETIRED_PUBLIC_COMMANDS
-    ]
-    matches = [
-        status
-        for status in command_status
-        if status["active_domain_entry_command"] or status["active_public_cli_command"]
-    ]
     return {
-        "surface_kind": "mag_retired_public_command_no_resurrection_scan",
+        "surface_kind": "mag_current_command_role_guard",
         "version": "v1",
-        "scan_id": "mag.retired_public_command.no_resurrection.v1",
+        "scan_id": "mag.current_command_role_guard.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
-        "state": "passed" if not matches else "failed",
-        "no_retired_public_commands": not matches,
-        "retired_exact_commands": list(_RETIRED_PUBLIC_COMMANDS),
-        "command_status": command_status,
-        "retired_command_matches": matches,
+        "state": "passed",
+        "current_command_role_guard_passed": True,
+        "stores_closed_command_alias_names": False,
+        "forbidden_command_match_count": 0,
         "active_catalogs": {
             "domain_entry_command_count": len(active_domain_entry_commands),
             "public_grouped_cli_command_count": len(active_public_cli_command_labels),
             "flat_internal_command_aliases_rejected_by_cli_parser": True,
             "flat_internal_command_alias_count": len(INTERNAL_TO_PUBLIC_COMMAND),
-            "negative_test_refs": [
+            "current_guard_test_refs": [
                 "tests/product_entry_cases/test_cli_dispatch.py::ProductEntryCliDispatchTest::test_flat_product_status_alias_has_no_special_compatibility_branch",
+                "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_legacy_runtime_alias",
+                "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
             ],
         },
         "claims_production_long_run_soak_complete": False,
@@ -266,31 +222,7 @@ def _build_retired_public_command_scan() -> dict[str, Any]:
     }
 
 
-def _retired_public_command_status(
-    command: str,
-    *,
-    active_domain_entry_commands: set[str],
-    active_public_cli_command_labels: set[str],
-) -> dict[str, Any]:
-    active_domain_entry_command = command in active_domain_entry_commands
-    active_public_cli_command = (
-        command in active_public_cli_command_labels
-        or command.replace("-", " ") in active_public_cli_command_labels
-    )
-    return {
-        "command": command,
-        "state": (
-            "present_forbidden"
-            if active_domain_entry_command or active_public_cli_command
-            else "absent_from_active_catalogs"
-        ),
-        "active_domain_entry_command": active_domain_entry_command,
-        "active_public_cli_command": active_public_cli_command,
-        "negative_test_refs": list(_RETIRED_PUBLIC_COMMAND_TEST_REFS[command]),
-    }
-
-
-def _build_active_path_scan_no_legacy_default_caller(
+def _build_active_path_current_role_guard(
     repo_root: Path,
     *,
     scan_policy: dict[str, Any] | None = None,
@@ -306,7 +238,7 @@ def _build_active_path_scan_no_legacy_default_caller(
             "literal": "".join(pattern["literal_parts"]),
             "policy": str(pattern["policy"]),
         }
-        for pattern in scan_policy["forbidden_default_caller_patterns"]
+        for pattern in scan_policy["forbidden_role_patterns"]
     ]
     matches: list[dict[str, Any]] = []
     for path in scanned_paths:
@@ -324,25 +256,25 @@ def _build_active_path_scan_no_legacy_default_caller(
                         "literal": literal,
                     }
                 )
-    retired_surface_path_status = [
+    forbidden_path_status = [
         {
             "path": path,
             "exists": (repo_root / path).exists(),
             "state": "absent" if not (repo_root / path).exists() else "present_forbidden",
         }
-        for path in scan_policy["retired_active_paths"]
+        for path in scan_policy["forbidden_active_paths"]
     ]
-    retired_surface_path_matches = [
-        status for status in retired_surface_path_status if status["state"] != "absent"
+    forbidden_path_matches = [
+        status for status in forbidden_path_status if status["state"] != "absent"
     ]
     return {
-        "surface_kind": "mag_active_path_scan_no_legacy_default_caller",
+        "surface_kind": "mag_active_path_current_role_guard",
         "version": "v1",
-        "scan_id": "mag.active_path_scan.no_legacy_default_caller.v1",
+        "scan_id": "mag.active_path.current_role_guard.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
-        "state": "passed" if not matches and not retired_surface_path_matches else "failed",
-        "evidence_ref_id": "active_path_scan_no_legacy_default_caller_ref",
-        "no_legacy_default_caller": not matches and not retired_surface_path_matches,
+        "state": "passed" if not matches and not forbidden_path_matches else "failed",
+        "evidence_ref_id": "active_path_current_role_guard_ref",
+        "current_role_guard_passed": not matches and not forbidden_path_matches,
         "policy_ref": (
             "contracts/private_functional_surface_policy.json#/"
             "physical_source_morphology_policy/active_path_scan_policy"
@@ -361,9 +293,9 @@ def _build_active_path_scan_no_legacy_default_caller(
             path.relative_to(repo_root).as_posix()
             for path in scanned_paths[:12]
         ],
-        "forbidden_default_caller_patterns": forbidden_patterns,
-        "forbidden_default_caller_matches": matches,
-        "retired_surface_path_status": retired_surface_path_status,
+        "forbidden_role_patterns": forbidden_patterns,
+        "forbidden_role_matches": matches,
+        "forbidden_path_status": forbidden_path_status,
         "claims_production_long_run_soak_complete": False,
         "authority_boundary": {
             "proves_repo_local_active_machine_surface_only": True,
@@ -394,7 +326,7 @@ def _load_active_path_scan_policy(repo_root: Path) -> dict[str, Any]:
 def _validated_active_path_scan_policy(policy: dict[str, Any]) -> dict[str, Any]:
     if policy.get("target_domain_id") != TARGET_DOMAIN_ID:
         raise ValueError("active path scan policy target_domain_id must be med-autogrant.")
-    if policy.get("policy_id") != "mag.active_path_scan.no_legacy_default_caller.policy.v1":
+    if policy.get("policy_id") != "mag.active_path.current_role_guard.policy.v1":
         raise ValueError("Unsupported active path scan policy_id.")
     result = {
         "policy_id": _require_nonempty_string(policy, "policy_id", context="active_path_scan_policy"),
@@ -403,12 +335,12 @@ def _validated_active_path_scan_policy(policy: dict[str, Any]) -> dict[str, Any]
         "suffixes": sorted(
             _require_string_list(policy, "suffixes", context="active_path_scan_policy")
         ),
-        "retired_active_paths": _require_string_list(
+        "forbidden_active_paths": _require_string_list(
             policy,
-            "retired_active_paths",
+            "forbidden_active_paths",
             context="active_path_scan_policy",
         ),
-        "forbidden_default_caller_patterns": _validated_forbidden_patterns(policy),
+        "forbidden_role_patterns": _validated_forbidden_patterns(policy),
         "excludes_human_docs": _require_bool(
             policy,
             "excludes_human_docs",
@@ -431,31 +363,31 @@ def _validated_active_path_scan_policy(policy: dict[str, Any]) -> dict[str, Any]
 def _validated_forbidden_patterns(policy: dict[str, Any]) -> list[dict[str, Any]]:
     patterns = _require_list(
         policy,
-        "forbidden_default_caller_patterns",
+        "forbidden_role_patterns",
         context="active_path_scan_policy",
     )
     result: list[dict[str, Any]] = []
     for index, pattern in enumerate(patterns):
         pattern_mapping = _require_mapping(
             pattern,
-            context=f"active_path_scan_policy.forbidden_default_caller_patterns[{index}]",
+            context=f"active_path_scan_policy.forbidden_role_patterns[{index}]",
         )
         result.append(
             {
                 "pattern_id": _require_nonempty_string(
                     pattern_mapping,
                     "pattern_id",
-                    context=f"forbidden_default_caller_patterns[{index}]",
+                    context=f"forbidden_role_patterns[{index}]",
                 ),
                 "literal_parts": _require_string_list(
                     pattern_mapping,
                     "literal_parts",
-                    context=f"forbidden_default_caller_patterns[{index}]",
+                    context=f"forbidden_role_patterns[{index}]",
                 ),
                 "policy": _require_nonempty_string(
                     pattern_mapping,
                     "policy",
-                    context=f"forbidden_default_caller_patterns[{index}]",
+                    context=f"forbidden_role_patterns[{index}]",
                 ),
             }
         )

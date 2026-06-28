@@ -51,7 +51,7 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
     policy = _contract_active_path_policy()
 
     assert policy == ACTIVE_PATH_SCAN_POLICY
-    assert policy["state"] == "contract_owned_no_resurrection_scan_policy"
+    assert policy["state"] == "contract_owned_current_role_guard_policy"
     assert policy["scans_repo_source_only"] is True
     assert policy["excludes_human_docs"] is True
     assert policy["authority_boundary"] == {
@@ -73,12 +73,12 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
             assert candidate.is_file(), file_path
     assert {"Makefile", "pyproject.toml"}.issubset(set(existing_explicit_files))
 
-    for retired_path in policy["retired_active_paths"]:
+    for retired_path in policy["forbidden_active_paths"]:
         _assert_repo_local_path(retired_path)
         assert not (REPO_ROOT / retired_path).exists(), retired_path
 
     pattern_ids = set()
-    for pattern in policy["forbidden_default_caller_patterns"]:
+    for pattern in policy["forbidden_role_patterns"]:
         pattern_ids.add(pattern["pattern_id"])
         assert pattern["pattern_id"]
         assert pattern["policy"]
@@ -198,7 +198,7 @@ def test_repo_shell_wrappers_are_explicitly_classified_as_verification_wrappers(
 
 def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_literal() -> None:
     current_scan = build_physical_skeleton_follow_through()[
-        "active_path_scan_no_legacy_default_caller"
+        "active_path_current_role_guard"
     ]
     policy = _contract_active_path_policy()
 
@@ -207,31 +207,31 @@ def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_litera
     assert current_scan["scanned_scope"]["files"] == policy["files"]
     assert current_scan["scanned_scope"]["suffixes"] == policy["suffixes"]
     assert current_scan["state"] == "passed"
-    assert current_scan["forbidden_default_caller_matches"] == []
+    assert current_scan["forbidden_role_matches"] == []
     assert all(
         status["state"] == "absent"
-        for status in current_scan["retired_surface_path_status"]
+        for status in current_scan["forbidden_path_status"]
     )
 
     injected_policy = copy.deepcopy(policy)
-    injected_policy["forbidden_default_caller_patterns"] = [
-        *injected_policy["forbidden_default_caller_patterns"],
+    injected_policy["forbidden_role_patterns"] = [
+        *injected_policy["forbidden_role_patterns"],
         {
             "pattern_id": "injected_policy_consumption_probe",
-            "literal_parts": ["def ", "_build_active_path_scan_no_legacy_default_caller"],
+            "literal_parts": ["def ", "_build_active_path_current_role_guard"],
             "policy": "test proves scanner consumes caller-supplied contract policy",
         },
     ]
 
     injected_scan = build_physical_skeleton_follow_through(
         active_path_scan_policy=injected_policy,
-    )["active_path_scan_no_legacy_default_caller"]
+    )["active_path_current_role_guard"]
 
     assert injected_scan["state"] == "failed"
-    assert injected_scan["no_legacy_default_caller"] is False
+    assert injected_scan["current_role_guard_passed"] is False
     assert any(
         match["pattern_id"] == "injected_policy_consumption_probe"
-        for match in injected_scan["forbidden_default_caller_matches"]
+        for match in injected_scan["forbidden_role_matches"]
     )
 
 
@@ -244,17 +244,17 @@ def test_active_path_scan_fails_closed_on_generated_surface_owner_resurrection()
     )
     try:
         scan = build_physical_skeleton_follow_through()[
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ]
     finally:
         probe_path.unlink(missing_ok=True)
 
     assert scan["state"] == "failed"
-    assert scan["no_legacy_default_caller"] is False
+    assert scan["current_role_guard_passed"] is False
     assert any(
         match["path"] == "contracts/__active_path_scan_generated_owner_probe.json"
         and match["pattern_id"] == "json_generated_surface_owner_in_mag_allowed_true"
-        for match in scan["forbidden_default_caller_matches"]
+        for match in scan["forbidden_role_matches"]
     )
 
 
@@ -287,17 +287,17 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
     probe_path.write_text("".join(probe_text_parts), encoding="utf-8")
     try:
         scan = build_physical_skeleton_follow_through()[
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ]
     finally:
         probe_path.unlink(missing_ok=True)
 
     assert scan["state"] == "failed"
-    assert scan["no_legacy_default_caller"] is False
+    assert scan["current_role_guard_passed"] is False
     assert any(
         match["path"] == f"contracts/{probe_name}"
         and match["pattern_id"] == pattern_id
-        for match in scan["forbidden_default_caller_matches"]
+        for match in scan["forbidden_role_matches"]
     )
 
 
@@ -506,8 +506,8 @@ def test_active_path_scan_fails_closed_on_direct_generated_surface_owner_resurre
         ),
         (
             "__active_path_scan_strict_source_purity_probe.toml",
-            ["active_path_scan_no_resurrection_", "complete = true\n"],
-            "toml_active_path_scan_no_resurrection_complete_true",
+            ["active_path_current_role_guard_", "complete = true\n"],
+            "toml_active_path_current_role_guard_complete_true",
         ),
         (
             "__active_path_scan_strict_source_purity_probe.yaml",
@@ -525,17 +525,17 @@ def test_active_path_scan_fails_closed_on_default_caller_false_ready_resurrectio
     probe_path.write_text("".join(probe_text_parts), encoding="utf-8")
     try:
         scan = build_physical_skeleton_follow_through()[
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ]
     finally:
         probe_path.unlink(missing_ok=True)
 
     assert scan["state"] == "failed"
-    assert scan["no_legacy_default_caller"] is False
+    assert scan["current_role_guard_passed"] is False
     assert any(
         match["path"] == f"contracts/{probe_name}"
         and match["pattern_id"] == pattern_id
-        for match in scan["forbidden_default_caller_matches"]
+        for match in scan["forbidden_role_matches"]
     )
 
 
@@ -552,9 +552,9 @@ def test_functional_closure_skeleton_does_not_redeclare_retired_policy_literals(
     assert POLICY_REF in source
     assert "active_path_scan_policy" in source
 
-    for retired_path in policy["retired_active_paths"]:
+    for retired_path in policy["forbidden_active_paths"]:
         assert retired_path not in source
 
-    for pattern in policy["forbidden_default_caller_patterns"]:
+    for pattern in policy["forbidden_role_patterns"]:
         forbidden_literal = "".join(pattern["literal_parts"])
         assert forbidden_literal not in source

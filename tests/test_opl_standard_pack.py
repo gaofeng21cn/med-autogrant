@@ -170,7 +170,6 @@ def _assert_adapter_thinning_policy(generated: dict[str, object]) -> None:
 def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
     assert generated["pack_compiler_input"]["generated_surface_owner"] == GENERATED_SURFACE_OWNER
     pack_taxonomy = generated["pack_compiler_input"]["minimal_authority_surface_taxonomy"]
-    assert pack_taxonomy["retired_legacy_function_id_compatibility"] is False
     assert pack_taxonomy["compatibility_alias_allowed"] is False
     assert "legacy_function_id_compatibility" not in pack_taxonomy
     assert pack_taxonomy["ai_first_judgment_surface_ids"] == [
@@ -193,8 +192,7 @@ def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
         for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
     )
     assert all(
-        surface["retired_legacy_function_id_compatibility"] is False
-        and surface["compatibility_alias_allowed"] is False
+        surface["compatibility_alias_allowed"] is False
         and "legacy_function_id_compatibility" not in surface
         for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
     )
@@ -226,7 +224,7 @@ def _assert_functional_privatization_audit(generated: dict[str, object]) -> None
     assert thinning_contract["active_path_scan_state"] == "passed"
     assert thinning_contract["guarded_by_active_path_scan_ref"] == (
         "/product_entry_manifest/physical_skeleton_follow_through/"
-        "active_path_scan_no_legacy_default_caller"
+        "active_path_current_role_guard"
     )
     audit = generated["functional_privatization_audit"]["privatized_functional_module_audit"]
     assert audit["no_active_caller_evidence_summary"][

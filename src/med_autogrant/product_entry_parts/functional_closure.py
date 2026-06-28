@@ -291,9 +291,9 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
             ],
             "current_manifest_surface_ref": "/product_entry_manifest/physical_skeleton_follow_through",
             "current_audit_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
-            "active_path_scan_no_legacy_default_caller_ref": (
+            "active_path_current_role_guard_ref": (
                 "/product_entry_manifest/physical_skeleton_follow_through/"
-                "active_path_scan_no_legacy_default_caller"
+                "active_path_current_role_guard"
             ),
         },
         "phases": [
@@ -373,7 +373,7 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                     "/product_entry_manifest/physical_skeleton_follow_through",
                     (
                         "/product_entry_manifest/physical_skeleton_follow_through/"
-                        "active_path_scan_no_legacy_default_caller"
+                        "active_path_current_role_guard"
                     ),
                     "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
                     "/product_entry_manifest/mag_consumer_thinning_contract",
@@ -382,7 +382,7 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                 required_evidence_refs=[
                     "opl_agent_scaffold_checklist_ref",
                     "opl_agents_list_mag_descriptor_no_drift_ref",
-                    "active_path_scan_no_legacy_default_caller_ref",
+                    "active_path_current_role_guard_ref",
                 ],
             ),
             _build_ideal_state_phase_status(

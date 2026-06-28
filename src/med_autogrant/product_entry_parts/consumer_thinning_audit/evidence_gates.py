@@ -75,7 +75,7 @@ def build_legacy_exit_gate(
         "satisfied_evidence_refs": {
             "no_active_caller_scan": (
                 "/product_entry_manifest/physical_skeleton_follow_through/"
-                "active_path_scan_no_legacy_default_caller"
+                "active_path_current_role_guard"
             ),
             "replacement_surface_consumes_mag_refs": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -127,7 +127,7 @@ def build_no_active_caller_evidence(
         "active_caller_status": active_caller_status,
         "scan_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
-            "active_path_scan_no_legacy_default_caller"
+            "active_path_current_role_guard"
         ),
         "evidence_refs": list(evidence_refs),
         "physical_delete_authorized": False,

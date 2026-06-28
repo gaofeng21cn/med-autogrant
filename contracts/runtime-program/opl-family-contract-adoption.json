@@ -1806,36 +1806,34 @@
       ],
       "retire_or_tombstone_surfaces": [
         {
-          "module_id": "retired_hermes_gateway_local_manager_default_paths",
+          "module_id": "closed_default_path_history_index",
           "classification": "legacy_proof_tombstone",
           "owner": "none_active",
           "state": "retired_or_tombstone_only",
           "code_paths": [
-            "src/med_autogrant/gateway.py:absent",
-            "src/med_autogrant/local_manager.py:absent",
-            "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts"
+            "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:closed_default_path_history_summary"
           ],
           "active_callers": [],
-          "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
-          "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
-          "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
-          "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
+          "active_caller_status": "closed_default_paths_absent_no_active_caller",
+          "migration_action": "Keep only compact history index refs for closed default paths; explicit non-default executor use goes through OPL executor adapter refs.",
+          "retention_reason": "No closed default path remains as active source residue or compatibility surface; history refs are body-free provenance only.",
+          "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit non-default executor selection remains a separate adapter receipt path, not this closed default path.",
           "evidence_refs": [
-            "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+            "/product_entry_manifest/physical_skeleton_follow_through/closed_default_path_history_summary",
             "docs/status.md#旧面退役校准"
           ],
           "no_active_caller_evidence": {
             "surface_kind": "mag_retired_surface_no_active_caller_evidence",
-            "evidence_id": "mag.retired_surface.retired_hermes_gateway_local_manager_default_paths.no_active_caller.v1",
-            "module_id": "retired_hermes_gateway_local_manager_default_paths",
+            "evidence_id": "mag.retired_surface.closed_default_path_history_index.no_active_caller.v1",
+            "module_id": "closed_default_path_history_index",
             "status": "no_active_caller_observed",
             "no_active_caller_observed": true,
             "active_caller_count": 0,
             "active_callers": [],
-            "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "active_caller_status": "closed_default_paths_absent_no_active_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
-              "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+              "/product_entry_manifest/physical_skeleton_follow_through/closed_default_path_history_summary",
               "docs/status.md#旧面退役校准"
             ],
             "physical_delete_authorized": false,
@@ -1885,7 +1883,7 @@
             "active_caller_count": 0,
             "active_callers": [],
             "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
               "/product_entry_manifest/session_continuity",
               "/product_entry_manifest/automation",
@@ -1925,7 +1923,7 @@
               "history_or_tombstone_ref"
             ],
             "satisfied_evidence_refs": {
-              "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+              "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
               "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
               "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
               "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
@@ -1972,7 +1970,7 @@
             "active_caller_count": 0,
             "active_callers": [],
             "active_caller_status": "retired_physical_facade_removed_no_active_caller",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
               "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
               "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
@@ -2023,7 +2021,7 @@
             "active_caller_count": 0,
             "active_callers": [],
             "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
               "tests/test_product_entry.py:absent",
               "tests/product_entry_cases/:focused_replacement_tests"
@@ -2073,7 +2071,7 @@
             "active_caller_count": 0,
             "active_callers": [],
             "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
               "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
               "docs/status.md#旧面退役校准"
@@ -2113,7 +2111,7 @@
           "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
           "evidence_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
           ],
           "no_active_caller_evidence": {
             "surface_kind": "mag_retired_surface_no_active_caller_evidence",
@@ -2124,10 +2122,10 @@
             "active_caller_count": 0,
             "active_callers": [],
             "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
-            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "evidence_refs": [
               "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
-              "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+              "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
             ],
             "physical_delete_authorized": false,
             "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
@@ -2163,7 +2161,7 @@
               "history_or_tombstone_ref"
             ],
             "satisfied_evidence_refs": {
-              "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+              "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
               "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
               "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
               "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
@@ -2191,7 +2189,7 @@
         "active_caller_present_count": 0,
         "all_retired_surfaces_have_no_active_caller_evidence": true,
         "observed_module_ids": [
-          "retired_hermes_gateway_local_manager_default_paths",
+          "closed_default_path_history_index",
           "legacy_local_runtime_history_attempt_record",
           "domain_runtime_patch_bridge",
           "compatibility_only_product_entry_aggregate_test",
@@ -2199,7 +2197,7 @@
           "repo_owned_scheduler_daemon"
         ],
         "active_caller_module_ids": [],
-        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
         "physical_delete_authorized": false,
         "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "authority_boundary": {
@@ -2280,10 +2278,10 @@
           "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
           "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs"
         },
-        "retired_default_runtime_paths": {
-          "module_ref": "retired_hermes_gateway_local_manager_default_paths",
-          "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
-          "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
+        "closed_default_path_history_index": {
+          "module_ref": "closed_default_path_history_index",
+          "active_caller_status": "closed_default_paths_absent_no_active_caller",
+          "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_compact_history_index_refs"
         }
       },
       "audit_refs": {
@@ -2488,7 +2486,7 @@
         {
           "closed_by_refs": [
             "/product_entry_manifest/standard_domain_agent_skeleton",
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
             "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
             "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
           ],
@@ -2564,7 +2562,7 @@
           "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
           "mag_surface_refs": [
             "/product_entry_manifest/controlled_stage_attempt_projection",
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard"
           ],
           "owner": "evidence_gate",
           "previous_bucket": "functional_structure_gap",
@@ -2607,7 +2605,6 @@
       "runtime/README.md"
     ],
     "human_readable_provenance_policy": "README refs are retained for human orientation/provenance only and are not required semantic pack compiler inputs or current machine source refs.",
-    "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
     "forbidden_active_path_residue": [],
     "source_refs_by_boundary": {
       "agent": [
@@ -2653,34 +2650,24 @@
         "docs/references/integration/opl-family-contract-adoption.md"
       ]
     },
-    "legacy_active_path_residue": [],
-    "retired_legacy_default_path_receipts": [
-      {
-        "path_family": "default Hermes active path",
-        "state": "tombstone_only",
-        "active_source_residue": false,
-        "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
-        "domain_owner_handoff_receipt_refs": []
-      },
-      {
-        "path_family": "default Gateway active path",
-        "state": "physically_removed_from_active_source",
-        "active_source_residue": false,
-        "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
-        "domain_owner_handoff_receipt_refs": [
-          "mag://owner-handoff/default-gateway-active-path-retired"
-        ]
-      },
-      {
-        "path_family": "default local-manager active path",
-        "state": "physically_removed_from_active_source",
-        "active_source_residue": false,
-        "evidence_ref": "docs/status.md#旧面退役校准",
-        "domain_owner_handoff_receipt_refs": [
-          "mag://owner-handoff/default-local-manager-active-path-retired"
-        ]
+    "closed_default_path_history_summary": {
+      "surface_kind": "mag_closed_default_path_history_summary",
+      "state": "closed_history_index_only",
+      "closed_path_family_count": 3,
+      "active_source_residue_count": 0,
+      "history_index_refs": [
+        "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+        "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+        "docs/status.md#旧面退役校准"
+      ],
+      "stores_closed_path_names": false,
+      "authority_boundary": {
+        "summary_can_authorize_physical_delete": false,
+        "summary_can_claim_runtime_ready": false,
+        "summary_can_restore_default_path": false
       }
-    ]
+    },
+    "active_path_current_role_policy": "current_role_guard_and_history_index_only"
   },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",

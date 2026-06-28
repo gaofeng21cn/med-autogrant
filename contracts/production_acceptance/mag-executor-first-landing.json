@@ -271,7 +271,7 @@
         "physical_morphology://no_active_compat_alias_or_facade_scan"
       ],
       "deliverables": [
-        "no_resurrection_guards",
+        "current_role_guards",
         "history_or_tombstone_refs",
         "active_caller_migration_receipts",
         "direct_hosted_parity_no_regression_refs",

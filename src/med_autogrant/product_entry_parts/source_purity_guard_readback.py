@@ -22,7 +22,7 @@ def build_source_purity_guard_readback() -> dict[str, Any]:
         context="private_functional_surface_policy",
     )
     active_path_scan = build_physical_skeleton_follow_through()[
-        "active_path_scan_no_legacy_default_caller"
+        "active_path_current_role_guard"
     ]
     source_ref_gate = _require_mapping(
         morphology,
@@ -102,11 +102,11 @@ def _collect_failures(
             {
                 "check_id": "active_path_scan",
                 "state": active_path_scan.get("state"),
-                "match_count": len(active_path_scan.get("forbidden_default_caller_matches") or []),
+                "match_count": len(active_path_scan.get("forbidden_role_matches") or []),
                 "retired_path_match_count": len(
                     [
                         item
-                        for item in active_path_scan.get("retired_surface_path_status") or []
+                        for item in active_path_scan.get("forbidden_path_status") or []
                         if isinstance(item, Mapping) and item.get("state") != "absent"
                     ]
                 ),

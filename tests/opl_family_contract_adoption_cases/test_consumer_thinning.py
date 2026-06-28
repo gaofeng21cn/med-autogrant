@@ -179,10 +179,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
                 "MAG_keeps_guarded_domain_adapter_refs"
             ),
         },
-        "retired_default_runtime_paths": {
-            "module_ref": "retired_hermes_gateway_local_manager_default_paths",
-            "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
-            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs",
+        "closed_default_path_history_index": {
+            "module_ref": "closed_default_path_history_index",
+            "active_caller_status": "closed_default_paths_absent_no_active_caller",
+            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_compact_history_index_refs",
         },
     }
     assert audit["audit_refs"]["external_evidence_request_pack_ref"] == (

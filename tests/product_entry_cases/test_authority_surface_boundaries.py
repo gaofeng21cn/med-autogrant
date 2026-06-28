@@ -18,12 +18,11 @@ class AuthoritySurfaceBoundaryTest(unittest.TestCase):
         taxonomy = thinning["minimal_authority_surface_taxonomy"]
 
         self.assertEqual(set(authority_surfaces), set(thinning["minimal_authority_function_ids"]))
-        self.assertFalse(taxonomy["retired_legacy_function_id_compatibility"])
         self.assertFalse(taxonomy["compatibility_alias_allowed"])
         self.assertEqual(taxonomy["function_id_policy"], "canonical_authority_surface_ids_only")
         self.assertEqual(
-            taxonomy["no_resurrection_policy"],
-            "do_not_restore_legacy_function_id_compatibility",
+            taxonomy["forbidden_role_policy"],
+            "forbid_compatibility_alias_function_ids",
         )
         self.assertNotIn("legacy_function_id_compatibility", taxonomy)
         self.assertEqual(
@@ -46,12 +45,11 @@ class AuthoritySurfaceBoundaryTest(unittest.TestCase):
             with self.subTest(authority_surface=function_id):
                 self.assertEqual(surface["surface_kind"], "mag_minimal_authority_surface")
                 self.assertEqual(surface["function_id"], function_id)
-                self.assertFalse(surface["retired_legacy_function_id_compatibility"])
                 self.assertFalse(surface["compatibility_alias_allowed"])
                 self.assertEqual(surface["function_id_policy"], "canonical_authority_surface_id_only")
                 self.assertEqual(
-                    surface["no_resurrection_policy"],
-                    "do_not_restore_legacy_function_id_compatibility",
+                    surface["forbidden_role_policy"],
+                    "forbid_compatibility_alias_function_ids",
                 )
                 self.assertNotIn("legacy_function_id_compatibility", surface)
                 self.assertTrue(surface["mechanical_decision_forbidden"])

@@ -184,7 +184,7 @@ STRICT_SOURCE_PURITY_FALSE_READY_CLAIM_KEYS = [
     "strict_source_purity_complete",
     "source_purity_guard_satisfied",
     "active_path_scan_complete",
-    "active_path_scan_no_resurrection_complete",
+    "active_path_current_role_guard_complete",
     "source_ref_integrity_complete",
     "source_ref_integrity_guard_satisfied",
     "source_ref_integrity_can_claim_ready",
@@ -375,9 +375,9 @@ STRICT_SOURCE_PURITY_FALSE_READY_PATTERN_IDS = [
 
 ACTIVE_PATH_SCAN_POLICY = {
     "surface_kind": "mag_active_path_scan_policy",
-    "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
+    "policy_id": "mag.active_path.current_role_guard.policy.v1",
     "target_domain_id": TARGET_DOMAIN_ID,
-    "state": "contract_owned_no_resurrection_scan_policy",
+    "state": "contract_owned_current_role_guard_policy",
     "roots": ["src", "tests", "schemas", "contracts", "scripts", "plugins"],
     "files": ["Makefile", "pyproject.toml", ".agents/plugins/marketplace.json"],
     "suffixes": [".json", ".py", ".sh", ".toml", ".yaml", ".yml"],
@@ -386,14 +386,14 @@ ACTIVE_PATH_SCAN_POLICY = {
         "docs/history/provenance may name retired surfaces without making them default callers"
     ),
     "scans_repo_source_only": True,
-    "retired_active_paths": [
+    "forbidden_active_paths": [
         "tests/test_product_entry.py",
         "src/med_autogrant/domain_runtime_parts/patch_targets.py",
         "src/med_autogrant/gateway.py",
         "src/med_autogrant/local_manager.py",
         "src/med_autogrant/" + "host" + "_agent.py",
     ],
-    "forbidden_default_caller_patterns": [
+    "forbidden_role_patterns": [
         {
             "pattern_id": "domain_runtime_patch_bridge_import",
             "literal_parts": ["med_autogrant.domain_runtime_parts", ".patch_targets"],
@@ -960,7 +960,7 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
             "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
         ],
         "evidence_refs": [
-            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_current_role_guard",
         ],
         "allowed_role": "history_or_tombstone_only",
         "forbidden_roles": FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
