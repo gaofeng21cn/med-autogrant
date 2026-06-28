@@ -2767,26 +2767,16 @@
       "repo_native_verification_wrapper",
       "legacy_proof_tombstone"
     ],
-    "forbidden_reflow_policy": "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_executor_probe_or_compat_alias",
-    "forbidden_residue_classes": [
-      "legacy_local_persistence_surface",
-      "legacy_attempt_record_surface",
-      "legacy_repo_cadence_owner",
-      "legacy_executor_runtime_probe",
-      "legacy_compat_alias_surface"
-    ],
-    "no_resurrection_policy": {
-      "applies_to_surface_ids": [
-        "grouped_cli_wrapper",
-        "product_entry",
-        "domain_handler",
-        "runtime_registration",
-        "control_plane",
-        "legacy_runtime_residue"
+    "current_role_guard": {
+      "allowed_roles": [
+        "domain_handler_target",
+        "refs_only_adapter",
+        "minimal_authority_function",
+        "repo_native_verification_wrapper"
       ],
       "compatibility_alias_allowed": false,
       "facade_reexport_allowed": false,
-      "forbidden_after_retirement": [
+      "forbidden_roles": [
         "compatibility_alias",
         "facade_reexport",
         "repo_owned_scheduler_or_daemon",
@@ -2795,10 +2785,19 @@
       ],
       "generated_surface_owner_in_mag_allowed": false,
       "generic_runtime_owner_allowed": false,
+      "guard_id": "mag.physical_morphology.current_role_guard.v1",
       "local_journal_or_attempt_ledger_allowed": false,
-      "policy": "do_not_restore_retired_runtime_wrapper_or_compatibility_surfaces",
+      "policy": "allow_current_roles_and_forbid_generic_owner_roles",
       "repo_owned_scheduler_or_daemon_allowed": false
     },
+    "forbidden_reflow_policy": "forbid_generic_runtime_scheduler_attempt_records_executor_probe_or_compat_alias_owner_roles",
+    "forbidden_residue_classes": [
+      "legacy_local_persistence_surface",
+      "legacy_attempt_record_surface",
+      "legacy_repo_cadence_owner",
+      "legacy_executor_runtime_probe",
+      "legacy_compat_alias_surface"
+    ],
     "policy_id": "mag.physical_source_morphology.v1",
     "required_surface_ids": [
       "domain_runtime",
@@ -2838,7 +2837,7 @@
         "owner_delta_route",
         "owner_delta_work_order_pack",
         "typed_blocker_ref_shape",
-        "no_resurrection_policy"
+        "current_role_guard"
       ],
       "authority_boundary": {
         "guard_can_authorize_physical_delete": false,
@@ -2892,12 +2891,12 @@
           "control_plane": {
             "allowed_role": "body_free_runtime_control_refs_projection",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "move runtime control default caller to OPL control-plane owner",
               "prove body-free refs parity and no attempt-ledger ownership",
               "delete repo-local adapter only after owner receipt or typed blocker"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current control plane stores body-free refs/projections and does not own a provider repair executor or attempt ledger",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2905,12 +2904,12 @@
           "domain_handler": {
             "allowed_role": "guarded_domain_dispatch_and_refs_projection",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "migrate default dispatch caller to generated domain handler surface",
               "prove guarded dispatch parity and no sidecar/workbench ownership",
               "delete repo-local wrapper code only after owner receipt or typed blocker"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current domain handler remains the MAG grant-native dispatch target and refs projection boundary",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2922,18 +2921,18 @@
               "tests/product_entry_cases/test_cli_dispatch.py::test_public_groups_are_registered_directly_without_flat_grouped_wrapper",
               "tests/product_entry_cases/test_cli_dispatch.py::test_flat_product_status_alias_has_no_special_compatibility_branch"
             ],
-            "retention_policy": "keep_no_resurrection_guard_do_not_recreate_wrapper_alias",
+            "retention_policy": "covered_by_current_role_guard",
             "state": "migrated_no_active_compat_alias_or_facade"
           },
           "lifecycle": {
             "allowed_role": "cleanup_restore_retention_receipt_refs_adapter",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "move lifecycle readback to generated delivery/lifecycle surface",
               "prove receipt refs parity and no artifact lifecycle ownership",
               "remove repo-local lifecycle adapter after owner receipt or typed blocker"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current lifecycle surface is an owner-receipt refs adapter, not a generic artifact lifecycle shell",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2941,12 +2940,12 @@
           "product_entry": {
             "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "replace remaining active domain calls with OPL generated product entry readback",
               "prove direct hosted parity and no forbidden writes",
               "remove source refs only after owner receipt or typed blocker roundtrip"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current MAG product entry is a thin target/readback assembly surface, not a generic product shell cleanup candidate",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2954,12 +2953,12 @@
           "status": {
             "allowed_role": "grant_status_refs_and_typed_blocker_projection",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "move status read-model default caller to generated surface",
               "prove same refs and no grant readiness substitution",
               "delete or tombstone repo status refs only after owner receipt"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current status files project grant refs and typed blockers without owning a generic status workbench",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2967,12 +2966,12 @@
           "user_loop": {
             "allowed_role": "grant_user_loop_domain_action_target_and_receipt_refs",
             "cleanup_candidate": false,
+            "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
             "delete_path": [
               "route action catalog and loop contracts through OPL generated caller",
               "prove no repo scheduler daemon or attempt loop is introduced",
               "remove repo-local loop adapter after owner receipt or typed blocker"
             ],
-            "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
             "retention_reason": "current loop surface is an action target/ref adapter, not a scheduler or daemon",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -3155,7 +3154,7 @@
         "missing_evidence_worklist",
         "owner_delta_route",
         "typed_blocker_ref_shape",
-        "no_resurrection_policy"
+        "current_role_guard"
       ],
       "authority_boundary": {
         "guard_can_authorize_physical_delete": false,
@@ -3224,7 +3223,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3258,7 +3257,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3296,7 +3295,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3331,7 +3330,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3367,7 +3366,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3404,7 +3403,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3437,7 +3436,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3471,7 +3470,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3505,7 +3504,7 @@
             "history_tombstone"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
           "required_before_delete_or_rename": [
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
@@ -3538,7 +3537,7 @@
             "rename_only_with_owner_receipt_and_no_regression"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "current_role_guard": "forbid_mechanical_verdict_or_generic_runtime_wrapper",
           "required_before_delete_or_rename": [
             "owner_receipt://mag/memory/authority_replacement_or_retirement_decision",
             "direct_hosted_parity_no_regression",
@@ -3569,7 +3568,7 @@
             "rename_only_with_owner_receipt_and_no_regression"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "current_role_guard": "forbid_mechanical_verdict_or_generic_runtime_wrapper",
           "required_before_delete_or_rename": [
             "owner_receipt://mag/package/authority_replacement_or_retirement_decision",
             "direct_hosted_parity_no_regression",
@@ -3611,7 +3610,7 @@
             "rename_only_with_owner_receipt_and_no_regression"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "current_role_guard": "forbid_mechanical_verdict_or_generic_runtime_wrapper",
           "required_before_delete_or_rename": [
             "owner_receipt://mag/autonomy_controller/authority_replacement_or_retirement_decision",
             "direct_hosted_parity_no_regression",
@@ -3648,7 +3647,7 @@
             "rename_only_with_owner_receipt_and_no_regression"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "current_role_guard": "forbid_mechanical_verdict_or_generic_runtime_wrapper",
           "required_before_delete_or_rename": [
             "owner_receipt://mag/owner_receipt_helper/authority_replacement_or_retirement_decision",
             "direct_hosted_parity_no_regression",
@@ -3702,7 +3701,7 @@
             "delete_or_rename_only_with_repo_verification_replacement"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_runtime_session_queue_workbench_or_generated_surface_owner",
+          "current_role_guard": "forbid_runtime_session_queue_workbench_or_generated_surface_owner",
           "required_before_delete_or_rename": [
             "repo_hygiene_replacement_command",
             "verification_entry_no_regression"
@@ -3746,7 +3745,7 @@
             "delete_if_no_source_ref_required"
           ],
           "compatibility_alias_allowed": false,
-          "no_resurrection_policy": "no_runtime_compat_alias_or_facade_reexport",
+          "current_role_guard": "forbid_runtime_compat_alias_or_facade_reexport",
           "required_before_delete_or_rename": [],
           "state": "already_tombstone_no_active_caller"
         },

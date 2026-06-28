@@ -208,10 +208,10 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["retirement_gate"]["owner_receipt_or_typed_blocker_roundtrip_required"]
         )
         self.assertFalse(
-            projection["no_resurrection_policy"]["generic_runtime_owner_allowed"]
+            projection["current_role_guard"]["generic_runtime_owner_allowed"]
         )
         self.assertFalse(
-            projection["no_resurrection_policy"]["facade_reexport_allowed"]
+            projection["current_role_guard"]["facade_reexport_allowed"]
         )
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]

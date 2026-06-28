@@ -130,26 +130,25 @@ def build_private_functional_surface_policy(
                 _strict_source_purity_no_second_truth_guard()
             ),
             "forbidden_reflow_policy": (
-                "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
-                "executor_probe_or_compat_alias"
+                "forbid_generic_runtime_scheduler_attempt_records_executor_probe_"
+                "or_compat_alias_owner_roles"
             ),
-            "no_resurrection_policy": {
-                "policy": "do_not_restore_retired_runtime_wrapper_or_compatibility_surfaces",
+            "current_role_guard": {
+                "guard_id": "mag.physical_morphology.current_role_guard.v1",
+                "policy": "allow_current_roles_and_forbid_generic_owner_roles",
                 "compatibility_alias_allowed": False,
                 "facade_reexport_allowed": False,
                 "local_journal_or_attempt_ledger_allowed": False,
                 "repo_owned_scheduler_or_daemon_allowed": False,
                 "generic_runtime_owner_allowed": False,
                 "generated_surface_owner_in_mag_allowed": False,
-                "applies_to_surface_ids": [
-                    "grouped_cli_wrapper",
-                    "product_entry",
-                    "domain_handler",
-                    "runtime_registration",
-                    "control_plane",
-                    "legacy_runtime_residue",
+                "allowed_roles": [
+                    "domain_handler_target",
+                    "refs_only_adapter",
+                    "minimal_authority_function",
+                    "repo_native_verification_wrapper",
                 ],
-                "forbidden_after_retirement": [
+                "forbidden_roles": [
                     "compatibility_alias",
                     "facade_reexport",
                     "repo_owned_scheduler_or_daemon",
@@ -262,7 +261,7 @@ def _strict_source_purity_no_second_truth_guard() -> dict[str, Any]:
             "missing_evidence_worklist",
             "owner_delta_route",
             "typed_blocker_ref_shape",
-            "no_resurrection_policy",
+            "current_role_guard",
         ],
         "forbidden_outputs": [
             "grant_truth_write",
@@ -357,7 +356,7 @@ def _retirement_readback_cleanup_guard(retirement_evidence_refs: list[str]) -> d
             "owner_delta_route",
             "owner_delta_work_order_pack",
             "typed_blocker_ref_shape",
-            "no_resurrection_policy",
+            "current_role_guard",
         ],
         "forbidden_readback_outputs": [
             "physical_delete_operation",
@@ -452,7 +451,7 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
                     "test_flat_product_status_alias_has_no_special_compatibility_branch",
                 ],
                 "delete_path": [],
-                "retention_policy": "keep_no_resurrection_guard_do_not_recreate_wrapper_alias",
+                "retention_policy": "covered_by_current_role_guard",
             },
             "product_entry": _retained_current_thin_surface_status(
                 allowed_role="grant_handler_target_receipt_refs_and_typed_blockers",
@@ -556,7 +555,7 @@ def _retained_current_thin_surface_status(
         "cleanup_candidate": False,
         "delete_path": patchable_delete_path,
         "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-        "no_resurrection_policy": "no_generic_wrapper_alias_facade_or_owner_claim",
+        "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
     }
 
 
@@ -651,7 +650,7 @@ def _surface_retirement_gate(
             "required_before_delete_or_rename": [],
             "allowed_terminal_actions": ["keep_history_tombstone", "delete_if_no_source_ref_required"],
             "compatibility_alias_allowed": False,
-            "no_resurrection_policy": "no_runtime_compat_alias_or_facade_reexport",
+            "current_role_guard": "forbid_runtime_compat_alias_or_facade_reexport",
         }
     if classification == "minimal_authority_function":
         return {
@@ -667,7 +666,7 @@ def _surface_retirement_gate(
             ],
             "target_owner_after_migration": target_owner,
             "compatibility_alias_allowed": False,
-            "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+            "current_role_guard": "forbid_mechanical_verdict_or_generic_runtime_wrapper",
         }
     if classification == "repo_native_verification_wrapper":
         return {
@@ -682,7 +681,7 @@ def _surface_retirement_gate(
             ],
             "target_owner_after_migration": target_owner,
             "compatibility_alias_allowed": False,
-            "no_resurrection_policy": "no_runtime_session_queue_workbench_or_generated_surface_owner",
+            "current_role_guard": "forbid_runtime_session_queue_workbench_or_generated_surface_owner",
         }
     return {
         "state": "active_caller_migration_required_before_retirement",
@@ -690,5 +689,5 @@ def _surface_retirement_gate(
         "allowed_terminal_actions": ["delete", "rename_to_domain_handler_target", "history_tombstone"],
         "target_owner_after_migration": target_owner,
         "compatibility_alias_allowed": False,
-        "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+        "current_role_guard": "forbid_compat_alias_facade_or_generated_surface_owner_in_mag",
     }

@@ -159,15 +159,16 @@ def build_physical_morphology_guard_projection(
             "delete_or_tombstone_only_after_gate": True,
             "compatibility_alias_allowed": False,
             "owner_receipt_or_typed_blocker_roundtrip_required": True,
-            "no_resurrection_policy": (
-                "no_compat_alias_facade_local_journal_attempt_ledger_scheduler_"
-                "or_generated_surface_owner_in_mag"
+            "current_role_guard": (
+                "allow_current_mag_roles_and_forbid_generic_runtime_scheduler_"
+                "attempt_ledger_workbench_generated_wrapper_or_compat_alias_owner"
             ),
         },
         "retirement_readback_cleanup_guard": _retirement_readback_cleanup_guard(
             required_next_evidence_refs=required_next_evidence_refs,
         ),
-        "no_resurrection_policy": {
+        "current_role_guard": {
+            "guard_id": "mag.physical_morphology.current_role_guard.v1",
             "compatibility_alias_allowed": False,
             "facade_reexport_allowed": False,
             "local_journal_or_attempt_ledger_allowed": False,
@@ -332,7 +333,7 @@ def _strict_source_purity_no_second_truth_guard(
             "missing_evidence_worklist",
             "owner_delta_route",
             "typed_blocker_ref_shape",
-            "no_resurrection_policy",
+            "current_role_guard",
         ],
         "forbidden_readback_outputs": [
             "grant_truth_write",
@@ -440,7 +441,7 @@ def _retirement_readback_cleanup_guard(
             "missing_evidence_worklist",
             "owner_delta_route",
             "typed_blocker_ref_shape",
-            "no_resurrection_policy",
+            "current_role_guard",
         ],
         "forbidden_outputs": [
             "physical_delete_operation",

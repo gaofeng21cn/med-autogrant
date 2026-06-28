@@ -252,7 +252,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert non_candidate_statuses["grouped_cli_wrapper"]["delete_path"] == []
     assert (
         non_candidate_statuses["grouped_cli_wrapper"]["retention_policy"]
-        == "keep_no_resurrection_guard_do_not_recreate_wrapper_alias"
+        == "covered_by_current_role_guard"
     )
     for surface_id in compact_cleanup_summary["retained_current_thin_surface_ids"]:
         assert non_candidate_statuses[surface_id]["state"] == "retained_current_thin_surface"
@@ -261,8 +261,8 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         assert non_candidate_statuses[surface_id]["retirement_guard"] == (
             "owner_receipt_or_domain_typed_blocker_required_before_delete"
         )
-        assert non_candidate_statuses[surface_id]["no_resurrection_policy"] == (
-            "no_generic_wrapper_alias_facade_or_owner_claim"
+        assert non_candidate_statuses[surface_id]["current_role_guard"] == (
+            "forbid_generic_wrapper_alias_facade_or_owner_claim"
         )
     assert compact_cleanup_summary["can_apply_cleanup"] is False
     assert compact_cleanup_summary["can_authorize_physical_delete"] is False
@@ -303,12 +303,17 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "guard_can_claim_default_caller_cutover": False,
         "guard_can_claim_app_or_live_readiness": False,
     }
-    assert morphology["no_resurrection_policy"]["compatibility_alias_allowed"] is False
-    assert "grouped_cli_wrapper" in morphology["no_resurrection_policy"]["applies_to_surface_ids"]
+    assert morphology["current_role_guard"]["compatibility_alias_allowed"] is False
+    assert morphology["current_role_guard"]["allowed_roles"] == [
+        "domain_handler_target",
+        "refs_only_adapter",
+        "minimal_authority_function",
+        "repo_native_verification_wrapper",
+    ]
     assert (
         morphology["forbidden_reflow_policy"]
-        == "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
-        "executor_probe_or_compat_alias"
+        == "forbid_generic_runtime_scheduler_attempt_records_executor_probe_"
+        "or_compat_alias_owner_roles"
     )
     assert morphology["active_path_scan_policy"] == ACTIVE_PATH_SCAN_POLICY
     source_ref_integrity = morphology["source_ref_integrity_gate"]
