@@ -89,7 +89,7 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
         "operator_workbench_shell",
         "temporal_stage_run_substrate",
         "typed_queue",
-        "attempt_ledger",
+        "stage_run_attempt_provenance",
         "provider_scheduler",
     }
     assert policy["mag_retained_authority_surfaces"] == [
@@ -110,7 +110,7 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
         "direct_entry_shell_owner",
         "domain_handler_shell_owner",
         "workbench_owner",
-        "attempt_ledger_owner",
+        "stage_run_attempt_provenance_owner",
         "provider_scheduler_owner",
     }
     assert policy["provider_completion_is_domain_completion"] is False
