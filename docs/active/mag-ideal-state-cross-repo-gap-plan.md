@@ -95,39 +95,26 @@ MAG 必须保留的 authority：
 | `opl_non_default_executor_receipt_tail` | `hermes_agent` critique 路径只作为 OPL-owned non-default executor receipt lane 读取；MAG 消费 receipt / closeout / critique payload。当前 helper 有 active caller，不能按旧 Hermes/Gateway residue 删除。 | executor receipt source/tests、OPL adapter owner evidence、history/provenance |
 | `current_role_guard_cleanup_tail` | 已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 只保留 tombstone/provenance 或 current role guard，不恢复 compatibility surface。 | `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`、retired public command scan、negative tests |
 
-## 证据差距
+## 后置 Live Evidence 维护
 
-以下 gap 只通过真实 external receipt、typed blocker、owner receipt 或 no-regression evidence 关闭；不能反向重开 MAG repo 侧结构缺口：
+本文不再维护 live / production evidence worklist。grant-ready、fundability-ready、quality-ready、export-ready、submission-ready、App/operator sustained consumption、Temporal long-soak、W7 owner evidence 和 human-gate receipt 只在单独 evidence lane 或 owner contract 中读取；它们不得反向重开 MAG repo 侧功能/结构 backlog。
 
-| Evidence gate | 当前状态 | 关闭条件 |
-| --- | --- | --- |
-| OPL-hosted grant-stage attempt | `blocked_by_mag_owned_live_progress_typed_blocker` | 当前 source of truth 是 `contracts/live_stage_run_progress_evidence.json`；关闭条件仍是真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence，并形成可重复 success-rate / long-run evidence。 |
-| Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | OPL replay / monitor lens 可读不等于 stage closeout；关闭条件是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness / success-rate evidence。 |
-| Real workspace memory/package/lifecycle scaleout | `refs_only_scaleout_observed_followthrough_open` | 已有 body-free refs-only scaleout 只能证明 surface 可重复产出 refs；关闭条件仍要求真实 owner human-gate receipt、持续 App/operator consumption、long-soak 与 no-regression follow-through。 |
-| Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
-| App/operator/release consumption | `payload_response_observed_sustained_closeout_open` | manifest / payload response / CLI regression 只形成 refs response、attempt scaleout contract 和 long-soak typed-blocker 分类；关闭条件是真实 OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG refs。 |
-| Temporal provider long soak | `open_provider_followthrough_typed_blocker_projected` | typed blocker follow-through 不等于 long-soak completion；关闭条件仍是 `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 连续证据。 |
-| Grant-ready completion audit live gap | `machine_audit_landed_live_owner_gap_open` | `grant_ready_completion_audit` 现在能机读说明 false-ready 信号和 required owner evidence；它只防冒认，不生成真实 MAG owner receipt、quality/export verdict、submission human-gate receipt、App/operator sustained consumption 或 Temporal long-soak window evidence。 |
-| W7 owner evidence tail closing ref | `typed_blocker_read_model_not_closing_ref` | `contracts/live_stage_run_progress_evidence.json#/w7_owner_evidence_tail_read_model` 当前只投影缺口分类，不关闭 W7。关闭条件是真实 `submission_ready_human_gate_receipt`、真实 quality/export receipt、Temporal provider long-soak window evidence、owner acceptance 或 production success-rate evidence；`contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence` 只作 provenance input，不是 `domain_owned_closing_ref`。 |
-| Physical cleanup / no-resurrection | `retired_no_active_caller_evidence_observed_delete_authority_open` | repo-local active path scan 与 retired public command scan 已形成 no-resurrection 结构输入；active path scan 的 roots / files / suffixes、retired active paths、legacy default-caller literals、generated-surface owner resurrection literals、default-caller / physical-delete false-ready literals 与 domain readiness true-claim literals 已由 `contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/active_path_scan_policy` 持有，`functional_closure_skeleton` 只消费该合同并 fail closed 校验，focused guard 覆盖 contract-owned policy、repo-local path hygiene、retired path absent、policy injection fail-closed、generated-surface owner true-flag probe、default-caller / physical-delete probe 和 representative JSON / Python dict / TOML / YAML domain-readiness false-ready probe。`scripts/*.{sh,py}` 顶层 repo verification scripts 已由 `repo_shell_verification_wrappers` 分类为 `repo_native_verification_wrapper`，只允许作为 repo-native verification / hygiene / temp-env / bootstrap / quality / contract-check entry，不能拥有 runtime、session、queue、attempt ledger、workbench、domain handler、generated wrapper、grant readiness、production soak 或 physical delete authority。retired/tombstone no-active-caller summary 与 private-platform owner-evidence 状态由 `functional_privatization_audit.json` / `runtime-program/opl-family-contract-adoption.json` 持有。production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 App/workbench consumption 仍未授权删除 active handler/adapter shell。删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
-
-Refs-only ledger verification、request accounting closure、production acceptance tail、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence、stage replay projection、grouped CLI success、product-entry manifest success、provider completion 或 W7 read-model 投影都不能替代 `contracts/live_stage_run_progress_evidence.json` 的 MAG-owned live progress owner answer / blocker，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
+Active plan 只保留当前可落地的非 live 缺口：product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI handler shells 的 physical-delete-not-authorized tail、strict source-purity / no-resurrection guard、refs-only package/memory/lifecycle boundary、AI-first authority guard 和 legacy wrapper/alias/facade/compat aggregate test 清理。涉及 evidence lane 时，只能在本文保留 false-ready 禁止边界，不列 receipt id、run id、cohort、long-soak、human-gate 或 ready-claim worklist。
 
 ## 下一轮 Agent prompt
 
 - Write scope: MAG active truth owner、current status summary、Declarative Grant Pack、
   product/status/user-loop/domain-handler/CLI refs-only adapter boundary、AI-first authority
-  guard、production evidence tail、Temporal long-soak、default-caller thinning 和 docs
-  lifecycle foldback。
+  guard、default-caller thinning、strict source-purity/no-resurrection 和 docs lifecycle foldback。
 - Non-goals: 不把 OPL provider completion、stage replay projection、package existence、
   schema completeness、scorecard 分数、grouped CLI success、product-entry manifest success、
   refs-only accounting 或 doctor pass 写成 grant-ready、fundability-ready、quality-ready、
   export-ready、submission-ready 或 production-ready；不扩写 MAG-owned generic shell、compat
   alias、facade、wrapper 或 fallback 文案。
-- Live truth inputs: 读取 `contracts/runtime-program/current-program.json`、MAG
+- Functional truth inputs: 读取 `contracts/runtime-program/current-program.json`、MAG
   contracts/schemas/source/tests、product-entry manifest、domain-handler/action metadata、
-  owner receipt / memory / package / lifecycle contracts、OPL/App fresh read-model、runtime
-  receipts、workspace/package evidence 和 docs portfolio；dated proof、receipt id、payload
+  owner receipt / memory / package / lifecycle contracts、OPL/App read-model shape、runtime
+  boundary contracts、workspace/package refs 和 docs portfolio；dated proof、receipt id、payload
   path、command transcript 和 old worktree closeout 只作 provenance。
 - Required actions:
   1. 保持 `agent/` Declarative Grant Pack、cognitive-kernel adoption、stage control plane、
@@ -139,12 +126,10 @@ Refs-only ledger verification、request accounting closure、production acceptan
      MAG-owned shell。
   3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export /
      submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
-  4. 只用持续真实 workspace/App/operator/release evidence、stage success-rate refs 与
-     Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting、
-     stage replay projection、workspace receipt scaleout snapshot、manifest sustained-consumption
-     payload response snapshot、operator payload records 和 provider long-soak follow-through
-     typed-blocker projection 只进入 ledger/history 或 body-free production-acceptance snapshot。
-  5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、
+  4. 不在本文推进 live / production evidence tail；遇到 release、submission、
+     human-gate、long-soak 或 grant-ready claim 时，路由到 owner evidence lane，并在本文只保留 false-ready 禁止边界。
+  5. 在 generated/default caller parity、no-active-caller、no-forbidden-write、
+     tombstone/provenance 与 explicit physical-delete owner decision 成立后，删除旧 wrapper、alias、
      facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留
      history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner
      receipt、typed blocker、fail-closed 或 tombstone semantics。
@@ -152,9 +137,9 @@ Refs-only ledger verification、request accounting closure、production acceptan
   `rtk rg -n "<<<<<<<|>>>>>>>|=======" docs` 和 docs inventory sanity；触及
   source/contracts/tests 时运行 `rtk ./scripts/verify.sh` 或 focused pytest。
 - Completion gate: 本轮只能在 active plan、docs portfolio、contracts/source/tests 与 fresh
-  read-model 一致，且 open production evidence tail 没有被误写成 ready verdict 后关闭；
-  production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、
-  App/workbench consumption 与 explicit MAG physical-delete owner receipt 未满足前，不授权 physical delete。
+  read-model 一致，且 live / production evidence 未被误写成 ready verdict 后关闭；
+  generated/default caller parity、direct/hosted parity、owner receipt / typed blocker roundtrip、
+  no-forbidden-write、tombstone/provenance 与 explicit MAG physical-delete owner decision 未满足前，不授权 physical delete。
 - Foldback target: durable 当前结论折回本文、核心五件套、`docs/specs/README.md`、
   specs lifecycle map 或 machine contracts；执行 prompt、worktree/branch 状态、命令
   transcript、receipt id、payload path、proof closeout 和 dated coverage 进入
