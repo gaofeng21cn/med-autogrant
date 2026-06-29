@@ -62,6 +62,9 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
 )
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.runtime_defaults import build_default_runtime_summary
+from med_autogrant.temporal_stage_run_consumption import (
+    build_temporal_stage_run_consumption_policy,
+)
 from opl_harness_shared.product_entry_companions import (
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
 )
@@ -532,6 +535,9 @@ class ProductEntryManifestBuilderMixin:
                 "action_catalog_projections": action_catalog_projections,
                 "source_provenance": source_provenance,
                 "executor_defaults": build_executor_defaults_surface(),
+                "temporal_stage_run_consumption_policy": (
+                    build_temporal_stage_run_consumption_policy()
+                ),
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "autonomy_observability": autonomy_observability,

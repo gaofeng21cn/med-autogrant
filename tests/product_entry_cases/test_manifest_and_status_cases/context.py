@@ -13,16 +13,22 @@ from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 class ManifestStatusContext:
     payload: dict[str, Any]
     manifest: dict[str, Any]
+    status: dict[str, Any]
 
 
 def build_manifest_status_context() -> ManifestStatusContext:
-    payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+    product_entry = MedAutoGrantProductEntry()
+    payload = product_entry.build_product_entry_manifest(
+        input_path=str(CRITIQUE_EXAMPLE_PATH),
+    )
+    status = product_entry.build_product_status(
         input_path=str(CRITIQUE_EXAMPLE_PATH),
     )
 
     return ManifestStatusContext(
         payload=payload,
         manifest=payload["product_entry_manifest"],
+        status=status,
     )
 
 

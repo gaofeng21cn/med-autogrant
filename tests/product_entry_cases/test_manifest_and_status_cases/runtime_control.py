@@ -120,6 +120,30 @@ def assert_runtime_control(
         runtime_control["restore_point"]["domain_authority_surface_ref"],
         "/product_entry_manifest/owner_receipt_contract",
     )
+    temporal_policy = manifest["temporal_stage_run_consumption_policy"]
+    test_case.assertEqual(
+        runtime_control["temporal_stage_run_consumption_policy_ref"],
+        "/product_entry_manifest/temporal_stage_run_consumption_policy",
+    )
+    test_case.assertEqual(runtime_control["temporal_stage_run_consumption_policy"], temporal_policy)
+    test_case.assertEqual(temporal_policy["surface_kind"], "temporal_stage_run_consumption_policy")
+    test_case.assertEqual(temporal_policy["runtime_substrate_owner"], "one-person-lab")
+    test_case.assertEqual(temporal_policy["runtime_substrate"], "temporal")
+    test_case.assertEqual(temporal_policy["temporal_attempt_ledger_owner"], "one-person-lab/OPL")
+    test_case.assertFalse(temporal_policy["provider_completion_is_domain_completion"])
+    test_case.assertFalse(temporal_policy["domain_repo_can_own_temporal_runtime"])
+    test_case.assertFalse(temporal_policy["domain_repo_can_write_opl_stage_attempts"])
+    test_case.assertFalse(temporal_policy["generated_surface_ready_can_claim_domain_ready"])
+    test_case.assertFalse(temporal_policy["mag_writes_opl_stage_attempt_records"])
+    test_case.assertEqual(
+        temporal_policy["accepted_domain_closing_ref_fields"],
+        ["owner_receipt_ref", "typed_blocker_ref", "human_gate_ref", "route_back_ref"],
+    )
+    temporal_boundary = temporal_policy["authority_boundary"]
+    test_case.assertFalse(temporal_boundary["provider_completion_counts_as_domain_completion"])
+    test_case.assertFalse(temporal_boundary["generated_surface_ready_counts_as_domain_ready"])
+    test_case.assertFalse(temporal_boundary["mag_can_write_opl_stage_attempts"])
+    test_case.assertFalse(temporal_boundary["mag_can_own_temporal_runtime"])
     semantic_closure = runtime_control["semantic_closure"]
     test_case.assertEqual(semantic_closure["surface_kind"], "runtime_control_semantic_closure")
     test_case.assertEqual(semantic_closure["authoring_continuity"], "same_funding_call_task")

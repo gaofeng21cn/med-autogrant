@@ -137,6 +137,7 @@
         "progress_projection",
         "artifact_inventory",
         "runtime_control",
+        "temporal_stage_run_consumption_policy",
         "caller_owner_contract",
         "generated_hosted_default_caller_proof",
         "family_orchestration",
@@ -202,6 +203,9 @@
         },
         "runtime_control": {
           "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
+        },
+        "temporal_stage_run_consumption_policy": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/temporalStageRunConsumptionPolicy"
         },
         "caller_owner_contract": {
           "$ref": "#/$defs/callerOwnerContract"

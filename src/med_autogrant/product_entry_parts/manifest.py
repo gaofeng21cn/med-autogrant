@@ -101,6 +101,11 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
                     "runtime_control",
                     context="product_status.product_entry_manifest",
                 )),
+                "temporal_stage_run_consumption_policy": dict(_require_mapping(
+                    manifest,
+                    "temporal_stage_run_consumption_policy",
+                    context="product_status.product_entry_manifest",
+                )),
             },
         )
         product_status["surface_kind"] = "product_status"

@@ -47,6 +47,7 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         self.assertIn("family_stage_control_plane", manifest_required)
         self.assertIn("domain_memory_descriptor", manifest_required)
         self.assertIn("action_catalog_projections", manifest_required)
+        self.assertIn("temporal_stage_run_consumption_policy", manifest_required)
 
         status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
         status_required = status_schema["$defs"]["productStatus"]["required"]
@@ -57,6 +58,7 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         self.assertIn("product_entry_readiness", status_required)
         self.assertIn("grant_authoring_readiness", status_required)
         self.assertIn("product_entry_quickstart", status_required)
+        self.assertIn("temporal_stage_run_consumption_policy", status_required)
 
     def test_product_entry_surface_schemas_pin_opl_provider_runtime_contract_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
@@ -102,6 +104,8 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
                 "artifact_pickup_surface",
                 "approval_control_surface",
                 "direct_entry",
+                "temporal_stage_run_consumption_policy_ref",
+                "temporal_stage_run_consumption_policy",
             ],
         )
         self.assertEqual(
@@ -132,6 +136,32 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
             runtime_control["properties"]["direct_entry"]["$ref"],
             "#/$defs/runtimeControlDirectEntry",
         )
+        self.assertEqual(
+            runtime_control["properties"]["temporal_stage_run_consumption_policy_ref"]["const"],
+            "/product_entry_manifest/temporal_stage_run_consumption_policy",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["temporal_stage_run_consumption_policy"]["$ref"],
+            "#/$defs/temporalStageRunConsumptionPolicy",
+        )
+
+    def test_product_entry_manifest_schema_pins_temporal_stage_run_consumption_policy(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        policy = manifest_schema["$defs"]["temporalStageRunConsumptionPolicy"]
+        self.assertEqual(policy["properties"]["surface_kind"]["const"], "temporal_stage_run_consumption_policy")
+        self.assertEqual(policy["properties"]["runtime_substrate_owner"]["const"], "one-person-lab")
+        self.assertEqual(policy["properties"]["runtime_substrate"]["const"], "temporal")
+        self.assertEqual(policy["properties"]["temporal_attempt_ledger_owner"]["const"], "one-person-lab/OPL")
+        self.assertFalse(policy["properties"]["provider_completion_is_domain_completion"]["const"])
+        self.assertFalse(policy["properties"]["domain_repo_can_own_temporal_runtime"]["const"])
+        self.assertFalse(policy["properties"]["domain_repo_can_write_opl_stage_attempts"]["const"])
+        self.assertFalse(policy["properties"]["generated_surface_ready_can_claim_domain_ready"]["const"])
+        self.assertFalse(policy["properties"]["mag_writes_opl_stage_attempt_records"]["const"])
+        boundary = policy["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(boundary["provider_completion_counts_as_domain_completion"]["const"])
+        self.assertFalse(boundary["generated_surface_ready_counts_as_domain_ready"]["const"])
+        self.assertFalse(boundary["mag_can_write_opl_stage_attempts"]["const"])
+        self.assertFalse(boundary["mag_can_own_temporal_runtime"]["const"])
 
     def test_product_entry_manifest_schema_pins_functional_harness_consumer_boundary(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

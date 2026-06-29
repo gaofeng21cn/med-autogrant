@@ -54,6 +54,9 @@ from med_autogrant.stage_control_plane import build_mag_family_stage_control_pla
 from med_autogrant.stage_control_plane_parts.cognitive_kernel import (
     pack_compiler_cognitive_kernel_fields,
 )
+from med_autogrant.temporal_stage_run_consumption import (
+    build_temporal_stage_run_consumption_policy,
+)
 from opl_harness_shared.product_entry_companions import build_operator_loop_action_catalog
 
 
@@ -400,6 +403,7 @@ def _generated_surface_handoff() -> dict[str, Any]:
         "source_contract_ref": "contracts/pack_compiler_input.json",
         "consumes_domain_pack_refs": True,
         "domain_pack_ref": "agent/",
+        "temporal_stage_run_consumption_policy": build_temporal_stage_run_consumption_policy(),
         "generated_surfaces": [
             {
                 "surface_id": surface_id,
@@ -428,6 +432,8 @@ def _generated_surface_handoff() -> dict[str, Any]:
                 "package_body",
                 "memory_body",
                 "owner_receipt_instance",
+                "opl_stage_attempt_records",
+                "temporal_attempt_ledger",
             ],
             "src_role": "domain_handler_minimal_authority_and_native_helper_only",
         },

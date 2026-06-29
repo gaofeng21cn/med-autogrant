@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
+from med_autogrant.temporal_stage_run_consumption import (
+    build_temporal_stage_run_consumption_policy,
+)
 
 from opl_harness_shared.family_action_catalog import (
     build_family_action,
@@ -89,6 +92,7 @@ def build_mag_family_action_catalog(
             "OPL consumes schema/helper/validator/discovery projections and does not own MAG grant truth.",
         ],
     )
+    catalog["temporal_stage_run_consumption_policy"] = build_temporal_stage_run_consumption_policy()
     parity = validate_family_action_catalog_parity(catalog)
     if parity["status"] != "aligned":
         raise ValueError(f"MAG family action catalog parity failed: {parity['issues']}")

@@ -36,6 +36,12 @@ Last reviewed: `2026-06-12`
 - 理由：标准 OPL Agent 应提交 declarative pack、domain handler、refs、typed blocker、owner receipt 和 grant authority surface。持久在线调度、唤醒、retry、resume、attempt ledger 和 long-running provider residency 是 OPL/Temporal 职责。
 - 影响：Direct app skill / CLI / `MedAutoGrantDomainEntry` 仍是一等入口；MAG 继续持有 grant truth、fundability / quality / export verdict、package authority、memory accept/reject 和 owner receipt authority。该决策不声明 Temporal long-soak window evidence 已关闭。
 
+### MAG 只消费 OPL Temporal StageRun refs，不拥有 Temporal runtime
+
+- 决策：`temporal_stage_run_consumption_policy` 作为 action catalog、generated surface handoff、runtime_control 和 product-status 的共享机器字段，声明 MAG 只消费 OPL Temporal-backed StageRun / provider attempt refs；`temporal_attempt_ledger_owner=one-person-lab/OPL`，`domain_repo_can_own_temporal_runtime=false`，`MAG` 不写 OPL stage attempts。
+- 理由：更好利用 Temporal 的方式是让 OPL 持有 durable execution substrate、provider completion、attempt ledger、queue 和 generated/hosted surfaces；MAG 保留 grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt 和 typed blocker authority。把消费边界机器化可以防止 provider completion、generated surface ready 或 stage attempt record 被误读成 grant/domain completion。
+- 影响：domain completion 只能由 `owner_receipt_ref`、`typed_blocker_ref`、`human_gate_ref` 或 `route_back_ref` 关闭；provider completion、schema completeness、generated surface ready、manifest success 或 focused tests 都不能声明 domain ready、grant-ready、quality/export-ready、submission-ready 或 production-ready。该决策不新增 MAG runtime，也不关闭 Temporal long-soak evidence gate。
+
 ### MAG 目标形态是 Declarative Grant Pack + OPL generated/hosted surfaces + minimal authority functions
 
 - 决策：MAG 以 `agent/` declarative pack、contracts、domain handler、refs-only adapter 和最小 authority function 作为长期形态；product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、memory/package helper、workspace/source intake 和 status/user-loop wrapper 只能作为 direct handler、refs-only adapter、migration input、diagnostic 或 tombstone 阅读。

@@ -884,7 +884,9 @@
         "progress_surface",
         "artifact_pickup_surface",
         "approval_control_surface",
-        "direct_entry"
+        "direct_entry",
+        "temporal_stage_run_consumption_policy_ref",
+        "temporal_stage_run_consumption_policy"
       ],
       "properties": {
         "surface_kind": {
@@ -926,6 +928,95 @@
         },
         "direct_entry": {
           "$ref": "#/$defs/runtimeControlDirectEntry"
+        },
+        "temporal_stage_run_consumption_policy_ref": {
+          "const": "/product_entry_manifest/temporal_stage_run_consumption_policy"
+        },
+        "temporal_stage_run_consumption_policy": {
+          "$ref": "#/$defs/temporalStageRunConsumptionPolicy"
+        }
+      }
+    },
+    "temporalStageRunConsumptionPolicy": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "policy_id",
+        "owner",
+        "runtime_substrate_owner",
+        "runtime_substrate",
+        "domain_role",
+        "domain_truth_owner",
+        "temporal_attempt_ledger_owner",
+        "provider_completion_is_domain_completion",
+        "domain_repo_can_own_temporal_runtime",
+        "domain_repo_can_write_opl_stage_attempts",
+        "generated_surface_ready_can_claim_domain_ready",
+        "mag_writes_opl_stage_attempt_records",
+        "accepted_domain_closing_ref_fields",
+        "authority_boundary",
+        "readback_policy"
+      ],
+      "properties": {
+        "surface_kind": {"const": "temporal_stage_run_consumption_policy"},
+        "policy_id": {"const": "mag.temporal_stage_run_consumption_policy.v1"},
+        "owner": {"const": "med-autogrant"},
+        "runtime_substrate_owner": {"const": "one-person-lab"},
+        "runtime_substrate": {"const": "temporal"},
+        "domain_role": {"const": "refs_only_consumer_and_grant_authority"},
+        "domain_truth_owner": {"const": "med-autogrant"},
+        "temporal_attempt_ledger_owner": {"const": "one-person-lab/OPL"},
+        "provider_completion_is_domain_completion": {"const": false},
+        "domain_repo_can_own_temporal_runtime": {"const": false},
+        "domain_repo_can_write_opl_stage_attempts": {"const": false},
+        "generated_surface_ready_can_claim_domain_ready": {"const": false},
+        "mag_writes_opl_stage_attempt_records": {"const": false},
+        "accepted_domain_closing_ref_fields": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ]
+          },
+          "minItems": 4
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "mag_can_write_opl_stage_attempts",
+            "mag_can_own_temporal_runtime",
+            "provider_completion_counts_as_domain_completion",
+            "generated_surface_ready_counts_as_domain_ready"
+          ],
+          "properties": {
+            "mag_can_write_opl_stage_attempts": {"const": false},
+            "mag_can_own_temporal_runtime": {"const": false},
+            "provider_completion_counts_as_domain_completion": {"const": false},
+            "generated_surface_ready_counts_as_domain_ready": {"const": false}
+          }
+        },
+        "readback_policy": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "project_on_product_status",
+            "project_on_runtime_control",
+            "project_on_action_catalog",
+            "project_on_generated_surface_handoff",
+            "second_runtime_forbidden"
+          ],
+          "properties": {
+            "project_on_product_status": {"const": true},
+            "project_on_runtime_control": {"const": true},
+            "project_on_action_catalog": {"const": true},
+            "project_on_generated_surface_handoff": {"const": true},
+            "second_runtime_forbidden": {"const": true}
+          }
         }
       }
     },
@@ -7927,7 +8018,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "owner_payload_response", "workspace_receipt_scaleout_evidence", "manifest_sustained_consumption_evidence", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "owner_payload_response", "workspace_receipt_scaleout_evidence", "manifest_sustained_consumption_evidence", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "temporal_stage_run_consumption_policy", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -8103,6 +8194,9 @@
         },
         "executor_defaults": {
           "$ref": "#/$defs/executorDefaultsSurface"
+        },
+        "temporal_stage_run_consumption_policy": {
+          "$ref": "#/$defs/temporalStageRunConsumptionPolicy"
         },
         "product_entry_status": {"$ref": "#/$defs/productEntryStatus"},
         "remaining_gaps": {

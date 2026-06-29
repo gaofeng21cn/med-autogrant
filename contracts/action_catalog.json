@@ -305,5 +305,52 @@
   "owner": "med-autogrant",
   "surface_kind": "family_action_catalog",
   "target_domain_id": "med-autogrant",
+  "temporal_stage_run_consumption_policy": {
+    "accepted_consumed_ref_fields": [
+      "temporal_stage_run_ref",
+      "provider_attempt_ref",
+      "provider_completion_ref",
+      "stage_attempt_ref"
+    ],
+    "accepted_domain_closing_ref_fields": [
+      "owner_receipt_ref",
+      "typed_blocker_ref",
+      "human_gate_ref",
+      "route_back_ref"
+    ],
+    "authority_boundary": {
+      "generated_surface_ready_counts_as_domain_ready": false,
+      "mag_can_own_temporal_runtime": false,
+      "mag_can_write_opl_stage_attempts": false,
+      "opl_can_authorize_quality_or_export": false,
+      "opl_can_sign_mag_owner_receipt": false,
+      "opl_can_write_grant_truth": false,
+      "provider_completion_counts_as_domain_completion": false
+    },
+    "domain_completion_policy": "Only MAG owner receipt, typed blocker, human gate, or route-back refs can close domain completion; OPL provider completion and generated-surface readiness remain runtime/projection signals.",
+    "domain_repo_can_own_temporal_runtime": false,
+    "domain_repo_can_write_opl_stage_attempts": false,
+    "domain_role": "refs_only_consumer_and_grant_authority",
+    "domain_truth_owner": "med-autogrant",
+    "generated_surface_ready_can_claim_domain_ready": false,
+    "mag_can_create_temporal_attempt_ledger": false,
+    "mag_can_run_temporal_worker_or_scheduler": false,
+    "mag_writes_opl_stage_attempt_records": false,
+    "owner": "med-autogrant",
+    "policy_id": "mag.temporal_stage_run_consumption_policy.v1",
+    "provider_completion_is_domain_completion": false,
+    "readback_policy": {
+      "project_on_action_catalog": true,
+      "project_on_generated_surface_handoff": true,
+      "project_on_product_status": true,
+      "project_on_runtime_control": true,
+      "second_runtime_forbidden": true
+    },
+    "runtime_substrate": "temporal",
+    "runtime_substrate_owner": "one-person-lab",
+    "surface_kind": "temporal_stage_run_consumption_policy",
+    "temporal_attempt_ledger_owner": "one-person-lab/OPL",
+    "version": 1
+  },
   "version": "family-action-catalog.v1"
 }

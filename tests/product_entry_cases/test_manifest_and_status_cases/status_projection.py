@@ -17,6 +17,7 @@ def assert_status_projection(
     test_case: unittest.TestCase,
     context: ManifestStatusContext,
 ) -> None:
+    status = context.status
     manifest = context.manifest
 
     test_case.assertIs(
@@ -61,6 +62,26 @@ def assert_status_projection(
     test_case.assertEqual(
         manifest["product_entry_status"]["next_focus"],
         manifest["repo_mainline"]["next_focus"],
+    )
+    product_status = status["product_status"]
+    test_case.assertEqual(
+        product_status["temporal_stage_run_consumption_policy"],
+        manifest["temporal_stage_run_consumption_policy"],
+    )
+    test_case.assertFalse(
+        product_status["temporal_stage_run_consumption_policy"][
+            "provider_completion_is_domain_completion"
+        ]
+    )
+    test_case.assertFalse(
+        product_status["temporal_stage_run_consumption_policy"][
+            "domain_repo_can_own_temporal_runtime"
+        ]
+    )
+    test_case.assertFalse(
+        product_status["temporal_stage_run_consumption_policy"][
+            "generated_surface_ready_can_claim_domain_ready"
+        ]
     )
     owner_payload = manifest["owner_payload_response"]
     test_case.assertEqual(owner_payload["surface_kind"], "mag_opl_owner_payload_response")

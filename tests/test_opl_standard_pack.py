@@ -66,6 +66,27 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
     assert generated["domain_descriptor"]["domain_label"] == DOMAIN_LABEL
     assert generated["domain_descriptor"]["generated_surface_owner"] == GENERATED_SURFACE_OWNER
+    policy = generated["action_catalog"]["temporal_stage_run_consumption_policy"]
+    assert policy["surface_kind"] == "temporal_stage_run_consumption_policy"
+    assert policy["runtime_substrate_owner"] == GENERATED_SURFACE_OWNER
+    assert policy["runtime_substrate"] == "temporal"
+    assert policy["temporal_attempt_ledger_owner"] == "one-person-lab/OPL"
+    assert policy["domain_role"] == "refs_only_consumer_and_grant_authority"
+    assert policy["provider_completion_is_domain_completion"] is False
+    assert policy["domain_repo_can_own_temporal_runtime"] is False
+    assert policy["domain_repo_can_write_opl_stage_attempts"] is False
+    assert policy["generated_surface_ready_can_claim_domain_ready"] is False
+    assert policy["mag_writes_opl_stage_attempt_records"] is False
+    assert policy["accepted_domain_closing_ref_fields"] == [
+        "owner_receipt_ref",
+        "typed_blocker_ref",
+        "human_gate_ref",
+        "route_back_ref",
+    ]
+    assert policy["authority_boundary"]["provider_completion_counts_as_domain_completion"] is False
+    assert policy["authority_boundary"]["generated_surface_ready_counts_as_domain_ready"] is False
+    assert policy["authority_boundary"]["mag_can_write_opl_stage_attempts"] is False
+    assert policy["authority_boundary"]["mag_can_own_temporal_runtime"] is False
 
 
 def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
@@ -200,6 +221,13 @@ def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
 
 def _assert_standard_handoff_refs(generated: dict[str, object]) -> None:
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
+    handoff_policy = generated["generated_surface_handoff"]["temporal_stage_run_consumption_policy"]
+    assert handoff_policy == generated["action_catalog"]["temporal_stage_run_consumption_policy"]
+    do_not_write = generated["generated_surface_handoff"]["consumption_boundary"][
+        "opl_generated_surfaces_do_not_write"
+    ]
+    assert "opl_stage_attempt_records" in do_not_write
+    assert "temporal_attempt_ledger" in do_not_write
     assert [
         surface["surface_id"] for surface in generated["generated_surface_handoff"]["generated_surfaces"]
     ] == GENERATED_SURFACES
@@ -270,16 +298,19 @@ def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority(
 
     report = readiness["reports"][0]
     assert report["deletion_gate"]["physical_delete_authorized"] is False
-    by_surface = {gate["surface_id"]: gate for gate in report["surface_gates"]}
-    assert by_surface["mcp"]["active_caller_module_id"] == "human_workbench_scheduler_daemon"
-    assert by_surface["product_status"]["active_caller_module_id"] == "domain_handler_product_status_shell"
-    assert by_surface["domain_handler"]["active_caller_module_id"] == "runtime_registration"
-    for gate in report["surface_gates"]:
-        worklist = gate["deletion_evidence_worklist"]
-        assert worklist["domain_owner_receipt_or_typed_blocker"]["status"] == "observed"
-        assert worklist["no_forbidden_write_proof"]["status"] == "observed"
-        assert worklist["tombstone_or_provenance_ref"]["status"] == "observed"
-        assert worklist["physical_delete_authorized"] is False
+    assert report["closed_surface_detail_policy"] == (
+        "closed_retirement_gate_details_omitted_from_default_payload"
+    )
+    assert report["summary"]["surface_retirement_gate_count"] == 8
+    assert report["summary"]["closed_surface_retirement_gate_count"] == 8
+    deletion_gate = report["deletion_gate"]
+    assert deletion_gate["all_deletion_evidence_requirements_observed"] is True
+    assert deletion_gate["generated_default_caller_readiness_can_authorize_physical_delete"] is False
+    assert deletion_gate["evidence_worklist_count"] == 0
+    assert deletion_gate["missing_domain_owner_receipt_or_typed_blocker_count"] == 0
+    assert deletion_gate["missing_no_forbidden_write_proof_count"] == 0
+    assert deletion_gate["missing_tombstone_or_provenance_ref_count"] == 0
+    assert "domain_ready" in deletion_gate["not_authorized_claims"]
 
 
 def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
