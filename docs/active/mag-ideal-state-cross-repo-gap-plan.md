@@ -97,7 +97,7 @@ MAG 必须保留的 authority：
 
 ## Ready / Submission 声明边界
 
-本文不维护 live / production evidence worklist。grant-ready、fundability-ready、quality-ready、export-ready、submission-ready、App/operator sustained consumption、Temporal long-soak、W7 owner evidence 和 human-gate receipt 只在单独 evidence lane 或 owner contract 中读取；它们不得反向重开 MAG repo 侧功能/结构 backlog。
+本文不维护 ready / production evidence worklist。grant-ready、fundability-ready、quality-ready、export-ready、submission-ready、App/operator sustained consumption、Temporal long-soak、W7 owner evidence 和 human-gate receipt 只在单独 evidence lane 或 owner contract 中读取；它们不得反向重开 MAG repo 侧功能/结构 backlog。
 
 Active plan 只保留当前可落地的非 live 缺口：product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI handler shells 的 physical-delete-not-authorized tail、strict source-purity / no-resurrection guard、refs-only package/memory/lifecycle boundary、AI-first authority guard 和 legacy wrapper/alias/facade/compat aggregate test 清理。涉及 evidence lane 时，只能在本文保留 false-ready 禁止边界，不列 receipt id、run id、cohort、long-soak、human-gate 或 ready-claim worklist。
 
