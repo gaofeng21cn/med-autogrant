@@ -550,9 +550,48 @@ def _assert_stage_receipts_monitors_and_closeout(
     test_case.assertEqual(closeout["stage_id"], stage["stage_id"])
     test_case.assertEqual(closeout["expected_receipt_refs"], stage["stage_contract"]["expected_receipt_refs"])
     test_case.assertEqual(closeout["monitor_freshness_refs"], stage["stage_contract"]["monitor_freshness_refs"])
+    test_case.assertEqual(
+        closeout["grant_ready_completion_audit_ref"],
+        (
+            "/product_entry_manifest/temporal_stage_run_consumption_policy/"
+            "grant_ready_completion_audit"
+        ),
+    )
+    audit = closeout["grant_ready_completion_audit"]
+    test_case.assertEqual(audit["surface_kind"], "grant_ready_completion_audit")
+    test_case.assertEqual(audit["state"], "blocked_without_mag_owner_closing_ref")
+    test_case.assertEqual(
+        audit["accepted_domain_closing_ref_fields"],
+        [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref",
+        ],
+    )
+    test_case.assertFalse(audit["claim_permissions"]["grant_ready"])
+    test_case.assertFalse(audit["claim_permissions"]["quality_ready"])
+    test_case.assertFalse(audit["claim_permissions"]["export_ready"])
+    test_case.assertFalse(audit["claim_permissions"]["submission_ready"])
+    test_case.assertIn("provider_completion", audit["false_completion_signals"])
+    test_case.assertIn("schema_completeness", audit["false_completion_signals"])
+    test_case.assertIn("generated_surface_ready", audit["false_completion_signals"])
+    test_case.assertIn("focused_tests_passed", audit["false_completion_signals"])
     test_case.assertFalse(closeout["authority_boundary"]["opl_can_sign_owner_receipt"])
     test_case.assertFalse(closeout["authority_boundary"]["opl_can_write_grant_truth"])
     test_case.assertFalse(closeout["authority_boundary"]["opl_can_declare_export_ready"])
+    test_case.assertFalse(
+        closeout["authority_boundary"]["provider_completion_counts_as_grant_ready"]
+    )
+    test_case.assertFalse(
+        closeout["authority_boundary"]["schema_completeness_counts_as_grant_ready"]
+    )
+    test_case.assertFalse(
+        closeout["authority_boundary"]["generated_surface_ready_counts_as_grant_ready"]
+    )
+    test_case.assertFalse(
+        closeout["authority_boundary"]["focused_tests_count_as_grant_ready"]
+    )
 
 
 def _assert_stage_authority_boundary(

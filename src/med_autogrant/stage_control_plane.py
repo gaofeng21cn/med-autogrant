@@ -14,6 +14,9 @@ from med_autogrant.stage_control_plane_parts.transition_oracle import (
     build_mag_grant_transition_oracle,
 )
 from med_autogrant.runtime_defaults import DEFAULT_EXECUTOR_OWNER
+from med_autogrant.temporal_stage_run_consumption import (
+    build_grant_ready_completion_audit,
+)
 
 USER_STAGE_LOG_REQUIRED_FIELDS = [
     "stage_name",
@@ -584,6 +587,7 @@ def _stage_production_evidence_closeout(
     expected_receipt_refs: list[dict[str, Any]],
     monitor_freshness_refs: list[dict[str, str]],
 ) -> dict[str, Any]:
+    grant_ready_completion_audit = build_grant_ready_completion_audit()
     return {
         "surface_kind": "mag_stage_production_evidence_closeout_refs",
         "state": "body_free_refs_ready_for_opl_record_preflight",
@@ -602,8 +606,14 @@ def _stage_production_evidence_closeout(
         "preflight_refs": [
             "/product_entry_manifest/controlled_stage_attempt_projection",
             "/product_entry_manifest/owner_receipt_contract",
+            "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
             f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/stage_contract",
         ],
+        "grant_ready_completion_audit_ref": (
+            "/product_entry_manifest/temporal_stage_run_consumption_policy/"
+            "grant_ready_completion_audit"
+        ),
+        "grant_ready_completion_audit": grant_ready_completion_audit,
         "authority_boundary": {
             "domain_truth_owner": TARGET_DOMAIN_ID,
             "fundability_judgment_owner": TARGET_DOMAIN_ID,
@@ -613,6 +623,10 @@ def _stage_production_evidence_closeout(
             "opl_can_write_grant_truth": False,
             "opl_can_write_memory_body": False,
             "opl_can_declare_export_ready": False,
+            "provider_completion_counts_as_grant_ready": False,
+            "schema_completeness_counts_as_grant_ready": False,
+            "generated_surface_ready_counts_as_grant_ready": False,
+            "focused_tests_count_as_grant_ready": False,
         },
     }
 

@@ -943,6 +943,7 @@
       "required": [
         "surface_kind",
         "policy_id",
+        "contract_ref",
         "owner",
         "runtime_substrate_owner",
         "runtime_substrate",
@@ -955,12 +956,14 @@
         "generated_surface_ready_can_claim_domain_ready",
         "mag_writes_opl_stage_attempt_records",
         "accepted_domain_closing_ref_fields",
+        "grant_ready_completion_audit",
         "authority_boundary",
         "readback_policy"
       ],
       "properties": {
         "surface_kind": {"const": "temporal_stage_run_consumption_policy"},
         "policy_id": {"const": "mag.temporal_stage_run_consumption_policy.v1"},
+        "contract_ref": {"const": "contracts/temporal_stage_run_consumption_policy.json"},
         "owner": {"const": "med-autogrant"},
         "runtime_substrate_owner": {"const": "one-person-lab"},
         "runtime_substrate": {"const": "temporal"},
@@ -983,6 +986,59 @@
             ]
           },
           "minItems": 4
+        },
+        "grant_ready_completion_audit": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "audit_id",
+            "owner",
+            "state",
+            "accepted_domain_closing_ref_fields",
+            "false_completion_signals",
+            "claim_permissions",
+            "required_owner_evidence",
+            "residual_live_evidence_gaps",
+            "authority_boundary",
+            "readback_policy"
+          ],
+          "properties": {
+            "surface_kind": {"const": "grant_ready_completion_audit"},
+            "audit_id": {"const": "mag.grant_ready_completion_audit.v1"},
+            "owner": {"const": "med-autogrant"},
+            "state": {"const": "blocked_without_mag_owner_closing_ref"},
+            "false_completion_signals": {
+              "type": "array",
+              "contains": {"const": "provider_completion"}
+            },
+            "claim_permissions": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "domain_ready": {"const": false},
+                "grant_ready": {"const": false},
+                "fundability_ready": {"const": false},
+                "quality_ready": {"const": false},
+                "export_ready": {"const": false},
+                "submission_ready": {"const": false},
+                "production_ready": {"const": false}
+              }
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "provider_completion_counts_as_grant_ready": {"const": false},
+                "schema_completeness_counts_as_grant_ready": {"const": false},
+                "generated_surface_ready_counts_as_grant_ready": {"const": false},
+                "focused_tests_count_as_grant_ready": {"const": false},
+                "stage_replay_counts_as_submission_ready": {"const": false},
+                "package_existence_counts_as_submission_ready": {"const": false},
+                "quality_scorecard_counts_as_quality_ready": {"const": false}
+              }
+            }
+          }
         },
         "authority_boundary": {
           "type": "object",

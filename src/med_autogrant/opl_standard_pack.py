@@ -93,6 +93,7 @@ def build_standard_pack() -> dict[str, Any]:
         "generated_surface_handoff": _generated_surface_handoff(),
         "foundry_agent_series": _foundry_agent_series_contract(stage_control_plane),
         "action_catalog": _with_forbidden_roles(action_catalog),
+        "temporal_stage_run_consumption_policy": build_temporal_stage_run_consumption_policy(),
         "stage_control_plane": stage_control_plane,
         "memory_descriptor": _memory_descriptor(),
         "artifact_locator_contract": _artifact_locator_contract(),

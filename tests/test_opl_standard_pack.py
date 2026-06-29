@@ -53,6 +53,10 @@ def _assert_root_contracts_match(generated: dict[str, object]) -> None:
     assert _read_contract("domain_descriptor") == generated["domain_descriptor"]
     assert _read_contract("foundry_agent_series") == generated["foundry_agent_series"]
     assert _read_contract("action_catalog") == generated["action_catalog"]
+    assert (
+        _read_contract("temporal_stage_run_consumption_policy")
+        == generated["temporal_stage_run_consumption_policy"]
+    )
     assert _read_contract("stage_control_plane") == generated["stage_control_plane"]
     assert _read_contract("functional_privatization_audit") == generated["functional_privatization_audit"]
     assert (
@@ -67,7 +71,9 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert generated["domain_descriptor"]["domain_label"] == DOMAIN_LABEL
     assert generated["domain_descriptor"]["generated_surface_owner"] == GENERATED_SURFACE_OWNER
     policy = generated["action_catalog"]["temporal_stage_run_consumption_policy"]
+    assert policy == generated["temporal_stage_run_consumption_policy"]
     assert policy["surface_kind"] == "temporal_stage_run_consumption_policy"
+    assert policy["contract_ref"] == "contracts/temporal_stage_run_consumption_policy.json"
     assert policy["runtime_substrate_owner"] == GENERATED_SURFACE_OWNER
     assert policy["runtime_substrate"] == "temporal"
     assert policy["temporal_attempt_ledger_owner"] == "one-person-lab/OPL"
@@ -87,6 +93,34 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert policy["authority_boundary"]["generated_surface_ready_counts_as_domain_ready"] is False
     assert policy["authority_boundary"]["mag_can_write_opl_stage_attempts"] is False
     assert policy["authority_boundary"]["mag_can_own_temporal_runtime"] is False
+    audit = policy["grant_ready_completion_audit"]
+    assert audit["surface_kind"] == "grant_ready_completion_audit"
+    assert audit["state"] == "blocked_without_mag_owner_closing_ref"
+    assert audit["accepted_domain_closing_ref_fields"] == policy["accepted_domain_closing_ref_fields"]
+    assert audit["claim_permissions"] == {
+        "domain_ready": False,
+        "grant_ready": False,
+        "fundability_ready": False,
+        "quality_ready": False,
+        "export_ready": False,
+        "submission_ready": False,
+        "production_ready": False,
+    }
+    assert {
+        "provider_completion",
+        "schema_completeness",
+        "generated_surface_ready",
+        "focused_tests_passed",
+        "stage_replay_projection",
+        "package_existence",
+        "quality_scorecard_score",
+    } <= set(audit["false_completion_signals"])
+    assert audit["authority_boundary"]["provider_completion_counts_as_grant_ready"] is False
+    assert audit["authority_boundary"]["schema_completeness_counts_as_grant_ready"] is False
+    assert audit["authority_boundary"]["generated_surface_ready_counts_as_grant_ready"] is False
+    assert audit["authority_boundary"]["focused_tests_count_as_grant_ready"] is False
+    assert "submission_ready_human_gate_receipt" in audit["residual_live_evidence_gaps"]
+    assert "temporal_provider_long_soak_window_evidence" in audit["residual_live_evidence_gaps"]
 
 
 def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
@@ -223,6 +257,7 @@ def _assert_standard_handoff_refs(generated: dict[str, object]) -> None:
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
     handoff_policy = generated["generated_surface_handoff"]["temporal_stage_run_consumption_policy"]
     assert handoff_policy == generated["action_catalog"]["temporal_stage_run_consumption_policy"]
+    assert handoff_policy == generated["temporal_stage_run_consumption_policy"]
     do_not_write = generated["generated_surface_handoff"]["consumption_boundary"][
         "opl_generated_surfaces_do_not_write"
     ]

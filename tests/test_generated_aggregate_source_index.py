@@ -36,6 +36,7 @@ def test_generated_aggregate_source_index_declares_leaf_source_policy() -> None:
 
     aggregate_ids = {item["aggregate_id"] for item in payload["aggregates"]}
     assert aggregate_ids == {
+        "temporal_stage_run_consumption_policy",
         "stage_control_plane",
         "functional_privatization_audit",
         "product_entry_manifest_schema",

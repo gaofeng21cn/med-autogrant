@@ -15,6 +15,32 @@
   },
   "aggregates": [
     {
+      "aggregate_id": "temporal_stage_run_consumption_policy",
+      "aggregate_path": "contracts/temporal_stage_run_consumption_policy.json",
+      "maintenance_shape": "generated_aggregate",
+      "safe_generator_available": true,
+      "generator": "med_autogrant.opl_standard_pack.build_standard_pack",
+      "sync_command": "scripts/run-python-clean.sh -m med_autogrant.opl_standard_pack",
+      "builder_output_key": "temporal_stage_run_consumption_policy",
+      "manual_edit_allowed": false,
+      "checker_policy": "aggregate_must_equal_builder_output",
+      "leaf_source_refs": [
+        "src/med_autogrant/temporal_stage_run_consumption.py",
+        "src/med_autogrant/action_catalog.py",
+        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+        "src/med_autogrant/product_entry_parts/manifest_builder.py",
+        "src/med_autogrant/stage_control_plane.py"
+      ],
+      "consumer_refs": [
+        "contracts/action_catalog.json",
+        "contracts/generated_surface_handoff.json",
+        "contracts/stage_control_plane.json",
+        "src/med_autogrant/product_entry_parts/manifest_builder.py",
+        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+        "tests/test_opl_standard_pack.py"
+      ]
+    },
+    {
       "aggregate_id": "stage_control_plane",
       "aggregate_path": "contracts/stage_control_plane.json",
       "maintenance_shape": "generated_aggregate",
@@ -118,7 +144,8 @@
         "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
         "src/med_autogrant/product_entry_parts/source_provenance.py",
         "src/med_autogrant/product_entry_parts/executor_defaults.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+        "src/med_autogrant/temporal_stage_run_consumption.py"
       ],
       "consumer_refs": [
         "tests/test_schema_registry.py",

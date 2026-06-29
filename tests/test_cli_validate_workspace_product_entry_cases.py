@@ -44,6 +44,41 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         )
         self.assertIn("sli_summary", manifest["autonomy_observability"])
         self.assertTrue(manifest["recommended_command"].startswith("opl://generated-surfaces/mag/"))
+        temporal_policy = manifest["temporal_stage_run_consumption_policy"]
+        self.assertEqual(
+            manifest["runtime_control"]["temporal_stage_run_consumption_policy"],
+            temporal_policy,
+        )
+        self.assertEqual(
+            manifest["family_action_catalog"]["temporal_stage_run_consumption_policy"],
+            temporal_policy,
+        )
+        self.assertEqual(
+            temporal_policy["contract_ref"],
+            "contracts/temporal_stage_run_consumption_policy.json",
+        )
+        audit = temporal_policy["grant_ready_completion_audit"]
+        self.assertEqual(audit["state"], "blocked_without_mag_owner_closing_ref")
+        self.assertFalse(audit["claim_permissions"]["grant_ready"])
+        self.assertFalse(audit["claim_permissions"]["quality_ready"])
+        self.assertFalse(audit["claim_permissions"]["export_ready"])
+        self.assertFalse(audit["claim_permissions"]["submission_ready"])
+        self.assertIn("provider_completion", audit["false_completion_signals"])
+        self.assertIn("schema_completeness", audit["false_completion_signals"])
+        self.assertIn("generated_surface_ready", audit["false_completion_signals"])
+        self.assertIn("focused_tests_passed", audit["false_completion_signals"])
+        self.assertFalse(
+            audit["authority_boundary"]["provider_completion_counts_as_grant_ready"]
+        )
+        self.assertFalse(
+            audit["authority_boundary"]["schema_completeness_counts_as_grant_ready"]
+        )
+        self.assertFalse(
+            audit["authority_boundary"]["generated_surface_ready_counts_as_grant_ready"]
+        )
+        self.assertFalse(
+            audit["authority_boundary"]["focused_tests_count_as_grant_ready"]
+        )
 
     def test_skill_catalog_returns_machine_readable_app_skill_surface(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

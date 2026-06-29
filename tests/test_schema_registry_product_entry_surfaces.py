@@ -149,6 +149,12 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         policy = manifest_schema["$defs"]["temporalStageRunConsumptionPolicy"]
         self.assertEqual(policy["properties"]["surface_kind"]["const"], "temporal_stage_run_consumption_policy")
+        self.assertIn("contract_ref", policy["required"])
+        self.assertIn("grant_ready_completion_audit", policy["required"])
+        self.assertEqual(
+            policy["properties"]["contract_ref"]["const"],
+            "contracts/temporal_stage_run_consumption_policy.json",
+        )
         self.assertEqual(policy["properties"]["runtime_substrate_owner"]["const"], "one-person-lab")
         self.assertEqual(policy["properties"]["runtime_substrate"]["const"], "temporal")
         self.assertEqual(policy["properties"]["temporal_attempt_ledger_owner"]["const"], "one-person-lab/OPL")
@@ -162,6 +168,20 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         self.assertFalse(boundary["generated_surface_ready_counts_as_domain_ready"]["const"])
         self.assertFalse(boundary["mag_can_write_opl_stage_attempts"]["const"])
         self.assertFalse(boundary["mag_can_own_temporal_runtime"]["const"])
+        audit = policy["properties"]["grant_ready_completion_audit"]
+        self.assertEqual(audit["properties"]["surface_kind"]["const"], "grant_ready_completion_audit")
+        self.assertEqual(audit["properties"]["audit_id"]["const"], "mag.grant_ready_completion_audit.v1")
+        self.assertEqual(audit["properties"]["state"]["const"], "blocked_without_mag_owner_closing_ref")
+        claim_permissions = audit["properties"]["claim_permissions"]["properties"]
+        self.assertFalse(claim_permissions["grant_ready"]["const"])
+        self.assertFalse(claim_permissions["quality_ready"]["const"])
+        self.assertFalse(claim_permissions["export_ready"]["const"])
+        self.assertFalse(claim_permissions["submission_ready"]["const"])
+        audit_boundary = audit["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(audit_boundary["provider_completion_counts_as_grant_ready"]["const"])
+        self.assertFalse(audit_boundary["schema_completeness_counts_as_grant_ready"]["const"])
+        self.assertFalse(audit_boundary["generated_surface_ready_counts_as_grant_ready"]["const"])
+        self.assertFalse(audit_boundary["focused_tests_count_as_grant_ready"]["const"])
 
     def test_product_entry_manifest_schema_pins_functional_harness_consumer_boundary(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

@@ -931,12 +931,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -963,6 +967,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/freshness",
@@ -986,6 +1100,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/stage_contract"
         ],
         "stage_id": "call_and_candidate_intake",
@@ -1879,12 +1994,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -1911,6 +2030,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/freshness",
@@ -1934,6 +2163,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/stage_contract"
         ],
         "stage_id": "fundability_strategy",
@@ -2829,12 +3059,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -2861,6 +3095,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/freshness",
@@ -2884,6 +3228,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/stage_contract"
         ],
         "stage_id": "specific_aims_and_structure",
@@ -3781,12 +4126,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -3813,6 +4162,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/freshness",
@@ -3836,6 +4295,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/stage_contract"
         ],
         "stage_id": "proposal_authoring",
@@ -4729,12 +5189,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -4761,6 +5225,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/freshness",
@@ -4784,6 +5358,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/stage_contract"
         ],
         "stage_id": "review_and_rebuttal",
@@ -5731,12 +6306,16 @@
       "stage_production_evidence_closeout": {
         "authority_boundary": {
           "domain_truth_owner": "med-autogrant",
+          "focused_tests_count_as_grant_ready": false,
           "fundability_judgment_owner": "med-autogrant",
+          "generated_surface_ready_counts_as_grant_ready": false,
           "opl_can_declare_export_ready": false,
           "opl_can_sign_owner_receipt": false,
           "opl_can_write_grant_truth": false,
           "opl_can_write_memory_body": false,
           "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "provider_completion_counts_as_grant_ready": false,
+          "schema_completeness_counts_as_grant_ready": false,
           "submission_ready_export_gate_owner": "med-autogrant"
         },
         "evidence_refs": [
@@ -5763,6 +6342,116 @@
             ]
           }
         ],
+        "grant_ready_completion_audit": {
+          "accepted_domain_closing_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "human_gate_ref",
+            "route_back_ref"
+          ],
+          "audit_id": "mag.grant_ready_completion_audit.v1",
+          "authority_boundary": {
+            "focused_tests_count_as_grant_ready": false,
+            "generated_surface_ready_counts_as_grant_ready": false,
+            "mag_can_write_opl_stage_attempts": false,
+            "opl_can_sign_mag_owner_receipt": false,
+            "opl_can_write_grant_truth": false,
+            "package_existence_counts_as_submission_ready": false,
+            "provider_completion_counts_as_grant_ready": false,
+            "quality_scorecard_counts_as_quality_ready": false,
+            "schema_completeness_counts_as_grant_ready": false,
+            "stage_replay_counts_as_submission_ready": false
+          },
+          "claim_permissions": {
+            "domain_ready": false,
+            "export_ready": false,
+            "fundability_ready": false,
+            "grant_ready": false,
+            "production_ready": false,
+            "quality_ready": false,
+            "submission_ready": false
+          },
+          "false_completion_signals": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "not_authorized_by": [
+            "provider_completion",
+            "schema_completeness",
+            "generated_surface_ready",
+            "manifest_success",
+            "focused_tests_passed",
+            "action_catalog_available",
+            "runtime_control_projection_present",
+            "product_status_projection_present",
+            "stage_replay_projection",
+            "stage_folder_conformance",
+            "package_existence",
+            "quality_scorecard_score",
+            "grouped_cli_success"
+          ],
+          "owner": "med-autogrant",
+          "purpose": "Prevent Temporal/provider/schema/generated-surface/test signals from being misread as MAG grant-ready, quality-ready, export-ready, or submission-ready completion.",
+          "readback_policy": {
+            "fail_closed_when_owner_closing_ref_missing": true,
+            "project_on_product_status": true,
+            "project_on_runtime_control": true,
+            "project_on_stage_control_plane_closeout": true,
+            "project_on_temporal_stage_run_consumption_policy": true
+          },
+          "required_owner_evidence": {
+            "domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
+            "quality_or_export_ready": [
+              "mag_owner_receipt_ref",
+              "ai_backed_quality_or_export_artifact_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "submission_ready": [
+              "submission_ready_human_gate_receipt_ref",
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "temporal_followthrough": [
+              "temporal_provider_long_soak_window_evidence_ref",
+              "live_receipt_reconciliation_ref",
+              "owner_acceptance_or_success_rate_ref"
+            ]
+          },
+          "residual_live_evidence_gaps": [
+            "submission_ready_human_gate_receipt",
+            "quality_or_export_owner_receipt",
+            "temporal_provider_long_soak_window_evidence",
+            "app_operator_sustained_consumption",
+            "owner_acceptance_or_success_rate_evidence"
+          ],
+          "source_refs": [
+            "contracts/temporal_stage_run_consumption_policy.json",
+            "contracts/live_stage_run_progress_evidence.json",
+            "contracts/production_acceptance/mag-production-acceptance.json",
+            "docs/status.md",
+            "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
+          ],
+          "state": "blocked_without_mag_owner_closing_ref",
+          "surface_kind": "grant_ready_completion_audit",
+          "version": 1
+        },
+        "grant_ready_completion_audit_ref": "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
         "monitor_freshness_refs": [
           {
             "ref": "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/freshness",
@@ -5786,6 +6475,7 @@
         "preflight_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
           "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
           "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/stage_contract"
         ],
         "stage_id": "package_and_submit_ready",
