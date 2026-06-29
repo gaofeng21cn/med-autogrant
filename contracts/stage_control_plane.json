@@ -1047,6 +1047,12 @@
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
             ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",
               "mag_owner_receipt_ref",
@@ -2109,6 +2115,12 @@
               "mag_owner_receipt_ref",
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
+            ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
             ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",
@@ -3174,6 +3186,12 @@
               "mag_owner_receipt_ref",
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
+            ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
             ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",
@@ -4242,6 +4260,12 @@
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
             ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
+            ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",
               "mag_owner_receipt_ref",
@@ -5304,6 +5328,12 @@
               "mag_owner_receipt_ref",
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
+            ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
             ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",
@@ -6421,6 +6451,12 @@
               "mag_owner_receipt_ref",
               "ai_backed_quality_or_export_artifact_ref",
               "mag_owned_typed_blocker_ref"
+            ],
+            "stage_run_domain_closeout": [
+              "owner_receipt_ref",
+              "typed_blocker_ref",
+              "human_gate_ref",
+              "route_back_ref"
             ],
             "submission_ready": [
               "submission_ready_human_gate_receipt_ref",

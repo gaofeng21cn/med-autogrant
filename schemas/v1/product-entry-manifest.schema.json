@@ -947,15 +947,23 @@
         "owner",
         "runtime_substrate_owner",
         "runtime_substrate",
+        "stage_run_substrate_owner",
+        "stage_run_owner_surface",
         "domain_role",
         "domain_truth_owner",
         "temporal_attempt_ledger_owner",
+        "opl_owned_substrate_surfaces",
+        "mag_retained_authority_surfaces",
+        "forbidden_mag_substrate_roles",
         "provider_completion_is_domain_completion",
         "domain_repo_can_own_temporal_runtime",
         "domain_repo_can_write_opl_stage_attempts",
+        "domain_repo_can_own_stage_run_substrate",
+        "mag_can_own_status_user_loop_direct_entry_domain_handler_or_workbench_shell",
         "generated_surface_ready_can_claim_domain_ready",
         "mag_writes_opl_stage_attempt_records",
         "accepted_domain_closing_ref_fields",
+        "stage_run_consumption_boundary",
         "grant_ready_completion_audit",
         "authority_boundary",
         "readback_policy"
@@ -967,12 +975,67 @@
         "owner": {"const": "med-autogrant"},
         "runtime_substrate_owner": {"const": "one-person-lab"},
         "runtime_substrate": {"const": "temporal"},
+        "stage_run_substrate_owner": {"const": "one-person-lab"},
+        "stage_run_owner_surface": {"const": "opl_temporal_stage_run_kernel"},
         "domain_role": {"const": "refs_only_consumer_and_grant_authority"},
         "domain_truth_owner": {"const": "med-autogrant"},
         "temporal_attempt_ledger_owner": {"const": "one-person-lab/OPL"},
+        "opl_owned_substrate_surfaces": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "generated_shell",
+              "product_status_shell",
+              "user_loop_shell",
+              "direct_entry_shell",
+              "domain_handler_shell",
+              "operator_workbench_shell",
+              "temporal_stage_run_substrate",
+              "typed_queue",
+              "attempt_ledger",
+              "provider_scheduler"
+            ]
+          },
+          "minItems": 10
+        },
+        "mag_retained_authority_surfaces": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "grant_native_domain_entry",
+              "schema_backed_authoring_contract",
+              "fundability_quality_export_verdict",
+              "submission_package_authority",
+              "memory_accept_reject",
+              "owner_receipt",
+              "typed_blocker"
+            ]
+          },
+          "minItems": 7
+        },
+        "forbidden_mag_substrate_roles": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "private_runner",
+              "private_queue",
+              "temporal_wrapper",
+              "status_shell_owner",
+              "user_loop_shell_owner",
+              "direct_entry_shell_owner",
+              "domain_handler_shell_owner",
+              "workbench_owner",
+              "attempt_ledger_owner",
+              "provider_scheduler_owner"
+            ]
+          },
+          "minItems": 10
+        },
         "provider_completion_is_domain_completion": {"const": false},
         "domain_repo_can_own_temporal_runtime": {"const": false},
         "domain_repo_can_write_opl_stage_attempts": {"const": false},
+        "domain_repo_can_own_stage_run_substrate": {"const": false},
+        "mag_can_own_status_user_loop_direct_entry_domain_handler_or_workbench_shell": {"const": false},
         "generated_surface_ready_can_claim_domain_ready": {"const": false},
         "mag_writes_opl_stage_attempt_records": {"const": false},
         "accepted_domain_closing_ref_fields": {
@@ -986,6 +1049,53 @@
             ]
           },
           "minItems": 4
+        },
+        "stage_run_consumption_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "owner",
+            "consumer_role",
+            "opl_substrate_owner",
+            "stage_run_owner_surface",
+            "payload_body_allowed",
+            "mag_runtime_state_write_allowed",
+            "accepted_consumed_ref_fields",
+            "accepted_domain_closing_ref_fields",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {"const": "mag_stage_run_consumption_boundary"},
+            "owner": {"const": "med-autogrant"},
+            "consumer_role": {"const": "consume_opl_stage_run_refs_only"},
+            "opl_substrate_owner": {"const": "one-person-lab"},
+            "stage_run_owner_surface": {"const": "opl_temporal_stage_run_kernel"},
+            "payload_body_allowed": {"const": false},
+            "mag_runtime_state_write_allowed": {"const": false},
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_can_start_temporal_worker",
+                "mag_can_schedule_stage_run",
+                "mag_can_write_attempt_ledger",
+                "mag_can_own_generated_shell",
+                "opl_can_write_grant_truth",
+                "opl_can_sign_mag_owner_receipt",
+                "provider_completion_counts_as_domain_completion"
+              ],
+              "properties": {
+                "mag_can_start_temporal_worker": {"const": false},
+                "mag_can_schedule_stage_run": {"const": false},
+                "mag_can_write_attempt_ledger": {"const": false},
+                "mag_can_own_generated_shell": {"const": false},
+                "opl_can_write_grant_truth": {"const": false},
+                "opl_can_sign_mag_owner_receipt": {"const": false},
+                "provider_completion_counts_as_domain_completion": {"const": false}
+              }
+            }
+          }
         },
         "grant_ready_completion_audit": {
           "type": "object",

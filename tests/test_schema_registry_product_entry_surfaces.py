@@ -157,10 +157,18 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         )
         self.assertEqual(policy["properties"]["runtime_substrate_owner"]["const"], "one-person-lab")
         self.assertEqual(policy["properties"]["runtime_substrate"]["const"], "temporal")
+        self.assertEqual(policy["properties"]["stage_run_substrate_owner"]["const"], "one-person-lab")
+        self.assertEqual(policy["properties"]["stage_run_owner_surface"]["const"], "opl_temporal_stage_run_kernel")
         self.assertEqual(policy["properties"]["temporal_attempt_ledger_owner"]["const"], "one-person-lab/OPL")
         self.assertFalse(policy["properties"]["provider_completion_is_domain_completion"]["const"])
         self.assertFalse(policy["properties"]["domain_repo_can_own_temporal_runtime"]["const"])
         self.assertFalse(policy["properties"]["domain_repo_can_write_opl_stage_attempts"]["const"])
+        self.assertFalse(policy["properties"]["domain_repo_can_own_stage_run_substrate"]["const"])
+        self.assertFalse(
+            policy["properties"][
+                "mag_can_own_status_user_loop_direct_entry_domain_handler_or_workbench_shell"
+            ]["const"]
+        )
         self.assertFalse(policy["properties"]["generated_surface_ready_can_claim_domain_ready"]["const"])
         self.assertFalse(policy["properties"]["mag_writes_opl_stage_attempt_records"]["const"])
         boundary = policy["properties"]["authority_boundary"]["properties"]
@@ -168,6 +176,30 @@ class ProductEntrySurfaceSchemaRegistryTest(unittest.TestCase):
         self.assertFalse(boundary["generated_surface_ready_counts_as_domain_ready"]["const"])
         self.assertFalse(boundary["mag_can_write_opl_stage_attempts"]["const"])
         self.assertFalse(boundary["mag_can_own_temporal_runtime"]["const"])
+        stage_run_boundary = policy["properties"]["stage_run_consumption_boundary"]
+        self.assertEqual(
+            stage_run_boundary["properties"]["surface_kind"]["const"],
+            "mag_stage_run_consumption_boundary",
+        )
+        self.assertEqual(
+            stage_run_boundary["properties"]["consumer_role"]["const"],
+            "consume_opl_stage_run_refs_only",
+        )
+        self.assertEqual(
+            stage_run_boundary["properties"]["opl_substrate_owner"]["const"],
+            "one-person-lab",
+        )
+        self.assertFalse(
+            stage_run_boundary["properties"]["payload_body_allowed"]["const"]
+        )
+        self.assertFalse(
+            stage_run_boundary["properties"]["mag_runtime_state_write_allowed"]["const"]
+        )
+        stage_run_authority = stage_run_boundary["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(stage_run_authority["mag_can_start_temporal_worker"]["const"])
+        self.assertFalse(stage_run_authority["mag_can_schedule_stage_run"]["const"])
+        self.assertFalse(stage_run_authority["mag_can_write_attempt_ledger"]["const"])
+        self.assertFalse(stage_run_authority["mag_can_own_generated_shell"]["const"])
         audit = policy["properties"]["grant_ready_completion_audit"]
         self.assertEqual(audit["properties"]["surface_kind"]["const"], "grant_ready_completion_audit")
         self.assertEqual(audit["properties"]["audit_id"]["const"], "mag.grant_ready_completion_audit.v1")
