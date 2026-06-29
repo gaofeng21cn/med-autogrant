@@ -16,6 +16,7 @@ def build_domain_handler_caller_owner_contract() -> dict[str, Any]:
     return {
         "active_caller_owner": TARGET_DOMAIN_ID,
         "active_caller_surface": "mag_domain_handler_handler_until_opl_caller_evidence",
+        "active_caller_readback_state": "mag_direct_domain_handler_active_until_opl_caller_evidence",
         "target_caller_owner": "one-person-lab",
         "target_caller_surface": "opl_generated_or_hosted_domain_handler",
         "domain_handler_target": TARGET_DOMAIN_ID,
@@ -24,6 +25,17 @@ def build_domain_handler_caller_owner_contract() -> dict[str, Any]:
         "claims_fully_cleaned": False,
         "mag_handler_boundary_ready": True,
         "external_opl_generated_or_hosted_caller_evidence_required": True,
+        "opl_generated_or_hosted_caller_evidence_observed": False,
+        "readback_guard": {
+            "active_caller_owner_until_evidence": TARGET_DOMAIN_ID,
+            "active_caller_surface_until_evidence": "mag_direct_domain_handler",
+            "evidence_owner": "one-person-lab",
+            "grant_truth_write_authorized": False,
+            "external_evidence_authorized_by_mag_repo": False,
+            "physical_delete_authorized": False,
+            "provider_completion_is_grant_ready": False,
+            "provider_completion_is_submission_ready": False,
+        },
     }
 
 
@@ -86,6 +98,14 @@ def build_domain_handler_shell_payload(
         },
         "guardrails": {
             "dispatch_boundary": "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
+            "readback_boundary": {
+                "active_caller_remains": "mag_direct_domain_handler_until_opl_caller_evidence",
+                "grant_truth_write_authorized": False,
+                "external_evidence_authorized_by_mag_repo": False,
+                "physical_delete_authorized": False,
+                "provider_completion_is_grant_ready": False,
+                "provider_completion_is_submission_ready": False,
+            },
             "forbidden_defaults": [
                 "hermes_proof_executor",
                 "grant_truth_mutation_by_opl",

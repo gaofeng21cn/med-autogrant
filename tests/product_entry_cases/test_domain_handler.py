@@ -116,6 +116,40 @@ class ProductDomainHandlerTest(unittest.TestCase):
             },
         )
 
+    def test_domain_handler_shell_projection_fixes_caller_owner_readback_guard(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        export = MedAutoGrantProductEntry().build_domain_handler_export(input_path=str(CRITIQUE_EXAMPLE_PATH))[
+            "domain_handler_export"
+        ]
+
+        caller_owner = export["caller_owner_contract"]
+        self.assertEqual(
+            caller_owner["active_caller_readback_state"],
+            "mag_direct_domain_handler_active_until_opl_caller_evidence",
+        )
+        self.assertFalse(caller_owner["opl_generated_or_hosted_caller_evidence_observed"])
+        readback_guard = caller_owner["readback_guard"]
+        self.assertEqual(readback_guard["active_caller_owner_until_evidence"], "med-autogrant")
+        self.assertEqual(readback_guard["active_caller_surface_until_evidence"], "mag_direct_domain_handler")
+        self.assertEqual(readback_guard["evidence_owner"], "one-person-lab")
+        self.assertFalse(readback_guard["grant_truth_write_authorized"])
+        self.assertFalse(readback_guard["external_evidence_authorized_by_mag_repo"])
+        self.assertFalse(readback_guard["physical_delete_authorized"])
+        self.assertFalse(readback_guard["provider_completion_is_grant_ready"])
+        self.assertFalse(readback_guard["provider_completion_is_submission_ready"])
+        self.assertEqual(
+            export["guardrails"]["readback_boundary"],
+            {
+                "active_caller_remains": "mag_direct_domain_handler_until_opl_caller_evidence",
+                "grant_truth_write_authorized": False,
+                "external_evidence_authorized_by_mag_repo": False,
+                "physical_delete_authorized": False,
+                "provider_completion_is_grant_ready": False,
+                "provider_completion_is_submission_ready": False,
+            },
+        )
+
     def test_domain_handler_dispatch_retires_generic_wrapper_actions(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
