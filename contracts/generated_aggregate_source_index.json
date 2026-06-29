@@ -65,6 +65,11 @@
       "leaf_source_refs": [
         "src/med_autogrant/opl_standard_pack.py",
         "src/med_autogrant/opl_standard_pack_private_policy.py",
+        "src/med_autogrant/opl_standard_pack_source_policy.py",
+        "src/med_autogrant/opl_standard_pack_source_policy_parts/active_path_scan.py",
+        "src/med_autogrant/opl_standard_pack_source_policy_parts/basic.py",
+        "src/med_autogrant/opl_standard_pack_source_policy_parts/classifications.py",
+        "src/med_autogrant/opl_standard_pack_source_policy_parts/false_ready_patterns.py",
         "src/med_autogrant/product_entry_parts/consumer_thinning.py",
         "src/med_autogrant/product_entry_parts/consumer_thinning_audit/__init__.py",
         "src/med_autogrant/product_entry_parts/consumer_thinning_audit/classification.py",
