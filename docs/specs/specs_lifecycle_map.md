@@ -18,6 +18,17 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 - 不再默认新增 dated root specs；只有明确被接纳为 current owner surface 的文件才进入 active specs。
 - 纯历史 spec 一律进入 `docs/history/specs/`；不得为了旧审计路径稳定性在 current specs 层保留旧调用入口。
 
+## SSOT / 防回流规则
+
+本文只持有 specs 生命周期和 direct-reader guard，不持有 MAG 当前 gap、ready claim、provider proof、worktree closeout 或执行批次。当前 gap 回到 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，机器真相回到 `contracts/runtime-program/current-program.json`、schema、source、CLI/API behavior 和 runtime receipts，历史长正文回到 `docs/history/specs/README.md` 或 git history。
+
+新增 specs 记录前先判断语义 owner：
+
+- 改变当前 public role、runtime boundary、authoring quality 或 command semantics：先更新核心五件套、`current-program.json`、schema/source，再按需新增小型 active spec。
+- 只记录完成过程、provider proof、activation package、route snapshot、hosted handoff、worktree closeout 或 dated evidence：进入 `docs/history/specs/` 或 history/process，不进入 current specs 层。
+- 只解释 product-entry / package support：优先更新 `product-entry-support-record.md` 或对应 product/delivery owner，不新增 P4/P5 式长清单。
+- 已有 support spec 的 current subsection 发生变化：更新下方 lifecycle table 的 owner / reading action；不要在 dated spec 末尾追加新一轮 active checklist。
+
 ## Active Current Specs
 
 这些记录仍由 docs guide 或 current status 直接链接，并定义特定 active boundary。它们只在第二列列出的边界内是 current；整体产品状态仍由核心文档和 `current-program.json` 持有。
