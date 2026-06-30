@@ -48,163 +48,25 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 | Retired / guarded surfaces | This ledger records no source, contract, test, workflow, package or CLI/API deletion authority by itself. Guarded retired surfaces remain `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, active `frontdoor` fields/help wording, local journal / attempt ledger, Gateway/local-manager default path, flat aliases, facades, patch bridge, stale test-level facade closeouts, compatibility aggregate tests and physical-delete-by-read-model claims. | Concrete retirement lanes need no-active-caller, replacement owner, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer before physical delete or test/interface retirement. |
 | Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not seven-repo OPL series completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening, private inventory refresh, production/default-caller evidence tail, App/workbench sustained consumption, Temporal long-soak, or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
 
-## Fresh Intake 2026-06-12 Current/Support Metadata Scope Closure
+## Topic Provenance Foldback
 
-Semantic theme: current and support docs that remain in active reader paths should not carry first-screen `Date` metadata that makes them read as frozen historical snapshots.
+Older fresh-intake sections are compressed here by semantic theme. Exact edited
+file lists, command transcripts, branch state, proof ids and dated closeout
+chains are recoverable from git history; current rules stay with the SSOT
+owners listed above.
 
-Single Source of Truth:
+| Historical theme | Current foldback | Current owner / read rule |
+| --- | --- | --- |
+| Current/support metadata cleanup | Active specs, support current-truth specs and the memory-policy reference no longer use first-screen `Date` metadata that would make them read as frozen snapshots. | Spec routing: `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md`; reference routing: `docs/README.md`, `docs/references/README.md`, `docs/docs_portfolio_consolidation.md`; history routing: `docs/history/**` indexes and this ledger. |
+| Decisions SSOT review | `docs/decisions.md` preserves durable decision boundaries without freezing Stage Folder Kernel field-level implementation detail or carrying docs-governance open tails. | Current decision boundary remains `docs/decisions.md`; evidence and active-gap boundaries remain `docs/status.md` and `docs/active/mag-ideal-state-cross-repo-gap-plan.md`; machine detail stays in contracts/source/tests/runtime receipts. |
+| Private inventory retired-register compression | The active private implementation inventory no longer carries an itemized dated retirement register duplicating retired-surface provenance. | Current per-surface status stays in `docs/active/opl-private-implementation-migration-inventory.md`; no-resurrection itemization stays in `retired-surface-provenance.md`; machine gates stay in private surface contracts, source/tests and owner receipts / typed blockers. |
+| Architecture / status implementation-list compression | Current architecture and status pages summarize owner boundaries without duplicating product-entry, domain-handler, projection, schema, receipt, canary or payload field details. | Current status and evidence boundary: `docs/status.md`; architecture owner boundary: `docs/architecture.md`; implementation truth: `contracts/runtime-program/current-program.json`, private contracts, product-entry manifest, schema registry, source, CLI/API behavior, tests and runtime receipts. |
+| Active gap reviewed-header cleanup | The active gap plan is current active truth, not a dated historical snapshot. | `docs/active/mag-ideal-state-cross-repo-gap-plan.md` remains the only active gap / completion owner; this ledger keeps only provenance. |
+| Status stage-progress evidence compression | Live stage progress, Stage Folder / progress contracts and retired residue are summarized as current readouts without prose-freezing payload fields, file mappings or retired receipt shapes. | Current stage/progress truth returns to `contracts/live_stage_run_progress_evidence.json`, `contracts/stage_control_plane.json`, production acceptance contracts, stage-native artifact contracts, source/builders and focused tests. |
+| Source-morphology guard trace compression | Dated strict-source-purity increments were folded into a current guard table covering active path scan, false-ready guards, cleanup/source-ref/no-second-truth guards, strict readback, compact cleanup/work-order readback, verification-wrapper classification and structure quality guard. | Per-surface inventory: `docs/active/opl-private-implementation-migration-inventory.md`; machine source-morphology guards: `contracts/private_functional_surface_policy.json#/physical_source_morphology_policy`, `src/med_autogrant/opl_standard_pack_source_policy.py`, source policy parts, strict readback builder and focused guard tests. |
 
-- Active spec routing: `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md`.
-- Reference routing: `docs/README.md`, `docs/references/README.md` and `docs/docs_portfolio_consolidation.md`.
-- History routing: `docs/history/README.md`, `docs/history/plans/README.md`, `docs/history/specs/README.md`, this ledger and retired-surface provenance.
-
-Edited docs:
-
-- `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`
-- `docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md`
-- `docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md`
-- `docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md`
-- `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md`
-- `docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`
-- `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
-- `docs/specs/2026-04-07-durability-model-clarification.md`
-- `docs/references/grant_strategy_memory_policy.md`
-- `docs/history/docs-portfolio-coverage-ledger/README.md`
-
-Coverage / carry-forward:
-
-- Covered: first-screen `Date` metadata in current active specs, support current-truth specs and the current memory-policy reference; MAG docs portfolio coverage scope now explicitly includes root `README*`, repo-source support `README.md`, `docs/*.md` and all tracked `docs/**/*.md`, with history-body routing through history indexes.
-- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, private source thinning, concrete source/test/workflow/package retirement lanes or any physical surface deletion.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API, runtime state, owner receipt or typed blocker change. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-12 Decisions SSOT Review
-
-Semantic theme: MAG decision log must preserve durable decision boundaries without freezing field-level Stage Folder Kernel implementation detail or keeping `docs/decisions.md` as an open docs-governance tail.
-
-Single Source of Truth:
-
-- Current decision boundary: `docs/decisions.md`.
-- Current status and evidence boundary: `docs/status.md`.
-- Active gap and physical-delete gate: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
-- Machine truth: `contracts/runtime-program/current-program.json`, `contracts/stage_control_plane.json`, private surface contracts, Foundry series contract, schema registry, source, CLI/API behavior and tests.
-
-Edited docs:
-
-- `docs/decisions.md`: added `Last reviewed` metadata and compressed the Stage Folder Kernel decision from field/file implementation detail into owner-boundary language that routes schema, builder payload and conformance assertions back to machine owners.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage and removes `docs/decisions.md` as a standing unreviewed docs-governance tail.
-
-Coverage / carry-forward:
-
-- Covered: decision-log paragraphs that could duplicate Stage Folder Kernel refs, SQLite sidecar constraints or builder payload fields as current prose truth.
-- Not covered: private inventory refresh, production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, concrete source/test/workflow/package retirement lanes, and full seven-repo OPL series paragraph coverage.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-12 Private Inventory Retired Register Compression
-
-Semantic theme: MAG active private implementation inventory carried a dated header and an itemized concrete retirement register that duplicated retired-surface provenance and machine guard owners.
-
-Single Source of Truth:
-
-- Current per-surface private implementation status: `docs/active/opl-private-implementation-migration-inventory.md`.
-- Retired surface no-resurrection itemization: `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
-- Machine gates: `contracts/private_functional_surface_policy.json`, `contracts/foundry_agent_series.json`, product-entry manifest / functional audits, source/tests and MAG owner receipts / typed blockers.
-
-Edited docs:
-
-- `docs/active/opl-private-implementation-migration-inventory.md`: removed the frozen `Date` field and compressed `Concrete Retirement Register` from itemized retired rows into a pointer plus deletion-gate rule.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a new dated proof log.
-
-Coverage / carry-forward:
-
-- Covered: active inventory retired-tail duplication for stale test-level facade assertions, Foundry `frontdoor` wording, old runtime command family and facade / patch-bridge / star-import tails.
-- Not covered: path-level source thinning, default-caller production proof, App/workbench sustained consumption, Temporal long-soak, or any physical deletion.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-12 Architecture / Status Implementation-List Compression
-
-Semantic theme: MAG current architecture and status pages were duplicating product-entry, domain-handler, projection, schema, receipt and canary implementation detail that belongs to source/tests/contracts, product-entry manifest, schema registry, runtime receipts or history provenance.
-
-Single Source of Truth:
-
-- Current status and evidence boundary: `docs/status.md`.
-- Architecture and owner boundary: `docs/architecture.md`.
-- Active gap and physical-delete gate: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
-- Per-surface implementation inventory: `docs/active/opl-private-implementation-migration-inventory.md`.
-- Machine truth: `contracts/runtime-program/current-program.json`, private surface contracts, Foundry series contract, product-entry manifest, schema registry, source, CLI/API behavior, tests and runtime receipts.
-
-Edited docs:
-
-- `docs/architecture.md`: compressed the `入口与执行` implementation longlist into a role/owner table and routed command/schema/builder/helper detail back to machine owners.
-- `docs/status.md`: changed the status date to `Last reviewed` and compressed the dated owner-chain canary detail into provenance-only wording.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this tranche as topic-level coverage instead of adding a dated proof log.
-
-Coverage / carry-forward:
-
-- Covered: MAG `docs/architecture.md` sections that repeated product-entry/domain-handler generated surfaces and MAG `docs/status.md` rows that froze dated canary evidence as current state.
-- Not covered: full MAG `docs/architecture.md` body thinning, `docs/decisions.md` review, private inventory refresh, concrete source/test/workflow/package retirement lanes, and full seven-repo OPL series paragraph coverage.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-12 Active Gap Reviewed Header Cleanup
-
-Semantic theme: MAG active gap plan metadata still carried a frozen `Date` field even though the document is the current active gap / completion owner rather than a historical snapshot.
-
-Single Source of Truth:
-
-- Current active gap and next baton: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
-- Historical coverage / provenance: this ledger and git history.
-- Machine truth: `contracts/runtime-program/current-program.json`, private surface contracts, Foundry series contract, source, tests, CLI/API behavior, owner receipts and typed blockers.
-
-Edited docs:
-
-- `docs/active/mag-ideal-state-cross-repo-gap-plan.md`: changed the frozen `Date` metadata to `Last reviewed` while preserving the active plan state, active gap owner role, and open production/default-caller evidence tails.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a dated proof log.
-
-Coverage / carry-forward:
-
-- Covered: active-plan metadata that could make the current MAG active truth read like a 2026-06-09 snapshot.
-- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, private source thinning, `docs/decisions.md` review, or any physical surface retirement.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-12 Status Stage Progress Evidence Compression
-
-Semantic theme: MAG current status should summarize live stage progress, Stage Folder / progress contracts and retired residue as current readouts, without freezing payload field names, file-level kernel mappings or retired receipt shapes as prose truth.
-
-Single Source of Truth:
-
-- Current status and evidence boundary: `docs/status.md`.
-- Current live stage progress owner answer: `contracts/live_stage_run_progress_evidence.json`.
-- Stage/progress and artifact mapping: `contracts/stage_control_plane.json`, production acceptance contracts, stage-native artifact contracts, source/builders and focused tests.
-- Active gap and physical-delete gates: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `docs/active/opl-private-implementation-migration-inventory.md`, `contracts/private_functional_surface_policy.json` and `contracts/foundry_agent_series.json`.
-- Retired runtime / command / residue provenance: `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
-
-Edited docs:
-
-- `docs/status.md`: compressed live progress refs, Stage Folder Kernel field/file mappings, package lifecycle ref names and legacy residue refs into owner-boundary summaries that route implementation detail back to contracts, source/tests, active inventory and provenance.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a dated proof log.
-
-Coverage / carry-forward:
-
-- Covered: `docs/status.md` paragraphs and status-table rows that could duplicate `contracts/live_stage_run_progress_evidence.json`, Stage Folder / artifact contracts, production acceptance payloads or retired residue refs as current prose truth.
-- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, path-level source thinning, private inventory refresh, concrete source/test/workflow/package retirement lanes or full seven-repo OPL series paragraph coverage.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
-
-## Fresh Intake 2026-06-30 Source-Morphology Guard Trace Compression
-
-Semantic theme: MAG active private inventory should keep current source-morphology SSOT, guard roles and physical-delete gates, not a chronological list of strict-source-purity implementation increments.
-
-Single Source of Truth:
-
-- Per-surface private implementation inventory: `docs/active/opl-private-implementation-migration-inventory.md`.
-- Machine source-morphology guards: `contracts/private_functional_surface_policy.json#/physical_source_morphology_policy`, `src/med_autogrant/opl_standard_pack_source_policy.py`, source policy parts, strict source-purity readback builder and focused guard tests.
-- Historical provenance: this ledger and git history.
-
-Edited docs:
-
-- `docs/active/opl-private-implementation-migration-inventory.md`: compressed dated 2026-06-20 / 2026-06-21 / 2026-06-22 / 2026-06-28 source-morphology notes into a current guard table covering active path scan, false-ready guards, cleanup/source-ref/no-second-truth guards, strict readback, compact cleanup/work-order readback, repo verification wrapper classification and structure quality guard.
-- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this topic-level foldback without storing command transcripts, branch state, proof ids or dated closeout chains.
-
-Coverage / carry-forward:
-
-- Covered: active inventory first-screen chronological guard increments that duplicated machine guard owners and made the active inventory read like a process log.
-- Not covered: any contract/source/test behavior change, production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, MAG owner delete authorization or physical surface deletion.
-- This tranche authorizes no source, contract, test, workflow, package, CLI/API, runtime state, owner receipt or typed blocker change. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
+These historical foldbacks authorize no source, contract, test, workflow,
+package, CLI/API, runtime state, owner receipt, typed blocker or physical
+surface deletion. Physical retirement still requires replacement owner,
+no-active-caller, MAG owner receipt / typed blocker roundtrip,
+no-forbidden-write proof and tombstone/provenance pointer.
