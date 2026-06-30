@@ -187,3 +187,24 @@ Coverage / carry-forward:
 - Covered: `docs/status.md` paragraphs and status-table rows that could duplicate `contracts/live_stage_run_progress_evidence.json`, Stage Folder / artifact contracts, production acceptance payloads or retired residue refs as current prose truth.
 - Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, path-level source thinning, private inventory refresh, concrete source/test/workflow/package retirement lanes or full seven-repo OPL series paragraph coverage.
 - This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
+
+## Fresh Intake 2026-06-30 Source-Morphology Guard Trace Compression
+
+Semantic theme: MAG active private inventory should keep current source-morphology SSOT, guard roles and physical-delete gates, not a chronological list of strict-source-purity implementation increments.
+
+Single Source of Truth:
+
+- Per-surface private implementation inventory: `docs/active/opl-private-implementation-migration-inventory.md`.
+- Machine source-morphology guards: `contracts/private_functional_surface_policy.json#/physical_source_morphology_policy`, `src/med_autogrant/opl_standard_pack_source_policy.py`, source policy parts, strict source-purity readback builder and focused guard tests.
+- Historical provenance: this ledger and git history.
+
+Edited docs:
+
+- `docs/active/opl-private-implementation-migration-inventory.md`: compressed dated 2026-06-20 / 2026-06-21 / 2026-06-22 / 2026-06-28 source-morphology notes into a current guard table covering active path scan, false-ready guards, cleanup/source-ref/no-second-truth guards, strict readback, compact cleanup/work-order readback, repo verification wrapper classification and structure quality guard.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this topic-level foldback without storing command transcripts, branch state, proof ids or dated closeout chains.
+
+Coverage / carry-forward:
+
+- Covered: active inventory first-screen chronological guard increments that duplicated machine guard owners and made the active inventory read like a process log.
+- Not covered: any contract/source/test behavior change, production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, MAG owner delete authorization or physical surface deletion.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API, runtime state, owner receipt or typed blocker change. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
