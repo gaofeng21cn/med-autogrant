@@ -423,6 +423,10 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         "control_plane",
         "lifecycle",
     ]
+    retained_surface_owner_decision_gate = _retained_surface_owner_decision_gate(
+        retained_current_thin_surface_ids=retained_current_thin_surface_ids,
+        missing_evidence_refs=missing_evidence_refs,
+    )
     non_candidate_surface_ids = [
         *migrated_surface_ids,
         *retained_current_thin_surface_ids,
@@ -440,6 +444,7 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         "non_candidate_surface_ids": non_candidate_surface_ids,
         "migrated_surface_ids": migrated_surface_ids,
         "retained_current_thin_surface_ids": retained_current_thin_surface_ids,
+        "retained_surface_owner_decision_gate": retained_surface_owner_decision_gate,
         "non_candidate_surface_statuses": {
             "grouped_cli_wrapper": {
                 "state": "migrated_no_active_compat_alias_or_facade",
@@ -542,6 +547,49 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
     }
 
 
+def _retained_surface_owner_decision_gate(
+    *,
+    retained_current_thin_surface_ids: list[str],
+    missing_evidence_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "gate_id": "mag.physical_morphology.retained_surface_owner_decision_gate.v1",
+        "state": "retained_surfaces_require_owner_decision_before_delete_or_tombstone",
+        "applies_to_surface_ids": retained_current_thin_surface_ids,
+        "required_before_delete_or_tombstone": list(missing_evidence_refs),
+        "required_proofs": [
+            "generated_default_caller_parity",
+            "no_active_domain_repo_generic_shell_caller",
+            "owner_receipt_or_domain_typed_blocker_roundtrip",
+            "continuous_no_forbidden_write",
+            "tombstone_or_provenance_pointer",
+        ],
+        "allowed_terminal_decisions": [
+            "retain_as_current_thin_domain_target",
+            "delete_after_explicit_owner_receipt",
+            "tombstone_after_domain_typed_blocker_or_owner_decision",
+        ],
+        "forbidden_terminal_decisions": [
+            "delete_from_refs_only_evidence",
+            "delete_from_cleanup_candidate_count_zero",
+            "retain_as_generic_wrapper_or_facade",
+            "claim_default_caller_cutover_without_external_parity",
+        ],
+        "authority_boundary": {
+            "gate_can_write_grant_truth": False,
+            "gate_can_sign_owner_receipt": False,
+            "gate_can_create_typed_blocker_instance": False,
+            "gate_can_authorize_physical_delete": False,
+            "gate_can_claim_default_caller_cutover": False,
+            "gate_can_claim_app_operator_consumption": False,
+            "gate_can_claim_grant_ready": False,
+            "gate_can_claim_submission_ready": False,
+            "gate_can_claim_domain_ready": False,
+            "gate_can_claim_production_ready": False,
+        },
+    }
+
+
 def _retained_current_thin_surface_status(
     *,
     allowed_role: str,
@@ -555,6 +603,11 @@ def _retained_current_thin_surface_status(
         "cleanup_candidate": False,
         "delete_path": patchable_delete_path,
         "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
+        "owner_decision_gate_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/retirement_readback_cleanup_guard/"
+            "compact_cleanup_readiness_summary/retained_surface_owner_decision_gate"
+        ),
         "current_role_guard": "forbid_generic_wrapper_alias_facade_or_owner_claim",
     }
 

@@ -2897,6 +2897,7 @@
               "prove body-free refs parity and no attempt-ledger ownership",
               "delete repo-local adapter only after owner receipt or typed blocker"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current control plane stores body-free refs/projections and does not own a provider repair executor or attempt ledger",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2910,6 +2911,7 @@
               "prove guarded dispatch parity and no sidecar/workbench ownership",
               "delete repo-local wrapper code only after owner receipt or typed blocker"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current domain handler remains the MAG grant-native dispatch target and refs projection boundary",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2933,6 +2935,7 @@
               "prove receipt refs parity and no artifact lifecycle ownership",
               "remove repo-local lifecycle adapter after owner receipt or typed blocker"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current lifecycle surface is an owner-receipt refs adapter, not a generic artifact lifecycle shell",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2946,6 +2949,7 @@
               "prove direct hosted parity and no forbidden writes",
               "remove source refs only after owner receipt or typed blocker roundtrip"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current MAG product entry is a thin target/readback assembly surface, not a generic product shell cleanup candidate",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2959,6 +2963,7 @@
               "prove same refs and no grant readiness substitution",
               "delete or tombstone repo status refs only after owner receipt"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current status files project grant refs and typed blockers without owning a generic status workbench",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -2972,6 +2977,7 @@
               "prove no repo scheduler daemon or attempt loop is introduced",
               "remove repo-local loop adapter after owner receipt or typed blocker"
             ],
+            "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current loop surface is an action target/ref adapter, not a scheduler or daemon",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
             "state": "retained_current_thin_surface"
@@ -3016,6 +3022,56 @@
           "control_plane",
           "lifecycle"
         ],
+        "retained_surface_owner_decision_gate": {
+          "allowed_terminal_decisions": [
+            "retain_as_current_thin_domain_target",
+            "delete_after_explicit_owner_receipt",
+            "tombstone_after_domain_typed_blocker_or_owner_decision"
+          ],
+          "applies_to_surface_ids": [
+            "product_entry",
+            "status",
+            "user_loop",
+            "domain_handler",
+            "control_plane",
+            "lifecycle"
+          ],
+          "authority_boundary": {
+            "gate_can_authorize_physical_delete": false,
+            "gate_can_claim_app_operator_consumption": false,
+            "gate_can_claim_default_caller_cutover": false,
+            "gate_can_claim_domain_ready": false,
+            "gate_can_claim_grant_ready": false,
+            "gate_can_claim_production_ready": false,
+            "gate_can_claim_submission_ready": false,
+            "gate_can_create_typed_blocker_instance": false,
+            "gate_can_sign_owner_receipt": false,
+            "gate_can_write_grant_truth": false
+          },
+          "forbidden_terminal_decisions": [
+            "delete_from_refs_only_evidence",
+            "delete_from_cleanup_candidate_count_zero",
+            "retain_as_generic_wrapper_or_facade",
+            "claim_default_caller_cutover_without_external_parity"
+          ],
+          "gate_id": "mag.physical_morphology.retained_surface_owner_decision_gate.v1",
+          "required_before_delete_or_tombstone": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan",
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+          ],
+          "required_proofs": [
+            "generated_default_caller_parity",
+            "no_active_domain_repo_generic_shell_caller",
+            "owner_receipt_or_domain_typed_blocker_roundtrip",
+            "continuous_no_forbidden_write",
+            "tombstone_or_provenance_pointer"
+          ],
+          "state": "retained_surfaces_require_owner_decision_before_delete_or_tombstone"
+        },
         "source_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard",
         "state": "compact_cleanup_worklist_empty_current_thin_surfaces_retained",
         "summary_id": "mag.physical_morphology.compact_cleanup_readiness_summary.v1"

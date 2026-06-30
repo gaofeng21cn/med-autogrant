@@ -236,6 +236,36 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "control_plane",
         "lifecycle",
     ]
+    owner_decision_gate = compact_cleanup_summary["retained_surface_owner_decision_gate"]
+    assert owner_decision_gate["gate_id"] == (
+        "mag.physical_morphology.retained_surface_owner_decision_gate.v1"
+    )
+    assert owner_decision_gate["applies_to_surface_ids"] == (
+        compact_cleanup_summary["retained_current_thin_surface_ids"]
+    )
+    assert owner_decision_gate["required_before_delete_or_tombstone"] == (
+        compact_cleanup_summary["missing_evidence_refs"]
+    )
+    assert owner_decision_gate["allowed_terminal_decisions"] == [
+        "retain_as_current_thin_domain_target",
+        "delete_after_explicit_owner_receipt",
+        "tombstone_after_domain_typed_blocker_or_owner_decision",
+    ]
+    assert "delete_from_refs_only_evidence" in (
+        owner_decision_gate["forbidden_terminal_decisions"]
+    )
+    assert owner_decision_gate["authority_boundary"] == {
+        "gate_can_write_grant_truth": False,
+        "gate_can_sign_owner_receipt": False,
+        "gate_can_create_typed_blocker_instance": False,
+        "gate_can_authorize_physical_delete": False,
+        "gate_can_claim_default_caller_cutover": False,
+        "gate_can_claim_app_operator_consumption": False,
+        "gate_can_claim_grant_ready": False,
+        "gate_can_claim_submission_ready": False,
+        "gate_can_claim_domain_ready": False,
+        "gate_can_claim_production_ready": False,
+    }
     assert compact_cleanup_summary["non_candidate_surface_ids"] == [
         "grouped_cli_wrapper",
         "product_entry",
@@ -260,6 +290,9 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         assert non_candidate_statuses[surface_id]["delete_path"]
         assert non_candidate_statuses[surface_id]["retirement_guard"] == (
             "owner_receipt_or_domain_typed_blocker_required_before_delete"
+        )
+        assert non_candidate_statuses[surface_id]["owner_decision_gate_ref"].endswith(
+            "/retained_surface_owner_decision_gate"
         )
         assert non_candidate_statuses[surface_id]["current_role_guard"] == (
             "forbid_generic_wrapper_alias_facade_or_owner_claim"

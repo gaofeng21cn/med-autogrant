@@ -69,6 +69,35 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
         "control_plane",
         "lifecycle",
     ]
+    owner_decision_gate = summary["retained_surface_owner_decision_gate"]
+    assert owner_decision_gate["gate_id"] == (
+        "mag.physical_morphology.retained_surface_owner_decision_gate.v1"
+    )
+    assert owner_decision_gate["state"] == (
+        "retained_surfaces_require_owner_decision_before_delete_or_tombstone"
+    )
+    assert owner_decision_gate["applies_to_surface_ids"] == (
+        summary["retained_current_thin_surface_ids"]
+    )
+    assert owner_decision_gate["required_before_delete_or_tombstone"] == (
+        summary["missing_evidence_refs"]
+    )
+    assert "tombstone_or_provenance_pointer" in owner_decision_gate["required_proofs"]
+    assert "delete_from_cleanup_candidate_count_zero" in (
+        owner_decision_gate["forbidden_terminal_decisions"]
+    )
+    assert owner_decision_gate["authority_boundary"] == {
+        "gate_can_write_grant_truth": False,
+        "gate_can_sign_owner_receipt": False,
+        "gate_can_create_typed_blocker_instance": False,
+        "gate_can_authorize_physical_delete": False,
+        "gate_can_claim_default_caller_cutover": False,
+        "gate_can_claim_app_operator_consumption": False,
+        "gate_can_claim_grant_ready": False,
+        "gate_can_claim_submission_ready": False,
+        "gate_can_claim_domain_ready": False,
+        "gate_can_claim_production_ready": False,
+    }
     assert summary["non_candidate_surface_ids"] == [
         "grouped_cli_wrapper",
         "product_entry",
@@ -88,6 +117,9 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
         assert status["delete_path"]
         assert status["retirement_guard"] == (
             "owner_receipt_or_domain_typed_blocker_required_before_delete"
+        )
+        assert status["owner_decision_gate_ref"].endswith(
+            "/retained_surface_owner_decision_gate"
         )
     assert summary["can_apply_cleanup"] is False
     assert summary["can_authorize_physical_delete"] is False
