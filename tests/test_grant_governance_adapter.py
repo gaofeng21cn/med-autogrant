@@ -27,7 +27,7 @@ from med_autogrant.project_profile_selector import _build_grant_family_grammar  
 OPL_STAGE_ATTEMPT = {
     "runtime_owner": "one-person-lab",
     "executor_kind": "codex_cli",
-    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+    "attempt_lease_ref": "lease:opl/stage-run/mag/test/owner-chain-default-caller",
 }
 
 

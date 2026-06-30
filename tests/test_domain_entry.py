@@ -316,7 +316,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "opl_stage_attempt": {
                     "runtime_owner": "one-person-lab",
                     "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
                 },
             }
         )
@@ -328,7 +328,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
             opl_stage_attempt={
                 "runtime_owner": "one-person-lab",
                 "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
             },
             max_rounds=4,
         )
@@ -349,7 +349,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "opl_stage_attempt": {
                     "runtime_owner": "one-person-lab",
                     "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
                 },
             }
         )
@@ -361,7 +361,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
             opl_stage_attempt={
                 "runtime_owner": "one-person-lab",
                 "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
             },
             max_cycles=6,
         )
@@ -381,7 +381,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "opl_stage_attempt": {
                     "runtime_owner": "one-person-lab",
                     "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
                 },
             }
         )
@@ -393,7 +393,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
             opl_stage_attempt={
                 "runtime_owner": "one-person-lab",
                 "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
             },
         )
 

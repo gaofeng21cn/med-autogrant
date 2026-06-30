@@ -16,7 +16,7 @@ from med_autogrant.authoring_mainline_controller import run_authoring_mainline_c
 OPL_STAGE_ATTEMPT = {
     "runtime_owner": "one-person-lab",
     "executor_kind": "codex_cli",
-    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+    "attempt_lease_ref": "lease:opl/stage-run/mag/test/owner-chain-default-caller",
 }
 
 

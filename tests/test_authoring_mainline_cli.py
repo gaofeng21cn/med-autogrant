@@ -55,7 +55,7 @@ class AuthoringMainlineCliTest(unittest.TestCase):
                         {
                             "runtime_owner": "one-person-lab",
                             "executor_kind": "codex_cli",
-                            "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                            "attempt_lease_ref": "lease:opl/stage-run/mag/cli/owner-chain-default-caller",
                         }
                     ),
                     encoding="utf-8",
@@ -88,7 +88,7 @@ class AuthoringMainlineCliTest(unittest.TestCase):
                 "opl_stage_attempt": {
                     "runtime_owner": "one-person-lab",
                     "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                    "attempt_lease_ref": "lease:opl/stage-run/mag/cli/owner-chain-default-caller",
                 },
             }
         )

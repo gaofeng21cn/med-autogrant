@@ -20,7 +20,7 @@ from med_autogrant.opl_execution_boundary import (  # noqa: E402
 OPL_STAGE_ATTEMPT = {
     "runtime_owner": "one-person-lab",
     "executor_kind": "codex_cli",
-    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+    "attempt_lease_ref": "lease:opl/stage-run/mag/test/owner-chain-default-caller",
 }
 
 
@@ -42,6 +42,12 @@ class CritiqueLoopControllerTest(unittest.TestCase):
         self.assertTrue(allowed["ok"])
         boundary = allowed["execution_boundary"]
         self.assertEqual(boundary["runtime_owner"], "one-person-lab")
+        self.assertEqual(
+            boundary["stage_run_ref"],
+            "lease:opl/stage-run/mag/test/owner-chain-default-caller",
+        )
+        self.assertEqual(boundary["caller_role"], "opl_owner_chain_default_caller")
+        self.assertTrue(boundary["owner_chain_default_caller_observed"])
         self.assertFalse(boundary["mag_writes_stage_current_pointer"])
         self.assertFalse(boundary["mag_writes_stage_terminal_state"])
         self.assertFalse(boundary["provider_completion_is_stage_transition"])
@@ -104,6 +110,81 @@ class CritiqueLoopControllerTest(unittest.TestCase):
         self.assertEqual(
             result["typed_blocker"]["blocker_kind"],
             "opl_attempt_lease_or_receipt_required",
+        )
+
+    def test_stage_run_ref_is_required_for_default_controller_entry(self) -> None:
+        def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("缺少 StageRun ref 时不应运行 critique_runner")
+
+        attempt_without_stage_run = {
+            "runtime_owner": "one-person-lab",
+            "executor_kind": "codex_cli",
+            "attempt_lease_ref": "lease:opl/stage-attempt/mag/test/owner-chain-default-caller",
+        }
+
+        result = run_critique_revision_closed_loop(
+            current_document={"doc": "initial"},
+            max_rounds=3,
+            critique_runner=critique_runner,
+            revision_runner=critique_runner,
+            route_resolver=critique_runner,
+            opl_stage_attempt=attempt_without_stage_run,
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["blocker_kind"],
+            "opl_stage_run_ref_required",
+        )
+
+    def test_repo_local_or_legacy_caller_role_is_rejected(self) -> None:
+        def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("repo-local/private caller 不应运行 critique_runner")
+
+        repo_local_attempt = dict(OPL_STAGE_ATTEMPT)
+        repo_local_attempt["caller_role"] = "repo_local_runner"
+
+        result = run_critique_revision_closed_loop(
+            current_document={"doc": "initial"},
+            max_rounds=3,
+            critique_runner=critique_runner,
+            revision_runner=critique_runner,
+            route_resolver=critique_runner,
+            opl_stage_attempt=repo_local_attempt,
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["blocker_kind"],
+            "opl_owner_chain_default_caller_required",
+        )
+
+    def test_default_caller_without_owner_chain_marker_is_rejected(self) -> None:
+        def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("缺少 owner-chain default-caller marker 时不应运行 critique_runner")
+
+        default_caller_without_owner_chain = {
+            "runtime_owner": "one-person-lab",
+            "executor_kind": "codex_cli",
+            "attempt_lease_ref": "lease:opl/stage-run/mag/test/default-caller",
+        }
+
+        result = run_critique_revision_closed_loop(
+            current_document={"doc": "initial"},
+            max_rounds=3,
+            critique_runner=critique_runner,
+            revision_runner=critique_runner,
+            route_resolver=critique_runner,
+            opl_stage_attempt=default_caller_without_owner_chain,
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["blocker_kind"],
+            "opl_owner_chain_default_caller_required",
         )
 
     def test_ready_for_submission_stops_in_first_round(self) -> None:

@@ -19,7 +19,7 @@ NIH_SELECTION_INPUT_PATH = REPO_ROOT / "examples" / "profile_selection_input_nih
 OPL_STAGE_ATTEMPT = {
     "runtime_owner": "one-person-lab",
     "executor_kind": "codex_cli",
-    "attempt_lease_ref": "lease:opl/stage-attempt/runtime-autonomy",
+    "attempt_lease_ref": "lease:opl/stage-run/mag/runtime-autonomy/owner-chain-default-caller",
 }
 
 

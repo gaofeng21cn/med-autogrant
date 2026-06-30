@@ -60,6 +60,43 @@ def test_stage_run_profile_keeps_mag_thin_and_opl_hosted() -> None:
     assert "mag_owned_attempt_ledger" in thinning["forbidden_resurrection"]
     assert "no_active_caller" in thinning["physical_delete_gate"]
 
+    default_entry = profile["default_entry_admission_policy"]
+    assert default_entry["surface_kind"] == "mag_stage_run_default_entry_admission_policy"
+    assert default_entry["required_runtime_owner"] == "one-person-lab"
+    assert default_entry["required_executor_kind"] == "codex_cli"
+    assert default_entry["required_stage_run_ref_fields"] == [
+        "stage_run_ref",
+        "temporal_stage_run_ref",
+    ]
+    assert default_entry["accepted_stage_run_ref_sources"] == [
+        "stage_run_ref",
+        "temporal_stage_run_ref",
+        "attempt_lease_ref",
+        "lease_ref",
+        "receipt_ref",
+        "stage_attempt_receipt_ref",
+    ]
+    assert default_entry["required_caller_role_field"] == "caller_role"
+    assert default_entry["required_caller_role"] == "opl_owner_chain_default_caller"
+    assert default_entry["accepted_owner_chain_default_caller_sources"] == [
+        "caller_role",
+        "attempt_lease_ref",
+        "lease_ref",
+        "receipt_ref",
+        "stage_attempt_receipt_ref",
+    ]
+    assert default_entry["required_owner_chain_ref_marker"] == "owner-chain-default-caller"
+    assert default_entry["allowed_entry_surface_role"] == "stage_run_owner_chain_role_policy"
+    assert default_entry["rejects_caller_roles"] == [
+        "repo_local_runner",
+        "private_wrapper",
+        "default_caller_without_owner_chain",
+        "named_legacy_guard",
+    ]
+    assert default_entry["mag_can_start_repo_local_runner"] is False
+    assert default_entry["mag_can_use_private_wrapper_as_default"] is False
+    assert default_entry["mag_can_name_legacy_guard_as_default"] is False
+
 
 def test_stage_run_profile_consumes_opl_contract_refs_without_copying_framework_contracts() -> None:
     profile = _read_profile()
