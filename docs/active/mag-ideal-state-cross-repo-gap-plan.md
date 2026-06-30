@@ -113,7 +113,7 @@ Active plan 只保留当前可落地的非 live 缺口：product/status/user-loo
   refs-only accounting 或 doctor pass 写成 grant-ready、fundability-ready、quality-ready、
   export-ready、submission-ready 或 production-ready；不扩写 MAG-owned generic shell、compat
   alias、facade、wrapper 或 fallback 文案。
-- Functional truth inputs: 读取 `contracts/runtime-program/current-program.json`、MAG
+- Live truth inputs: 读取 `contracts/runtime-program/current-program.json`、MAG
   contracts/schemas/source/tests、product-entry manifest、domain-handler/action metadata、
   owner receipt / memory / package / lifecycle contracts、OPL/App read-model shape、runtime
   boundary contracts、workspace/package refs 和 docs portfolio；dated proof、receipt id、payload
