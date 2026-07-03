@@ -547,9 +547,16 @@ def build_opl_ledger_artifact_registration_projection(
             "provider_attempt_record",
         ],
         "opl_ledger_command_refs": {
-            "register_artifact_ref": "opl-ledger://commands/artifact-register/v1",
-            "verify_artifact_registration_ref": "opl-ledger://commands/artifact-verify/v1",
-            "read_artifact_index_ref": "opl-ledger://commands/artifact-index-read/v1",
+            "validate_registration_bundle": (
+                "opl ledger bundle validate --bundle <bundle.json> --json"
+            ),
+            "record_artifact_registration": (
+                "opl ledger bundle record --bundle <bundle.json> "
+                "--domain med-autogrant --artifact <artifact_ref> --json"
+            ),
+            "inspect_artifact_registration": (
+                "opl ledger bundle inspect --artifact <artifact_ref> --json"
+            ),
         },
         "authority_boundary": {
             "mag_can_write_opl_ledger": False,
