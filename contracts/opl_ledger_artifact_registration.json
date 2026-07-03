@@ -1,0 +1,134 @@
+{
+  "surface_kind": "opl_ledger_artifact_registration_contract",
+  "version": "opl-ledger-artifact-registration.v1",
+  "owner": "med-autogrant",
+  "domain_id": "med-autogrant",
+  "target_ledger_owner": "one-person-lab",
+  "refs_only": true,
+  "contract_state": "refs_only_registration_contract_landed",
+  "purpose": "Register long-lived MAG grant deliverable refs with OPL Ledger without copying grant artifact bodies or transferring MAG authority.",
+  "artifact_classes": [
+    {
+      "class_id": "grant_stage_deliverable",
+      "description": "A durable stage output ref such as aims, authoring, critique, review, or package-stage material.",
+      "required_fields": [
+        "domain_id",
+        "artifact_class",
+        "artifact_ref",
+        "artifact_hash",
+        "index_ref",
+        "review_ref",
+        "receipt_ref"
+      ]
+    },
+    {
+      "class_id": "grant_review_package",
+      "description": "A review-facing package ref for MAG-authored proposal evaluation and revision handoff.",
+      "required_fields": [
+        "domain_id",
+        "artifact_class",
+        "artifact_ref",
+        "artifact_hash",
+        "index_ref",
+        "review_ref",
+        "receipt_ref"
+      ]
+    },
+    {
+      "class_id": "grant_submission_package_ref",
+      "description": "A submission-ready package ref when MAG export/package authority has produced a separate ref.",
+      "required_fields": [
+        "domain_id",
+        "artifact_class",
+        "artifact_ref",
+        "artifact_hash",
+        "index_ref",
+        "review_ref",
+        "receipt_ref"
+      ]
+    }
+  ],
+  "required_registration_fields": [
+    "domain_id",
+    "artifact_class",
+    "artifact_ref",
+    "artifact_hash",
+    "index_ref",
+    "review_ref",
+    "receipt_ref"
+  ],
+  "hash_policy": {
+    "required": true,
+    "algorithm": "sha256",
+    "field": "artifact_hash",
+    "value_format": "sha256:<hex>"
+  },
+  "allowed_ref_fields": [
+    "artifact_ref",
+    "index_ref",
+    "review_ref",
+    "receipt_ref",
+    "source_workspace_ref",
+    "source_stage_ref"
+  ],
+  "forbidden_payload_fields": [
+    "grant_body",
+    "artifact_body",
+    "package_body",
+    "memory_body",
+    "fundability_verdict_body",
+    "authoring_quality_verdict_body",
+    "submission_ready_export_verdict_body",
+    "owner_receipt_body",
+    "typed_blocker_body",
+    "runtime_queue_record_body",
+    "provider_attempt_body"
+  ],
+  "forbidden_authority_fields": [
+    "fundability_verdict",
+    "authoring_quality_verdict",
+    "submission_ready_export_verdict",
+    "package_export_authority_verdict",
+    "owner_receipt",
+    "typed_blocker",
+    "runtime_queue_record",
+    "provider_attempt_record"
+  ],
+  "opl_ledger_command_refs": {
+    "register_artifact_ref": "opl-ledger://commands/artifact-register/v1",
+    "verify_artifact_registration_ref": "opl-ledger://commands/artifact-verify/v1",
+    "read_artifact_index_ref": "opl-ledger://commands/artifact-index-read/v1"
+  },
+  "projection_refs": {
+    "mag_readback_ref": "/product_entry_manifest/artifact_locator_contract/opl_ledger_artifact_registration",
+    "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
+    "artifact_inventory_ref": "/product_entry_manifest/artifact_inventory"
+  },
+  "authority_boundary": {
+    "mag_role": "domain_ref_publisher_and_contract_owner",
+    "opl_ledger_role": "refs_hash_index_review_receipt_registration_owner",
+    "domain_truth_owner": "med-autogrant",
+    "artifact_body_owner": "med-autogrant",
+    "package_authority_owner": "med-autogrant",
+    "owner_receipt_authority_owner": "med-autogrant",
+    "mag_can_write_opl_ledger": false,
+    "mag_can_emit_registration_projection": true,
+    "opl_ledger_can_register_refs": true,
+    "opl_ledger_can_read_artifact_body": false,
+    "opl_ledger_can_write_grant_truth": false,
+    "opl_ledger_can_create_owner_receipt": false,
+    "opl_ledger_can_create_typed_blocker": false,
+    "opl_ledger_can_authorize_quality_or_export": false,
+    "opl_ledger_can_declare_submission_ready": false
+  },
+  "claim_boundary": {
+    "grant_ready_claimed": false,
+    "quality_ready_claimed": false,
+    "export_ready_claimed": false,
+    "submission_ready_claimed": false,
+    "owner_receipt_created": false,
+    "typed_blocker_created": false,
+    "runtime_queue_created": false,
+    "package_export_authority_verdict_created": false
+  }
+}

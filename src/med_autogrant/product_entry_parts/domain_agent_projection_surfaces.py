@@ -10,6 +10,8 @@ from med_autogrant.product_entry_parts.primitives import (
 
 
 ARTIFACT_LOCATOR_KIND = "domain_artifact_locator_contract"
+OPL_LEDGER_ARTIFACT_REGISTRATION_KIND = "mag_opl_ledger_artifact_registration_projection"
+OPL_LEDGER_ARTIFACT_REGISTRATION_CONTRACT_REF = "contracts/opl_ledger_artifact_registration.json"
 CONTROLLED_STAGE_ATTEMPT_KIND = "controlled_stage_attempt_projection"
 DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND = "domain_memory_descriptor_locator"
 DOMAIN_MEMORY_MIGRATION_PLAN_KIND = "domain_memory_migration_plan"
@@ -466,12 +468,109 @@ def build_artifact_locator_contract(
         },
         "artifact_inventory_ref": "/product_entry_manifest/artifact_inventory",
         "artifact_refs": list(artifact_inventory.get("artifacts") or []),
+        "opl_ledger_artifact_registration": build_opl_ledger_artifact_registration_projection(
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            draft_id=draft_id,
+            lifecycle_stage=lifecycle_stage,
+        ),
         "opl_consumption": {
             "role": "index_locator_refs_only",
             "can_copy_canonical_artifacts": False,
             "can_issue_fundability_verdict": False,
             "can_issue_export_verdict": False,
             "requires_mag_receipt_for_domain_artifact_mutation": True,
+        },
+    }
+
+
+def build_opl_ledger_artifact_registration_projection(
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
+    lifecycle_stage: str,
+) -> dict[str, Any]:
+    required_registration_fields = [
+        "domain_id",
+        "artifact_class",
+        "artifact_ref",
+        "artifact_hash",
+        "index_ref",
+        "review_ref",
+        "receipt_ref",
+    ]
+    return {
+        "surface_kind": OPL_LEDGER_ARTIFACT_REGISTRATION_KIND,
+        "version": "v1",
+        "contract_ref": OPL_LEDGER_ARTIFACT_REGISTRATION_CONTRACT_REF,
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "domain_id": TARGET_DOMAIN_ID,
+        "refs_only": True,
+        "registration_owner": "one-person-lab",
+        "mag_role": "domain_ref_publisher_and_contract_owner",
+        "ledger_role": "refs_hash_index_review_receipt_registration_owner",
+        "identity": {
+            "grant_run_id": grant_run_id,
+            "workspace_id": workspace_id,
+            "draft_id": draft_id,
+            "lifecycle_stage": lifecycle_stage,
+        },
+        "source_surface_refs": [
+            "/product_entry_manifest/artifact_locator_contract",
+            "/product_entry_manifest/artifact_inventory",
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+        ],
+        "required_registration_fields": required_registration_fields,
+        "registration_record_template": {
+            "domain_id": TARGET_DOMAIN_ID,
+            "artifact_class": (
+                "<grant_stage_deliverable|grant_review_package|grant_submission_package_ref>"
+            ),
+            "artifact_ref": "<artifact-ref>",
+            "artifact_hash": "sha256:<hex>",
+            "index_ref": "<index-ref>",
+            "review_ref": "<review-ref>",
+            "receipt_ref": "<receipt-ref>",
+        },
+        "forbidden_registration_fields": [
+            "grant_body",
+            "artifact_body",
+            "package_body",
+            "memory_body",
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict",
+            "owner_receipt",
+            "typed_blocker",
+            "runtime_queue_record",
+            "provider_attempt_record",
+        ],
+        "opl_ledger_command_refs": {
+            "register_artifact_ref": "opl-ledger://commands/artifact-register/v1",
+            "verify_artifact_registration_ref": "opl-ledger://commands/artifact-verify/v1",
+            "read_artifact_index_ref": "opl-ledger://commands/artifact-index-read/v1",
+        },
+        "authority_boundary": {
+            "mag_can_write_opl_ledger": False,
+            "mag_can_emit_registration_projection": True,
+            "opl_ledger_can_register_refs": True,
+            "opl_ledger_can_read_artifact_body": False,
+            "opl_ledger_can_write_grant_truth": False,
+            "opl_ledger_can_create_owner_receipt": False,
+            "opl_ledger_can_create_typed_blocker": False,
+            "opl_ledger_can_authorize_quality_or_export": False,
+            "opl_ledger_can_declare_submission_ready": False,
+        },
+        "claim_boundary": {
+            "grant_ready_claimed": False,
+            "quality_ready_claimed": False,
+            "export_ready_claimed": False,
+            "submission_ready_claimed": False,
+            "owner_receipt_created": False,
+            "typed_blocker_created": False,
+            "runtime_queue_created": False,
+            "package_export_authority_verdict_created": False,
         },
     }
 
