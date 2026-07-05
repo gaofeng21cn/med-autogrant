@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root
+from med_autogrant.domain_runtime_parts.contracts import build_author_side_route_command
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.workspace_types import WorkspaceStateError
 
@@ -16,105 +17,16 @@ def _build_route_execution_command(
     draft_id: str | None,
 ) -> str:
     resolved_input_path = input_path.expanduser().resolve()
+    command = build_author_side_route_command(route_id, source_stage=route_id)
     output_path = _build_runtime_route_output_path(
         route_id=route_id,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         draft_id=draft_id,
     )
-    if route_id == "direction_screening":
+    if route_id not in {"final_package", "hosted_contract_bundle"}:
         return public_cli_command(
-            "execute-direction-screening-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "question_refinement":
-        return public_cli_command(
-            "execute-question-refinement-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "argument_building":
-        return public_cli_command(
-            "execute-argument-building-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "fit_alignment":
-        return public_cli_command(
-            "execute-fit-alignment-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "outline":
-        return public_cli_command(
-            "execute-outline-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "drafting":
-        return public_cli_command(
-            "execute-drafting-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "critique":
-        return public_cli_command(
-            "execute-critique-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "revision":
-        return public_cli_command(
-            "execute-revision-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "frozen":
-        return public_cli_command(
-            "execute-freeze-pass",
-            "--input",
-            str(resolved_input_path),
-            "--output",
-            str(output_path),
-            "--format",
-            "json",
-        )
-    if route_id == "artifact_bundle":
-        return public_cli_command(
-            "build-artifact-bundle",
+            command,
             "--input",
             str(resolved_input_path),
             "--output",
@@ -130,7 +42,7 @@ def _build_route_execution_command(
             draft_id=draft_id,
         )
         return public_cli_command(
-            "build-final-package",
+            command,
             "--input",
             str(resolved_input_path),
             "--artifact-bundle",
@@ -148,7 +60,7 @@ def _build_route_execution_command(
             draft_id=draft_id,
         )
         return public_cli_command(
-            "build-hosted-contract-bundle",
+            command,
             "--final-package",
             str(final_package_path),
             "--output",

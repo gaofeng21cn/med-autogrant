@@ -225,27 +225,35 @@ def build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, An
     return build_author_side_route_contract(resolved_stage, source_stage=source_stage)
 
 
-def build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
+AUTHOR_SIDE_ROUTE_COMMANDS = {
+    "direction_screening": "execute-direction-screening-pass",
+    "question_refinement": "execute-question-refinement-pass",
+    "argument_building": "execute-argument-building-pass",
+    "fit_alignment": "execute-fit-alignment-pass",
+    "outline": "execute-outline-pass",
+    "drafting": "execute-drafting-pass",
+    "critique": "execute-critique-pass",
+    "revision": "execute-revision-pass",
+    "frozen": "execute-freeze-pass",
+    "artifact_bundle": "build-artifact-bundle",
+    "final_package": "build-final-package",
+    "hosted_contract_bundle": "build-hosted-contract-bundle",
+}
+
+
+def build_author_side_route_command(route_id: str, *, source_stage: str) -> str:
     resolved_route_id = require_known_route_id(route_id, context="executor routing route")
-    execution_command = {
-        "direction_screening": "execute-direction-screening-pass",
-        "question_refinement": "execute-question-refinement-pass",
-        "argument_building": "execute-argument-building-pass",
-        "fit_alignment": "execute-fit-alignment-pass",
-        "outline": "execute-outline-pass",
-        "drafting": "execute-drafting-pass",
-        "critique": "execute-critique-pass",
-        "revision": "execute-revision-pass",
-        "frozen": "execute-freeze-pass",
-        "artifact_bundle": "build-artifact-bundle",
-        "final_package": "build-final-package",
-        "hosted_contract_bundle": "build-hosted-contract-bundle",
-    }.get(resolved_route_id)
+    execution_command = AUTHOR_SIDE_ROUTE_COMMANDS.get(resolved_route_id)
     if execution_command is None:
         raise WorkspaceStateError(
             f"未找到已 landed 的 author-side route command: {resolved_route_id}",
             lifecycle_stage=source_stage,
         )
+    return execution_command
+
+
+def build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
+    resolved_route_id = require_known_route_id(route_id, context="executor routing route")
     return {
         "route_id": resolved_route_id,
         "route_status": "landed",
@@ -253,7 +261,7 @@ def build_author_side_route_contract(route_id: str, *, source_stage: str) -> dic
         "execution_surface": {
             "surface_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
             "entry_adapter": SERVICE_SAFE_ENTRY_ADAPTER,
-            "command": execution_command,
+            "command": build_author_side_route_command(resolved_route_id, source_stage=source_stage),
         },
         "handoff_contract_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
     }
