@@ -19,6 +19,11 @@ AHE_PATCH_LOOP_REF_KEYS = [
     "agent_lab_re_evaluation_ref",
 ]
 
+STANDARD_DEVELOPER_MODE_EXECUTION_GATE_REFS = [
+    "opl-developer-mode:repo-fix-execution",
+    "opl-developer-mode:direct-fix-or-fork-pr-route",
+]
+
 AHE_PATCH_LOOP_CLOSEOUT_REFS = {
     "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
     "developer_patch_work_order_ref": (
@@ -90,6 +95,7 @@ def build_agent_lab_handoff(*, generated_surface_owner: str) -> dict[str, Any]:
             "opl_runtime_state_body",
             "app_workbench_state_body",
         ],
+        "feedback_self_evolution_trigger": _feedback_self_evolution_trigger(),
         "handoff_refs": _handoff_refs(generated_surface_owner=generated_surface_owner),
         "authority_boundary": _authority_boundary(),
     }
@@ -213,6 +219,74 @@ def _handoff_refs(*, generated_surface_owner: str) -> dict[str, Any]:
             "boundary": "proof_refs_do_not_grant_oma_write_authority",
         },
         "real_target_patch_loop_closeout": _real_target_patch_loop_closeout(),
+    }
+
+
+def _feedback_self_evolution_trigger() -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_foundry_agent_feedback_self_evolution_trigger",
+        "schema_version": 1,
+        "policy_ref": (
+            "contracts/foundry_agent_series.json#/"
+            "standard_feedback_self_evolution_trigger_policy"
+        ),
+        "policy_id": "standard_agent_feedback_self_evolution_trigger.v1",
+        "target_agent_id": "medautogrant",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "adapter_kind": "domain_thin_feedback_adapter",
+        "feedbackops_event_kind": "target_agent_feedback_external_suite",
+        "accepted_feedback_profile": "target_agent_feedback_external_suite",
+        "idempotency_key": "feedbackops:mag/agent-lab-handoff/latest",
+        "external_suite_ref": "contracts/agent_lab_handoff.json#/handoff_refs/agent_lab_handoff",
+        "required_trigger_fields": [
+            "feedbackops_event_kind",
+            "accepted_feedback_profile",
+            "target_agent_id",
+            "idempotency_key",
+            "external_suite_ref",
+            "developer_mode_execution_gate_refs",
+            "oma_evolution_skill_ref",
+            "owner_closeout_readback_refs",
+        ],
+        "trigger_chain": [
+            "domain_or_package_thin_feedback_adapter",
+            "opl_feedbackops_agent_lab_status_projection",
+            "opl_meta_agent_oma_agent_evolution_work_order",
+            "developer_mode_direct_fix_or_fork_pr_route",
+            "target_owner_closeout_readback",
+        ],
+        "feedback_capture_requires_developer_mode": False,
+        "repo_fix_execution_requires_opl_developer_mode": True,
+        "developer_mode_execution_gate_refs": list(
+            STANDARD_DEVELOPER_MODE_EXECUTION_GATE_REFS
+        ),
+        "oma_evolution_skill_ref": "opl-meta-agent:oma-agent-evolution",
+        "default_oma_skill_ref": "opl-meta-agent:oma-agent-evolution",
+        "status_projection_ref": (
+            "contracts/opl-framework/agent-lab-contract.json#/"
+            "domain_feedback_self_evolution_surface"
+        ),
+        "owner_closeout_readback_refs": [
+            "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+            "contracts/owner_receipt_contract.json",
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+        ],
+        "contract_can_trigger_execution": False,
+        "target_route": {
+            "domain_owner": TARGET_DOMAIN_ID,
+            "agent_lab_owner": "one-person-lab",
+            "meta_agent_owner": "opl-meta-agent",
+            "target_repo": "med-autogrant",
+        },
+        "authority_boundary": {
+            "refs_only": True,
+            "can_write_domain_truth": False,
+            "can_mutate_artifact_body": False,
+            "can_authorize_quality_or_export": False,
+            "can_create_owner_receipt": False,
+            "can_create_typed_blocker": False,
+            "can_execute_repo_patch_without_developer_mode": False,
+        },
     }
 
 

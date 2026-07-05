@@ -18,6 +18,7 @@ from med_autogrant.opl_standard_pack_profiles import (
     DOMAIN_SPECIFIC_PROFILE,
     SERIES_DESIGN_PROFILE,
     SHARED_POLICY_RELEASE,
+    STANDARD_FEEDBACK_SELF_EVOLUTION_TRIGGER_POLICY,
     STANDARD_PUBLIC_PROJECTION_POLICY,
     WORKSPACE_TOPOLOGY_PROFILE,
 )
@@ -216,6 +217,10 @@ def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
     assert series["shared_policy_release"] == SHARED_POLICY_RELEASE
     assert series["agent_membership_projection_policy"] == AGENT_MEMBERSHIP_PROJECTION_POLICY
     assert series["standard_public_projection_policy"] == STANDARD_PUBLIC_PROJECTION_POLICY
+    assert (
+        series["standard_feedback_self_evolution_trigger_policy"]
+        == STANDARD_FEEDBACK_SELF_EVOLUTION_TRIGGER_POLICY
+    )
     assert series["series_design_profile"] == SERIES_DESIGN_PROFILE
     assert series["domain_specific_profile"] == DOMAIN_SPECIFIC_PROFILE
     assert "stage_completion_policy" in series["required_stage_packets"]
@@ -488,6 +493,36 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
     assert closeout["production_acceptance_ref"] == (
         "contracts/production_acceptance/mag-production-acceptance.json#/patch_loop_refs"
     )
+    trigger = handoff["feedback_self_evolution_trigger"]
+    assert trigger["surface_kind"] == "opl_foundry_agent_feedback_self_evolution_trigger"
+    assert trigger["policy_ref"] == (
+        "contracts/foundry_agent_series.json#/standard_feedback_self_evolution_trigger_policy"
+    )
+    assert trigger["policy_id"] == "standard_agent_feedback_self_evolution_trigger.v1"
+    assert trigger["target_agent_id"] == "medautogrant"
+    assert trigger["adapter_kind"] == "domain_thin_feedback_adapter"
+    assert trigger["feedbackops_event_kind"] == "target_agent_feedback_external_suite"
+    assert trigger["external_suite_ref"] == (
+        "contracts/agent_lab_handoff.json#/handoff_refs/agent_lab_handoff"
+    )
+    assert trigger["developer_mode_execution_gate_refs"] == [
+        "opl-developer-mode:repo-fix-execution",
+        "opl-developer-mode:direct-fix-or-fork-pr-route",
+    ]
+    assert trigger["owner_closeout_readback_refs"] == [
+        "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+        "contracts/owner_receipt_contract.json",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    ]
+    assert trigger["authority_boundary"] == {
+        "refs_only": True,
+        "can_write_domain_truth": False,
+        "can_mutate_artifact_body": False,
+        "can_authorize_quality_or_export": False,
+        "can_create_owner_receipt": False,
+        "can_create_typed_blocker": False,
+        "can_execute_repo_patch_without_developer_mode": False,
+    }
     assert closeout["read_model_consumption_ref"] == (
         "/product_entry_manifest/production_live_acceptance_receipt"
     )
