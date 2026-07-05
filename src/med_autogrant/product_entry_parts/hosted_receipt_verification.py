@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.owner_receipt_common import (
+    OWNER_RECEIPT_EVIDENCE_KIND,
+    FORBIDDEN_WRITE_KEYS,
+    read_forbidden_write_proof,
+)
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_mapping,
@@ -13,7 +18,6 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 HOSTED_RECEIPT_VERIFICATION_KIND = "mag_focused_hosted_receipt_verification"
 OPL_HOSTED_ATTEMPT_EVIDENCE_KIND = "opl_hosted_stage_attempt_evidence"
-OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
 
 _READY_CLAIM_KEYS = (
     "grant_ready",
@@ -26,15 +30,6 @@ _READY_CLAIM_KEYS = (
     "claims_fundability_ready",
     "claims_authoring_quality_ready",
     "claims_submission_ready_export",
-)
-_FORBIDDEN_WRITE_KEYS = (
-    "repo_receipt_instance_written",
-    "grant_truth_written",
-    "grant_artifact_written",
-    "memory_body_written",
-    "fundability_verdict_written",
-    "authoring_quality_verdict_written",
-    "submission_ready_export_verdict_written",
 )
 
 
@@ -159,8 +154,7 @@ def build_focused_hosted_receipt_verification(
 def _require_owner_receipt_evidence(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
     if receipt.get("surface_kind") != OWNER_RECEIPT_EVIDENCE_KIND:
         raise WorkspaceStateError("owner_receipt_evidence.surface_kind 必须是 mag_owner_receipt_evidence。")
-    proof = _require_mapping(receipt, "forbidden_write_proof", context="owner_receipt_evidence")
-    if any(bool(proof.get(key)) for key in _FORBIDDEN_WRITE_KEYS):
+    if any(read_forbidden_write_proof(receipt, context="owner_receipt_evidence").values()):
         raise WorkspaceStateError("owner_receipt_evidence 不能包含 forbidden write。")
     return receipt
 
@@ -264,8 +258,7 @@ def _read_ref_list(value: Any, *, field_name: str) -> list[str]:
 
 
 def _forbidden_write_proof(receipt: Mapping[str, Any]) -> dict[str, bool]:
-    proof = _require_mapping(receipt, "forbidden_write_proof", context="owner_receipt_evidence")
-    return {key: bool(proof.get(key)) for key in _FORBIDDEN_WRITE_KEYS}
+    return read_forbidden_write_proof(receipt, context="owner_receipt_evidence")
 
 
 def _require_mapping(

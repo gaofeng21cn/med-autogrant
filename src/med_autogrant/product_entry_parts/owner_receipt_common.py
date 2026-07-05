@@ -21,6 +21,15 @@ PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND = (
 )
 
 RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker", "no_regression_evidence")
+FORBIDDEN_WRITE_KEYS = (
+    "repo_receipt_instance_written",
+    "grant_truth_written",
+    "grant_artifact_written",
+    "memory_body_written",
+    "fundability_verdict_written",
+    "authoring_quality_verdict_written",
+    "submission_ready_export_verdict_written",
+)
 STAGE_IDS = (
     "call_and_candidate_intake",
     "fundability_strategy",
@@ -72,6 +81,18 @@ def forbidden_write_proof() -> dict[str, bool]:
     }
 
 
+def read_forbidden_write_proof(
+    payload: Mapping[str, Any],
+    *,
+    field_name: str = "forbidden_write_proof",
+    context: str,
+) -> dict[str, bool]:
+    raw = payload.get(field_name)
+    if not isinstance(raw, Mapping):
+        raise WorkspaceStateError(f"{context} 缺少 forbidden_write_proof。")
+    return {key: bool(raw.get(key)) for key in FORBIDDEN_WRITE_KEYS}
+
+
 def opl_receipt_ref_consumption() -> dict[str, bool | str]:
     return {
         "role": "receipt_ref_consumer_only",
@@ -95,18 +116,7 @@ def require_owner_receipt_evidence(payload: Mapping[str, Any]) -> Mapping[str, A
         raise WorkspaceStateError("owner_receipt_evidence.surface_kind 必须是 mag_owner_receipt_evidence。")
     if payload.get("owner") != TARGET_DOMAIN_ID or payload.get("target_domain_id") != TARGET_DOMAIN_ID:
         raise WorkspaceStateError("owner_receipt_evidence.owner 和 target_domain_id 必须都是 med-autogrant。")
-    forbidden = payload.get("forbidden_write_proof")
-    if not isinstance(forbidden, Mapping):
-        raise WorkspaceStateError("owner_receipt_evidence 缺少 forbidden_write_proof。")
-    if any(bool(forbidden.get(key)) for key in (
-        "repo_receipt_instance_written",
-        "grant_truth_written",
-        "grant_artifact_written",
-        "memory_body_written",
-        "fundability_verdict_written",
-        "authoring_quality_verdict_written",
-        "submission_ready_export_verdict_written",
-    )):
+    if any(read_forbidden_write_proof(payload, context="owner_receipt_evidence").values()):
         raise WorkspaceStateError("owner_receipt_evidence 不能包含 MAG/OPL forbidden write。")
     return payload
 

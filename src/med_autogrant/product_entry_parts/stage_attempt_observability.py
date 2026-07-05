@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
+from med_autogrant.product_entry_parts.owner_receipt_common import read_forbidden_write_proof
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_mapping,
@@ -243,18 +244,4 @@ def _control_loop_handoff_state(items: Sequence[Mapping[str, Any]]) -> str:
 
 
 def _forbidden_write_proof(inventory: Mapping[str, Any]) -> dict[str, bool]:
-    proof = _require_mapping(
-        inventory,
-        "forbidden_write_proof",
-        context="receipt_reconciliation_inventory",
-    )
-    forbidden_keys = (
-        "repo_receipt_instance_written",
-        "grant_truth_written",
-        "grant_artifact_written",
-        "memory_body_written",
-        "fundability_verdict_written",
-        "authoring_quality_verdict_written",
-        "submission_ready_export_verdict_written",
-    )
-    return {key: bool(proof.get(key)) for key in forbidden_keys}
+    return read_forbidden_write_proof(inventory, context="receipt_reconciliation_inventory")
