@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.owner_receipt_common import OWNER_RECEIPT_EVIDENCE_KIND
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID, _require_nonempty_string
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
 MAG_RECEIPT_READINESS_PROJECTION_KIND = "mag_receipt_readiness_projection"
-
-_OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
 _REQUIRED_CATEGORIES = (
     "owner_receipt",
     "memory_accept_reject",
@@ -186,9 +185,9 @@ def _require_owner_receipt_evidence_shape(item: Mapping[str, Any], *, context: s
     receipt = item.get("owner_receipt_evidence", item)
     if not isinstance(receipt, Mapping):
         raise WorkspaceStateError(f"{context}.owner_receipt_evidence 必须是 object。")
-    if receipt.get("surface_kind") != _OWNER_RECEIPT_EVIDENCE_KIND:
+    if receipt.get("surface_kind") != OWNER_RECEIPT_EVIDENCE_KIND:
         raise WorkspaceStateError(
-            f"{context}.surface_kind 必须是 {_OWNER_RECEIPT_EVIDENCE_KIND}。"
+            f"{context}.surface_kind 必须是 {OWNER_RECEIPT_EVIDENCE_KIND}。"
         )
     _require_nonempty_string(
         receipt.get("receipt_id"),

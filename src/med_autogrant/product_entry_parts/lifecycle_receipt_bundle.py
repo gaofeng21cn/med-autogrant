@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
-from med_autogrant.product_entry_parts.owner_receipt_common import forbidden_write_proof
+from med_autogrant.product_entry_parts.owner_receipt_common import (
+    forbidden_write_proof,
+    read_forbidden_write_proof,
+)
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
-    _require_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
@@ -27,15 +29,6 @@ _READY_CLAIM_KEYS = (
     "claims_fundability_ready",
     "claims_authoring_quality_ready",
     "claims_submission_ready_export",
-)
-_FORBIDDEN_WRITE_KEYS = (
-    "repo_receipt_instance_written",
-    "grant_truth_written",
-    "grant_artifact_written",
-    "memory_body_written",
-    "fundability_verdict_written",
-    "authoring_quality_verdict_written",
-    "submission_ready_export_verdict_written",
 )
 
 
@@ -136,12 +129,7 @@ def _require_lifecycle_receipt_evidence(payload: Mapping[str, Any]) -> Mapping[s
         raise WorkspaceStateError(
             "lifecycle_receipt_evidence.surface_kind 必须是 mag_lifecycle_receipt_evidence。"
         )
-    forbidden = _require_mapping(
-        payload,
-        "forbidden_write_proof",
-        context="lifecycle_receipt_evidence",
-    )
-    if any(bool(forbidden.get(key)) for key in _FORBIDDEN_WRITE_KEYS):
+    if any(read_forbidden_write_proof(payload, context="lifecycle_receipt_evidence").values()):
         raise WorkspaceStateError("lifecycle_receipt_evidence 不能包含 forbidden write。")
     if any(bool(payload.get(key)) for key in _READY_CLAIM_KEYS):
         raise WorkspaceStateError("lifecycle_receipt_evidence 不能声明 grant readiness。")
