@@ -116,7 +116,10 @@ def build_stage_attempt_observability_projection(
             "mag_implements_generic_runner": False,
             "mag_implements_generic_scheduler": False,
         },
-        "forbidden_write_proof": _forbidden_write_proof(inventory),
+        "forbidden_write_proof": read_forbidden_write_proof(
+            inventory,
+            context="receipt_reconciliation_inventory",
+        ),
     }
     return {
         "ok": True,
@@ -241,7 +244,3 @@ def _control_loop_handoff_state(items: Sequence[Mapping[str, Any]]) -> str:
     if any(bool(item.get("typed_blocker_present")) for item in items):
         return "typed_blocker_refs_ready_for_opl_control_loop"
     return "no_regression_refs_ready_for_opl_usage_projection"
-
-
-def _forbidden_write_proof(inventory: Mapping[str, Any]) -> dict[str, bool]:
-    return read_forbidden_write_proof(inventory, context="receipt_reconciliation_inventory")

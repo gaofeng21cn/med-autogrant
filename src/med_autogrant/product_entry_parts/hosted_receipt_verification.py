@@ -3,8 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.owner_receipt_common import (
-    OWNER_RECEIPT_EVIDENCE_KIND,
-    FORBIDDEN_WRITE_KEYS,
+    require_owner_receipt_evidence,
     read_forbidden_write_proof,
 )
 from med_autogrant.product_entry_parts.primitives import (
@@ -39,7 +38,7 @@ def build_focused_hosted_receipt_verification(
     opl_attempt_evidence: Mapping[str, Any],
     domain_handler_closeout_result: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    receipt = _require_owner_receipt_evidence(owner_receipt_evidence)
+    receipt = require_owner_receipt_evidence(owner_receipt_evidence)
     attempt = _require_opl_attempt_evidence(opl_attempt_evidence)
     closeout = dict(domain_handler_closeout_result or {})
     breakdown = _require_mapping(
@@ -142,23 +141,16 @@ def build_focused_hosted_receipt_verification(
             "provider_completion_can_declare_grant_ready": False,
             "provider_completion_can_declare_export_ready": False,
         },
-        "forbidden_write_proof": _forbidden_write_proof(receipt),
+        "forbidden_write_proof": read_forbidden_write_proof(
+            receipt,
+            context="owner_receipt_evidence",
+        ),
     }
     return {
         "ok": True,
         "command": "focused-hosted-receipt-verification",
         "focused_hosted_receipt_verification": payload,
     }
-
-
-def _require_owner_receipt_evidence(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
-    if receipt.get("surface_kind") != OWNER_RECEIPT_EVIDENCE_KIND:
-        raise WorkspaceStateError("owner_receipt_evidence.surface_kind 必须是 mag_owner_receipt_evidence。")
-    if any(read_forbidden_write_proof(receipt, context="owner_receipt_evidence").values()):
-        raise WorkspaceStateError("owner_receipt_evidence 不能包含 forbidden write。")
-    return receipt
-
-
 def _require_opl_attempt_evidence(attempt: Mapping[str, Any]) -> Mapping[str, Any]:
     if attempt.get("surface_kind") != OPL_HOSTED_ATTEMPT_EVIDENCE_KIND:
         raise WorkspaceStateError(
@@ -255,12 +247,6 @@ def _read_ref_list(value: Any, *, field_name: str) -> list[str]:
         if resolved not in refs:
             refs.append(resolved)
     return refs
-
-
-def _forbidden_write_proof(receipt: Mapping[str, Any]) -> dict[str, bool]:
-    return read_forbidden_write_proof(receipt, context="owner_receipt_evidence")
-
-
 def _require_mapping(
     payload: Mapping[str, Any],
     field_name: str,
