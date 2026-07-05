@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 from med_autogrant.product_entry_parts.owner_receipt_common import (
+    LIFECYCLE_OPERATIONS,
+    LIFECYCLE_RECEIPT_EVIDENCE_KIND,
     forbidden_write_proof,
     read_forbidden_write_proof,
 )
@@ -15,9 +17,6 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 
 LIFECYCLE_RECEIPT_BUNDLE_KIND = "mag_lifecycle_receipt_bundle"
-LIFECYCLE_RECEIPT_EVIDENCE_KIND = "mag_lifecycle_receipt_evidence"
-
-_LIFECYCLE_OPERATIONS = ("cleanup", "restore", "retention")
 _READY_CLAIM_KEYS = (
     "grant_ready",
     "fundability_ready",
@@ -47,14 +46,14 @@ def build_lifecycle_receipt_bundle(
             "operation",
             context="lifecycle_receipt_evidence",
         )
-        if operation not in _LIFECYCLE_OPERATIONS:
+        if operation not in LIFECYCLE_OPERATIONS:
             raise WorkspaceStateError(f"lifecycle operation 不支持: {operation}")
         if operation in items_by_operation:
             raise WorkspaceStateError(f"lifecycle operation 重复: {operation}")
         items_by_operation[operation] = receipt
 
     missing_operations = [
-        operation for operation in _LIFECYCLE_OPERATIONS if operation not in items_by_operation
+        operation for operation in LIFECYCLE_OPERATIONS if operation not in items_by_operation
     ]
     if missing_operations:
         raise WorkspaceStateError(
@@ -63,7 +62,7 @@ def build_lifecycle_receipt_bundle(
 
     items = [
         _project_lifecycle_receipt(items_by_operation[operation])
-        for operation in _LIFECYCLE_OPERATIONS
+        for operation in LIFECYCLE_OPERATIONS
     ]
     receipt_refs = {
         item["operation"]: item["receipt_ref"]

@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.owner_receipt_common import (
-    FORBIDDEN_WRITE_KEYS,
     RECEIPT_SHAPES,
     RECEIPT_RECONCILIATION_INVENTORY_KIND,
+    forbidden_write_proof,
     read_forbidden_write_proof,
 )
 from med_autogrant.product_entry_parts.primitives import (
@@ -209,12 +209,11 @@ def _require_forbidden_write_proof(inventory: Mapping[str, Any]) -> Mapping[str,
         inventory,
         context="receipt_reconciliation_inventory",
     )
-    for field_name in FORBIDDEN_WRITE_KEYS:
-        if proof[field_name] is not False:
-            raise WorkspaceStateError(
-                "receipt_reconciliation_inventory.forbidden_write_proof 必须证明 forbidden writes 全部为 false。"
-            )
-    return {field_name: False for field_name in FORBIDDEN_WRITE_KEYS}
+    if any(proof.values()):
+        raise WorkspaceStateError(
+            "receipt_reconciliation_inventory.forbidden_write_proof 必须证明 forbidden writes 全部为 false。"
+        )
+    return forbidden_write_proof()
 
 
 def _authority_boundary() -> dict[str, bool | str]:

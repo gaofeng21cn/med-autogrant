@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
-from med_autogrant.product_entry_parts.owner_receipt_common import read_forbidden_write_proof
+from med_autogrant.product_entry_parts.owner_receipt_common import (
+    RECEIPT_RECONCILIATION_INVENTORY_KIND,
+    read_forbidden_write_proof,
+)
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_mapping,
@@ -139,7 +142,7 @@ def _coerce_stage_attempt_projection(payload: Mapping[str, Any]) -> Mapping[str,
 
 
 def _coerce_receipt_reconciliation_inventory(payload: Mapping[str, Any]) -> Mapping[str, Any]:
-    if payload.get("surface_kind") == "mag_controlled_soak_receipt_reconciliation_inventory":
+    if payload.get("surface_kind") == RECEIPT_RECONCILIATION_INVENTORY_KIND:
         return payload
     return _require_mapping(
         payload,
@@ -162,10 +165,10 @@ def _validate_stage_attempt(stage_attempt: Mapping[str, Any]) -> None:
 
 
 def _validate_inventory(inventory: Mapping[str, Any]) -> None:
-    if inventory.get("surface_kind") != "mag_controlled_soak_receipt_reconciliation_inventory":
+    if inventory.get("surface_kind") != RECEIPT_RECONCILIATION_INVENTORY_KIND:
         raise WorkspaceStateError(
             "receipt_reconciliation_inventory.surface_kind 必须是 "
-            "mag_controlled_soak_receipt_reconciliation_inventory。"
+            f"{RECEIPT_RECONCILIATION_INVENTORY_KIND}。"
         )
     if bool(inventory.get("claims_production_long_run_soak_complete")):
         raise WorkspaceStateError("receipt_reconciliation_inventory 不能声明 production long-run soak complete。")
