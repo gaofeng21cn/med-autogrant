@@ -53,14 +53,10 @@ from med_autogrant.product_entry_parts.opl_substrate_adapter import build_manife
 from med_autogrant.product_entry_parts.source_provenance import build_source_provenance_surface
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
-    _build_artifact_inventory_surface,
     _build_product_command_catalog,
-    _build_progress_projection_surface,
-    _build_runtime_control_surface,
-    _build_session_continuity_surface,
+    _build_runtime_continuity_surfaces,
     _build_skill_runtime_continuity_envelope,
 )
-from med_autogrant.public_cli import public_cli_command
 from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.temporal_stage_run_consumption import (
     build_temporal_stage_run_consumption_policy,
@@ -146,69 +142,48 @@ class ProductEntryManifestBuilderMixin:
         operator_loop_surface = shell_assembly["operator_loop_surface"]
         human_gate_ids = shell_assembly["human_gate_ids"]
         shell_commands = shell_assembly["shell_commands"]
-        session_continuity = _build_session_continuity_surface(
-            grant_run_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "grant_run_id",
-                context="grant-progress",
-            ),
-            workspace_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "workspace_id",
-                context="grant-progress",
-            ),
-            lifecycle_stage=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "lifecycle_stage",
-                context="grant-progress",
-            ),
-            input_path=str(resolved_input_path),
+        grant_run_id = _require_nonempty_string_from_mapping(
+            progress_payload,
+            "grant_run_id",
+            context="grant-progress",
         )
-        manifest_progress_projection = _build_progress_projection_surface(
-            projection=dict(progress_projection),
-            grant_run_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "grant_run_id",
-                context="grant-progress",
-            ),
-            workspace_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "workspace_id",
-                context="grant-progress",
-            ),
-            lifecycle_stage=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "lifecycle_stage",
-                context="grant-progress",
-            ),
-            input_path=str(resolved_input_path),
-            inspect_progress_command=command_catalog["grant_progress"],
-            summarize_workspace_command=public_cli_command(
-                "summarize-workspace", "--input", str(resolved_input_path), "--format", "json"
-            ),
-            stage_route_report_command=public_cli_command(
-                "stage-route-report", "--input", str(resolved_input_path), "--format", "json"
-            ),
+        workspace_id = _require_nonempty_string_from_mapping(
+            progress_payload,
+            "workspace_id",
+            context="grant-progress",
         )
-        artifact_inventory = _build_artifact_inventory_surface(
+        lifecycle_stage = _require_nonempty_string_from_mapping(
+            progress_payload,
+            "lifecycle_stage",
+            context="grant-progress",
+        )
+        runtime_summary = build_default_runtime_summary(
+            current_owner_line=_require_nonempty_string_from_mapping(
+                current_line,
+                "current_owner_line",
+                context="mainline_status.current_line",
+            )
+        )
+        opl_provider_runtime_contract = _build_managed_runtime_contract()
+        continuity_surfaces = _build_runtime_continuity_surfaces(
+            progress_projection=progress_projection,
             workspace_summary=workspace_summary,
-            grant_run_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "grant_run_id",
-                context="grant-progress",
-            ),
-            workspace_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "workspace_id",
-                context="grant-progress",
-            ),
-            lifecycle_stage=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "lifecycle_stage",
-                context="grant-progress",
-            ),
+            runtime_summary=runtime_summary,
+            managed_runtime_contract=opl_provider_runtime_contract,
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
             input_path=str(resolved_input_path),
+            funding_call=_read_funding_call_from_summary(workspace_summary),
+            grant_progress_command=command_catalog["grant_progress"],
+            summarize_workspace_command=command_catalog["summarize_workspace"],
+            stage_route_report_command=command_catalog["stage_route_report"],
+            grant_user_loop_command=grant_user_loop_command,
+            grant_direct_entry_command=grant_direct_entry_command,
         )
+        session_continuity = continuity_surfaces["session_continuity"]
+        manifest_progress_projection = continuity_surfaces["progress_projection"]
+        artifact_inventory = continuity_surfaces["artifact_inventory"]
         route_report = self._domain_entry.dispatch(
             {
                 "command": "stage-route-report",
@@ -316,14 +291,6 @@ class ProductEntryManifestBuilderMixin:
             ),
             "next_focus": list(mainline_snapshot["next_focus"]),
         }
-        runtime_summary = build_default_runtime_summary(
-            current_owner_line=_require_nonempty_string_from_mapping(
-                current_line,
-                "current_owner_line",
-                context="mainline_status.current_line",
-            )
-        )
-        opl_provider_runtime_contract = _build_managed_runtime_contract()
         domain_entry_contract = build_domain_entry_contract()
         user_interaction_contract = build_user_interaction_contract()
         readiness_surfaces = build_manifest_readiness_surfaces(
@@ -332,30 +299,7 @@ class ProductEntryManifestBuilderMixin:
         )
         grant_authoring_readiness = readiness_surfaces["grant_authoring_readiness"]
         product_entry_readiness = readiness_surfaces["product_entry_readiness"]
-        runtime_control = _build_runtime_control_surface(
-            runtime_summary=runtime_summary,
-            managed_runtime_contract=opl_provider_runtime_contract,
-            grant_run_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "grant_run_id",
-                context="grant-progress",
-            ),
-            workspace_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "workspace_id",
-                context="grant-progress",
-            ),
-            lifecycle_stage=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "lifecycle_stage",
-                context="grant-progress",
-            ),
-            funding_call=_read_funding_call_from_summary(workspace_summary),
-            grant_progress_command=command_catalog["grant_progress"],
-            summarize_workspace_command=command_catalog["summarize_workspace"],
-            grant_user_loop_command=grant_user_loop_command,
-            grant_direct_entry_command=grant_direct_entry_command,
-        )
+        runtime_control = continuity_surfaces["runtime_control"]
         runtime_task_shell = build_manifest_runtime_task_shell(
             resolved_input_path=resolved_input_path,
             progress_payload=progress_payload,
