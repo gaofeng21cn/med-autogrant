@@ -43,14 +43,21 @@ from med_autogrant.workspace_types import WorkspaceStateError
 def _build_default_runtime_continuity_surfaces(
     *,
     resolved_input_path: Path,
-    resolved_task_intent: str,
+    resolved_task_intent: str | None = None,
     progress_projection: Mapping[str, Any],
     workspace_summary: Mapping[str, Any],
     grant_run_id: str,
     workspace_id: str,
     lifecycle_stage: str,
+    grant_user_loop_command: str | None = None,
+    grant_direct_entry_command: str | None = None,
 ) -> dict[str, dict[str, Any]]:
     input_path = str(resolved_input_path)
+    task_intent = (
+        _require_nonempty_string(resolved_task_intent, field_name="resolved_task_intent")
+        if grant_user_loop_command is None or grant_direct_entry_command is None
+        else None
+    )
     command_catalog = _build_product_command_catalog(resolved_input_path)
     current_line = _require_mapping(
         read_mainline_status(),
@@ -77,21 +84,23 @@ def _build_default_runtime_continuity_surfaces(
         grant_progress_command=command_catalog["grant_progress"],
         summarize_workspace_command=command_catalog["summarize_workspace"],
         stage_route_report_command=command_catalog["stage_route_report"],
-        grant_user_loop_command=public_cli_command(
+        grant_user_loop_command=grant_user_loop_command
+        or public_cli_command(
             "grant-user-loop",
             "--input",
             input_path,
             "--task-intent",
-            resolved_task_intent,
+            task_intent,
             "--format",
             "json",
         ),
-        grant_direct_entry_command=public_cli_command(
+        grant_direct_entry_command=grant_direct_entry_command
+        or public_cli_command(
             "grant-direct-entry",
             "--input",
             input_path,
             "--task-intent",
-            resolved_task_intent,
+            task_intent,
             "--format",
             "json",
         ),

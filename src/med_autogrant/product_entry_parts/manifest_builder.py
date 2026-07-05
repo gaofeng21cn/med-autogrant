@@ -9,14 +9,10 @@ from med_autogrant.domain_entry_contract import (
 )
 from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
-from med_autogrant.product_entry_parts.orchestration_companions import (
-    _build_managed_runtime_contract,
-)
 from med_autogrant.product_entry_parts.primitives import (
     PRODUCT_ENTRY_MANIFEST_KIND,
     TARGET_DOMAIN_ID,
     _optional_string_from_mapping,
-    _read_funding_call_from_summary,
     _require_mapping,
     _require_nonempty_string_from_mapping,
 )
@@ -53,8 +49,8 @@ from med_autogrant.product_entry_parts.opl_substrate_adapter import build_manife
 from med_autogrant.product_entry_parts.source_provenance import build_source_provenance_surface
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
+    _build_default_runtime_continuity_surfaces,
     _build_product_command_catalog,
-    _build_runtime_continuity_surfaces,
     _build_skill_runtime_continuity_envelope,
 )
 from med_autogrant.runtime_defaults import build_default_runtime_summary
@@ -165,19 +161,13 @@ class ProductEntryManifestBuilderMixin:
             )
         )
         opl_provider_runtime_contract = _build_managed_runtime_contract()
-        continuity_surfaces = _build_runtime_continuity_surfaces(
+        continuity_surfaces = _build_default_runtime_continuity_surfaces(
+            resolved_input_path=resolved_input_path,
             progress_projection=progress_projection,
             workspace_summary=workspace_summary,
-            runtime_summary=runtime_summary,
-            managed_runtime_contract=opl_provider_runtime_contract,
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
-            input_path=str(resolved_input_path),
-            funding_call=_read_funding_call_from_summary(workspace_summary),
-            grant_progress_command=command_catalog["grant_progress"],
-            summarize_workspace_command=command_catalog["summarize_workspace"],
-            stage_route_report_command=command_catalog["stage_route_report"],
             grant_user_loop_command=grant_user_loop_command,
             grant_direct_entry_command=grant_direct_entry_command,
         )
@@ -514,3 +504,6 @@ class ProductEntryManifestBuilderMixin:
             lifecycle_stage=progress_payload["lifecycle_stage"],
         )
         return payload
+from med_autogrant.product_entry_parts.orchestration_companions import (
+    _build_managed_runtime_contract,
+)
