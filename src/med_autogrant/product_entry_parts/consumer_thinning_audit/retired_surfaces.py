@@ -1,29 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import Any
 
 from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
-    build_legacy_exit_gate as _default_build_legacy_exit_gate,
+    build_legacy_exit_gate,
 )
 from med_autogrant.product_entry_parts.consumer_thinning_audit.model import (
-    build_retired_functional_module_audit_item as _default_build_retired_functional_module_audit_item,
+    build_retired_functional_module_audit_item,
 )
 
 
-def build_retire_or_tombstone_surfaces(
-    *,
-    build_retired_functional_module_audit_item: Callable[..., dict[str, Any]]
-    | None = None,
-    build_legacy_exit_gate: Callable[..., dict[str, Any]] | None = None,
-) -> list[dict[str, Any]]:
-    if build_retired_functional_module_audit_item is None:
-        build_retired_functional_module_audit_item = (
-            _default_build_retired_functional_module_audit_item
-        )
-    if build_legacy_exit_gate is None:
-        build_legacy_exit_gate = _default_build_legacy_exit_gate
-
+def build_retire_or_tombstone_surfaces() -> list[dict[str, Any]]:
     return [
         build_retired_functional_module_audit_item(
             "closed_default_path_history_index",

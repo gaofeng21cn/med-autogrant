@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
+from med_autogrant.product_entry_parts.owner_receipt_common import forbidden_write_proof
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_mapping,
@@ -112,7 +113,7 @@ def build_lifecycle_receipt_bundle(
             "can_declare_authoring_quality_ready": False,
             "can_declare_submission_ready_export": False,
         },
-        "forbidden_write_proof": _forbidden_write_proof(),
+        "forbidden_write_proof": forbidden_write_proof(),
         "opl_consumption": {
             "role": "lifecycle_receipt_ref_consumer_only",
             "consumes_cleanup_restore_retention_refs": True,
@@ -203,18 +204,6 @@ def _project_lifecycle_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
             context="lifecycle_receipt_evidence",
         ),
         "repo_tracked": bool(receipt.get("repo_tracked", False)),
-    }
-
-
-def _forbidden_write_proof() -> dict[str, bool]:
-    return {
-        "repo_receipt_instance_written": False,
-        "grant_truth_written": False,
-        "grant_artifact_written": False,
-        "memory_body_written": False,
-        "fundability_verdict_written": False,
-        "authoring_quality_verdict_written": False,
-        "submission_ready_export_verdict_written": False,
     }
 
 
