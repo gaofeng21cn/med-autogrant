@@ -3,7 +3,10 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.owner_receipt_common import (
+    FORBIDDEN_WRITE_KEYS,
+    RECEIPT_SHAPES,
     RECEIPT_RECONCILIATION_INVENTORY_KIND,
+    read_forbidden_write_proof,
 )
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
@@ -13,21 +16,10 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 
 RECEIPT_OBSERVABILITY_SUMMARY_KIND = "mag_controlled_soak_receipt_observability_summary"
-
-_RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker", "no_regression_evidence")
 _RECONCILIATION_STATUSES = (
     "domain_owner_receipt_reconciled",
     "typed_blocker_reconciled",
     "no_regression_evidence_reconciled",
-)
-_FORBIDDEN_WRITE_FIELDS = (
-    "repo_receipt_instance_written",
-    "grant_truth_written",
-    "grant_artifact_written",
-    "memory_body_written",
-    "fundability_verdict_written",
-    "authoring_quality_verdict_written",
-    "submission_ready_export_verdict_written",
 )
 
 
@@ -176,7 +168,7 @@ def _require_items(inventory: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         if not isinstance(item, Mapping):
             raise WorkspaceStateError("receipt_reconciliation_inventory.items 必须只包含 JSON object。")
         receipt_shape = _require_nonempty_item_string(item, "receipt_shape")
-        if receipt_shape not in _RECEIPT_SHAPES:
+        if receipt_shape not in RECEIPT_SHAPES:
             raise WorkspaceStateError(f"receipt_shape 不支持: {receipt_shape}。")
         reconciliation_status = _require_nonempty_item_string(item, "reconciliation_status")
         if reconciliation_status not in _RECONCILIATION_STATUSES:
@@ -213,13 +205,16 @@ def _require_summary_consistency(summary: Mapping[str, Any], items: list[Mapping
 
 
 def _require_forbidden_write_proof(inventory: Mapping[str, Any]) -> Mapping[str, bool]:
-    proof = _require_mapping(inventory, "forbidden_write_proof")
-    for field_name in _FORBIDDEN_WRITE_FIELDS:
-        if proof.get(field_name) is not False:
+    proof = read_forbidden_write_proof(
+        inventory,
+        context="receipt_reconciliation_inventory",
+    )
+    for field_name in FORBIDDEN_WRITE_KEYS:
+        if proof[field_name] is not False:
             raise WorkspaceStateError(
                 "receipt_reconciliation_inventory.forbidden_write_proof 必须证明 forbidden writes 全部为 false。"
             )
-    return {field_name: False for field_name in _FORBIDDEN_WRITE_FIELDS}
+    return {field_name: False for field_name in FORBIDDEN_WRITE_KEYS}
 
 
 def _authority_boundary() -> dict[str, bool | str]:

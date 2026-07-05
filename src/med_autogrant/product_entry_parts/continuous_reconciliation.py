@@ -6,6 +6,7 @@ from med_autogrant.product_entry_parts.hosted_receipt_verification import (
     HOSTED_RECEIPT_VERIFICATION_KIND,
 )
 from med_autogrant.product_entry_parts.owner_receipt_common import (
+    RECEIPT_SHAPES,
     RECEIPT_RECONCILIATION_INVENTORY_KIND,
 )
 from med_autogrant.product_entry_parts.primitives import (
@@ -27,11 +28,6 @@ CONTINUOUS_RECEIPT_RECONCILIATION_SNAPSHOT_KIND = (
     "mag_continuous_receipt_reconciliation_snapshot"
 )
 
-_RECEIPT_SHAPES = (
-    "domain_owner_receipt",
-    "typed_blocker",
-    "no_regression_evidence",
-)
 _RECONCILIATION_STATUSES = (
     "domain_owner_receipt_reconciled",
     "typed_blocker_reconciled",
@@ -210,7 +206,7 @@ def _inventory_items(inventory: Mapping[str, Any]) -> list[Mapping[str, Any]]:
             "receipt_shape",
             context="receipt_reconciliation_inventory.items",
         )
-        if receipt_shape not in _RECEIPT_SHAPES:
+        if receipt_shape not in RECEIPT_SHAPES:
             raise WorkspaceStateError(f"receipt_shape 不支持: {receipt_shape}。")
         reconciliation_status = _require_nonempty_string_from_mapping(
             item,
@@ -327,7 +323,7 @@ def _validate_verification_identity(verification: Mapping[str, Any]) -> None:
         "receipt_shape",
         context="focused_hosted_receipt_verification.mag_owner_receipt",
     )
-    if receipt_shape not in _RECEIPT_SHAPES:
+    if receipt_shape not in RECEIPT_SHAPES:
         raise WorkspaceStateError(f"focused_hosted_receipt_verification receipt_shape 不支持: {receipt_shape}。")
     _receipt_ref_from_verification(verification)
     _reject_ready_claims(
