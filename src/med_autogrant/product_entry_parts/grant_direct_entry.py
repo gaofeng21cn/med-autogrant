@@ -3,14 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.product_entry_parts.loop_contracts import (
     _validate_grant_direct_entry_contract,
 )
-from med_autogrant.product_entry_parts.orchestration_companions import (
-    _build_family_orchestration_companion,
-    _build_managed_runtime_contract,
-)
+from med_autogrant.product_entry_parts.orchestration_companions import _build_family_orchestration_companion
 from med_autogrant.product_entry_parts.primitives import (
     GRANT_DIRECT_ENTRY_KIND,
     GRANT_DIRECT_ENTRY_VERSION,
@@ -25,11 +21,9 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string_from_mapping,
 )
 from med_autogrant.product_entry_parts.runtime_surfaces import (
-    _build_product_command_catalog,
-    _build_runtime_continuity_surfaces,
+    _build_default_runtime_continuity_surfaces,
 )
 from med_autogrant.public_cli import public_cli_command
-from med_autogrant.runtime_defaults import build_default_runtime_summary
 
 
 def build_grant_direct_entry_payload(
@@ -162,51 +156,14 @@ def _build_grant_direct_entry_runtime_surfaces(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> dict[str, dict[str, Any]]:
-    command_catalog = _build_product_command_catalog(resolved_input_path)
-    mainline_payload = read_mainline_status()
-    current_line = _require_mapping(
-        mainline_payload,
-        "current_line",
-        context="mainline_status",
-    )
-    runtime_summary = build_default_runtime_summary(
-        current_owner_line=_require_nonempty_string_from_mapping(
-            current_line,
-            "current_owner_line",
-            context="mainline_status.current_line",
-        )
-    )
-    return _build_runtime_continuity_surfaces(
+    return _build_default_runtime_continuity_surfaces(
+        resolved_input_path=resolved_input_path,
+        resolved_task_intent=resolved_task_intent,
         progress_projection=progress_projection,
         workspace_summary=workspace_summary,
-        runtime_summary=runtime_summary,
-        managed_runtime_contract=_build_managed_runtime_contract(),
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
-        input_path=str(resolved_input_path),
-        funding_call=_read_funding_call_from_summary(workspace_summary),
-        grant_progress_command=command_catalog["grant_progress"],
-        summarize_workspace_command=command_catalog["summarize_workspace"],
-        stage_route_report_command=command_catalog["stage_route_report"],
-        grant_user_loop_command=public_cli_command(
-            "grant-user-loop",
-            "--input",
-            str(resolved_input_path),
-            "--task-intent",
-            resolved_task_intent,
-            "--format",
-            "json",
-        ),
-        grant_direct_entry_command=public_cli_command(
-            "grant-direct-entry",
-            "--input",
-            str(resolved_input_path),
-            "--task-intent",
-            resolved_task_intent,
-            "--format",
-            "json",
-        ),
     )
 
 

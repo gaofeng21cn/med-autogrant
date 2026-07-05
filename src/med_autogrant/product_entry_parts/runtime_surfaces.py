@@ -3,16 +3,21 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.product_entry_parts.primitives import (
     GRANT_DIRECT_ENTRY_KIND,
     GRANT_PROGRESS_PROJECTION_KIND,
     GRANT_USER_LOOP_KIND,
     TARGET_DOMAIN_ID,
+    _read_funding_call_from_summary,
     _optional_mapping,
     _optional_string_from_mapping,
     _require_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
+)
+from med_autogrant.product_entry_parts.orchestration_companions import (
+    _build_managed_runtime_contract,
 )
 from med_autogrant.product_entry_parts.runtime_contracts import (
     _build_runtime_state_contract,
@@ -31,7 +36,66 @@ from med_autogrant.temporal_stage_run_consumption import (
     TEMPORAL_STAGE_RUN_CONSUMPTION_POLICY_REF,
     build_temporal_stage_run_consumption_policy,
 )
+from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.workspace_types import WorkspaceStateError
+
+
+def _build_default_runtime_continuity_surfaces(
+    *,
+    resolved_input_path: Path,
+    resolved_task_intent: str,
+    progress_projection: Mapping[str, Any],
+    workspace_summary: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+) -> dict[str, dict[str, Any]]:
+    input_path = str(resolved_input_path)
+    command_catalog = _build_product_command_catalog(resolved_input_path)
+    current_line = _require_mapping(
+        read_mainline_status(),
+        "current_line",
+        context="mainline_status",
+    )
+    runtime_summary = build_default_runtime_summary(
+        current_owner_line=_require_nonempty_string_from_mapping(
+            current_line,
+            "current_owner_line",
+            context="mainline_status.current_line",
+        )
+    )
+    return _build_runtime_continuity_surfaces(
+        progress_projection=progress_projection,
+        workspace_summary=workspace_summary,
+        runtime_summary=runtime_summary,
+        managed_runtime_contract=_build_managed_runtime_contract(),
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        input_path=input_path,
+        funding_call=_read_funding_call_from_summary(workspace_summary),
+        grant_progress_command=command_catalog["grant_progress"],
+        summarize_workspace_command=command_catalog["summarize_workspace"],
+        stage_route_report_command=command_catalog["stage_route_report"],
+        grant_user_loop_command=public_cli_command(
+            "grant-user-loop",
+            "--input",
+            input_path,
+            "--task-intent",
+            resolved_task_intent,
+            "--format",
+            "json",
+        ),
+        grant_direct_entry_command=public_cli_command(
+            "grant-direct-entry",
+            "--input",
+            input_path,
+            "--task-intent",
+            resolved_task_intent,
+            "--format",
+            "json",
+        ),
+    )
 
 
 def _build_runtime_continuity_surfaces(

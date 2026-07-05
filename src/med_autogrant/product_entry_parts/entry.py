@@ -4,8 +4,6 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
-from med_autogrant.mainline_status import read_mainline_status
-from med_autogrant.product_entry_parts.orchestration_companions import _build_managed_runtime_contract
 from med_autogrant.product_entry_parts.primitives import (
     PRODUCT_ENTRY_KIND,
     PRODUCT_ENTRY_VERSION,
@@ -33,11 +31,8 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     DOMAIN_AUTHORITY_SURFACE_REF,
     GENERATED_SESSION_RESUME_SURFACE_REF,
     GENERATED_SESSION_SURFACE_REF,
-    _build_product_command_catalog,
-    _build_runtime_continuity_surfaces,
+    _build_default_runtime_continuity_surfaces,
 )
-from med_autogrant.public_cli import public_cli_command
-from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
@@ -148,57 +143,20 @@ class MedAutoGrantProductEntry(
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
-        command_catalog = _build_product_command_catalog(resolved_input_path)
         progress_payload = self.read_grant_progress(input_path=resolved_input_path)
         progress_projection = _require_mapping(
             progress_payload,
             "progress_projection",
             context="build-product-entry.grant_progress",
         )
-        mainline_payload = read_mainline_status()
-        current_line = _require_mapping(
-            mainline_payload,
-            "current_line",
-            context="mainline_status",
-        )
-        runtime_summary = build_default_runtime_summary(
-            current_owner_line=_require_nonempty_string_from_mapping(
-                current_line,
-                "current_owner_line",
-                context="mainline_status.current_line",
-            )
-        )
-        continuity_surfaces = _build_runtime_continuity_surfaces(
+        continuity_surfaces = _build_default_runtime_continuity_surfaces(
+            resolved_input_path=resolved_input_path,
+            resolved_task_intent=resolved_task_intent,
             progress_projection=progress_projection,
             workspace_summary=workspace_summary,
-            runtime_summary=runtime_summary,
-            managed_runtime_contract=_build_managed_runtime_contract(),
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
-            input_path=str(resolved_input_path),
-            funding_call=resolved_funding_call,
-            grant_progress_command=command_catalog["grant_progress"],
-            summarize_workspace_command=command_catalog["summarize_workspace"],
-            stage_route_report_command=command_catalog["stage_route_report"],
-            grant_user_loop_command=public_cli_command(
-                "grant-user-loop",
-                "--input",
-                str(resolved_input_path),
-                "--task-intent",
-                resolved_task_intent,
-                "--format",
-                "json",
-            ),
-            grant_direct_entry_command=public_cli_command(
-                "grant-direct-entry",
-                "--input",
-                str(resolved_input_path),
-                "--task-intent",
-                resolved_task_intent,
-                "--format",
-                "json",
-            ),
         )
         product_entry = {
             "entry_version": PRODUCT_ENTRY_VERSION,
