@@ -59,20 +59,6 @@ def _candidate_shared_src_roots() -> tuple[Path, ...]:
     )
 
 
-def _explicit_shared_src_roots_from_sys_path() -> tuple[Path, ...]:
-    roots: list[Path] = []
-    for entry in sys.path:
-        if not entry:
-            continue
-        candidate = Path(entry).expanduser()
-        if not (candidate / _SHARED_PACKAGE_NAME / _SHARED_HELPER_MODULE_FILE).exists():
-            continue
-        resolved = candidate.resolve()
-        if resolved not in roots:
-            roots.append(resolved)
-    return tuple(roots)
-
-
 def _candidate_shared_helper_module_paths() -> tuple[Path, ...]:
     return tuple(
         candidate_root / _SHARED_PACKAGE_NAME / _SHARED_HELPER_MODULE_FILE
@@ -91,61 +77,24 @@ def _prepend_path(candidate_root: Path) -> bool:
     return True
 
 
-def _prefer_existing_package_path(candidate_root: Path) -> None:
-    package = sys.modules.get(_SHARED_PACKAGE_NAME)
-    if package is None or not hasattr(package, "__path__"):
-        return
-    package_root = str(candidate_root / _SHARED_PACKAGE_NAME)
-    existing = [entry for entry in package.__path__ if entry != package_root]
-    package.__path__[:] = [package_root, *existing]
-
-
-def _evict_stale_package_modules(candidate_root: Path) -> None:
-    preferred_package_root = (candidate_root / _SHARED_PACKAGE_NAME).resolve()
-    stale_module_names: list[str] = []
-    for module_name, module in list(sys.modules.items()):
-        if module_name != _SHARED_PACKAGE_NAME and not module_name.startswith(f"{_SHARED_PACKAGE_NAME}."):
-            continue
-        module_file = getattr(module, "__file__", None)
-        if not isinstance(module_file, str) or not module_file.strip():
-            continue
-        try:
-            resolved_module_file = Path(module_file).resolve()
-        except OSError:
-            stale_module_names.append(module_name)
-            continue
-        if preferred_package_root not in resolved_module_file.parents and resolved_module_file != preferred_package_root:
-            stale_module_names.append(module_name)
-    for module_name in stale_module_names:
-        sys.modules.pop(module_name, None)
-    if stale_module_names:
-        importlib.invalidate_caches()
-
-
-def _load_shared_helper_module_from_path(helper_path: Path):
-    spec = importlib.util.spec_from_file_location(
-        f"{_SHARED_PACKAGE_NAME}_editable_consumer_launcher_{abs(hash(helper_path))}",
-        helper_path,
-    )
-    if spec is None or spec.loader is None:
-        return None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
 def _load_sibling_shared_helper(added_paths: list[Path]):
     for helper_path in _candidate_shared_helper_module_paths():
         if not helper_path.exists():
             continue
         shared_src_root = helper_path.parent.parent
-        inserted = _prepend_path(shared_src_root)
-        _prefer_existing_package_path(shared_src_root)
-        _evict_stale_package_modules(shared_src_root)
-        if inserted:
+        if _prepend_path(shared_src_root):
             added_paths.append(shared_src_root)
-        return _load_shared_helper_module_from_path(helper_path)
+        return _load_shared_helper_from_path(helper_path)
     return None
+
+
+def _load_shared_helper_from_path(helper_path: Path):
+    spec = importlib.util.spec_from_file_location("_mag_editable_shared_helper", helper_path)
+    if spec is None or spec.loader is None:
+        return None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _import_installed_shared_helper():
@@ -157,11 +106,6 @@ def _import_installed_shared_helper():
 def ensure_editable_dependency_paths() -> tuple[Path, ...]:
     repo_root = _repo_root()
     added_paths: list[Path] = []
-    for explicit_root in _explicit_shared_src_roots_from_sys_path():
-        _prepend_path(explicit_root)
-        _prefer_existing_package_path(explicit_root)
-        _evict_stale_package_modules(explicit_root)
-        return (explicit_root,)
     helper_module = _load_sibling_shared_helper(added_paths)
     if helper_module is None:
         for candidate_root in _candidate_repo_site_packages_roots():

@@ -57,7 +57,6 @@ from med_autogrant.workspace_scaffold import (
 )
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
-from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 from med_autogrant.domain_runtime_parts.shared import (
     FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
     FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE,
@@ -71,9 +70,6 @@ from med_autogrant.domain_runtime_parts.shared import (
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
 from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
-
-
-_editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 
 class MagDomainRuntime(

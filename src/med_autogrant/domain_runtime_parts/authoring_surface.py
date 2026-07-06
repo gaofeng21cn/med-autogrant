@@ -49,8 +49,6 @@ from med_autogrant.workspace import (
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
-from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
-
 from med_autogrant.domain_runtime_parts.shared import (
     CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
     GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
@@ -75,9 +73,6 @@ from med_autogrant.domain_runtime_parts.runtime_ops import (
     _looks_like_workspace,
 )
 from med_autogrant.domain_runtime_parts.authoring_mainline import build_authoring_mainline_payload
-
-
-_editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 
 class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
