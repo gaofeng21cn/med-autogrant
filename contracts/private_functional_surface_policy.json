@@ -72,7 +72,7 @@
             "\""
           ],
           "pattern_id": "hermes_default_runtime_owner",
-          "policy": "hermes_agent remains explicit OPL non-default executor backend / receipt vocabulary only"
+          "policy": "Hermes-Agent remains explicit proof/provider provenance only"
         },
         {
           "literal_parts": [
@@ -3123,7 +3123,7 @@
         "gate_can_create_alias_files": false,
         "gate_can_fix_missing_refs": false
       },
-      "checked_source_ref_count": 55,
+      "checked_source_ref_count": 54,
       "checked_source_refs": [
         "contracts/owner_receipt_contract.json",
         "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
@@ -3160,7 +3160,6 @@
         "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_memory.py",
-        "src/med_autogrant/product_entry_parts/entry.py",
         "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
         "src/med_autogrant/product_entry_parts/loop_contracts.py",
         "src/med_autogrant/product_entry_parts/manifest.py",
@@ -3329,8 +3328,7 @@
           "src/med_autogrant/product_entry_parts/manifest.py",
           "src/med_autogrant/product_entry_parts/manifest_builder.py",
           "src/med_autogrant/product_entry_parts/manifest_shell/runtime_task_shell.py",
-          "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py",
-          "src/med_autogrant/product_entry_parts/entry.py"
+          "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py"
         ],
         "surface_id": "product_entry",
         "target_owner_after_migration": "one-person-lab"

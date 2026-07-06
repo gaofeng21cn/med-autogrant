@@ -313,7 +313,7 @@ def build_generated_surface_handoff() -> dict[str, Any]:
             "product_user_loop",
             current_mag_paths=[
                 "src/med_autogrant/product_entry_parts/loop_contracts.py",
-                "src/med_autogrant/product_entry_parts/entry.py",
+                "src/med_autogrant/product_entry.py",
             ],
             input_refs=[
                 "/product_entry_manifest/operator_loop_surface",

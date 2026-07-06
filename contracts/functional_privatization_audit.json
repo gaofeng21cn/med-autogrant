@@ -1620,7 +1620,7 @@
               },
               {
                 "exists": true,
-                "path": "src/med_autogrant/product_entry_parts/entry.py",
+                "path": "src/med_autogrant/product_entry.py",
                 "proof_kind": "repo_file_exists_at_manifest_build_time",
                 "role": "current_mag_domain_handler_or_refs_only_adapter_path"
               }
@@ -1631,7 +1631,7 @@
           },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/loop_contracts.py",
-            "src/med_autogrant/product_entry_parts/entry.py"
+            "src/med_autogrant/product_entry.py"
           ],
           "current_owner": "med-autogrant",
           "domain_handler_owner": "med-autogrant",
@@ -3947,7 +3947,6 @@
           "classification": "refs_only_adapter",
           "code_paths": [
             "src/med_autogrant/product_entry_parts/domain_handler.py",
-            "src/med_autogrant/product_entry_parts/entry.py",
             "src/med_autogrant/product_entry_parts/manifest.py",
             "src/med_autogrant/product_entry.py"
           ],
@@ -6314,7 +6313,6 @@
         "classification": "refs_only_adapter",
         "code_paths": [
           "src/med_autogrant/product_entry_parts/domain_handler.py",
-          "src/med_autogrant/product_entry_parts/entry.py",
           "src/med_autogrant/product_entry_parts/manifest.py",
           "src/med_autogrant/product_entry.py"
         ],
@@ -7137,7 +7135,6 @@
       "classification": "refs_only_adapter",
       "code_paths": [
         "src/med_autogrant/product_entry_parts/domain_handler.py",
-        "src/med_autogrant/product_entry_parts/entry.py",
         "src/med_autogrant/product_entry_parts/manifest.py",
         "src/med_autogrant/product_entry.py"
       ],

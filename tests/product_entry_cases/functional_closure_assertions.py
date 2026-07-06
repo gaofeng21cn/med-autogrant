@@ -19,7 +19,11 @@ from med_autogrant.product_entry_parts.consumer_thinning_audit.retired_surfaces 
 )
 from med_autogrant.product_entry_parts.consumer_thinning_shell import (
     FORBIDDEN_MAG_GENERIC_OWNER_ROLES,
+    MAG_CONSUMED_RETAINED_AUTHORITY,
+    MAG_FUNCTIONAL_HARNESS_RETAINED_AUTHORITY,
     MAG_THIN_SURFACE_OUTPUT_CLASSES,
+    OPL_CONSUMED_GENERIC_PRIMITIVES,
+    OPL_CONSUMED_PROJECTION_SURFACES,
     PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES,
     build_consumed_opl_standard_surfaces,
     build_opl_replacement_expectations,
@@ -92,28 +96,11 @@ def assert_consumer_thinning_consumed_surfaces(testcase: Any, thinning: Mapping[
     )
     testcase.assertEqual(
         consumed["consumed_generic_primitives"],
-        [
-            "workspace_source_intake_shell",
-            "memory_locator_writeback_transport",
-            "artifact_package_lifecycle_shell",
-            "generic_transition_runner",
-            "functional_harness_queue_stage_attempt_typed_closeout",
-            "functional_harness_restart_dead_letter_repair_human_gate",
-            "operator_workbench_drilldown_shell",
-            "observability_repair_projection",
-            "agent_scaffold_checklist",
-            "pack_compiler_generated_surface",
-        ],
+        list(OPL_CONSUMED_GENERIC_PRIMITIVES),
     )
     testcase.assertEqual(
         consumed["consumed_projection_surfaces"],
-        [
-            "family_conflict_envelope",
-            "stage_attempt_usage_projection",
-            "stage_attempt_control_loop_projection",
-            "runtime_observability_export",
-            "family_product_operator_projection",
-        ],
+        list(OPL_CONSUMED_PROJECTION_SURFACES),
     )
     testcase.assertEqual(
         consumed["functional_harness_consumer_coverage_ref"],
@@ -122,16 +109,7 @@ def assert_consumer_thinning_consumed_surfaces(testcase: Any, thinning: Mapping[
     )
     testcase.assertEqual(
         set(consumed["mag_retained_authority"]),
-        {
-            "grant_truth",
-            "fundability_verdict",
-            "quality_verdict",
-            "export_verdict",
-            "memory_body_accept_reject",
-            "package_authority",
-            "owner_receipt",
-            "grant_helper",
-        },
+        set(MAG_CONSUMED_RETAINED_AUTHORITY),
     )
     testcase.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
     testcase.assertTrue(consumed["authority_boundary"]["mag_consumes_generic_primitives"])
@@ -187,17 +165,7 @@ def assert_consumer_thinning_harness_and_route_boundary(testcase: Any, thinning:
     )
     testcase.assertEqual(
         set(coverage["mag_retained_authority"]),
-        {
-            "grant_truth",
-            "fundability_verdict",
-            "quality_verdict",
-            "export_verdict",
-            "grant_memory_body_accept_reject",
-            "package_authority",
-            "owner_receipt",
-            "typed_blocker",
-            "domain_handler_projection_adapter",
-        },
+        set(MAG_FUNCTIONAL_HARNESS_RETAINED_AUTHORITY),
     )
     testcase.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_grant_ready"])
     testcase.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_export_ready"])

@@ -94,7 +94,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             source_item_path = Path(tmp_dir) / "source-item.json"
             source_item = {
-                "path": "src/med_autogrant/product_entry_parts/entry.py",
+                "path": "src/med_autogrant/product_entry.py",
                 "module_id": "product_entry",
                 "declared_role": "domain_handler_target",
                 "evidence_refs": ["/product_entry_manifest/physical_morphology/product_entry"],

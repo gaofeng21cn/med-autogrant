@@ -7,7 +7,7 @@ from med_autogrant.workspace import WorkspaceStateError
 def _source_item(
     *,
     module_id: str = "product_entry",
-    path: str = "src/med_autogrant/product_entry_parts/entry.py",
+    path: str = "src/med_autogrant/product_entry.py",
     declared_role: str = "domain_handler_target",
     evidence_refs: list[str] | None = None,
     forbidden_role_flags: dict[str, bool] | None = None,

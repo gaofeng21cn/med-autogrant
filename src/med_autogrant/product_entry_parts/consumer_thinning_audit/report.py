@@ -7,6 +7,9 @@ from med_autogrant.product_entry_parts.consumer_thinning_audit.classification im
     build_mag_owned_grant_authority_surfaces,
     build_refs_only_adapter_surfaces,
 )
+from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
+    build_no_active_caller_refs_only_authority_boundary,
+)
 from med_autogrant.product_entry_parts.consumer_thinning_audit.retired_surfaces import (
     build_retire_or_tombstone_surfaces,
 )
@@ -71,15 +74,7 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
             "next_owner_action": (
                 "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker"
             ),
-            "authority_boundary": {
-                "refs_only": True,
-                "can_authorize_physical_delete": False,
-                "can_create_owner_receipt": False,
-                "can_create_typed_blocker": False,
-                "can_write_grant_truth": False,
-                "can_claim_domain_ready": False,
-                "can_claim_production_ready": False,
-            },
+            "authority_boundary": build_no_active_caller_refs_only_authority_boundary(),
         },
         "domain_authority_do_not_retire": [
             "grant_lifecycle_stage",
@@ -205,13 +200,5 @@ def _build_no_active_caller_evidence_summary(
         ),
         "physical_delete_authorized": False,
         "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
-        "authority_boundary": {
-            "refs_only": True,
-            "can_authorize_physical_delete": False,
-            "can_create_owner_receipt": False,
-            "can_create_typed_blocker": False,
-            "can_write_grant_truth": False,
-            "can_claim_domain_ready": False,
-            "can_claim_production_ready": False,
-        },
+        "authority_boundary": build_no_active_caller_refs_only_authority_boundary(),
     }

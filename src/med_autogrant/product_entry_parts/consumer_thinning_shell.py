@@ -33,6 +33,54 @@ OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS = (
     "restart_dead_letter_repair_human_gate_chain",
 )
 
+OPL_REPLACEMENT_PRIMITIVE_IDS = (
+    "workspace_source_intake_shell",
+    "memory_locator_writeback_transport",
+    "artifact_package_lifecycle_shell",
+    "generic_transition_runner",
+    "functional_harness_queue_stage_attempt_typed_closeout",
+    "functional_harness_restart_dead_letter_repair_human_gate",
+    "operator_workbench_drilldown_shell",
+    "observability_repair_projection",
+    "agent_scaffold_checklist",
+)
+
+OPL_CONSUMED_GENERIC_PRIMITIVES = (
+    *OPL_REPLACEMENT_PRIMITIVE_IDS,
+    "pack_compiler_generated_surface",
+)
+
+OPL_CONSUMED_PROJECTION_SURFACES = (
+    "family_conflict_envelope",
+    "stage_attempt_usage_projection",
+    "stage_attempt_control_loop_projection",
+    "runtime_observability_export",
+    "family_product_operator_projection",
+)
+
+MAG_CONSUMED_RETAINED_AUTHORITY = (
+    "grant_truth",
+    "fundability_verdict",
+    "quality_verdict",
+    "export_verdict",
+    "memory_body_accept_reject",
+    "package_authority",
+    "owner_receipt",
+    "grant_helper",
+)
+
+MAG_FUNCTIONAL_HARNESS_RETAINED_AUTHORITY = (
+    "grant_truth",
+    "fundability_verdict",
+    "quality_verdict",
+    "export_verdict",
+    "grant_memory_body_accept_reject",
+    "package_authority",
+    "owner_receipt",
+    "typed_blocker",
+    "domain_handler_projection_adapter",
+)
+
 PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES = (
     "local_runtime_journal_state",
     "local_attempt_record_state",
@@ -47,52 +95,60 @@ PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES = (
 
 
 def build_opl_replacement_expectations() -> list[dict[str, Any]]:
+    replacement_rows = [
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[0],
+            ["funding_call_profile_task_lock_adapter", "domain_blocker", "owner_receipt"],
+            ["workspace_locator", "source_receipt", "freshness", "repair_command"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[1],
+            ["strategy_memory_policy", "writeback_proposal", "accept_reject", "receipt_writer"],
+            ["body_free_locator", "index", "freshness", "receipt_ref_projection"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[2],
+            ["package_refs", "gap_report", "submission_ready_verdict", "manual_portal_boundary"],
+            ["package_lifecycle_shell", "restore_provenance", "retention", "artifact_index"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[3],
+            ["grant_transition_oracle", "stage_guard", "typed_blocker", "owner_action_metadata"],
+            ["matrix_runner", "retry_dead_letter", "dispatch_receipt", "transition_audit"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[4],
+            ["grant_stage_truth", "owner_receipt", "typed_blocker", "no_regression_evidence"],
+            ["typed_queue", "stage_attempt_records", "attempt_dispatch", "typed_closeout_envelope"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[5],
+            ["grant_blocker_meaning", "owner_receipt", "manual_portal_boundary", "safe_action_refs"],
+            ["restart_token", "dead_letter_record", "repair_command_projection", "human_gate_state"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[6],
+            ["quality_verdict_refs", "hard_blockers", "safe_action_refs"],
+            ["workbench_panel", "attention_queue", "repair_command_projection"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[7],
+            ["owner_receipt_refs", "typed_blocker_refs", "verdict_refs", "safe_action_refs"],
+            ["runtime_observability_export", "slo_projection", "repair_projection"],
+        ),
+        (
+            OPL_REPLACEMENT_PRIMITIVE_IDS[8],
+            ["grant_domain_authority_pack", "receipt_schema_examples", "docs_taxonomy_example"],
+            ["new_agent_template", "owner_boundary_checklist", "no_forbidden_write_rule"],
+        ),
+    ]
     return [
         _build_opl_replacement_expectation(
-            "workspace_source_intake_shell",
-            mag_keeps=["funding_call_profile_task_lock_adapter", "domain_blocker", "owner_receipt"],
-            opl_provides=["workspace_locator", "source_receipt", "freshness", "repair_command"],
-        ),
-        _build_opl_replacement_expectation(
-            "memory_locator_writeback_transport",
-            mag_keeps=["strategy_memory_policy", "writeback_proposal", "accept_reject", "receipt_writer"],
-            opl_provides=["body_free_locator", "index", "freshness", "receipt_ref_projection"],
-        ),
-        _build_opl_replacement_expectation(
-            "artifact_package_lifecycle_shell",
-            mag_keeps=["package_refs", "gap_report", "submission_ready_verdict", "manual_portal_boundary"],
-            opl_provides=["package_lifecycle_shell", "restore_provenance", "retention", "artifact_index"],
-        ),
-        _build_opl_replacement_expectation(
-            "generic_transition_runner",
-            mag_keeps=["grant_transition_oracle", "stage_guard", "typed_blocker", "owner_action_metadata"],
-            opl_provides=["matrix_runner", "retry_dead_letter", "dispatch_receipt", "transition_audit"],
-        ),
-        _build_opl_replacement_expectation(
-            "functional_harness_queue_stage_attempt_typed_closeout",
-            mag_keeps=["grant_stage_truth", "owner_receipt", "typed_blocker", "no_regression_evidence"],
-            opl_provides=["typed_queue", "stage_attempt_records", "attempt_dispatch", "typed_closeout_envelope"],
-        ),
-        _build_opl_replacement_expectation(
-            "functional_harness_restart_dead_letter_repair_human_gate",
-            mag_keeps=["grant_blocker_meaning", "owner_receipt", "manual_portal_boundary", "safe_action_refs"],
-            opl_provides=["restart_token", "dead_letter_record", "repair_command_projection", "human_gate_state"],
-        ),
-        _build_opl_replacement_expectation(
-            "operator_workbench_drilldown_shell",
-            mag_keeps=["quality_verdict_refs", "hard_blockers", "safe_action_refs"],
-            opl_provides=["workbench_panel", "attention_queue", "repair_command_projection"],
-        ),
-        _build_opl_replacement_expectation(
-            "observability_repair_projection",
-            mag_keeps=["owner_receipt_refs", "typed_blocker_refs", "verdict_refs", "safe_action_refs"],
-            opl_provides=["runtime_observability_export", "slo_projection", "repair_projection"],
-        ),
-        _build_opl_replacement_expectation(
-            "agent_scaffold_checklist",
-            mag_keeps=["grant_domain_authority_pack", "receipt_schema_examples", "docs_taxonomy_example"],
-            opl_provides=["new_agent_template", "owner_boundary_checklist", "no_forbidden_write_rule"],
-        ),
+            primitive_id,
+            mag_keeps=mag_keeps,
+            opl_provides=opl_provides,
+        )
+        for primitive_id, mag_keeps, opl_provides in replacement_rows
     ]
 
 
@@ -107,39 +163,13 @@ def build_consumed_opl_standard_surfaces() -> dict[str, Any]:
         "consumption_policy": (
             "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild"
         ),
-        "consumed_generic_primitives": [
-            "workspace_source_intake_shell",
-            "memory_locator_writeback_transport",
-            "artifact_package_lifecycle_shell",
-            "generic_transition_runner",
-            "functional_harness_queue_stage_attempt_typed_closeout",
-            "functional_harness_restart_dead_letter_repair_human_gate",
-            "operator_workbench_drilldown_shell",
-            "observability_repair_projection",
-            "agent_scaffold_checklist",
-            "pack_compiler_generated_surface",
-        ],
-        "consumed_projection_surfaces": [
-            "family_conflict_envelope",
-            "stage_attempt_usage_projection",
-            "stage_attempt_control_loop_projection",
-            "runtime_observability_export",
-            "family_product_operator_projection",
-        ],
+        "consumed_generic_primitives": list(OPL_CONSUMED_GENERIC_PRIMITIVES),
+        "consumed_projection_surfaces": list(OPL_CONSUMED_PROJECTION_SURFACES),
         "functional_harness_consumer_coverage_ref": (
             "/product_entry_manifest/mag_consumer_thinning_contract/"
             "functional_harness_consumer_coverage"
         ),
-        "mag_retained_authority": [
-            "grant_truth",
-            "fundability_verdict",
-            "quality_verdict",
-            "export_verdict",
-            "memory_body_accept_reject",
-            "package_authority",
-            "owner_receipt",
-            "grant_helper",
-        ],
+        "mag_retained_authority": list(MAG_CONSUMED_RETAINED_AUTHORITY),
         "authority_boundary": {
             "opl_standard_scaffold_owner": "one-person-lab",
             "opl_generic_primitives_owner": "one-person-lab",
@@ -257,17 +287,7 @@ def build_functional_harness_consumer_coverage() -> dict[str, Any]:
             ),
         ],
         "coverage_chain_ids": list(OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS),
-        "mag_retained_authority": [
-            "grant_truth",
-            "fundability_verdict",
-            "quality_verdict",
-            "export_verdict",
-            "grant_memory_body_accept_reject",
-            "package_authority",
-            "owner_receipt",
-            "typed_blocker",
-            "domain_handler_projection_adapter",
-        ],
+        "mag_retained_authority": list(MAG_FUNCTIONAL_HARNESS_RETAINED_AUTHORITY),
         "fail_closed_rules": {
             "opl_harness_pass_is_grant_ready": False,
             "opl_harness_pass_is_export_ready": False,

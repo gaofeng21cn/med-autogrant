@@ -2,6 +2,20 @@ from __future__ import annotations
 
 from typing import Any
 
+NO_ACTIVE_CALLER_REFS_ONLY_AUTHORITY_BOUNDARY = {
+    "refs_only": True,
+    "can_authorize_physical_delete": False,
+    "can_create_owner_receipt": False,
+    "can_create_typed_blocker": False,
+    "can_write_grant_truth": False,
+    "can_claim_domain_ready": False,
+    "can_claim_production_ready": False,
+}
+
+
+def build_no_active_caller_refs_only_authority_boundary() -> dict[str, bool]:
+    return dict(NO_ACTIVE_CALLER_REFS_ONLY_AUTHORITY_BOUNDARY)
+
 
 def build_default_caller_deletion_bridge_exit_gate(
     *,
@@ -132,13 +146,5 @@ def build_no_active_caller_evidence(
         "evidence_refs": list(evidence_refs),
         "physical_delete_authorized": False,
         "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
-        "authority_boundary": {
-            "refs_only": True,
-            "can_authorize_physical_delete": False,
-            "can_create_owner_receipt": False,
-            "can_create_typed_blocker": False,
-            "can_write_grant_truth": False,
-            "can_claim_domain_ready": False,
-            "can_claim_production_ready": False,
-        },
+        "authority_boundary": build_no_active_caller_refs_only_authority_boundary(),
     }

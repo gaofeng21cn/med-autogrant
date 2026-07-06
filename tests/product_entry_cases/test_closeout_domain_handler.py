@@ -153,7 +153,7 @@ class ProductCloseoutDomainHandlerTest(unittest.TestCase):
                         "input_path": str(CRITIQUE_EXAMPLE_PATH),
                         "source_items": [
                             {
-                                "path": "src/med_autogrant/product_entry_parts/entry.py",
+                                "path": "src/med_autogrant/product_entry.py",
                                 "module_id": "product_entry",
                                 "declared_role": "domain_handler_target",
                                 "evidence_refs": ["/product_entry_manifest/physical_morphology/product_entry"],
@@ -261,7 +261,7 @@ class ProductCloseoutDomainHandlerTest(unittest.TestCase):
         physical_guard = build_physical_morphology_guard_projection(
             source_items=[
                 {
-                    "path": "src/med_autogrant/product_entry_parts/entry.py",
+                    "path": "src/med_autogrant/product_entry.py",
                     "module_id": "product_entry",
                     "declared_role": "domain_handler_target",
                     "evidence_refs": ["/product_entry_manifest/physical_morphology/product_entry"],

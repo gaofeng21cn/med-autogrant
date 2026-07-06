@@ -229,7 +229,6 @@ def build_refs_only_adapter_surfaces() -> list[dict[str, Any]]:
             mag_role="guarded_domain_domain_handler_refs_adapter",
             code_paths=[
                 "src/med_autogrant/product_entry_parts/domain_handler.py",
-                "src/med_autogrant/product_entry_parts/entry.py",
                 "src/med_autogrant/product_entry_parts/manifest.py",
                 "src/med_autogrant/product_entry.py",
             ],
