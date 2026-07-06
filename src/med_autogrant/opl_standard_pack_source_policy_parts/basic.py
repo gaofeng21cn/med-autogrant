@@ -114,9 +114,7 @@ REPO_VERIFICATION_SCRIPT_REFS = [
     "scripts/line_budget.py",
     "scripts/opl-module-healthcheck.sh",
     "scripts/repo-hygiene.sh",
-    "scripts/run-opl-quality-details.sh",
     "scripts/run-pytest-clean.sh",
     "scripts/run-python-clean.sh",
-    "scripts/run-structural-quality-gate.sh",
     "scripts/verify.sh",
 ]

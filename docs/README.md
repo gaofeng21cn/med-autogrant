@@ -118,14 +118,10 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 和 repo-native 验证：大幅且无法解释的结构退化、cycle 回归、rules 违规或测试失败
 应阻止吸收；若依赖 ownership 更清楚，Sentrux 分数小幅波动可以接受。
 
-本地 `structure` lane 与 advisory workflow 还会在仓外
-`${TMPDIR:-/tmp}/med-autogrant/opl-quality-details/` 写入 OPL quality details
-sidecar；如需指定诊断落点，可设置 `OPL_QUALITY_DETAILS_DIR`。通过
+本地 `structure` lane 不再依赖仓内 Sentrux 包装脚本。需要结构诊断时直接运行
+`sentrux gate .` / `sentrux check .`，或用
 `/Users/gaofeng/workspace/one-person-lab/bin/opl quality details --root . --format markdown --limit 20`
-生成 markdown，通过同一命令的 `--format json` 生成 JSON，并额外保留完整
-`.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
-诊断，再报告 Sentrux 失败。`./scripts/run-structural-quality-gate.sh` 默认 advisory；
-只有显式传入 `--strict` 时才把 Sentrux 失败码作为脚本退出码。
+在仓外生成 OPL quality details。合入判断继续以 repo-native 验证为准。
 
 默认本地验证入口是 `./scripts/verify.sh`。它运行一次 line-budget gate，然后通过
 repo-local clean runner 运行小 `smoke` lane 与不需要 optional proof dependency

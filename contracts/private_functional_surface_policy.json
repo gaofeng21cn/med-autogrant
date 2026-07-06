@@ -3123,7 +3123,7 @@
         "gate_can_create_alias_files": false,
         "gate_can_fix_missing_refs": false
       },
-      "checked_source_ref_count": 54,
+      "checked_source_ref_count": 52,
       "checked_source_refs": [
         "contracts/owner_receipt_contract.json",
         "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
@@ -3133,10 +3133,8 @@
         "scripts/line_budget.py",
         "scripts/opl-module-healthcheck.sh",
         "scripts/repo-hygiene.sh",
-        "scripts/run-opl-quality-details.sh",
         "scripts/run-pytest-clean.sh",
         "scripts/run-python-clean.sh",
-        "scripts/run-structural-quality-gate.sh",
         "scripts/verify.sh",
         "src/med_autogrant/action_catalog.py",
         "src/med_autogrant/cli.py",
@@ -3770,10 +3768,8 @@
           "scripts/line_budget.py",
           "scripts/opl-module-healthcheck.sh",
           "scripts/repo-hygiene.sh",
-          "scripts/run-opl-quality-details.sh",
           "scripts/run-pytest-clean.sh",
           "scripts/run-python-clean.sh",
-          "scripts/run-structural-quality-gate.sh",
           "scripts/verify.sh"
         ],
         "surface_id": "repo_shell_verification_wrappers",
