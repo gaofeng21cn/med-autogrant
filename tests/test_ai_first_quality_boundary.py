@@ -214,7 +214,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
     }
     hermes_executor = _build_hermes_executor_payload(
         {
-            "entrypoint": "run_agent.AIAgent.run_conversation",
+            "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
             "model": "gpt-5.4",
             "provider": "custom",
             "api_mode": "chat_completions",

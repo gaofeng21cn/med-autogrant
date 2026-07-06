@@ -277,7 +277,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertTrue(contract["executor_defaults"]["non_default_executor_requires_explicit_selection"])
         self.assertTrue(contract["executor_defaults"]["non_default_executor_forbids_silent_codex_fallback"])
         self.assertNotIn("default_executor", contract["executor_defaults"])
-        self.assertNotIn("hermes_native_requires_full_agent_loop", contract["executor_defaults"])
+        self.assertFalse(
+            any(
+                key.endswith("_native_requires_full_agent_loop")
+                for key in contract["executor_defaults"]
+            )
+        )
         self.assertNotIn("experimental_executor_proofs", contract)
         receipt_lane = contract["non_default_executor_receipt_lanes"][0]
         self.assertEqual(receipt_lane["route_id"], "critique")
@@ -395,9 +400,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "human_doc:2026_04_13_" + "critique_codex_cli" + "_autonomous_executor_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
-        self.assertNotIn(
-            "human_doc:2026_04_13_" + "hermes_native" + "_critique_proof_current_truth",
-            contract["repo_tracked_truth_surfaces"],
+        self.assertFalse(
+            any(
+                "hermes" in ref and "native" in ref and "critique_proof" in ref
+                for ref in contract["repo_tracked_truth_surfaces"]
+            )
         )
         self.assertNotIn(
             "human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth",

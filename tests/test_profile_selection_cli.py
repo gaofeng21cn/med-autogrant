@@ -4,7 +4,6 @@ import json
 import subprocess
 import sys
 import tempfile
-import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
@@ -16,40 +15,6 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-
-if "hermes_cli.config" not in sys.modules:
-    hermes_cli = types.ModuleType("hermes_cli")
-    hermes_cli_config = types.ModuleType("hermes_cli.config")
-
-    def _load_config() -> dict:
-        return {}
-
-    hermes_cli_config.load_config = _load_config
-    hermes_cli.config = hermes_cli_config
-    sys.modules["hermes_cli"] = hermes_cli
-    sys.modules["hermes_cli.config"] = hermes_cli_config
-
-if "hermes_constants" not in sys.modules:
-    hermes_constants = types.ModuleType("hermes_constants")
-
-    def _parse_reasoning_effort(_value: str) -> dict:
-        return {}
-
-    hermes_constants.parse_reasoning_effort = _parse_reasoning_effort
-    sys.modules["hermes_constants"] = hermes_constants
-
-if "run_agent" not in sys.modules:
-    run_agent = types.ModuleType("run_agent")
-
-    class _AIAgentStub:
-        def __init__(self, *_args, **_kwargs) -> None:
-            pass
-
-        def run_conversation(self, _prompt: str) -> dict:
-            return {"completed": True, "api_calls": 0, "final_response": "{}"}
-
-    run_agent.AIAgent = _AIAgentStub
-    sys.modules["run_agent"] = run_agent
 
 from med_autogrant.cli import main  # noqa: E402
 from support.cli import public_cli_argv  # noqa: E402

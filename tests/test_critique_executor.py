@@ -472,7 +472,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
                 "proof": proof,
                 "executor_contract": {
-                    "entrypoint": "run_agent.AIAgent.run_conversation",
+                    "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
                     "model": "gpt-5.4",
                     "provider": "custom",
                     "api_mode": "chat_completions",
@@ -508,7 +508,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
             executor["non_equivalence_notice"],
             "connectivity_lifecycle_receipt_audit_only",
         )
-        self.assertEqual(executor["entrypoint"], "run_agent.AIAgent.run_conversation")
+        self.assertEqual(executor["entrypoint"], "OPL AgentExecutionRequest -> AgentExecutionReceipt")
         self.assertEqual(executor["provider"], "custom")
         self.assertEqual(executor["api_mode"], "chat_completions")
         self.assertEqual(executor["reasoning_effort"], "xhigh")
@@ -551,7 +551,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                     "tool_call_count": 1,
                 },
                 "executor_contract": {
-                    "entrypoint": "run_agent.AIAgent.run_conversation",
+                    "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
                     "model": "gpt-5.4",
                 },
                 "closeout_packet": {
