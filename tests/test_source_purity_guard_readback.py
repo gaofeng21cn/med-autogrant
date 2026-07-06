@@ -79,7 +79,13 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
     )
     assert "default_caller_delete_ready" in observed_evidence["not_authorized_claims"]
     assert summary["remaining_authority_gap"]["status"] == (
-        "mag_owner_physical_delete_or_keep_decision_required"
+        "mag_owner_keep_as_authority_adapter_decision_observed"
+    )
+    assert summary["remaining_authority_gap"]["owner_decision_status"] == (
+        "keep_as_authority_adapter_observed"
+    )
+    assert summary["remaining_authority_gap"]["keep_as_authority_adapter_ref"].endswith(
+        "/retained_surface_owner_decision"
     )
     assert summary["remaining_authority_gap"]["accepted_result_shapes"] == [
         "physical_delete_authorization_ref",
@@ -116,6 +122,15 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
         "gate_can_claim_domain_ready": False,
         "gate_can_claim_production_ready": False,
     }
+    owner_decision = summary["retained_surface_owner_decision"]
+    assert owner_decision["status"] == "keep_as_authority_adapter_observed"
+    assert owner_decision["decision"] == "retain_as_current_thin_domain_target"
+    assert owner_decision["applies_to_surface_ids"] == (
+        summary["retained_current_thin_surface_ids"]
+    )
+    assert owner_decision["physical_delete_authorized"] is False
+    assert owner_decision["default_caller_delete_ready"] is False
+    assert owner_decision["authority_boundary"]["decision_can_authorize_physical_delete"] is False
     assert summary["non_candidate_surface_ids"] == [
         "grouped_cli_wrapper",
         "product_entry",
@@ -132,6 +147,7 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
         status = summary["non_candidate_surface_statuses"][surface_id]
         assert status["state"] == "retained_current_thin_surface"
         assert status["cleanup_candidate"] is False
+        assert status["terminal_decision"] == "retain_as_current_thin_domain_target"
         assert status["delete_path"]
         assert status["retirement_guard"] == (
             "owner_receipt_or_domain_typed_blocker_required_before_delete"

@@ -53,8 +53,8 @@ def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
     makefile = (repo_root / "Makefile").read_text(encoding="utf-8")
 
     assert "python scripts/line_budget.py" not in verify_script
-    assert "make test-fast" in verify_script
-    assert verify_script.count("make test-fast") == 1
+    assert 'lane="${1:-fast}"' in verify_script
+    assert 'exec make "test-${lane}"' in verify_script
     assert "$(MAKE) test-line-budget" in makefile
     assert "test-line-budget-strict:" in makefile
     assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" not in makefile

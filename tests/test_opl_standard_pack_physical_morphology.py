@@ -248,8 +248,14 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     )
     remaining_authority_gap = compact_cleanup_summary["remaining_authority_gap"]
     assert remaining_authority_gap == {
-        "status": "mag_owner_physical_delete_or_keep_decision_required",
+        "status": "mag_owner_keep_as_authority_adapter_decision_observed",
         "required_owner": "med-autogrant",
+        "owner_decision_status": "keep_as_authority_adapter_observed",
+        "keep_as_authority_adapter_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/retirement_readback_cleanup_guard/"
+            "compact_cleanup_readiness_summary/retained_surface_owner_decision"
+        ),
         "accepted_result_shapes": [
             "physical_delete_authorization_ref",
             "keep_as_authority_adapter_ref",
@@ -288,6 +294,15 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "gate_can_claim_domain_ready": False,
         "gate_can_claim_production_ready": False,
     }
+    owner_decision = compact_cleanup_summary["retained_surface_owner_decision"]
+    assert owner_decision["status"] == "keep_as_authority_adapter_observed"
+    assert owner_decision["decision"] == "retain_as_current_thin_domain_target"
+    assert owner_decision["applies_to_surface_ids"] == (
+        compact_cleanup_summary["retained_current_thin_surface_ids"]
+    )
+    assert owner_decision["physical_delete_authorized"] is False
+    assert owner_decision["default_caller_delete_ready"] is False
+    assert owner_decision["authority_boundary"]["decision_can_authorize_physical_delete"] is False
     assert compact_cleanup_summary["non_candidate_surface_ids"] == [
         "grouped_cli_wrapper",
         "product_entry",
@@ -309,6 +324,9 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     for surface_id in compact_cleanup_summary["retained_current_thin_surface_ids"]:
         assert non_candidate_statuses[surface_id]["state"] == "retained_current_thin_surface"
         assert non_candidate_statuses[surface_id]["cleanup_candidate"] is False
+        assert non_candidate_statuses[surface_id]["terminal_decision"] == (
+            "retain_as_current_thin_domain_target"
+        )
         assert non_candidate_statuses[surface_id]["delete_path"]
         assert non_candidate_statuses[surface_id]["retirement_guard"] == (
             "owner_receipt_or_domain_typed_blocker_required_before_delete"

@@ -104,10 +104,17 @@ def test_generated_aggregate_checker_runs_cleanly() -> None:
 
 
 def test_meta_lane_runs_generated_aggregate_checker() -> None:
-    verify_script = (REPO_ROOT / "scripts" / "verify.sh").read_text(encoding="utf-8")
     makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+    dry_run = subprocess.run(
+        ["make", "-n", "test-meta"],
+        cwd=REPO_ROOT,
+        check=True,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    ).stdout
 
-    assert "make test-meta" in verify_script
     assert "test-generated-aggregate-sources:" in makefile
     assert "$(PYTHON_CLEAN) scripts/check_generated_aggregate_sources.py" in makefile
     assert "$(MAKE) test-generated-aggregate-sources" in makefile
+    assert "scripts/check_generated_aggregate_sources.py" in dry_run

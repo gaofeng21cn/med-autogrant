@@ -452,6 +452,9 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         retained_current_thin_surface_ids=retained_current_thin_surface_ids,
         missing_evidence_refs=missing_evidence_refs,
     )
+    retained_surface_owner_decision = _retained_surface_owner_decision(
+        retained_current_thin_surface_ids=retained_current_thin_surface_ids,
+    )
     non_candidate_surface_ids = [
         *migrated_surface_ids,
         *retained_current_thin_surface_ids,
@@ -470,10 +473,15 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         "migrated_surface_ids": migrated_surface_ids,
         "retained_current_thin_surface_ids": retained_current_thin_surface_ids,
         "retained_surface_owner_decision_gate": retained_surface_owner_decision_gate,
+        "retained_surface_owner_decision": retained_surface_owner_decision,
         "observed_non_authorizing_evidence": observed_non_authorizing_evidence,
         "remaining_authority_gap": {
-            "status": "mag_owner_physical_delete_or_keep_decision_required",
+            "status": "mag_owner_keep_as_authority_adapter_decision_observed",
             "required_owner": "med-autogrant",
+            "owner_decision_status": "keep_as_authority_adapter_observed",
+            "keep_as_authority_adapter_ref": retained_surface_owner_decision[
+                "keep_as_authority_adapter_ref"
+            ],
             "accepted_result_shapes": [
                 "physical_delete_authorization_ref",
                 "keep_as_authority_adapter_ref",
@@ -627,6 +635,43 @@ def _retained_surface_owner_decision_gate(
     }
 
 
+def _retained_surface_owner_decision(
+    *,
+    retained_current_thin_surface_ids: list[str],
+) -> dict[str, Any]:
+    return {
+        "decision_id": "mag.physical_morphology.retained_current_thin_surface_owner_decision.v1",
+        "status": "keep_as_authority_adapter_observed",
+        "decision": "retain_as_current_thin_domain_target",
+        "keep_as_authority_adapter_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/retirement_readback_cleanup_guard/"
+            "compact_cleanup_readiness_summary/retained_surface_owner_decision"
+        ),
+        "applies_to_surface_ids": list(retained_current_thin_surface_ids),
+        "rationale": (
+            "current surfaces are thin MAG authority/readback adapters; OPL refs-only "
+            "followthrough does not authorize physical delete"
+        ),
+        "physical_delete_authorized": False,
+        "default_caller_delete_ready": False,
+        "claims_domain_ready": False,
+        "claims_production_ready": False,
+        "authority_boundary": {
+            "decision_can_write_grant_truth": False,
+            "decision_can_sign_owner_receipt": False,
+            "decision_can_create_typed_blocker_instance": False,
+            "decision_can_authorize_physical_delete": False,
+            "decision_can_claim_default_caller_cutover": False,
+            "decision_can_claim_app_operator_consumption": False,
+            "decision_can_claim_grant_ready": False,
+            "decision_can_claim_submission_ready": False,
+            "decision_can_claim_domain_ready": False,
+            "decision_can_claim_production_ready": False,
+        },
+    }
+
+
 def _retained_current_thin_surface_status(
     *,
     allowed_role: str,
@@ -638,6 +683,7 @@ def _retained_current_thin_surface_status(
         "allowed_role": allowed_role,
         "retention_reason": retention_reason,
         "cleanup_candidate": False,
+        "terminal_decision": "retain_as_current_thin_domain_target",
         "delete_path": patchable_delete_path,
         "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
         "owner_decision_gate_ref": (

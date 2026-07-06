@@ -2900,7 +2900,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current control plane stores body-free refs/projections and does not own a provider repair executor or attempt ledger",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           },
           "domain_handler": {
             "allowed_role": "guarded_domain_dispatch_and_refs_projection",
@@ -2914,7 +2915,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current domain handler remains the MAG grant-native dispatch target and refs projection boundary",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           },
           "grouped_cli_wrapper": {
             "delete_path": [],
@@ -2938,7 +2940,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current lifecycle surface is an owner-receipt refs adapter, not a generic artifact lifecycle shell",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           },
           "product_entry": {
             "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
@@ -2952,7 +2955,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current MAG product entry is a thin target/readback assembly surface, not a generic product shell cleanup candidate",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           },
           "status": {
             "allowed_role": "grant_status_refs_and_typed_blocker_projection",
@@ -2966,7 +2970,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current status files project grant refs and typed blockers without owning a generic status workbench",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           },
           "user_loop": {
             "allowed_role": "grant_user_loop_domain_action_target_and_receipt_refs",
@@ -2980,7 +2985,8 @@
             "owner_decision_gate_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision_gate",
             "retention_reason": "current loop surface is an action target/ref adapter, not a scheduler or daemon",
             "retirement_guard": "owner_receipt_or_domain_typed_blocker_required_before_delete",
-            "state": "retained_current_thin_surface"
+            "state": "retained_current_thin_surface",
+            "terminal_decision": "retain_as_current_thin_domain_target"
           }
         },
         "observed_non_authorizing_evidence": {
@@ -3038,9 +3044,11 @@
             "typed_blocker_ref"
           ],
           "default_caller_delete_ready": false,
+          "keep_as_authority_adapter_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision",
+          "owner_decision_status": "keep_as_authority_adapter_observed",
           "physical_delete_authorized": false,
           "required_owner": "med-autogrant",
-          "status": "mag_owner_physical_delete_or_keep_decision_required"
+          "status": "mag_owner_keep_as_authority_adapter_decision_observed"
         },
         "required_before_cleanup_apply": [
           "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
@@ -3058,6 +3066,37 @@
           "control_plane",
           "lifecycle"
         ],
+        "retained_surface_owner_decision": {
+          "applies_to_surface_ids": [
+            "product_entry",
+            "status",
+            "user_loop",
+            "domain_handler",
+            "control_plane",
+            "lifecycle"
+          ],
+          "authority_boundary": {
+            "decision_can_authorize_physical_delete": false,
+            "decision_can_claim_app_operator_consumption": false,
+            "decision_can_claim_default_caller_cutover": false,
+            "decision_can_claim_domain_ready": false,
+            "decision_can_claim_grant_ready": false,
+            "decision_can_claim_production_ready": false,
+            "decision_can_claim_submission_ready": false,
+            "decision_can_create_typed_blocker_instance": false,
+            "decision_can_sign_owner_receipt": false,
+            "decision_can_write_grant_truth": false
+          },
+          "claims_domain_ready": false,
+          "claims_production_ready": false,
+          "decision": "retain_as_current_thin_domain_target",
+          "decision_id": "mag.physical_morphology.retained_current_thin_surface_owner_decision.v1",
+          "default_caller_delete_ready": false,
+          "keep_as_authority_adapter_ref": "contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/retirement_readback_cleanup_guard/compact_cleanup_readiness_summary/retained_surface_owner_decision",
+          "physical_delete_authorized": false,
+          "rationale": "current surfaces are thin MAG authority/readback adapters; OPL refs-only followthrough does not authorize physical delete",
+          "status": "keep_as_authority_adapter_observed"
+        },
         "retained_surface_owner_decision_gate": {
           "allowed_terminal_decisions": [
             "retain_as_current_thin_domain_target",

@@ -94,18 +94,13 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     verify_script = _read("scripts/verify.sh")
 
     subprocess.run(["bash", "-n", "scripts/verify.sh"], cwd=REPO_ROOT, check=True)
-    assert "make test-line-budget" in verify_script
-    assert "make test-fast" in verify_script
-    assert "make test-family" in verify_script
-    assert "make test-meta" in verify_script
-    assert "make test-cli-smoke" in verify_script
-    assert "make test-regression" in verify_script
-    assert "make test-proof" in verify_script
-    assert "make test-full" in verify_script
-    assert "make test-structure" in verify_script
+    assert 'lane="${1:-fast}"' in verify_script
+    assert 'exec make "test-${lane}"' in verify_script
     assert 'lane" == "cleanup"' in verify_script
+    assert "source-purity:strict" in verify_script
     assert "scripts/repo-hygiene.sh --fix" in verify_script
     assert "scripts/repo-hygiene.sh" in verify_script
+    assert "make test-line-budget" not in verify_script
     assert "python scripts/line_budget.py" not in verify_script
     assert "sentrux" not in verify_script.lower()
 

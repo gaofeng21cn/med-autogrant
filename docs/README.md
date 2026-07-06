@@ -123,9 +123,11 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 `/Users/gaofeng/workspace/one-person-lab/bin/opl quality details --root . --format markdown --limit 20`
 在仓外生成 OPL quality details。合入判断继续以 repo-native 验证为准。
 
-默认本地验证入口是 `./scripts/verify.sh`。它运行一次 line-budget gate，然后通过
-repo-local clean runner 运行小 `smoke` lane 与不需要 optional proof dependency
-的非重型 fast core lane；Python bytecode、pytest cache 和临时同步副产物不得写回开发 checkout。
+默认本地验证入口是 `./scripts/verify.sh`，但 lane 组合的单一真相是 Makefile
+`test-*` target；`verify.sh` 只做 hygiene/cleanup 入口和少量兼容 lane 转发。默认
+lane 运行一次 line-budget gate，然后通过 repo-local clean runner 运行小 `smoke`
+lane 与不需要 optional proof dependency 的非重型 fast core lane；Python bytecode、
+pytest cache 和临时同步副产物不得写回开发 checkout。
 tracked code 文件超过默认行数预算时直接阻断；`make test-line-budget-strict`
 仅保留为同一 gate 的 Makefile 别名。
 Sentrux strict rules 不承接大型机器聚合合同 / schema 的单文件行数预算；这类 surface

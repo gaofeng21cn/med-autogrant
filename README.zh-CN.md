@@ -140,9 +140,9 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 
 ## 维护者验证
 
-- 默认本地门禁使用 `./scripts/verify.sh`，它会运行 line-budget、最小 smoke lane 和非重型 fast core lane。
+- 默认本地门禁使用 `./scripts/verify.sh`。它只是公开薄入口；验证 lane 组合由 Makefile `test-*` target 持有。默认 lane 会运行 line-budget、最小 smoke lane 和非重型 fast core lane。
 - Makefile 中的 Python / pytest lane 通过 `scripts/run-python-clean.sh` / `scripts/run-pytest-clean.sh` 执行，把 bytecode 与 pytest cache 导向 checkout 外部。
-- 快速入口健康检查使用 `./scripts/verify.sh smoke` 或 `make test-cli-smoke`。
+- 快速入口健康检查使用 `./scripts/verify.sh smoke`；只跑 pytest smoke target 时使用 `make test-cli-smoke`。
 - 矩阵型、product-entry、runtime/session、hosted/export 与回归覆盖使用 `./scripts/verify.sh regression`。Product-entry case 现在直接放在 `tests/product_entry_cases/` 下收集；旧 `tests/test_product_entry.py` 聚合面已删除。
 - repo 治理、结构检查和 clean-clone/full-suite 基线分别使用 `./scripts/verify.sh meta`、`./scripts/verify.sh structure` 与 `./scripts/verify.sh full`。
 

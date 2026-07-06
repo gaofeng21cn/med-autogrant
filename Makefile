@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-generated-aggregate-sources test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-generated-aggregate-sources test-family test-meta test-cli-smoke test-smoke test-regression test-proof test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -19,10 +19,13 @@ test-line-budget-strict:
 test-source-purity-strict:
 	$(PYTHON_CLEAN) scripts/check_source_purity_guard.py --format json >/tmp/med-autogrant-source-purity-guard.json
 
+test-source-purity: test-source-purity-strict
+
 test-generated-aggregate-sources:
 	$(PYTHON_CLEAN) scripts/check_generated_aggregate_sources.py
 
 test-family:
+	$(MAKE) test-line-budget
 	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"
 
 test-meta:
@@ -34,6 +37,10 @@ test-meta:
 
 test-cli-smoke:
 	$(PYTEST_CLEAN) -q -m smoke
+
+test-smoke:
+	$(MAKE) test-line-budget
+	$(MAKE) test-cli-smoke
 
 test-regression:
 	$(PYTEST_CLEAN) -q -m "regression and not proof"
