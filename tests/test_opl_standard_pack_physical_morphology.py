@@ -236,6 +236,28 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "control_plane",
         "lifecycle",
     ]
+    observed_evidence = compact_cleanup_summary["observed_non_authorizing_evidence"]
+    assert observed_evidence["status"] == "observed_refs_only_not_physical_delete_authority"
+    assert "generated_default_caller_parity" in observed_evidence["observed_gate_ids"]
+    assert (
+        "app_operator_or_default_caller_sustained_consumption_refs_only"
+        in observed_evidence["observed_gate_ids"]
+    )
+    assert "domain_repo_physical_delete_authorization" in (
+        observed_evidence["not_authorized_claims"]
+    )
+    remaining_authority_gap = compact_cleanup_summary["remaining_authority_gap"]
+    assert remaining_authority_gap == {
+        "status": "mag_owner_physical_delete_or_keep_decision_required",
+        "required_owner": "med-autogrant",
+        "accepted_result_shapes": [
+            "physical_delete_authorization_ref",
+            "keep_as_authority_adapter_ref",
+            "typed_blocker_ref",
+        ],
+        "physical_delete_authorized": False,
+        "default_caller_delete_ready": False,
+    }
     owner_decision_gate = compact_cleanup_summary["retained_surface_owner_decision_gate"]
     assert owner_decision_gate["gate_id"] == (
         "mag.physical_morphology.retained_surface_owner_decision_gate.v1"

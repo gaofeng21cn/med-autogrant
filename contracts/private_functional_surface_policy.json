@@ -2983,6 +2983,31 @@
             "state": "retained_current_thin_surface"
           }
         },
+        "observed_non_authorizing_evidence": {
+          "not_authorized_claims": [
+            "domain_repo_physical_delete_authorization",
+            "default_caller_delete_ready",
+            "domain_ready",
+            "grant_ready",
+            "production_ready",
+            "quality_verdict",
+            "artifact_authority"
+          ],
+          "observed_gate_ids": [
+            "generated_default_caller_parity",
+            "no_active_domain_repo_generic_shell_caller",
+            "owner_receipt_or_domain_typed_blocker_roundtrip",
+            "continuous_no_forbidden_write",
+            "tombstone_or_provenance_pointer",
+            "app_operator_or_default_caller_sustained_consumption_refs_only"
+          ],
+          "source_refs": [
+            "opl://agents/default-callers/family-defaults#owner_decision_gate_by_repo/med-autogrant",
+            "opl://runtime/app-operator-drilldown#mag_manifest_sustained_consumption_followthrough_refs",
+            "opl://mag-manifest-sustained-consumption/medautogrant%2Fmag_manifest_sustained_consumption_followthrough_workorder%2Fmanifest_sustained_consumption_followthrough"
+          ],
+          "status": "observed_refs_only_not_physical_delete_authority"
+        },
         "owner_delta_required": false,
         "owner_delta_work_order_pack": {
           "authority_boundary": {
@@ -3005,6 +3030,17 @@
           "state": "no_cleanup_candidates_current_thin_surfaces_retained",
           "surface_kind": "mag_cleanup_owner_delta_work_order_pack",
           "target_domain_id": "med-autogrant"
+        },
+        "remaining_authority_gap": {
+          "accepted_result_shapes": [
+            "physical_delete_authorization_ref",
+            "keep_as_authority_adapter_ref",
+            "typed_blocker_ref"
+          ],
+          "default_caller_delete_ready": false,
+          "physical_delete_authorized": false,
+          "required_owner": "med-autogrant",
+          "status": "mag_owner_physical_delete_or_keep_decision_required"
         },
         "required_before_cleanup_apply": [
           "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",

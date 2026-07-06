@@ -69,6 +69,24 @@ def test_source_purity_guard_readback_is_repo_guard_not_readiness_claim() -> Non
         "control_plane",
         "lifecycle",
     ]
+    observed_evidence = summary["observed_non_authorizing_evidence"]
+    assert observed_evidence["status"] == "observed_refs_only_not_physical_delete_authority"
+    assert "owner_receipt_or_domain_typed_blocker_roundtrip" in (
+        observed_evidence["observed_gate_ids"]
+    )
+    assert "app_operator_or_default_caller_sustained_consumption_refs_only" in (
+        observed_evidence["observed_gate_ids"]
+    )
+    assert "default_caller_delete_ready" in observed_evidence["not_authorized_claims"]
+    assert summary["remaining_authority_gap"]["status"] == (
+        "mag_owner_physical_delete_or_keep_decision_required"
+    )
+    assert summary["remaining_authority_gap"]["accepted_result_shapes"] == [
+        "physical_delete_authorization_ref",
+        "keep_as_authority_adapter_ref",
+        "typed_blocker_ref",
+    ]
+    assert summary["remaining_authority_gap"]["physical_delete_authorized"] is False
     owner_decision_gate = summary["retained_surface_owner_decision_gate"]
     assert owner_decision_gate["gate_id"] == (
         "mag.physical_morphology.retained_surface_owner_decision_gate.v1"

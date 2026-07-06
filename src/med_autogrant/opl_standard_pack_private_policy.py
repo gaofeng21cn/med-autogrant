@@ -413,6 +413,31 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         *retirement_evidence_refs,
         "owner_receipt://mag/physical_delete_or_tombstone_authorization",
     ]
+    observed_non_authorizing_evidence = {
+        "status": "observed_refs_only_not_physical_delete_authority",
+        "source_refs": [
+            "opl://agents/default-callers/family-defaults#owner_decision_gate_by_repo/med-autogrant",
+            "opl://runtime/app-operator-drilldown#mag_manifest_sustained_consumption_followthrough_refs",
+            "opl://mag-manifest-sustained-consumption/medautogrant%2Fmag_manifest_sustained_consumption_followthrough_workorder%2Fmanifest_sustained_consumption_followthrough",
+        ],
+        "observed_gate_ids": [
+            "generated_default_caller_parity",
+            "no_active_domain_repo_generic_shell_caller",
+            "owner_receipt_or_domain_typed_blocker_roundtrip",
+            "continuous_no_forbidden_write",
+            "tombstone_or_provenance_pointer",
+            "app_operator_or_default_caller_sustained_consumption_refs_only",
+        ],
+        "not_authorized_claims": [
+            "domain_repo_physical_delete_authorization",
+            "default_caller_delete_ready",
+            "domain_ready",
+            "grant_ready",
+            "production_ready",
+            "quality_verdict",
+            "artifact_authority",
+        ],
+    }
     cleanup_candidate_surface_ids: list[str] = []
     migrated_surface_ids = ["grouped_cli_wrapper"]
     retained_current_thin_surface_ids = [
@@ -445,6 +470,18 @@ def _compact_cleanup_readiness_summary(retirement_evidence_refs: list[str]) -> d
         "migrated_surface_ids": migrated_surface_ids,
         "retained_current_thin_surface_ids": retained_current_thin_surface_ids,
         "retained_surface_owner_decision_gate": retained_surface_owner_decision_gate,
+        "observed_non_authorizing_evidence": observed_non_authorizing_evidence,
+        "remaining_authority_gap": {
+            "status": "mag_owner_physical_delete_or_keep_decision_required",
+            "required_owner": "med-autogrant",
+            "accepted_result_shapes": [
+                "physical_delete_authorization_ref",
+                "keep_as_authority_adapter_ref",
+                "typed_blocker_ref",
+            ],
+            "physical_delete_authorized": False,
+            "default_caller_delete_ready": False,
+        },
         "non_candidate_surface_statuses": {
             "grouped_cli_wrapper": {
                 "state": "migrated_no_active_compat_alias_or_facade",
