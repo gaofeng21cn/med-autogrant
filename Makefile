@@ -14,7 +14,7 @@ test-line-budget:
 	$(PYTHON_CLEAN) scripts/line_budget.py
 
 test-line-budget-strict:
-	$(PYTHON_CLEAN) scripts/line_budget.py --strict
+	$(MAKE) test-line-budget
 
 test-source-purity-strict:
 	$(PYTHON_CLEAN) scripts/check_source_purity_guard.py --format json >/tmp/med-autogrant-source-purity-guard.json

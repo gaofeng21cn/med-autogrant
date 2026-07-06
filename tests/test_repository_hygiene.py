@@ -143,7 +143,7 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertTrue(all(item["status"] == "aligned" for item in inspection["findings"]))
         self.assertTrue(all(item["pins"] == [inspection["owner_commit"]] for item in inspection["findings"]))
 
-    def test_repo_tracked_code_file_line_budget_is_advisory_by_default(self) -> None:
+    def test_repo_tracked_code_file_line_budget_accepts_current_tree(self) -> None:
         result = subprocess.run(
             ["python", "scripts/line_budget.py"],
             cwd=REPO_ROOT,

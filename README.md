@@ -140,12 +140,12 @@ You can start with prompts like:
 
 ## Maintainer Verification
 
-- Use `./scripts/verify.sh` for the default local check. It runs the advisory line-budget report, the minimal smoke lane, and the fast non-regression core lane.
+- Use `./scripts/verify.sh` for the default local check. It runs the line-budget gate, the minimal smoke lane, and the fast non-regression core lane.
 - `./scripts/verify.sh` checks repo hygiene without deleting ignored local artifacts. Use `./scripts/verify.sh cleanup` when you intentionally want to remove ignored cache/build byproducts.
 - Makefile Python and pytest lanes run through `scripts/run-python-clean.sh` / `scripts/run-pytest-clean.sh`, which route bytecode and pytest cache outside the checkout.
 - Use `./scripts/verify.sh smoke` or `make test-cli-smoke` for quick CLI/product/runtime entry health checks.
 - Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and regression coverage. Product-entry cases live under `tests/product_entry_cases/` as directly collected regression tests; the old `tests/test_product_entry.py` aggregation surface has been removed.
-- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repo governance, advisory architecture checks, and clean-clone/full-suite baselines. Use `make test-line-budget-strict` or `make test-structure-strict` when daily structure maintenance needs hard enforcement.
+- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repo governance, architecture checks, and clean-clone/full-suite baselines. `make test-line-budget-strict` remains an alias for the same line-budget gate.
 
 ## Further Reading
 

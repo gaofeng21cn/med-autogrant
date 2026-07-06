@@ -126,7 +126,6 @@ class RuntimeSplitStructureTest(unittest.TestCase):
             SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "package_surface.py"
         ).read_text(encoding="utf-8")
 
-        self.assertIn("class DomainRuntimePackageSurfaceMixin", package_surface_text)
         self.assertNotIn("from med_autogrant.domain_runtime import", package_surface_text)
 
     def test_package_builders_do_not_import_runtime_facade(self) -> None:

@@ -35,7 +35,6 @@ STRUCTURE_FILES = {
     "tests/test_line_budget.py",
     "tests/test_runtime_cli_structural_helpers.py",
     "tests/test_sentrux_governance.py",
-    "tests/test_structural_direct_coverage.py",
 }
 
 

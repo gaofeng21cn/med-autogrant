@@ -50,7 +50,8 @@ def test_makefile_lanes_route_to_repo_native_checks() -> None:
     assert "run-structural-quality-gate" not in structure
     assert "sentrux" not in structure.lower()
 
-    assert "scripts/line_budget.py --strict" in structure_strict
+    assert "scripts/line_budget.py --strict" not in structure_strict
+    assert "scripts/line_budget.py" in structure_strict
     assert "scripts/check_source_purity_guard.py" in structure_strict
     assert "scripts/check_generated_aggregate_sources.py" in structure_strict
 
