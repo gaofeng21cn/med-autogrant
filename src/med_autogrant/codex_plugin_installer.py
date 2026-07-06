@@ -5,11 +5,17 @@ import json
 from pathlib import Path
 
 
-PLUGIN_NAME = "mag"
-LEGACY_PLUGIN_NAMES = ("med-autogrant",)
-LEGACY_TEST_SKILL_MARKERS = (
-    "description: mag test skill",
-    "# mag",
+PLUGIN_NAME = "med-autogrant"
+LEGACY_PLUGIN_NAMES = ("mag",)
+LEGACY_TEST_SKILL_MARKER_SETS = (
+    (
+        "description: med-autogrant test skill",
+        "# med-autogrant",
+    ),
+    (
+        "description: mag test skill",
+        "# mag",
+    ),
 )
 
 
@@ -51,7 +57,7 @@ def _remove_legacy_test_skill_stub(path: Path) -> None:
     if any(item.name != "SKILL.md" for item in path.iterdir()):
         return
     content = skill_file.read_text(encoding="utf-8")
-    if all(marker in content for marker in LEGACY_TEST_SKILL_MARKERS):
+    if any(all(marker in content for marker in markers) for markers in LEGACY_TEST_SKILL_MARKER_SETS):
         skill_file.unlink()
         path.rmdir()
 
@@ -87,6 +93,8 @@ def install_repo_local_codex_plugin(*, repo_root: Path, home: Path | None = None
     _remove_legacy_symlink(_user_plugin_root(resolved_home))
     _remove_legacy_symlink(_user_skill_root(resolved_home))
     _remove_legacy_test_skill_stub(resolved_home / ".codex" / "skills" / PLUGIN_NAME)
+    for legacy_name in LEGACY_PLUGIN_NAMES:
+        _remove_legacy_test_skill_stub(resolved_home / ".codex" / "skills" / legacy_name)
 
     repo_local_marketplace_removed = _remove_repo_local_marketplace(marketplace_path)
 

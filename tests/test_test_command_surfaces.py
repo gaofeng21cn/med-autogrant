@@ -123,7 +123,7 @@ def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
 
 
 def test_mag_skill_keeps_generic_shells_out_of_repo_local_public_commands() -> None:
-    skill = _read("plugins/mag/skills/mag/SKILL.md")
+    skill = _read("plugins/med-autogrant/skills/med-autogrant/SKILL.md")
 
     expected_public_command_surfaces = (
         "foundry status",

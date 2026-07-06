@@ -149,7 +149,7 @@ case 模块直接由 `tests/product_entry_cases/` 收集，旧
 主线不得包含 `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、
 `.codex/`、`.omx/`、`.runtime-program/`、`runtime-state/` 或
 `.agents/`、`.agent-contract-baseline.json` 这类生成物 / 本地状态。MAG 只维护
-`plugins/mag/.codex-plugin/plugin.json` 与 skill source；Codex config 的 marketplace
+`plugins/med-autogrant/.codex-plugin/plugin.json` 与 skill source；Codex config 的 marketplace
 由 OPL-owned wrapper 生成，不再把 `.agents/plugins/marketplace.json` 写回本仓。
 同一测试也继续确认 tracked source/test line budget 的 advisory 默认和 strict 入口；
 新增或增长的超长文件应拆分，而不是扩大单文件基线，但硬 enforcement 只属于显式 strict
