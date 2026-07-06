@@ -176,16 +176,3 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
 
         self.assertEqual(set(contract_api.__all__), expected_exports)
         self.assertTrue(all(not name.startswith("_") for name in contract_api.__all__))
-
-    def test_product_entry_entry_keeps_evidence_delegates_in_mixin(self) -> None:
-        entry_path = REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "entry.py"
-        evidence_path = REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "evidence.py"
-        entry_text = entry_path.read_text(encoding="utf-8")
-        evidence_text = evidence_path.read_text(encoding="utf-8")
-
-        self.assertIn("ProductEntryEvidenceMixin", entry_text)
-        self.assertIn("class ProductEntryEvidenceMixin", evidence_text)
-        self.assertNotIn("def write_owner_receipt_evidence", entry_text)
-        self.assertNotIn("def build_receipt_readiness_projection", entry_text)
-        self.assertIn("def write_owner_receipt_evidence", evidence_text)
-        self.assertIn("def build_receipt_readiness_projection", evidence_text)

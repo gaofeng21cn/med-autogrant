@@ -71,7 +71,7 @@ class ProductEntryFailureModeTest(unittest.TestCase):
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with patch(
-            "med_autogrant.product_entry_parts.entry._build_executor_routing_contract",
+            "med_autogrant.product_entry._build_executor_routing_contract",
             return_value={
                 "contract_version": 1,
                 "current_stage_route": {

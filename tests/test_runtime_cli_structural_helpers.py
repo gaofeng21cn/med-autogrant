@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import med_autogrant.cli as cli
 import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
@@ -14,7 +14,6 @@ from med_autogrant.domain_runtime_parts.shared import (
     GENERATED_SESSION_SURFACE_REF,
 )
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
-from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
 
 
@@ -116,21 +115,6 @@ def test_autonomy_quality_evaluator_uses_owner_module_quality_builders() -> None
     assert payload["quality_closure_dossier"] is sentinel_dossier
     scorecard.assert_called_once_with({"workspace_id": "ws-structure"})
     dossier.assert_called_once_with({"workspace_id": "ws-structure"})
-
-
-def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
-    domain_entry = object()
-    domain_entry_module = Mock()
-    domain_entry_module.MedAutoGrantDomainEntry.return_value = domain_entry
-
-    with patch(
-        "med_autogrant.product_entry_parts.domain_entry_loader.import_module",
-        return_value=domain_entry_module,
-    ) as import_module:
-        loaded = build_default_domain_entry()
-
-    assert loaded is domain_entry
-    import_module.assert_called_once_with("med_autogrant.domain_entry")
 
 
 def test_functional_closure_skeleton_reads_command_catalog_without_domain_entry_runtime() -> None:

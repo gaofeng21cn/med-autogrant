@@ -22,8 +22,8 @@ import med_autogrant.domain_runtime_parts.quality_surface as quality_surface
 import med_autogrant.domain_runtime_parts.shared as shared
 import med_autogrant.domain_runtime_parts.substrate as substrate
 import med_autogrant.mainline_status as mainline_status
+import med_autogrant.product_entry as product_entry
 import med_autogrant.product_entry_parts.autonomy_observability as autonomy_observability
-import med_autogrant.product_entry_parts.entry as entry
 import med_autogrant.product_entry_parts.evidence as evidence
 import med_autogrant.product_entry_parts.loop_contracts as loop_contracts
 import med_autogrant.product_entry_parts.manifest as manifest
@@ -99,7 +99,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert shared.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
     assert substrate.MagDomainRuntime.__name__ == "MagDomainRuntime"
     assert autonomy_observability.build_grant_autonomy_observability
-    assert entry.MedAutoGrantProductEntry
+    assert product_entry.MedAutoGrantProductEntry
     assert evidence.ProductEntryEvidenceMixin
     assert loop_contracts._build_mainline_snapshot
     assert manifest.ProductEntryManifestMixin
