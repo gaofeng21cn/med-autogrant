@@ -4,7 +4,6 @@ import json
 import os
 import subprocess
 import tempfile
-import textwrap
 from pathlib import Path
 from typing import Any
 
@@ -37,8 +36,6 @@ def run_opl_agent_executor(
         child_env = dict(os.environ)
         if env is not None:
             child_env.update(env)
-        if request.get("executor_kind") == "hermes_agent" and "OPL_HERMES_AGENT_EXECUTOR_BIN" not in child_env:
-            child_env["OPL_HERMES_AGENT_EXECUTOR_BIN"] = _write_hermes_helper_shim(tmp_path)
         try:
             process = subprocess.run(
                 command,
@@ -66,22 +63,3 @@ def run_opl_agent_executor(
     if not isinstance(receipt, dict):
         raise WorkspaceStateError("OPL executor adapter 返回值缺少 agent_execution_receipt。")
     return receipt
-
-
-def _write_hermes_helper_shim(tmp_path: Path) -> str:
-    shim = tmp_path / "mag-opl-hermes-executor"
-    shim.write_text(
-        textwrap.dedent(
-            f"""\
-            #!/bin/sh
-            exec /usr/bin/env python3 {_hermes_helper_path()}
-            """
-        ),
-        encoding="utf-8",
-    )
-    shim.chmod(0o700)
-    return str(shim)
-
-
-def _hermes_helper_path() -> str:
-    return str(Path(__file__).resolve().parent / "opl_hermes_executor_helper.py")

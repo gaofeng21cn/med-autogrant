@@ -492,67 +492,61 @@ class DomainEntryFreshProofTest(unittest.TestCase):
     def test_service_safe_domain_entry_runs_fresh_cutover_walkthrough(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
-            hermes_home = tmp_root / "hermes-home"
             revised_workspace_path = tmp_root / "revised.json"
             frozen_bundle_path = tmp_root / "frozen-bundle.json"
             final_package_path = tmp_root / "final-package.json"
             hosted_contract_path = tmp_root / "hosted-contract.json"
 
-            with unittest.mock.patch.dict(
-                os.environ,
-                {"MED_AUTOGRANT_HERMES_HOME": str(hermes_home)},
-                clear=False,
-            ):
-                entry = MedAutoGrantDomainEntry()
+            entry = MedAutoGrantDomainEntry()
 
-                critique_report = entry.dispatch(
-                    {
-                        "command": "stage-route-report",
-                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                    }
-                )
-                self.assertTrue(critique_report["ok"])
-                self.assertEqual(
-                    critique_report["verification_checkpoint"]["identity"]["grant_run_id"],
-                    "grant-run-nsfc-demo-001-baseline-001",
-                )
+            critique_report = entry.dispatch(
+                {
+                    "command": "stage-route-report",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                }
+            )
+            self.assertTrue(critique_report["ok"])
+            self.assertEqual(
+                critique_report["verification_checkpoint"]["identity"]["grant_run_id"],
+                "grant-run-nsfc-demo-001-baseline-001",
+            )
 
-                revision_payload = entry.dispatch(
-                    {
-                        "command": "execute-revision-pass",
-                        "input_path": str(RE_REVIEW_EXAMPLE_PATH),
-                        "output_path": str(revised_workspace_path),
-                    }
-                )
-                self.assertTrue(revision_payload["ok"])
-                self.assertEqual(revision_payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+            revision_payload = entry.dispatch(
+                {
+                    "command": "execute-revision-pass",
+                    "input_path": str(RE_REVIEW_EXAMPLE_PATH),
+                    "output_path": str(revised_workspace_path),
+                }
+            )
+            self.assertTrue(revision_payload["ok"])
+            self.assertEqual(revision_payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
 
-                bundle_payload = entry.dispatch(
-                    {
-                        "command": "build-artifact-bundle",
-                        "input_path": str(FROZEN_EXAMPLE_PATH),
-                        "output_path": str(frozen_bundle_path),
-                    }
-                )
-                self.assertTrue(bundle_payload["ok"])
+            bundle_payload = entry.dispatch(
+                {
+                    "command": "build-artifact-bundle",
+                    "input_path": str(FROZEN_EXAMPLE_PATH),
+                    "output_path": str(frozen_bundle_path),
+                }
+            )
+            self.assertTrue(bundle_payload["ok"])
 
-                final_package_payload = entry.dispatch(
-                    {
-                        "command": "build-final-package",
-                        "input_path": str(FROZEN_EXAMPLE_PATH),
-                        "artifact_bundle_path": str(frozen_bundle_path),
-                        "output_path": str(final_package_path),
-                    }
-                )
-                self.assertTrue(final_package_payload["ok"])
+            final_package_payload = entry.dispatch(
+                {
+                    "command": "build-final-package",
+                    "input_path": str(FROZEN_EXAMPLE_PATH),
+                    "artifact_bundle_path": str(frozen_bundle_path),
+                    "output_path": str(final_package_path),
+                }
+            )
+            self.assertTrue(final_package_payload["ok"])
 
-                hosted_contract_payload = entry.dispatch(
-                    {
-                        "command": "build-hosted-contract-bundle",
-                        "final_package_path": str(final_package_path),
-                        "output_path": str(hosted_contract_path),
-                    }
-                )
+            hosted_contract_payload = entry.dispatch(
+                {
+                    "command": "build-hosted-contract-bundle",
+                    "final_package_path": str(final_package_path),
+                    "output_path": str(hosted_contract_path),
+                }
+            )
 
         self.assertTrue(hosted_contract_payload["ok"])
         self.assertEqual(
