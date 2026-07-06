@@ -17,7 +17,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.cli import main  # noqa: E402
 import med_autogrant.domain_runtime_parts.handoff_surfaces as handoff_surfaces  # noqa: E402
-from med_autogrant.product_entry_contract_api import build_author_side_route_contract  # noqa: E402
+from med_autogrant.domain_runtime_parts.contracts import build_author_side_route_contract  # noqa: E402
 from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
 
@@ -171,7 +171,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             )
 
     def test_executor_routing_contract_publishes_landed_route_catalog_only(self) -> None:
-        from med_autogrant.product_entry_contract_api import build_executor_routing_contract
+        from med_autogrant.domain_runtime_parts.contracts import build_executor_routing_contract
 
         drafting_contract = build_executor_routing_contract(
             current_stage="drafting",

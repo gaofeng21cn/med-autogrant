@@ -392,7 +392,21 @@ class ProductEntryManifestBuilderMixin:
             action_catalog_projections=action_catalog_projections,
             standard_domain_agent_skeleton=standard_domain_agent_skeleton,
         )
-        opl_substrate_adapter_export = build_manifest_opl_substrate_adapter_export(manifest_context=locals())
+        opl_substrate_adapter_export = build_manifest_opl_substrate_adapter_export(
+            resolved_input_path=resolved_input_path,
+            progress_payload=progress_payload,
+            verification_identity=verification_identity,
+            domain_memory_surfaces=domain_memory_surfaces,
+            functional_closure_surfaces=functional_closure_surfaces,
+            skill_catalog=skill_catalog,
+            runtime_control=runtime_control,
+            session_continuity=session_continuity,
+            task_lifecycle=task_lifecycle,
+            manifest_progress_projection=manifest_progress_projection,
+            artifact_inventory=artifact_inventory,
+            artifact_locator_contract=artifact_locator_contract,
+            controlled_stage_attempt_projection=controlled_stage_attempt_projection,
+        )
         automation = runtime_task_shell["automation"]
         autonomy_observability = build_grant_autonomy_observability(
             task_lifecycle=task_lifecycle,

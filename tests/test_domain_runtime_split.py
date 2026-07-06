@@ -144,9 +144,11 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
-    def test_workspace_parts_do_not_import_workspace_facade(self) -> None:
+    def test_retired_workspace_parts_facade_is_not_present(self) -> None:
+        self.assertFalse((SRC_ROOT / "med_autogrant" / "workspace_parts.py").exists())
+
+    def test_workspace_projection_parts_do_not_import_workspace_facade(self) -> None:
         workspace_parts = [
-            SRC_ROOT / "med_autogrant" / "workspace_parts.py",
             SRC_ROOT / "med_autogrant" / "workspace_projection_parts.py",
         ]
 

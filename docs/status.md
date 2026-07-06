@@ -30,6 +30,10 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 OPL/App 读回：`one-person-lab` 的 `agents default-callers --family-defaults` 对 MAG 显示 `all_deletion_evidence_requirements_observed=true`、`active_deletion_evidence_worklist_count=0`，`runtime app-operator-drilldown --detail full` 显示 MAG manifest sustained-consumption followthrough `verified_ledger_receipt_ref_count=1`、open workorder count `0`；该 refs-only receipt 覆盖 App/operator consumption、default caller consumption、owner payload response、workspace receipt scaleout、continuous no-forbidden-write 与 long-soak typed blocker refs。它关闭 OPL 结构/refs-only followthrough 缺口，但仍不授权 MAG 物理删除：`physical_delete_authorized=false`、`default_caller_delete_ready=false`，下一步只能是 MAG owner 返回 `physical_delete_authorization_ref`、`keep_as_authority_adapter_ref` 或 `typed_blocker_ref`。
 
+2026-07-07 product-entry manifest source cleanup：manifest builder 到 `opl_substrate_adapter_export` 的 `locals()` 隐式上下文已收薄为显式字段传递；输出 payload contract 仍按 product-entry manifest / focused tests 验证。该 cleanup 不改变 current status：product/status/domain-handler 大 shell 删除仍需要 OPL generated/default caller parity 与 MAG owner physical-delete / keep / typed-blocker 裁决，不声明 readiness 或物理删除完成。
+
+2026-07-07 source facade cleanup：`product_entry_contract_api.py` 与 `workspace_parts.py` 已删除，相关内部 caller 改为直接读取真实 owner module；`cli_rendering.py` facade 也已退役，CLI 错误上下文 helper 回到唯一调用方。该 cleanup 只减少 repo-local bridge，不改变 MAG/OPL authority split。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。

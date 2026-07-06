@@ -17,6 +17,10 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 当前风险集中在 hand-written product-entry / domain_handler / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取；OPL generated/default caller parity、owner receipt roundtrip、no-active-caller、no-forbidden-write 和 App/operator followthrough 已作为 refs-only replacement/cutover 证据 observed，物理删除仍需要 explicit MAG owner receipt authorizing physical delete，或 MAG owner 返回 keep / tombstone typed blocker 裁决。当前 retired/tombstone no-active-caller evidence 已进入 `contracts/functional_privatization_audit.json` 与 `contracts/runtime-program/opl-family-contract-adoption.json`，只证明 retired surface 无 active caller，不授权 active handler/adapter shell 删除。不以 tombstone code、retired alias 或 re-export facade 形式长期保留。
 
+2026-07-07 product-entry manifest cleanup：`product_entry_parts/manifest_builder.py` 不再用 `locals()` 向 `opl_substrate_adapter_export` 传递隐式上下文，adapter 只消费显式 manifest 字段。该改动只关闭一个 source-level coupling；product/status/domain-handler 大 shell 仍是 owner / OPL generated-caller gated tail，不能据此声明 physical delete、default-caller delete-ready 或 readiness。
+
+2026-07-07 facade cleanup：`product_entry_contract_api.py` 与 `workspace_parts.py` 已作为 bridge/facade 退役，内部 caller 直接读取 `domain_runtime_parts` 和 workspace focused owner modules；`opl_standard_pack_source_policy.py` 仍按 active import surface 保留，不作为本轮删除对象。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |

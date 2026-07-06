@@ -13,56 +13,46 @@ from med_autogrant.public_cli import public_cli_command
 
 def build_manifest_opl_substrate_adapter_export(
     *,
-    manifest_context: Mapping[str, Any],
+    resolved_input_path: str | Path,
+    progress_payload: Mapping[str, Any],
+    verification_identity: Mapping[str, Any],
+    domain_memory_surfaces: Mapping[str, Any],
+    functional_closure_surfaces: Mapping[str, Any],
+    skill_catalog: Mapping[str, Any],
+    runtime_control: Mapping[str, Any],
+    session_continuity: Mapping[str, Any],
+    task_lifecycle: Mapping[str, Any],
+    manifest_progress_projection: Mapping[str, Any],
+    artifact_inventory: Mapping[str, Any],
+    artifact_locator_contract: Mapping[str, Any],
+    controlled_stage_attempt_projection: Mapping[str, Any],
 ) -> dict[str, Any]:
-    input_path = manifest_context["resolved_input_path"]
-    progress_payload = _require_mapping(manifest_context, "progress_payload", context="manifest_context")
-    verification_identity = _require_mapping(manifest_context, "verification_identity", context="manifest_context")
-    domain_memory_surfaces = _require_mapping(manifest_context, "domain_memory_surfaces", context="manifest_context")
-    functional_closure_surfaces = _require_mapping(
-        manifest_context,
-        "functional_closure_surfaces",
-        context="manifest_context",
-    )
-    skill_catalog = _require_mapping(manifest_context, "skill_catalog", context="manifest_context")
     domain_projection = _require_mapping(
         skill_catalog["skills"][0],
         "domain_projection",
         context="skill_catalog.skills.0",
     )
     return build_opl_substrate_adapter_export(
-        input_path=input_path,
+        input_path=resolved_input_path,
         grant_run_id=_require_nonempty_string_from_mapping(progress_payload, "grant_run_id", context="grant-progress"),
         workspace_id=_require_nonempty_string_from_mapping(progress_payload, "workspace_id", context="grant-progress"),
         draft_id=verification_identity.get("draft_id") if isinstance(verification_identity.get("draft_id"), str) else None,
         lifecycle_stage=_require_nonempty_string_from_mapping(progress_payload, "lifecycle_stage", context="grant-progress"),
         workspace_locator={
             "workspace_surface_kind": "nsfc_workspace",
-            "workspace_root": str(Path(input_path).expanduser().resolve()),
-            "workspace_path": str(Path(input_path).expanduser().resolve()),
+            "workspace_root": str(Path(resolved_input_path).expanduser().resolve()),
+            "workspace_path": str(Path(resolved_input_path).expanduser().resolve()),
         },
-        runtime_control=_require_mapping(manifest_context, "runtime_control", context="manifest_context"),
-        session_continuity=_require_mapping(manifest_context, "session_continuity", context="manifest_context"),
-        task_lifecycle=_require_mapping(manifest_context, "task_lifecycle", context="manifest_context"),
-        progress_projection=_require_mapping(
-            manifest_context,
-            "manifest_progress_projection",
-            context="manifest_context",
-        ),
-        artifact_inventory=_require_mapping(manifest_context, "artifact_inventory", context="manifest_context"),
-        artifact_locator_contract=_require_mapping(
-            manifest_context,
-            "artifact_locator_contract",
-            context="manifest_context",
-        ),
+        runtime_control=runtime_control,
+        session_continuity=session_continuity,
+        task_lifecycle=task_lifecycle,
+        progress_projection=manifest_progress_projection,
+        artifact_inventory=artifact_inventory,
+        artifact_locator_contract=artifact_locator_contract,
         domain_memory_descriptor=domain_memory_surfaces["domain_memory_descriptor"],
         domain_memory_descriptor_locator=domain_memory_surfaces["domain_memory_descriptor_locator"],
         controlled_domain_memory_apply_proof=domain_memory_surfaces["controlled_domain_memory_apply_proof"],
-        controlled_stage_attempt_projection=_require_mapping(
-            manifest_context,
-            "controlled_stage_attempt_projection",
-            context="manifest_context",
-        ),
+        controlled_stage_attempt_projection=controlled_stage_attempt_projection,
         owner_receipt_contract=functional_closure_surfaces["owner_receipt_contract"],
         lifecycle_guarded_apply_proof=functional_closure_surfaces["lifecycle_guarded_apply_proof"],
         runtime_registration=_require_mapping(

@@ -14,12 +14,8 @@ from med_autogrant.public_cli import (
     PUBLIC_COMMAND_ORDER,
     PUBLIC_GROUP_COMMANDS,
 )
+from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
-
-from med_autogrant.cli_rendering import (
-    _extract_error_details,
-    _extract_workspace_context_for_error,
-)
 from med_autogrant.cli_rendering_parts import _render_text
 from med_autogrant.cli_parts.handlers import (
     handle_build_artifact_bundle,
@@ -108,6 +104,33 @@ from med_autogrant.cli_parts.parser_adders import (
 
 
 RETIRED_FLAT_COMMANDS = frozenset(INTERNAL_TO_PUBLIC_COMMAND)
+
+
+def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, object]:
+    input_path = getattr(args, "input", None)
+    if not input_path:
+        return {}
+    try:
+        document = load_workspace_document(input_path)
+    except WorkspaceError:
+        return {}
+    return {
+        "grant_run_id": document.get("grant_run_id"),
+        "workspace_id": document.get("workspace_id"),
+        "lifecycle_stage": document.get("lifecycle_stage"),
+    }
+
+
+def _extract_error_details(exc: WorkspaceError) -> list[dict[str, str]]:
+    if not isinstance(exc, WorkspaceStateError):
+        return []
+    return [
+        {
+            "path": issue.path,
+            "message": issue.message,
+        }
+        for issue in exc.errors
+    ]
 
 
 class _PublicCommandSubparsers:
