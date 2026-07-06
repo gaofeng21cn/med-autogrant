@@ -42,13 +42,14 @@ test-proof:
 	MAG_CLEAN_RUNNER_UV_EXTRA=proof $(PYTEST_CLEAN) -q -m proof
 
 test-structure:
-	make test-line-budget
-	./scripts/run-structural-quality-gate.sh --advisory
+	$(MAKE) test-line-budget
+	$(MAKE) test-generated-aggregate-sources
+	$(MAKE) test-source-purity-strict
 
 test-structure-strict:
-	make test-line-budget-strict
+	$(MAKE) test-line-budget-strict
 	$(MAKE) test-source-purity-strict
-	./scripts/run-structural-quality-gate.sh --strict
+	$(MAKE) test-generated-aggregate-sources
 
 test-full:
 	$(PYTEST_CLEAN) -q -m "not proof"

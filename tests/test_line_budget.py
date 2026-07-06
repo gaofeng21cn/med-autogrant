@@ -95,7 +95,8 @@ def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
 
     assert "python scripts/line_budget.py" not in verify_script
     assert "make test-fast" in verify_script
-    assert makefile.count("$(MAKE) test-line-budget") == 1
+    assert verify_script.count("make test-fast") == 1
+    assert "$(MAKE) test-line-budget" in makefile
     assert "test-line-budget-strict:" in makefile
     assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" in makefile
     assert makefile.index("$(MAKE) test-line-budget") < makefile.index(

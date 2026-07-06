@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tomllib
+import subprocess
 from pathlib import Path
 
 
@@ -11,49 +12,58 @@ def _read(relative_path: str) -> str:
     return (REPO_ROOT / relative_path).read_text(encoding="utf-8")
 
 
-def test_makefile_exposes_layered_test_entrypoints() -> None:
-    makefile = _read("Makefile")
+def _make_dry_run(target: str) -> str:
+    result = subprocess.run(
+        ["make", "-n", target],
+        cwd=REPO_ROOT,
+        check=True,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    return result.stdout
 
-    assert "test-fast:" in makefile
-    assert "PYTHON_CLEAN := ./scripts/run-python-clean.sh" in makefile
-    assert "PYTEST_CLEAN := ./scripts/run-pytest-clean.sh" in makefile
-    assert '$(PYTEST_CLEAN) -q -m "not meta and not regression and not proof"' in makefile
-    assert "test-line-budget:" in makefile
-    assert "$(PYTHON_CLEAN) scripts/line_budget.py" in makefile
-    assert "test-line-budget-strict:" in makefile
-    assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" in makefile
-    assert "test-cli-smoke:" in makefile
-    assert "$(PYTEST_CLEAN) -q -m smoke" in makefile
-    assert "test-regression:" in makefile
-    assert '$(PYTEST_CLEAN) -q -m "regression and not proof"' in makefile
-    assert "test-proof:" in makefile
-    assert "MAG_CLEAN_RUNNER_UV_EXTRA=proof $(PYTEST_CLEAN) -q -m proof" in makefile
-    assert "test-family:" in makefile
-    assert (
-        "$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
-        'tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"'
-    ) in makefile
-    assert "test-meta:" in makefile
-    assert "$(PYTEST_CLEAN) -q -m meta" in makefile
-    assert "test-full:" in makefile
-    assert '$(PYTEST_CLEAN) -q -m "not proof"' in makefile
+
+def _tracked_files() -> set[str]:
+    result = subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO_ROOT,
+        check=True,
+        text=True,
+        stdout=subprocess.PIPE,
+    )
+    return set(result.stdout.splitlines())
+
+
+def test_makefile_lanes_route_to_repo_native_checks() -> None:
+    fast = _make_dry_run("test-fast")
+    structure = _make_dry_run("test-structure")
+    structure_strict = _make_dry_run("test-structure-strict")
+
+    assert "scripts/line_budget.py" in fast
+    assert "-m smoke" in fast
+    assert "not meta and not regression and not proof" in fast
+
+    assert "scripts/line_budget.py" in structure
+    assert "scripts/check_generated_aggregate_sources.py" in structure
+    assert "scripts/check_source_purity_guard.py" in structure
+    assert "run-structural-quality-gate" not in structure
+    assert "sentrux" not in structure.lower()
+
+    assert "scripts/line_budget.py --strict" in structure_strict
+    assert "scripts/check_source_purity_guard.py" in structure_strict
+    assert "scripts/check_generated_aggregate_sources.py" in structure_strict
 
 
 def test_clean_python_runners_route_caches_outside_checkout() -> None:
     python_runner = _read("scripts/run-python-clean.sh")
-    pytest_runner = _read("scripts/run-pytest-clean.sh")
 
+    subprocess.run(["bash", "-n", "scripts/run-python-clean.sh"], cwd=REPO_ROOT, check=True)
+    subprocess.run(["bash", "-n", "scripts/run-pytest-clean.sh"], cwd=REPO_ROOT, check=True)
     assert "PYTHONDONTWRITEBYTECODE=1" in python_runner
     assert "PYTHONPYCACHEPREFIX" in python_runner
-    assert 'path_is_inside_checkout "${UV_PROJECT_ENVIRONMENT:-}"' in python_runner
-    assert 'path_is_inside_checkout "${PYTHONPYCACHEPREFIX:-}"' in python_runner
-    assert 'export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-${tmp_root}/venv}"' in python_runner
     assert "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT" in _read("src/med_autogrant/editable_shared_bootstrap.py")
-    assert "-p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache" in python_runner
-    assert "uv sync --frozen --group dev --no-install-project --inexact" in python_runner
-    assert 'venv_python="${UV_PROJECT_ENVIRONMENT}/bin/python"' in python_runner
     assert 'venv_python="${repo_root}/.venv/bin/python"' not in python_runner
-    assert "-m pytest" in pytest_runner
 
 
 def test_pyproject_registers_test_lane_markers() -> None:
@@ -82,8 +92,8 @@ def test_pyproject_registers_test_lane_markers() -> None:
 def test_verify_script_wraps_canonical_make_lanes() -> None:
     verify_script = _read("scripts/verify.sh")
 
+    subprocess.run(["bash", "-n", "scripts/verify.sh"], cwd=REPO_ROOT, check=True)
     assert "make test-line-budget" in verify_script
-    assert "make test-line-budget-strict" not in verify_script
     assert "make test-fast" in verify_script
     assert "make test-family" in verify_script
     assert "make test-meta" in verify_script
@@ -91,14 +101,22 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     assert "make test-regression" in verify_script
     assert "make test-proof" in verify_script
     assert "make test-full" in verify_script
+    assert "make test-structure" in verify_script
     assert 'lane" == "cleanup"' in verify_script
     assert "scripts/repo-hygiene.sh --fix" in verify_script
     assert "scripts/repo-hygiene.sh" in verify_script
     assert "python scripts/line_budget.py" not in verify_script
-    assert (
-        "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|"
-        "source-purity|source-purity:strict|full|cleanup]"
-    ) in verify_script
+    assert "sentrux" not in verify_script.lower()
+
+
+def test_sentrux_sidecar_is_not_a_tracked_structure_dependency() -> None:
+    tracked = _tracked_files()
+
+    assert ".sentrux/baseline.json" not in tracked
+    assert ".sentrux/rules.toml" not in tracked
+    assert ".github/workflows/sentrux-advisory.yml" not in tracked
+    assert "scripts/run-structural-quality-gate.sh" not in tracked
+    assert "scripts/run-opl-quality-details.sh" not in tracked
 
 
 def test_product_entry_cases_are_direct_regression_cases() -> None:

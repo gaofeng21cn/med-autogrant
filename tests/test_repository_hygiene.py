@@ -115,7 +115,7 @@ class RepositoryHygieneTest(unittest.TestCase):
         agent_paths = [path for path in _tracked_files() if path.startswith(".agents/")]
 
         self.assertEqual(agent_paths, [])
-        self.assertTrue((REPO_ROOT / "plugins" / "mag" / ".codex-plugin" / "plugin.json").is_file())
+        self.assertTrue((REPO_ROOT / "plugins" / "med-autogrant" / ".codex-plugin" / "plugin.json").is_file())
 
     def test_pyproject_pins_opl_harness_shared_to_a_full_commit(self) -> None:
         pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
