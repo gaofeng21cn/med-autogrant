@@ -14,6 +14,9 @@ from med_autogrant.foundry_series_cli import (
     build_foundry_series_validate,
 )
 from med_autogrant import mainline_status
+from med_autogrant.product_entry_parts.receipt_readiness import (
+    build_receipt_readiness_projection,
+)
 from med_autogrant.product_entry_parts.source_purity_guard_readback import (
     build_source_purity_guard_readback,
 )
@@ -182,7 +185,7 @@ def handle_product_live_acceptance_receipt(args: argparse.Namespace) -> dict[str
 
 
 def handle_product_receipt_readiness(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_receipt_readiness_projection(
+    return build_receipt_readiness_projection(
         owner_receipt_evidence_items=[
             _read_json_object(receipt_path)
             for receipt_path in args.owner_receipt_evidence

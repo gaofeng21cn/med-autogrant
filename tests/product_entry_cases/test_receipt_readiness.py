@@ -86,9 +86,11 @@ class ProductEntryReceiptReadinessTest(unittest.TestCase):
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
     def test_missing_receipts_project_missing_without_quality_authority(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.receipt_readiness import (
+            build_receipt_readiness_projection,
+        )
 
-        projection = MedAutoGrantProductEntry().build_receipt_readiness_projection(
+        projection = build_receipt_readiness_projection(
             owner_receipt_evidence_items=[],
             memory_receipt_items=[],
             package_lifecycle_items=[],
@@ -205,9 +207,10 @@ class ProductEntryReceiptReadinessTest(unittest.TestCase):
             package_lifecycle_path.write_text(json.dumps(package_lifecycle), encoding="utf-8")
             lifecycle_receipt_path.write_text(json.dumps(lifecycle_receipt), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_receipt_readiness_projection.return_value = expected_payload
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_receipt_readiness_projection",
+                return_value=expected_payload,
+            ) as build_receipt_readiness:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -227,7 +230,7 @@ class ProductEntryReceiptReadinessTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_receipt_readiness_projection.assert_called_once_with(
+        build_receipt_readiness.assert_called_once_with(
             owner_receipt_evidence_items=[owner_receipt],
             memory_receipt_items=[memory_receipt],
             package_lifecycle_items=[package_lifecycle],

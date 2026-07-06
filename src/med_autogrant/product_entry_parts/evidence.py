@@ -26,14 +26,8 @@ from med_autogrant.product_entry_parts.external_evidence_ledger import (
 from med_autogrant.product_entry_parts.hosted_receipt_verification import (
     build_focused_hosted_receipt_verification,
 )
-from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
-    build_lifecycle_receipt_bundle,
-)
 from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
     build_manifest_sustained_consumption_payload_response,
-)
-from med_autogrant.product_entry_parts.memory_receipt_projection import (
-    build_memory_receipt_read_projection,
 )
 from med_autogrant.product_entry_parts.operator_closeout import (
     build_operator_closeout_readiness_projection,
@@ -49,9 +43,6 @@ from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
 )
-from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
-    build_package_lifecycle_handoff_projection,
-)
 from med_autogrant.product_entry_parts.physical_morphology_guard import (
     build_physical_morphology_guard_projection,
 )
@@ -60,9 +51,6 @@ from med_autogrant.product_entry_parts.production_live_acceptance import (
 )
 from med_autogrant.product_entry_parts.receipt_observability import (
     build_controlled_soak_receipt_observability_summary,
-)
-from med_autogrant.product_entry_parts.receipt_readiness import (
-    build_receipt_readiness_projection,
 )
 from med_autogrant.product_entry_parts.stage_attempt_observability import (
     build_stage_attempt_observability_projection,
@@ -260,22 +248,6 @@ class ProductEntryEvidenceMixin:
             domain_handler_closeout_result=domain_handler_closeout_result,
         )
 
-    def build_lifecycle_receipt_bundle(
-        self,
-        *,
-        lifecycle_receipt_evidence_items: list[Mapping[str, Any]],
-    ) -> dict[str, Any]:
-        return build_lifecycle_receipt_bundle(
-            lifecycle_receipt_evidence_items=lifecycle_receipt_evidence_items,
-        )
-
-    def build_memory_receipt_read_projection(
-        self,
-        *,
-        receipt_items: list[Mapping[str, Any]],
-    ) -> dict[str, Any]:
-        return build_memory_receipt_read_projection(receipt_items)
-
     def build_external_evidence_consumption_ledger(
         self,
         *,
@@ -285,38 +257,6 @@ class ProductEntryEvidenceMixin:
         return build_external_evidence_consumption_ledger(
             external_evidence_request_pack=external_evidence_request_pack,
             evidence_receipts=evidence_receipts,
-        )
-
-    def build_package_lifecycle_handoff_projection(
-        self,
-        *,
-        package_refs: Mapping[str, Any],
-        gap_report: Mapping[str, Any],
-        export_verdict: Mapping[str, Any],
-        manual_portal_boundary: Mapping[str, Any],
-        lifecycle_receipt_refs: Mapping[str, Any],
-    ) -> dict[str, Any]:
-        return build_package_lifecycle_handoff_projection(
-            package_refs=package_refs,
-            gap_report=gap_report,
-            export_verdict=export_verdict,
-            manual_portal_boundary=manual_portal_boundary,
-            lifecycle_receipt_refs=lifecycle_receipt_refs,
-        )
-
-    def build_receipt_readiness_projection(
-        self,
-        *,
-        owner_receipt_evidence_items: list[Mapping[str, Any]],
-        memory_receipt_items: list[Mapping[str, Any]],
-        package_lifecycle_items: list[Mapping[str, Any]],
-        lifecycle_receipt_items: list[Mapping[str, Any]],
-    ) -> dict[str, Any]:
-        return build_receipt_readiness_projection(
-            owner_receipt_evidence_items=owner_receipt_evidence_items,
-            memory_receipt_items=memory_receipt_items,
-            package_lifecycle_items=package_lifecycle_items,
-            lifecycle_receipt_items=lifecycle_receipt_items,
         )
 
     def build_codex_stage_execution_receipt_bundle(

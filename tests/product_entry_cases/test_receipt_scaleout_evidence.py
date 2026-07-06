@@ -5,6 +5,15 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
+    build_lifecycle_receipt_bundle,
+)
+from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
+    build_package_lifecycle_handoff_projection,
+)
+from med_autogrant.product_entry_parts.receipt_readiness import (
+    build_receipt_readiness_projection,
+)
 from product_entry_cases.support import (
     CRITIQUE_EXAMPLE_PATH,
     FROZEN_EXAMPLE_PATH,
@@ -137,7 +146,7 @@ def _lifecycle_bundle_for_sample(
             ("retention", "no_regression_evidence"),
         )
     ]
-    return entry.build_lifecycle_receipt_bundle(
+    return build_lifecycle_receipt_bundle(
         lifecycle_receipt_evidence_items=receipts,
     )["lifecycle_receipt_bundle"]
 
@@ -157,7 +166,7 @@ def _package_lifecycle_for_sample(
     attempt_root = f"{stage_root}/attempts/attempt-{sample_id}"
     lifecycle_receipt_refs = dict(lifecycle_bundle["receipt_refs"])
     lifecycle_receipt_refs["lifecycle_receipt_ref"] = lifecycle_receipt_refs["retention"]
-    return entry.build_package_lifecycle_handoff_projection(
+    return build_package_lifecycle_handoff_projection(
         package_refs={
             "artifact_bundle_ref": f"mag-package://receipt-scaleout/{sample_id}/artifact-bundle",
             "final_package_ref": f"mag-package://receipt-scaleout/{sample_id}/final-package",
@@ -255,7 +264,7 @@ def _build_scaleout_payload() -> tuple[dict[str, object], dict[str, object], dic
             lifecycle_bundles.append(lifecycle_bundle)
             package_lifecycle_items.append(package_lifecycle)
 
-        readiness = entry.build_receipt_readiness_projection(
+        readiness = build_receipt_readiness_projection(
             owner_receipt_evidence_items=owner_receipts,
             memory_receipt_items=memory_receipts,
             package_lifecycle_items=package_lifecycle_items,
