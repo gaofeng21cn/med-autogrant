@@ -21,6 +21,8 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 facade cleanup：`product_entry_contract_api.py` 与 `workspace_parts.py` 已作为 bridge/facade 退役，内部 caller 直接读取 `domain_runtime_parts` 和 workspace focused owner modules；`opl_standard_pack_source_policy.py` 仍按 active import surface 保留，不作为本轮删除对象。
 
+2026-07-07 wrapper/test portfolio cleanup：CLI registry 删除未注册历史 handler wrapper，保留正式 direct CLI entry 与 `receipt-readiness` leaf projection；receipt/readiness evidence tests 不再通过 `ProductEntryEvidenceMixin` 的一行转调 wrapper 镜像 leaf builder，改为直接覆盖 leaf contract；active-path / functional-closure structure tests 不再锁定完整历史清单或 builder module inventory，只保留 no-resurrection、authority boundary、ref-only handoff 和 forbidden output class sentinel。该 cleanup 说明测试组合不应替旧 wrapper 保活；它不改变仍有 active caller 的 product/status/user-loop/domain_handler/control_plane/lifecycle 删除门。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |
