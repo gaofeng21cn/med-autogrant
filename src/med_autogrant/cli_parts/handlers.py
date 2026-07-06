@@ -119,70 +119,12 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "stage-route-report", "input_path": args.input})
 
 
-def handle_grant_progress(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().read_grant_progress(input_path=args.input)
-
-
-def handle_grant_cockpit(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().read_grant_cockpit(input_path=args.input)
-
-
 def handle_mainline_status(args: argparse.Namespace) -> dict[str, Any]:
     return mainline_status.read_mainline_status()
 
 
 def handle_mainline_phase(args: argparse.Namespace) -> dict[str, Any]:
     return mainline_status.read_mainline_phase_status(args.phase)
-
-
-def handle_grant_direct_entry(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_grant_direct_entry(
-        input_path=args.input,
-        task_intent=args.task_intent,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_grant_user_loop(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_grant_user_loop(
-        input_path=args.input,
-        task_intent=args.task_intent,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_skill_catalog(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_skill_catalog(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_entry_manifest(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_manifest(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_status(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_status(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_preflight(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_preflight(
-        input_path=args.input,
-    )
-
-
-def handle_product_start(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_start(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
 
 
 def handle_domain_handler_export(args: argparse.Namespace) -> dict[str, Any]:
@@ -231,87 +173,11 @@ def handle_product_owner_receipt_evidence(args: argparse.Namespace) -> dict[str,
     )
 
 
-def handle_product_lifecycle_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().write_lifecycle_receipt_evidence(
-        input_path=args.input,
-        operation=args.operation,
-        receipt_shape=args.receipt_shape,
-        source_ref=args.source_ref,
-        closeout_summary=args.closeout_summary,
-        runtime_root=args.runtime_root,
-        receipt_id=args.receipt_id,
-    )
-
-
-def handle_product_receipt_reconciliation_proof(args: argparse.Namespace) -> dict[str, Any]:
-    domain_handler_closeout_result = None
-    if args.domain_handler_closeout_result is not None:
-        domain_handler_closeout_result = _read_json_object(args.domain_handler_closeout_result)
-    return _product_entry().build_controlled_soak_receipt_reconciliation_proof(
-        owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
-        opl_ledger_ref=args.opl_ledger_ref,
-        domain_handler_closeout_result=domain_handler_closeout_result,
-    )
-
-
-def handle_product_receipt_reconciliation_inventory(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_controlled_soak_receipt_reconciliation_inventory(
-        owner_receipt_evidence_items=[
-            _read_json_object(owner_receipt_path)
-            for owner_receipt_path in args.owner_receipt_evidence
-        ],
-        opl_ledger_ref=args.opl_ledger_ref,
-        domain_handler_closeout_results=[
-            _read_json_object(domain_handler_closeout_path)
-            for domain_handler_closeout_path in args.domain_handler_closeout_result or []
-        ],
-    )
-
-
-def handle_product_focused_hosted_receipt_verification(args: argparse.Namespace) -> dict[str, Any]:
-    domain_handler_closeout_result = None
-    if args.domain_handler_closeout_result is not None:
-        domain_handler_closeout_result = _read_json_object(args.domain_handler_closeout_result)
-    return _product_entry().build_focused_hosted_receipt_verification(
-        owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
-        opl_attempt_evidence=_read_json_object(args.opl_attempt_evidence),
-        domain_handler_closeout_result=domain_handler_closeout_result,
-    )
-
-
 def handle_product_live_acceptance_receipt(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_production_live_acceptance_receipt_projection(
         owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
         agent_lab_suite_result=_read_json_object(args.agent_lab_suite_result),
         meta_agent_coordination_result=_read_json_object(args.meta_agent_coordination_result),
-    )
-
-
-def handle_product_lifecycle_receipt_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_lifecycle_receipt_bundle(
-        lifecycle_receipt_evidence_items=[
-            _read_json_object(lifecycle_receipt_path)
-            for lifecycle_receipt_path in args.lifecycle_receipt_evidence
-        ],
-    )
-
-
-def handle_product_memory_receipt_projection(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_memory_receipt_read_projection(
-        receipt_items=[
-            _read_json_object(receipt_path)
-            for receipt_path in args.receipt
-        ],
-    )
-
-
-def handle_product_package_lifecycle_handoff(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_package_lifecycle_handoff_projection(
-        package_refs=_read_json_object(args.package_refs),
-        gap_report=_read_json_object(args.gap_report),
-        export_verdict=_read_json_object(args.export_verdict),
-        manual_portal_boundary=_read_json_object(args.manual_portal_boundary),
-        lifecycle_receipt_refs=_read_json_object(args.lifecycle_receipt_refs),
     )
 
 
@@ -336,28 +202,6 @@ def handle_product_receipt_readiness(args: argparse.Namespace) -> dict[str, Any]
     )
 
 
-def handle_product_continuous_receipt_reconciliation(args: argparse.Namespace) -> dict[str, Any]:
-    receipt_observability_summary = None
-    if args.receipt_observability_summary is not None:
-        receipt_observability_summary = _read_json_object(args.receipt_observability_summary)
-    stage_attempt_observability_projection = None
-    if args.stage_attempt_observability_projection is not None:
-        stage_attempt_observability_projection = _read_json_object(
-            args.stage_attempt_observability_projection
-        )
-    return _product_entry().build_continuous_receipt_reconciliation_snapshot(
-        focused_hosted_receipt_verification_items=[
-            _read_json_object(verification_path)
-            for verification_path in args.hosted_receipt_verification
-        ],
-        receipt_reconciliation_inventory=_read_json_object(
-            args.receipt_reconciliation_inventory
-        ),
-        receipt_observability_summary=receipt_observability_summary,
-        stage_attempt_observability_projection=stage_attempt_observability_projection,
-    )
-
-
 def handle_product_codex_stage_receipts(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_codex_stage_execution_receipt_bundle(
         stage_id=args.stage_id,
@@ -369,14 +213,6 @@ def handle_product_codex_stage_receipts(args: argparse.Namespace) -> dict[str, A
             _read_json_object(attempt_path)
             for attempt_path in args.review_attempt
         ],
-    )
-
-
-def handle_product_operator_closeout_readiness(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_operator_closeout_readiness_projection(
-        production_acceptance=_read_json_object(args.production_acceptance),
-        external_evidence_receipt_ledger=_read_json_object(args.external_evidence_receipt_ledger),
-        receipt_readiness_projection=_read_json_object(args.receipt_readiness_projection),
     )
 
 
@@ -603,16 +439,6 @@ def handle_build_submission_ready_package(args: argparse.Namespace) -> dict[str,
             "input_path": args.input,
             "output_dir": args.output_dir,
         }
-    )
-
-
-def handle_build_product_entry(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build(
-        input_path=args.input,
-        entry_mode=args.entry_mode,
-        task_intent=args.task_intent,
-        output_path=args.output,
-        funding_call=args.funding_call,
     )
 
 

@@ -29,18 +29,6 @@ def _add_workspace_command(
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
-def _add_output_workspace_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output", required=True)
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
 def _add_initialize_intake_workspace_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -98,31 +86,6 @@ def _add_phase_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--phase", required=True)
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-def _add_direct_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--task-intent", required=True)
-    command.add_argument("--funding-call")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-def _add_manifest_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--funding-call")
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
@@ -232,21 +195,6 @@ def _add_submission_ready_package_command(
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
-def _add_product_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--entry-mode", required=True, choices=("direct", "opl-handoff"))
-    command.add_argument("--task-intent", required=True)
-    command.add_argument("--funding-call")
-    command.add_argument("--output")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
 def _add_domain_handler_export_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -331,56 +279,6 @@ def _add_product_owner_receipt_evidence_command(
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
-def _add_product_lifecycle_receipt_evidence_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--operation", required=True, choices=("cleanup", "restore", "retention"))
-    command.add_argument(
-        "--receipt-shape",
-        required=True,
-        choices=("domain_owner_receipt", "typed_blocker", "no_regression_evidence"),
-    )
-    command.add_argument("--source-ref", required=True)
-    command.add_argument("--closeout-summary", required=True)
-    command.add_argument("--runtime-root")
-    command.add_argument("--receipt-id")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_receipt_reconciliation_proof_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--owner-receipt-evidence", required=True)
-    command.add_argument("--opl-ledger-ref", required=True)
-    command.add_argument("--domain_handler-closeout-result")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_receipt_reconciliation_inventory_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--owner-receipt-evidence", required=True, action="append")
-    command.add_argument("--opl-ledger-ref", required=True)
-    command.add_argument("--domain_handler-closeout-result", action="append")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
 def _add_product_live_acceptance_receipt_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -391,60 +289,6 @@ def _add_product_live_acceptance_receipt_command(
     command.add_argument("--owner-receipt-evidence", required=True)
     command.add_argument("--agent-lab-suite-result", required=True)
     command.add_argument("--meta-agent-coordination-result", required=True)
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_focused_hosted_receipt_verification_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--owner-receipt-evidence", required=True)
-    command.add_argument("--opl-attempt-evidence", required=True)
-    command.add_argument("--domain_handler-closeout-result")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_lifecycle_receipt_bundle_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--lifecycle-receipt-evidence", required=True, action="append")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_memory_receipt_projection_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--receipt", required=True, action="append")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_package_lifecycle_handoff_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--package-refs", required=True)
-    command.add_argument("--gap-report", required=True)
-    command.add_argument("--export-verdict", required=True)
-    command.add_argument("--manual-portal-boundary", required=True)
-    command.add_argument("--lifecycle-receipt-refs", required=True)
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
@@ -464,21 +308,6 @@ def _add_product_receipt_readiness_command(
     command.set_defaults(handler=handler)
 
 
-def _add_product_continuous_receipt_reconciliation_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--hosted-receipt-verification", required=True, action="append")
-    command.add_argument("--receipt-reconciliation-inventory", required=True)
-    command.add_argument("--receipt-observability-summary")
-    command.add_argument("--stage-attempt-observability-projection")
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
 def _add_product_codex_stage_receipts_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -489,20 +318,6 @@ def _add_product_codex_stage_receipts_command(
     command.add_argument("--stage-id", required=True)
     command.add_argument("--execution-attempt", required=True, action="append")
     command.add_argument("--review-attempt", action="append", default=[])
-    _add_format_argument(command)
-    command.set_defaults(handler=handler)
-
-
-def _add_product_operator_closeout_readiness_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--production-acceptance", required=True)
-    command.add_argument("--external-evidence-receipt-ledger", required=True)
-    command.add_argument("--receipt-readiness-projection", required=True)
     _add_format_argument(command)
     command.set_defaults(handler=handler)
 
