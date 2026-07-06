@@ -23,11 +23,6 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "package",
 )
 
-PUBLIC_GROUP_ALIASES: Final[dict[str, str]] = {
-    "grant": "workspace",
-    "work": "pass",
-}
-
 INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "foundry-status": ("foundry", "status"),
     "foundry-inspect": ("foundry", "inspect"),
@@ -81,12 +76,6 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "build-final-package": ("package", "final-package"),
     "build-hosted-contract-bundle": ("package", "hosted-contract-bundle"),
     "build-submission-ready-package": ("package", "submission-ready"),
-}
-
-PUBLIC_TOP_LEVEL_COMMANDS: Final[dict[str, str]] = {
-    subcommand: internal
-    for internal, (group, subcommand) in INTERNAL_TO_PUBLIC_COMMAND.items()
-    if group == "foundry"
 }
 
 GENERATED_SURFACE_COMMAND_REFS: Final[dict[str, str]] = {

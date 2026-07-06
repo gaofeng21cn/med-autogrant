@@ -143,17 +143,8 @@ def test_repo_local_clean_runner_is_cwd_independent(tmp_path: Path) -> None:
 
 
 @pytest.mark.smoke
-def test_top_level_status_alias_dispatches_foundry_status() -> None:
-    payload = _run_json_cli("status", "--format", "json")
-
-    assert payload["command"] == "foundry-status"
-    assert payload["status"]["public_command_surface"] == "medautogrant foundry"
-    assert "public_frontdoor" not in payload["status"]
-
-
-@pytest.mark.smoke
-def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
-    payload = _run_json_cli("interfaces", "--json")
+def test_foundry_interfaces_exposes_canonical_grouped_cli() -> None:
+    payload = _run_json_cli("foundry", "interfaces", "--json")
 
     assert payload["command"] == "foundry-interfaces"
     assert payload["interfaces"]["ordinary_series_spine"] == [
@@ -175,26 +166,13 @@ def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
         "connect",
     ]
     assert "ordinary_public_frontdoor_spine" not in payload["interfaces"]
-    assert payload["interfaces"]["alias_groups"] == {"grant": "workspace", "work": "pass"}
-    assert payload["interfaces"]["mag_domain_aliases"]["authority"] == "vault"
-    assert payload["interfaces"]["mag_domain_aliases"]["domain-handler"] == "connect"
     assert "validate" in payload["interfaces"]["commands_by_group"]["workspace"]
     assert "revision" in payload["interfaces"]["commands_by_group"]["pass"]
 
 
 @pytest.mark.smoke
-def test_grant_and_work_aliases_dispatch_existing_public_groups() -> None:
-    validate_payload = _run_json_cli(
-        "grant",
-        "validate",
-        "--input",
-        str(CRITIQUE_EXAMPLE_PATH),
-        "--format",
-        "json",
-    )
-    assert validate_payload["command"] == "validate-workspace"
-
-    exit_code, stdout, stderr = _run_cli("work", "--help")
+def test_pass_group_help_renders_canonical_commands() -> None:
+    exit_code, stdout, stderr = _run_cli("pass", "--help")
     assert exit_code == 0
     assert stderr == ""
     assert "revision" in stdout
@@ -203,7 +181,7 @@ def test_grant_and_work_aliases_dispatch_existing_public_groups() -> None:
 
 @pytest.mark.smoke
 def test_foundry_validate_checks_command_surface_contract() -> None:
-    payload = _run_json_cli("validate", "--format", "json")
+    payload = _run_json_cli("foundry", "validate", "--format", "json")
 
     assert payload["command"] == "foundry-validate"
     assert payload["validation"]["ok"] is True

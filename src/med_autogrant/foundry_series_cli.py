@@ -8,7 +8,6 @@ from med_autogrant.public_cli import (
     GENERATED_SURFACE_COMMAND_REFS,
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
-    PUBLIC_GROUP_ALIASES,
     PUBLIC_GROUP_COMMANDS,
 )
 
@@ -37,8 +36,6 @@ def build_foundry_series_status() -> dict[str, Any]:
             "executable_command_surfaces": ["medautogrant"],
             "brand_shorthand": "mag",
             "brand_shorthand_path_safe": False,
-            "top_level_shortcuts": list(EXPECTED_OPERATIONS),
-            "alias_groups": dict(PUBLIC_GROUP_ALIASES),
         },
     )
 
@@ -74,15 +71,6 @@ def build_foundry_series_interfaces() -> dict[str, Any]:
             "ordinary_operations": list(EXPECTED_OPERATIONS),
             "ordinary_series_spine": list(ORDINARY_SERIES_SPINE),
             "ordinary_command_spine": list(ORDINARY_SERIES_SPINE),
-            "alias_groups": dict(PUBLIC_GROUP_ALIASES),
-            "mag_domain_aliases": {
-                "grant": "workspace",
-                "mainline": "run_status",
-                "domain-handler": "connect",
-                "authority": "vault",
-                "pass": "work",
-                "package": "handoff",
-            },
             "group_summaries": {
                 group: PUBLIC_COMMAND_GROUP_SUMMARIES[group] for group in PUBLIC_GROUP_COMMANDS
             },

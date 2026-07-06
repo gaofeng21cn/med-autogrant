@@ -12,9 +12,7 @@ from med_autogrant.public_cli import (
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
-    PUBLIC_GROUP_ALIASES,
     PUBLIC_GROUP_COMMANDS,
-    PUBLIC_TOP_LEVEL_COMMANDS,
 )
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
@@ -132,10 +130,6 @@ class _PublicCommandSubparsers:
         group, subcommand = public_tokens
         command = self._group_subparsers_for(group).add_parser(subcommand, **kwargs)
         command.set_defaults(command=name)
-        if group == "foundry" and subcommand in PUBLIC_TOP_LEVEL_COMMANDS:
-            alias = self._root_subparsers.add_parser(subcommand, **kwargs)
-            alias.set_defaults(command=name)
-            return _MirrorArgumentParser(primary=command, mirrors=(alias,))
         return command
 
     def _group_subparsers_for(
@@ -145,14 +139,8 @@ class _PublicCommandSubparsers:
         existing = self._group_subparsers.get(group)
         if existing is not None:
             return existing
-        aliases = [
-            alias
-            for alias, target_group in PUBLIC_GROUP_ALIASES.items()
-            if target_group == group
-        ]
         group_parser = self._root_subparsers.add_parser(
             group,
-            aliases=aliases,
             help=PUBLIC_COMMAND_GROUP_SUMMARIES[group],
         )
         group_subparsers = group_parser.add_subparsers(
@@ -161,31 +149,6 @@ class _PublicCommandSubparsers:
         )
         self._group_subparsers[group] = group_subparsers
         return group_subparsers
-
-
-class _MirrorArgumentParser:
-    def __init__(
-        self,
-        *,
-        primary: argparse.ArgumentParser,
-        mirrors: tuple[argparse.ArgumentParser, ...],
-    ) -> None:
-        self._primary = primary
-        self._mirrors = mirrors
-
-    def __getattr__(self, name: str) -> object:
-        return getattr(self._primary, name)
-
-    def add_argument(self, *args: object, **kwargs: object) -> object:
-        result = self._primary.add_argument(*args, **kwargs)
-        for mirror in self._mirrors:
-            mirror.add_argument(*args, **kwargs)
-        return result
-
-    def set_defaults(self, **kwargs: object) -> None:
-        self._primary.set_defaults(**kwargs)
-        for mirror in self._mirrors:
-            mirror.set_defaults(**kwargs)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -529,7 +492,6 @@ def _print_public_help() -> None:
             "Examples:",
             "  medautogrant foundry status --format json",
             "  <med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --json",
-            "  medautogrant status --json",
             "  medautogrant workspace validate --input <workspace-path> --format json",
             "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
@@ -558,7 +520,6 @@ def _maybe_handle_public_help(argv: list[str]) -> int | None:
         _print_public_help()
         return 0
     group = argv[0]
-    group = PUBLIC_GROUP_ALIASES.get(group, group)
     if group in PUBLIC_GROUP_COMMANDS and (len(argv) == 1 or argv[1] in {"-h", "--help", "help"}):
         _print_public_group_help(group)
         return 0
