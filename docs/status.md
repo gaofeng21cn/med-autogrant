@@ -28,6 +28,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 无论从 direct path 还是 OPL 托管 path 进入，执行都必须回到 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。OPL 持有 Temporal-backed provider runtime、typed queue、scheduler / daemon、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。
 
+2026-07-06 OPL caller 读回：`one-person-lab` lane `cc1f46f0b` 已把 OPL Connect module exec 的 MAG caller 改为 `<checkout>/scripts/run-python-clean.sh -m med_autogrant.cli ...`，不再通过 `uv run --directory <checkout> medautogrant ...` 进入。该证据只说明 OPL module exec caller 与 MAG clean runner 对齐；physical cleanup 仍需 generated/default caller consumption、direct/hosted parity、owner receipt/typed blocker roundtrip、continuous no-forbidden-write 与 explicit MAG physical-delete owner receipt。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。
