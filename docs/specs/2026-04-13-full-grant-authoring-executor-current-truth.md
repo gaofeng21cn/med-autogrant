@@ -99,7 +99,7 @@ Last reviewed: `2026-06-12`
 - `frozen`
   - 当前是 deterministic domain freeze pass
 
-因此当前 landed 的是“完整可执行 route truth”，不是“所有单步都已经 Hermes-native”。
+因此当前 landed 的是“完整可执行 route truth”，不是“所有单步都已经迁成 `hermes_agent` 非默认 executor lane”。
 
 ### 5. `pending_handoff_requirements` 已退出当前主线 route output
 
@@ -138,4 +138,4 @@ Last reviewed: `2026-06-12`
 
 - 不表示 mature direct grant Web UI / hosted runtime 已完成
 - 不表示旧 `OPL Gateway` landed wording 是 current owner line；它只保留为 provenance
-- 不表示所有 landed route 都已经自动变成 Hermes-native full agent loop
+- 不表示所有 landed route 都已经自动变成 `hermes_agent` 非默认 full agent loop

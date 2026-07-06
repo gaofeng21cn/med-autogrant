@@ -9,7 +9,7 @@ Machine boundary: 本文是人读项目概览。机器真相继续归 `contracts
 
 `Med Auto Grant` 是独立的医学 `Grant Ops` domain agent，面向 author-side、proposal-facing 的基金申请写作主线。对外第一主语是单一 `Med Auto Grant` app skill；repo-local formal entry 仍是 `CLI` / `MedAutoGrantDomainEntry`，用于给 Codex、OPL 和其他通用 agent 按 contract 调用。
 
-任务启动后的默认运行驻留由 OPL/Temporal hosted autonomous runtime 承担；MAG 不实现自己的 daemon、scheduler、attempt loop 或 attempt ledger。默认具体 stage executor 是 `Codex CLI` / `codex_cli`；`Hermes-Agent` 等只作为显式非默认 executor / proof lane 接入，并必须产出可审计 receipt。
+任务启动后的默认运行驻留由 OPL/Temporal hosted autonomous runtime 承担；MAG 不实现自己的 daemon、scheduler、attempt loop、attempt ledger 或 executor substrate。默认具体 stage executor 是 `Codex CLI` / `codex_cli`；`Hermes-Agent` 等只作为 OPL-owned 显式非默认 executor backend / proof lane 接入，并必须产出可审计 receipt。MAG 只声明和消费对应 request / receipt vocabulary，不管理 backend helper/runtime implementation。
 
 MAG 保留 grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt、typed blocker 与 grant-native helper。OPL 只消费 MAG 暴露的 descriptor、projection、refs、owner receipt 和 typed blocker，用于 stage-led runtime、queue/wakeup、handoff、receipt、operator projection、shared contracts/indexes 和 generated/App surfaces；OPL 不生成 grant route、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
 
