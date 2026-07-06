@@ -32,7 +32,7 @@
       "submission/export authority"
     ],
     "non_default_runtime_context": [
-      "Hermes-Agent remains explicit hosted/proof/provider provenance",
+      "`hermes_agent` remains explicit OPL non-default executor backend / receipt vocabulary",
       "OPL Runtime Manager wording remains historical/provider-specific migration context"
     ]
   },
@@ -101,7 +101,7 @@
         "fundability judgment owner",
         "authoring quality verdict owner",
         "submission-ready export authority",
-        "private Hermes-Agent fork"
+        "Hermes executor implementation or backend config in MAG"
       ],
       "standard_domain_agent_skeleton": {
         "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
@@ -659,22 +659,25 @@
     "non_default_executor_requires_explicit_selection": true,
     "non_default_executor_forbids_silent_codex_fallback": true
   },
-  "experimental_executor_proofs": [
+  "non_default_executor_receipt_lanes": [
     {
       "route_id": "critique",
       "executor_kind": "hermes_agent",
-      "entrypoint": "run_agent.AIAgent.run_conversation",
       "status": "experimental",
-      "adapter_owner": "one-person-lab",
+      "backend_owner": "one-person-lab",
+      "backend_owner_surface": "one-person-lab/src/modules/runway/agent-executor.ts",
       "adapter_contract_ref": "contracts/opl-framework/family-executor-adapter-defaults.json",
       "request_contract": "AgentExecutionRequest",
       "receipt_contract": "AgentExecutionReceipt",
+      "mag_receipt_vocabulary_owner": "med-autogrant",
+      "mag_implements_backend": false,
+      "mag_owns_backend_config": false,
       "fallback_allowed": false,
       "explicit_selection_required": true,
       "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
       "default_executor_name_unchanged": "codex_cli",
       "default_executor_mode_unchanged": "autonomous",
-      "provider_reasoning_status": "not_repo_proved_keep_default"
+      "equivalence_claim": "none"
     }
   ],
   "execution_identity": {
@@ -777,7 +780,7 @@
   "phase_map": [
     {
       "phase_id": "P1",
-      "phase_name": "explicit Hermes proof lane",
+      "phase_name": "explicit OPL non-default executor receipt lane",
       "status": "completed"
     },
     {

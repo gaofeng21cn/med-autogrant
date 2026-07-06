@@ -72,7 +72,7 @@
             "\""
           ],
           "pattern_id": "hermes_default_runtime_owner",
-          "policy": "Hermes-Agent remains explicit proof/provider provenance only"
+          "policy": "hermes_agent remains explicit OPL non-default executor backend / receipt vocabulary only"
         },
         {
           "literal_parts": [

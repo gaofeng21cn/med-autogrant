@@ -278,34 +278,42 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertTrue(contract["executor_defaults"]["non_default_executor_forbids_silent_codex_fallback"])
         self.assertNotIn("default_executor", contract["executor_defaults"])
         self.assertNotIn("hermes_native_requires_full_agent_loop", contract["executor_defaults"])
-        self.assertEqual(contract["experimental_executor_proofs"][0]["route_id"], "critique")
-        self.assertEqual(contract["experimental_executor_proofs"][0]["executor_kind"], "hermes_agent")
+        self.assertNotIn("experimental_executor_proofs", contract)
+        receipt_lane = contract["non_default_executor_receipt_lanes"][0]
+        self.assertEqual(receipt_lane["route_id"], "critique")
+        self.assertEqual(receipt_lane["executor_kind"], "hermes_agent")
+        self.assertNotIn("entrypoint", receipt_lane)
+        self.assertNotIn("provider_reasoning_status", receipt_lane)
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["entrypoint"],
-            "run_agent.AIAgent.run_conversation",
+            receipt_lane["backend_owner_surface"],
+            "one-person-lab/src/modules/runway/agent-executor.ts",
         )
-        self.assertEqual(contract["experimental_executor_proofs"][0]["status"], "experimental")
-        self.assertEqual(contract["experimental_executor_proofs"][0]["adapter_owner"], "one-person-lab")
+        self.assertEqual(receipt_lane["status"], "experimental")
+        self.assertEqual(receipt_lane["backend_owner"], "one-person-lab")
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["adapter_contract_ref"],
+            receipt_lane["adapter_contract_ref"],
             "contracts/opl-framework/family-executor-adapter-defaults.json",
         )
-        self.assertEqual(contract["experimental_executor_proofs"][0]["request_contract"], "AgentExecutionRequest")
-        self.assertEqual(contract["experimental_executor_proofs"][0]["receipt_contract"], "AgentExecutionReceipt")
-        self.assertFalse(contract["experimental_executor_proofs"][0]["fallback_allowed"])
-        self.assertTrue(contract["experimental_executor_proofs"][0]["explicit_selection_required"])
+        self.assertEqual(receipt_lane["request_contract"], "AgentExecutionRequest")
+        self.assertEqual(receipt_lane["receipt_contract"], "AgentExecutionReceipt")
+        self.assertEqual(receipt_lane["mag_receipt_vocabulary_owner"], "med-autogrant")
+        self.assertFalse(receipt_lane["mag_implements_backend"])
+        self.assertFalse(receipt_lane["mag_owns_backend_config"])
+        self.assertFalse(receipt_lane["fallback_allowed"])
+        self.assertTrue(receipt_lane["explicit_selection_required"])
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["non_equivalence_notice"],
+            receipt_lane["non_equivalence_notice"],
             "connectivity_lifecycle_receipt_audit_only",
         )
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["default_executor_name_unchanged"],
+            receipt_lane["default_executor_name_unchanged"],
             "codex_cli",
         )
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["default_executor_mode_unchanged"],
+            receipt_lane["default_executor_mode_unchanged"],
             "autonomous",
         )
+        self.assertEqual(receipt_lane["equivalence_claim"], "none")
         self.assertEqual(
             contract["task_boundary"]["primary_scope"],
             "target-locked grant narrative authoring and scientific quality closure",
