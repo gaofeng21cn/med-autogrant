@@ -62,11 +62,6 @@ def _validate_aggregate(
         f"{aggregate_id}.maintenance_shape",
         errors,
     )
-    leaf_source_refs = _string_list(
-        aggregate.get("leaf_source_refs"),
-        f"{aggregate_id}.leaf_source_refs",
-        errors,
-    )
 
     if not aggregate_path:
         return errors
@@ -74,19 +69,6 @@ def _validate_aggregate(
     if not path.is_file():
         errors.append(f"{aggregate_id}: aggregate_path does not exist: {aggregate_path}")
         return errors
-    if aggregate_path in leaf_source_refs:
-        errors.append(f"{aggregate_id}: leaf_source_refs must not include the aggregate path")
-    for leaf_source in leaf_source_refs:
-        if not (REPO_ROOT / leaf_source).exists():
-            errors.append(f"{aggregate_id}: leaf source missing: {leaf_source}")
-    consumer_refs = _string_list(
-        aggregate.get("consumer_refs"),
-        f"{aggregate_id}.consumer_refs",
-        errors,
-    )
-    for consumer_ref in consumer_refs:
-        if not (REPO_ROOT / consumer_ref).exists():
-            errors.append(f"{aggregate_id}: consumer ref missing: {consumer_ref}")
 
     if maintenance_shape == GENERATED_SHAPE:
         errors.extend(_validate_generated_aggregate(aggregate, generated=generated))
@@ -110,12 +92,6 @@ def _validate_generated_aggregate(
         f"{aggregate_id}.builder_output_key",
         errors,
     )
-    if aggregate.get("safe_generator_available") is not True:
-        errors.append(f"{aggregate_id}: generated aggregate must declare safe_generator_available=true")
-    if aggregate.get("manual_edit_allowed") is not False:
-        errors.append(f"{aggregate_id}: generated aggregate must forbid manual edits")
-    if aggregate.get("checker_policy") != "aggregate_must_equal_builder_output":
-        errors.append(f"{aggregate_id}: generated aggregate checker_policy mismatch")
     if not builder_output_key:
         return errors
     if builder_output_key not in generated:
@@ -137,11 +113,15 @@ def _validate_pinned_schema_aggregate(aggregate: Mapping[str, Any]) -> list[str]
     aggregate_id = str(aggregate["aggregate_id"])
     if aggregate.get("safe_generator_available") is not False:
         errors.append(f"{aggregate_id}: pinned schema must declare safe_generator_available=false")
+    if aggregate.get("generator") is not None:
+        errors.append(f"{aggregate_id}: pinned schema must not declare a generator")
+    if aggregate.get("sync_command") is not None:
+        errors.append(f"{aggregate_id}: pinned schema must not declare a sync_command")
     if aggregate.get("builder_output_key") is not None:
         errors.append(f"{aggregate_id}: pinned schema must not declare a builder_output_key")
     if aggregate.get("manual_edit_allowed") is not False:
         errors.append(f"{aggregate_id}: pinned schema must forbid direct manual edits")
-    expected_policy = "check_leaf_source_refs_and_schema_registry_consumers_until_a_schema_generator_lands"
+    expected_policy = "pinned_schema_has_no_safe_generator"
     if aggregate.get("checker_policy") != expected_policy:
         errors.append(f"{aggregate_id}: pinned schema checker_policy mismatch")
     return errors
@@ -163,19 +143,6 @@ def _string(value: Any, field: str, errors: list[str]) -> str:
         errors.append(f"{field} must be a non-empty string")
         return ""
     return value
-
-
-def _string_list(value: Any, field: str, errors: list[str]) -> list[str]:
-    if not isinstance(value, list) or not value:
-        errors.append(f"{field} must be a non-empty string list")
-        return []
-    result: list[str] = []
-    for item in value:
-        if not isinstance(item, str) or not item:
-            errors.append(f"{field} contains a non-string item")
-            continue
-        result.append(item)
-    return result
 
 
 if __name__ == "__main__":

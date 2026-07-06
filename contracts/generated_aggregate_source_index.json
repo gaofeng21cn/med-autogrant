@@ -3,9 +3,9 @@
   "version": "mag-generated-aggregate-source-index.v1",
   "target_domain_id": "med-autogrant",
   "owner": "Med Auto Grant",
-  "purpose": "Track large public aggregate contracts and schemas back to leaf sources, generators, and pinned-source checks.",
+  "purpose": "Track large public aggregate contracts and schemas by generator equality and pinned schema policy.",
   "state": "active",
-  "manual_edit_policy": "edit_leaf_sources_then_regenerate_or_update_pinned_schema_record",
+  "manual_edit_policy": "edit_generator_sources_then_regenerate_generated_aggregates_or_update_pinned_schema_record",
   "consumer_path_policy": "aggregate_paths_remain_stable_for_existing_consumers",
   "line_budget_policy": "do_not_relax_line_budget_for_large_aggregate_surfaces",
   "checker": {
@@ -23,22 +23,7 @@
       "sync_command": "scripts/run-python-clean.sh -m med_autogrant.opl_standard_pack",
       "builder_output_key": "temporal_stage_run_consumption_policy",
       "manual_edit_allowed": false,
-      "checker_policy": "aggregate_must_equal_builder_output",
-      "leaf_source_refs": [
-        "src/med_autogrant/temporal_stage_run_consumption.py",
-        "src/med_autogrant/action_catalog.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-        "src/med_autogrant/product_entry_parts/manifest_builder.py",
-        "src/med_autogrant/stage_control_plane.py"
-      ],
-      "consumer_refs": [
-        "contracts/action_catalog.json",
-        "contracts/generated_surface_handoff.json",
-        "contracts/stage_control_plane.json",
-        "src/med_autogrant/product_entry_parts/manifest_builder.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-        "tests/test_opl_standard_pack.py"
-      ]
+      "checker_policy": "aggregate_must_equal_builder_output"
     },
     {
       "aggregate_id": "stage_control_plane",
@@ -49,34 +34,7 @@
       "sync_command": "scripts/run-python-clean.sh -m med_autogrant.opl_standard_pack",
       "builder_output_key": "stage_control_plane",
       "manual_edit_allowed": false,
-      "checker_policy": "aggregate_must_equal_builder_output",
-      "leaf_source_refs": [
-        "src/med_autogrant/stage_control_plane.py",
-        "src/med_autogrant/stage_control_plane_parts/artifact_contracts.py",
-        "src/med_autogrant/stage_control_plane_parts/cognitive_kernel.py",
-        "src/med_autogrant/stage_control_plane_parts/transition_oracle.py",
-        "src/med_autogrant/action_catalog.py",
-        "agent/prompts/call_and_candidate_intake.md",
-        "agent/prompts/fundability_strategy.md",
-        "agent/prompts/specific_aims_and_structure.md",
-        "agent/prompts/proposal_authoring.md",
-        "agent/prompts/review_and_rebuttal.md",
-        "agent/prompts/package_and_submit_ready.md",
-        "agent/quality_gates/fundability.md",
-        "agent/quality_gates/quality.md",
-        "agent/quality_gates/export_and_package.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/package_authority.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-        "agent/tools/domain_affordances.md"
-      ],
-      "consumer_refs": [
-        "src/med_autogrant/product_entry_parts/manifest_builder.py",
-        "tests/product_entry_cases/test_family_stage_control_plane.py",
-        "tests/test_opl_standard_pack.py"
-      ]
+      "checker_policy": "aggregate_must_equal_builder_output"
     },
     {
       "aggregate_id": "functional_privatization_audit",
@@ -87,33 +45,7 @@
       "sync_command": "scripts/run-python-clean.sh -m med_autogrant.opl_standard_pack",
       "builder_output_key": "functional_privatization_audit",
       "manual_edit_allowed": false,
-      "checker_policy": "aggregate_must_equal_builder_output",
-      "leaf_source_refs": [
-        "src/med_autogrant/opl_standard_pack.py",
-        "src/med_autogrant/opl_standard_pack_private_policy.py",
-        "src/med_autogrant/opl_standard_pack_source_policy.py",
-        "src/med_autogrant/opl_standard_pack_source_policy_parts/active_path_scan.py",
-        "src/med_autogrant/opl_standard_pack_source_policy_parts/basic.py",
-        "src/med_autogrant/opl_standard_pack_source_policy_parts/classifications.py",
-        "src/med_autogrant/opl_standard_pack_source_policy_parts/false_ready_patterns.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/__init__.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/classification.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/evidence_gates.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/model.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/report.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_audit/retired_surfaces.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_pack.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_pack_evidence.py",
-        "src/med_autogrant/product_entry_parts/consumer_thinning_shell.py",
-        "src/med_autogrant/product_entry_parts/functional_closure.py",
-        "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py"
-      ],
-      "consumer_refs": [
-        "src/med_autogrant/product_entry_parts/manifest_builder.py",
-        "tests/product_entry_cases/test_functional_closure.py",
-        "tests/test_opl_standard_pack.py"
-      ]
+      "checker_policy": "aggregate_must_equal_builder_output"
     },
     {
       "aggregate_id": "product_entry_manifest_schema",
@@ -124,36 +56,7 @@
       "sync_command": null,
       "builder_output_key": null,
       "manual_edit_allowed": false,
-      "checker_policy": "check_leaf_source_refs_and_schema_registry_consumers_until_a_schema_generator_lands",
-      "leaf_source_refs": [
-        "schemas/v1/schema-index.json",
-        "src/med_autogrant/product_entry_parts/manifest_builder.py",
-        "src/med_autogrant/product_entry_parts/manifest.py",
-        "src/med_autogrant/product_entry_parts/runtime_contracts.py",
-        "src/med_autogrant/product_entry_parts/loop_contracts.py",
-        "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py",
-        "src/med_autogrant/product_entry_parts/manifest_shell/runtime_task_shell.py",
-        "src/med_autogrant/product_entry_parts/manifest_readiness.py",
-        "src/med_autogrant/product_entry_parts/manifest_runtime_companions.py",
-        "src/med_autogrant/product_entry_parts/manifest_skill_catalog.py",
-        "src/med_autogrant/product_entry_parts/manifest_owner_payload_response.py",
-        "src/med_autogrant/product_entry_parts/manifest_owner_receipt_surfaces.py",
-        "src/med_autogrant/product_entry_parts/domain_agent_projection_surfaces.py",
-        "src/med_autogrant/product_entry_parts/domain_memory.py",
-        "src/med_autogrant/product_entry_parts/functional_closure.py",
-        "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
-        "src/med_autogrant/product_entry_parts/source_provenance.py",
-        "src/med_autogrant/product_entry_parts/executor_defaults.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-        "src/med_autogrant/temporal_stage_run_consumption.py"
-      ],
-      "consumer_refs": [
-        "tests/test_schema_registry.py",
-        "tests/test_schema_registry_consumer_thinning.py",
-        "tests/test_schema_registry_owner_payload_manifest.py",
-        "tests/product_entry_cases/test_manifest_and_status.py",
-        "tests/product_entry_cases/test_family_stage_control_plane.py"
-      ]
+      "checker_policy": "pinned_schema_has_no_safe_generator"
     }
   ]
 }

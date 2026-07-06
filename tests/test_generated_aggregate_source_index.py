@@ -24,13 +24,15 @@ def _source_index() -> dict[str, object]:
     return json.loads(SOURCE_INDEX_PATH.read_text(encoding="utf-8"))
 
 
-def test_generated_aggregate_source_index_declares_leaf_source_policy() -> None:
+def test_generated_aggregate_source_index_declares_generated_policy() -> None:
     payload = _source_index()
 
     assert payload["surface_kind"] == "mag_generated_aggregate_source_index"
     assert payload["version"] == "mag-generated-aggregate-source-index.v1"
     assert payload["target_domain_id"] == "med-autogrant"
-    assert payload["manual_edit_policy"] == "edit_leaf_sources_then_regenerate_or_update_pinned_schema_record"
+    assert payload["manual_edit_policy"] == (
+        "edit_generator_sources_then_regenerate_generated_aggregates_or_update_pinned_schema_record"
+    )
     assert payload["consumer_path_policy"] == "aggregate_paths_remain_stable_for_existing_consumers"
     assert payload["line_budget_policy"] == "do_not_relax_line_budget_for_large_aggregate_surfaces"
 
@@ -41,6 +43,14 @@ def test_generated_aggregate_source_index_declares_leaf_source_policy() -> None:
         "functional_privatization_audit",
         "product_entry_manifest_schema",
     }
+
+
+def test_generated_aggregate_source_index_does_not_duplicate_leaf_or_consumer_refs() -> None:
+    payload = _source_index()
+
+    for item in payload["aggregates"]:
+        assert "leaf_source_refs" not in item
+        assert "consumer_refs" not in item
 
 
 def test_generated_aggregates_match_canonical_builder_outputs() -> None:
@@ -60,18 +70,6 @@ def test_generated_aggregates_match_canonical_builder_outputs() -> None:
         assert _read_json(aggregate_path) == generated[builder_key]
 
 
-def test_aggregate_leaf_source_refs_exist_and_do_not_point_back_to_aggregate() -> None:
-    payload = _source_index()
-
-    for item in payload["aggregates"]:
-        aggregate_path = item["aggregate_path"]
-        leaf_sources = item["leaf_source_refs"]
-        assert leaf_sources, aggregate_path
-        assert aggregate_path not in leaf_sources
-        for leaf_source in leaf_sources:
-            assert (REPO_ROOT / leaf_source).exists(), f"{aggregate_path} leaf source missing: {leaf_source}"
-
-
 def test_product_entry_manifest_schema_is_pinned_when_no_safe_generator_exists() -> None:
     payload = _source_index()
     schema_record = next(
@@ -82,11 +80,11 @@ def test_product_entry_manifest_schema_is_pinned_when_no_safe_generator_exists()
 
     assert schema_record["maintenance_shape"] == "pinned_aggregate_schema"
     assert schema_record["safe_generator_available"] is False
+    assert schema_record["generator"] is None
+    assert schema_record["sync_command"] is None
     assert schema_record["builder_output_key"] is None
     assert schema_record["manual_edit_allowed"] is False
-    assert schema_record["checker_policy"] == (
-        "check_leaf_source_refs_and_schema_registry_consumers_until_a_schema_generator_lands"
-    )
+    assert schema_record["checker_policy"] == "pinned_schema_has_no_safe_generator"
 
 
 def test_generated_aggregate_checker_runs_cleanly() -> None:
