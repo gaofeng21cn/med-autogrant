@@ -8,12 +8,6 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
-from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
-    build_manifest_sustained_consumption_payload_response,
-)
-from med_autogrant.product_entry_parts.opl_owner_payload_response import (
-    build_opl_owner_payload_response,
-)
 from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
@@ -122,30 +116,4 @@ class ProductEntryEvidenceMixin:
             owner_receipt_evidence=owner_receipt_evidence,
             agent_lab_suite_result=agent_lab_suite_result,
             meta_agent_coordination_result=meta_agent_coordination_result,
-        )
-
-    def build_opl_owner_payload_response(
-        self,
-        *,
-        production_acceptance: Mapping[str, Any],
-        external_evidence_receipt_ledger: Mapping[str, Any],
-        receipt_readiness_projection: Mapping[str, Any],
-    ) -> dict[str, Any]:
-        return build_opl_owner_payload_response(
-            production_acceptance=production_acceptance,
-            external_evidence_receipt_ledger=external_evidence_receipt_ledger,
-            receipt_readiness_projection=receipt_readiness_projection,
-        )
-
-    def build_manifest_sustained_consumption_payload_response(
-        self,
-        *,
-        owner_payload_response: Mapping[str, Any],
-        workspace_receipt_scaleout_evidence: Mapping[str, Any],
-        operator_payload: Mapping[str, Any],
-    ) -> dict[str, Any]:
-        return build_manifest_sustained_consumption_payload_response(
-            owner_payload_response=owner_payload_response,
-            workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
-            operator_payload=operator_payload,
         )

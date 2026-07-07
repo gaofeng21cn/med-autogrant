@@ -4,6 +4,7 @@ import json
 import unittest
 from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
     MAG_MANIFEST_SUSTAINED_CONSUMPTION_PAYLOAD_RESPONSE_KIND,
+    build_manifest_sustained_consumption_payload_response,
 )
 from med_autogrant.workspace import WorkspaceStateError
 
@@ -49,9 +50,7 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
     def test_sustained_consumption_payload_success_path_is_signed_refs_only_without_ready_claim(
         self,
     ) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        response = MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+        response = build_manifest_sustained_consumption_payload_response(
             owner_payload_response=_owner_payload_response(),
             workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
             operator_payload={
@@ -163,9 +162,7 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         self.assertNotIn("grant_artifact_body", encoded_record)
 
     def test_typed_blocker_payload_path_does_not_claim_success(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        response = MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+        response = build_manifest_sustained_consumption_payload_response(
             owner_payload_response=_owner_payload_response(),
             workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
             operator_payload={
@@ -198,8 +195,6 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         )
 
     def test_attempt_batch_payload_projects_scaleout_ledger_without_closeout_claim(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
         provider_long_soak_typed_blocker_ref = (
             "typed-blocker:mag/manifest-sustained-consumption/"
             "provider-long-soak-window-still-open/2026-06-01"
@@ -207,7 +202,7 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         app_operator_blocker_ref = (
             "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-06-01"
         )
-        response = MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+        response = build_manifest_sustained_consumption_payload_response(
             owner_payload_response=_owner_payload_response(),
             workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
             operator_payload={
@@ -275,18 +270,15 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         self.assertFalse(response["claims_provider_long_soak_complete"])
 
     def test_rejects_empty_payload_and_private_body(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        entry = MedAutoGrantProductEntry()
         with self.assertRaises(WorkspaceStateError):
-            entry.build_manifest_sustained_consumption_payload_response(
+            build_manifest_sustained_consumption_payload_response(
                 owner_payload_response=_owner_payload_response(),
                 workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
                 operator_payload={},
             )
 
         with self.assertRaises(WorkspaceStateError):
-            entry.build_manifest_sustained_consumption_payload_response(
+            build_manifest_sustained_consumption_payload_response(
                 owner_payload_response=_owner_payload_response(),
                 workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
                 operator_payload={
@@ -298,10 +290,8 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
             )
 
     def test_rejects_unknown_operator_payload_fields(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
         with self.assertRaisesRegex(WorkspaceStateError, "未声明字段"):
-            MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+            build_manifest_sustained_consumption_payload_response(
                 owner_payload_response=_owner_payload_response(),
                 workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
                 operator_payload={

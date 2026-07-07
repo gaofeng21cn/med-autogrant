@@ -40,6 +40,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 closeout projection wrapper thinning：codex stage execution receipt bundle、operator closeout readiness、physical morphology guard 与 executor-first closeout bundle 不再通过 `ProductEntryEvidenceMixin` 暴露 ProductEntry pass-through；CLI/domain_handler closeout caller 直接调用对应 leaf builder。该轮只移除 ProductEntry 第二入口，不改变 command output、owner receipt signer、grant truth、runtime-state 或 retained big-shell physical-delete gate。
 
+2026-07-07 OPL payload wrapper thinning：OPL owner payload response 与 manifest sustained-consumption payload response 不再通过 `ProductEntryEvidenceMixin` 暴露 ProductEntry pass-through；CLI 和测试 caller 直接调用 leaf builder。`ProductEntryEvidenceMixin` 只保留 domain memory、owner/lifecycle receipt writer 与 production acceptance 这些 active authority-path wrappers；physical delete gate 仍为未授权。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。

@@ -8,6 +8,9 @@ from pathlib import Path
 from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
     build_lifecycle_receipt_bundle,
 )
+from med_autogrant.product_entry_parts.opl_owner_payload_response import (
+    build_opl_owner_payload_response,
+)
 from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
     build_package_lifecycle_handoff_projection,
 )
@@ -270,7 +273,7 @@ def _build_scaleout_payload() -> tuple[dict[str, object], dict[str, object], dic
             package_lifecycle_items=package_lifecycle_items,
             lifecycle_receipt_items=lifecycle_bundles,
         )
-        owner_payload = entry.build_opl_owner_payload_response(
+        owner_payload = build_opl_owner_payload_response(
             production_acceptance=_production_acceptance(),
             external_evidence_receipt_ledger=_external_evidence_ledger(),
             receipt_readiness_projection=readiness,

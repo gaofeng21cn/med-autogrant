@@ -107,9 +107,11 @@ def _receipt_readiness() -> dict[str, object]:
 
 class ProductEntryOplOwnerPayloadResponseTest(unittest.TestCase):
     def test_owner_payload_response_exposes_success_refs_and_human_gate_blocker_path(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.opl_owner_payload_response import (
+            build_opl_owner_payload_response,
+        )
 
-        response = MedAutoGrantProductEntry().build_opl_owner_payload_response(
+        response = build_opl_owner_payload_response(
             production_acceptance=_production_acceptance(),
             external_evidence_receipt_ledger=_external_evidence_ledger(),
             receipt_readiness_projection=_receipt_readiness(),

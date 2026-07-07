@@ -20,6 +20,12 @@ from med_autogrant.product_entry_parts.codex_stage_receipts import (
 from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
     build_executor_first_closeout_bundle,
 )
+from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
+    build_manifest_sustained_consumption_payload_response,
+)
+from med_autogrant.product_entry_parts.opl_owner_payload_response import (
+    build_opl_owner_payload_response,
+)
 from med_autogrant.product_entry_parts.physical_morphology_guard import (
     build_physical_morphology_guard_projection,
 )
@@ -229,7 +235,7 @@ def handle_product_codex_stage_receipts(args: argparse.Namespace) -> dict[str, A
 
 
 def handle_product_opl_owner_payload_response(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_opl_owner_payload_response(
+    return build_opl_owner_payload_response(
         production_acceptance=_read_json_object(args.production_acceptance),
         external_evidence_receipt_ledger=_read_json_object(args.external_evidence_receipt_ledger),
         receipt_readiness_projection=_read_json_object(args.receipt_readiness_projection),
@@ -237,7 +243,7 @@ def handle_product_opl_owner_payload_response(args: argparse.Namespace) -> dict[
 
 
 def handle_product_manifest_sustained_consumption_payload(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_manifest_sustained_consumption_payload_response(
+    return build_manifest_sustained_consumption_payload_response(
         owner_payload_response=_read_json_object(args.owner_payload_response),
         workspace_receipt_scaleout_evidence=_read_json_object(
             args.workspace_receipt_scaleout_evidence

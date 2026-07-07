@@ -27,6 +27,8 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 closeout projection wrapper cleanup：codex stage execution receipt bundle、operator closeout readiness、physical morphology guard 与 executor-first closeout bundle 的 CLI/domain_handler caller 已改为直接调用 leaf builder；`ProductEntryEvidenceMixin` 不再为这些 closeout read-model projections 提供 ProductEntry pass-through。保留的是 leaf contract、CLI command output 与 domain_handler result shape，不保留测试驱动的 ProductEntry 第二入口。
 
+2026-07-07 OPL payload wrapper cleanup：OPL owner payload response 与 manifest sustained-consumption payload response 的 CLI/test caller 已改为直接调用 leaf builder；`ProductEntryEvidenceMixin` 不再为这些 refs-only payload response 提供 ProductEntry pass-through。剩余 mixin 方法均是 domain memory、owner/lifecycle receipt writer 或 production acceptance authority path，后续删除需要先迁移 active CLI/domain authority caller。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |

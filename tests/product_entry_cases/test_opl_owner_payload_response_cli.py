@@ -94,9 +94,10 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
             )
             receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_opl_owner_payload_response.return_value = expected_payload
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_opl_owner_payload_response",
+                return_value=expected_payload,
+            ) as build_response:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -114,7 +115,7 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_opl_owner_payload_response.assert_called_once_with(
+        build_response.assert_called_once_with(
             production_acceptance=production_acceptance,
             external_evidence_receipt_ledger=external_evidence_ledger,
             receipt_readiness_projection=receipt_readiness,
@@ -152,11 +153,10 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
             )
             operator_payload_path.write_text(json.dumps(operator_payload), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_manifest_sustained_consumption_payload_response.return_value = (
-                    expected_payload
-                )
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_manifest_sustained_consumption_payload_response",
+                return_value=expected_payload,
+            ) as build_response:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -174,7 +174,7 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_manifest_sustained_consumption_payload_response.assert_called_once_with(
+        build_response.assert_called_once_with(
             owner_payload_response=owner_payload_response,
             workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
             operator_payload=operator_payload,
