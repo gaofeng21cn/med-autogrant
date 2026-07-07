@@ -11,7 +11,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 - Accepted strategy, aims, section map, claim/evidence ledger, funder criteria, page limits, format rules, and source materials.
 - Reviewable draft refs, prior critique, scorecard, quality-diff, closure dossier, revision history, reviewer comments, and residual risks.
-- Review gate receipt, quality verdict ref, final draft/package refs, required artifact list, portal instructions, attachment rules, budget/support material refs, deadline constraints, and manual submission requirements.
+- Review gate receipt, quality verdict ref, final draft/package refs, required artifact list, portal instructions, upload slots, attachment rules, budget/support material refs, deadline constraints, and manual submission requirements.
 - MAG refs:
   - `agent/prompts/proposal_authoring.md`
   - `agent/prompts/review_and_rebuttal.md`
@@ -26,11 +26,12 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - Unsupported-claim list, citation/source needs, known weak arguments, and reviewer-facing handoff.
 - Reviewer-style critique with issue severity, evidence, affected section, required fix, and closure criterion.
 - Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, closure criterion, residual risk, or route-back.
+- Budget/support-material handoff mapping each needed change to budget justification, facilities/resources, biosketch, letters, appendices, portal fields, source refs, owner action, or blocker.
 - Local package audit with required files, provenance, quality gate state, manual portal actions, package/export recommendation, and exact blockers.
 
 ## AI-First / Contract-Light Boundary
 
-- This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, rebuttal substance, route-back decision, and owner-facing handoff framing.
+- This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, rebuttal substance, package/portal handoff, budget/support-material gap routing, route-back decision, and owner-facing handoff framing.
 - Contracts, capability maps, package refs, and scorecards only provide locators, boundaries, and traceable return shapes. They must not become a second source of grant truth, quality truth, package authority, or submission-readiness authority.
 - Use AI review to decide whether a weakness is local prose, source evidence, strategy/aims, package provenance, manual portal action, or owner decision. Route to the topmost owning layer instead of encoding a fallback workflow in contract metadata.
 - Keep quality, export, source, memory, and publication/package readiness elastic at the professional skill layer until the owning MAG authority surface issues the corresponding receipt, verdict, human gate, blocker, or route-back ref.
@@ -42,8 +43,9 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 3. Review independently from the authoring voice; scorecards organize evidence but do not declare quality-ready.
 4. Preserve reviewer concerns and map each substantive concern to a proposal delta or justified no-change response.
 5. Route strategy, aims, source, or fundability failures back to the owning stage instead of patching prose.
-6. Verify quality closure before package readiness; keep local submission-ready distinct from external portal submission.
-7. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
+6. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, and residual blockers.
+7. Verify quality closure before package readiness; keep local submission-ready distinct from external portal submission.
+8. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
 
 ## Stage Prompt Boundary
 
@@ -56,7 +58,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 Return `typed_blocker` when:
 
 - Accepted aims, section map, reviewable draft refs, source ledger, reviewer concerns, quality gate, or required package refs are missing.
-- Core method, preliminary evidence, citation, institutional input, required source, required attachment, budget/support material, or portal-facing artifact is absent.
+- Core method, preliminary evidence, citation, institutional input, required source, required attachment, budget/support material, portal slot, or portal-facing artifact is absent.
 - A fatal or high-severity review issue remains unclosed, claims exceed source evidence, or required evidence conflicts with the locked call.
 - Package refs lack provenance to accepted draft/source/receipt evidence.
 - Manual portal action is required before external submission.
@@ -65,5 +67,6 @@ Return `repair_target` when:
 
 - Polished prose hides weak claim/source support or missing reviewer logic.
 - Rebuttal answers tone but not substance, lacks concrete proposal deltas, or has unchecked closure criteria.
+- Budget/support-material or portal handoff is implied from package files instead of mapped to source refs, owner action, and closure criteria.
 - Residual risks are omitted from package-facing handoff.
 - Local package readiness is blurred with external submission or inferred from generated files alone.
