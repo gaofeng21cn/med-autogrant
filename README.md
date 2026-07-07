@@ -100,6 +100,7 @@ You can start with prompts like:
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
+- In the OPL family, MAG is the grant-writing domain agent package: MAG keeps grant authority, while OPL owns generic runtime, package carrier, generated wrapper, and hosted surfaces.
 - Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach stable capabilities through that skill.
 - MAG owns the grant-writing work itself: funding-call understanding, proposal structure, scientific questions, evidence organization, drafting, revision, and review-ready delivery packages. One Person Lab handles hosted runtime, progress display, recovery/retry, and the cross-agent product entry.
 - It can be used as the Grant Foundry inside One Person Lab, and it can also be called directly by Codex or another agent through stable capability entries.

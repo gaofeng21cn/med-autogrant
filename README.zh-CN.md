@@ -100,6 +100,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 ## 当前边界
 
 - `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
+- 在 OPL family 中，MAG 是基金写作 domain agent package：MAG 保留基金领域 authority，OPL 持有通用 runtime、package carrier、generated wrapper 和 hosted surface。
 - 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口访问稳定能力面。
 - MAG 负责基金写作本身：基金任务理解、正文结构、科学问题、证据组织、写作修订和可待审交付包。One Person Lab 负责托管运行、进度展示、恢复重试和跨 Agent 的入口体验。
 - 它可以作为 One Person Lab 里的基金工坊使用，也可以由 Codex 或其他 Agent 直接调用稳定能力入口。

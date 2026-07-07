@@ -117,6 +117,8 @@ MAG 必须保留的 authority：
 
 Active plan 只保留当前可落地的非 live 缺口：product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI handler shells 的 physical-delete-not-authorized tail、strict source-purity / no-resurrection guard、refs-only package/memory/lifecycle boundary、AI-first authority guard 和 legacy wrapper/alias/facade/compat aggregate test 清理。对 retained surfaces，现在的非 live 缺口已收敛为 MAG owner 是否删除、保留为 authority adapter 或 tombstone typed blocker 的三选一裁决；涉及 evidence lane 时，只能在本文保留 false-ready 禁止边界，不列 run id、cohort、long-soak、human-gate 或 ready-claim worklist。
 
+本轮按 `launcher|wrapper|alias|compat|legacy|status|sidecar|product-entry|helper|facade` 关键词复核后，没有发现可直接物理删除的孤立普通入口。命中的 product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI surfaces 已在本计划和私有实现迁移台账中归为 refs-only adapter、direct handler target、minimal grant authority function、diagnostic 或 migration input；退役仍必须满足 generated/default caller parity、no-active-caller、no-forbidden-write、tombstone/provenance 与 explicit MAG owner decision。
+
 ## 下一轮 Agent prompt
 
 - Write scope: MAG active truth owner、current status summary、Declarative Grant Pack、
