@@ -28,6 +28,13 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, closure criterion, residual risk, or route-back.
 - Local package audit with required files, provenance, quality gate state, manual portal actions, package/export recommendation, and exact blockers.
 
+## AI-First / Contract-Light Boundary
+
+- This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, rebuttal substance, route-back decision, and owner-facing handoff framing.
+- Contracts, capability maps, package refs, and scorecards only provide locators, boundaries, and traceable return shapes. They must not become a second source of grant truth, quality truth, package authority, or submission-readiness authority.
+- Use AI review to decide whether a weakness is local prose, source evidence, strategy/aims, package provenance, manual portal action, or owner decision. Route to the topmost owning layer instead of encoding a fallback workflow in contract metadata.
+- Keep quality, export, source, memory, and publication/package readiness elastic at the professional skill layer until the owning MAG authority surface issues the corresponding receipt, verdict, human gate, blocker, or route-back ref.
+
 ## Execution Rules
 
 1. Draft against accepted aims and funder criteria, not a generic grant template.

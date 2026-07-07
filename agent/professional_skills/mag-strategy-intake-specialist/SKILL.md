@@ -28,6 +28,13 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - Strategy-memory review classifying refs as accepted, rejected, stale, conflicting, or pending, without writing memory bodies or receipts.
 - Typed blockers or repair targets when the call, applicant basis, fundability route, aims, or memory use is unsafe.
 
+## AI-First / Contract-Light Boundary
+
+- This skill owns the flexible professional judgment: call-fit interpretation, material-gap diagnosis, reviewer-risk ranking, strategy-memory relevance, route-back choice, and owner handoff question shaping.
+- Contracts, capability maps, stage refs, and quality-gate refs only locate inputs, declare boundaries, and preserve traceable return shapes. They must not encode a second fundability truth, memory truth, readiness verdict, or strategy decision tree.
+- When judgment is uncertain, return a compact rationale with source refs, missing evidence, route-back target, and owner decision need. Do not fill the gap with schema defaults, heuristic scoring, or invented readiness.
+- Treat memory, source, and publication/package readiness signals as advisory professional-review inputs until the owning MAG authority surface accepts, rejects, signs, or blocks them.
+
 ## Execution Rules
 
 1. Read current call and applicant source refs literally before using memory or examples.
