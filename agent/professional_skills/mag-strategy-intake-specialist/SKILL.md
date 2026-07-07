@@ -53,6 +53,10 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - This skill supplies professional strategy judgment; it does not write owner receipts, mutate grant truth, decide memory accept/reject, authorize quality/export/submission readiness, or claim domain readiness.
 - Proposal authoring must preserve the accepted strategy and aims, or route back here with the exact blocker.
 
+## Legacy Coverage
+
+This workflow-level skill covers the retired `mag-call-fit-analyst`, `mag-fundability-strategist`, `mag-specific-aims-architect`, and `mag-grant-strategy-memory-curator` entries. Keep those pre-authoring strategy decisions together so call fit, fundability, aims, and strategy memory are judged against one locked funding route.
+
 ## Blockers And Repair Targets
 
 Return `typed_blocker` when:

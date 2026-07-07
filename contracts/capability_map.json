@@ -309,6 +309,88 @@
       }
     }
   ],
+  "legacy_professional_skill_redirects": [
+    {
+      "legacy_ref": "legacy-professional-skill:mag-call-fit-analyst",
+      "covered_by_capability_id": "med-autogrant.strategy-intake.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Call-fit analysis is part of strategy and intake judgment before proposal authoring."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-fundability-strategist",
+      "covered_by_capability_id": "med-autogrant.strategy-intake.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Fundability strategy belongs with call fit, reviewer risk, applicant basis, and specific aims framing."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-specific-aims-architect",
+      "covered_by_capability_id": "med-autogrant.strategy-intake.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Specific aims architecture is a pre-authoring strategy/intake responsibility."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-grant-strategy-memory-curator",
+      "covered_by_capability_id": "med-autogrant.strategy-intake.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Strategy-memory relevance review is advisory intake judgment and does not need a separate metadata entry."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-proposal-section-author",
+      "covered_by_capability_id": "med-autogrant.grant-workflow.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Proposal section authoring belongs in the accepted-strategy grant workflow skill."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-grant-reviewer",
+      "covered_by_capability_id": "med-autogrant.grant-workflow.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Independent grant review is part of workflow critique, repair, and package handoff."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-rebuttal-planner",
+      "covered_by_capability_id": "med-autogrant.grant-workflow.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Rebuttal and repair planning stays with review closure and proposal delta planning."
+    },
+    {
+      "legacy_ref": "legacy-professional-skill:mag-submission-package-auditor",
+      "covered_by_capability_id": "med-autogrant.grant-workflow.professional_skill",
+      "covered_by_skill_ref": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
+      "state": "legacy_redirect",
+      "capability_kind": "legacy_professional_skill_redirect",
+      "capability_preserved": true,
+      "default_codex_exposure": false,
+      "reason": "Local submission-package audit belongs with workflow package handoff and does not authorize submission readiness."
+    }
+  ],
   "resolver_index": {
     "primary_skill_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=primary_skill"

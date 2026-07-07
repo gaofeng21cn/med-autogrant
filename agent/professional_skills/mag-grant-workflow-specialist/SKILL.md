@@ -53,6 +53,10 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
 - Package work may proceed only with quality verdict refs or explicit blocker state from the stage.
 
+## Legacy Coverage
+
+This workflow-level skill covers the retired `mag-proposal-section-author`, `mag-grant-reviewer`, `mag-rebuttal-planner`, and `mag-submission-package-auditor` entries. Keep authoring, independent review, rebuttal repair, and local package audit together after strategy and aims are accepted.
+
 ## Blockers And Repair Targets
 
 Return `typed_blocker` when:
