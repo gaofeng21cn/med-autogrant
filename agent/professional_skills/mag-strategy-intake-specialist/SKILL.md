@@ -23,16 +23,17 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 ## Outputs
 
 - Call-fit summary with funder intent, scope, eligibility, reviewer rubric, constraints, deadlines, and source gaps.
+- Funder-fit strategy judgment covering opportunity logic, applicant fit, mismatch/retarget threshold, no-go conditions, and the proceed/repair/retarget/stop action matrix.
 - Reviewer-rubric translation: what reviewers will reward, penalize, disqualify, question, or require as mitigation.
 - Fundability recommendation: proceed, repair, retarget, or stop, with reviewer-risk ranking and mitigation requirements.
-- Central claim, specific aims, section map, claim/evidence ledger, and reviewer-risk mitigation map for authoring.
+- Central claim, specific aims strategy, section map, claim/evidence ledger, reviewer-facing frame, and reviewer-risk mitigation map for authoring.
 - Strategy-memory review classifying refs as accepted, rejected, stale, conflicting, or pending, without writing memory bodies or receipts.
 - Typed blockers or repair targets when the call, applicant basis, fundability route, aims, or memory use is unsafe.
 
 ## AI-First / Contract-Light Boundary
 
-- This skill owns the flexible professional judgment: call-fit interpretation, reviewer-rubric interpretation, material-gap diagnosis, reviewer-risk ranking, strategy-memory relevance, route-back choice, and owner handoff question shaping.
-- Contracts, capability maps, stage refs, and quality-gate refs only locate inputs, declare boundaries, and preserve traceable return shapes. They must not encode a second fundability truth, memory truth, readiness verdict, or strategy decision tree.
+- This skill owns the flexible professional judgment: funder-fit synthesis, call-fit interpretation, reviewer-rubric interpretation, specific-aims strategy, reviewer-facing framing, material-gap diagnosis, reviewer-risk ranking, strategy-memory relevance, route-back/action-matrix choice, and owner handoff question shaping.
+- Contracts, capability maps, stage refs, scripts, and quality-gate refs only locate identity, inputs, refs, receipt/no-authority guards, boundaries, and traceable return shapes. They must not encode a second fundability truth, memory truth, readiness verdict, or strategy decision tree.
 - When judgment is uncertain, return a compact rationale with source refs, missing evidence, route-back target, and owner decision need. Do not fill the gap with schema defaults, heuristic scoring, or invented readiness.
 - Treat memory, source, and publication/package readiness signals as advisory professional-review inputs until the owning MAG authority surface accepts, rejects, signs, or blocks them.
 
@@ -43,9 +44,10 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 3. Separate source facts from interpretation and mark uncertainty as evidence gaps.
 4. Judge as a skeptical grant reviewer: fit, eligibility, novelty, feasibility, impact, applicant credibility, timeline, budget realism, support-material credibility, and panel risk.
 5. Make each aim assessable: premise, approach, success criterion, risk/alternative, and evidence need.
-6. Translate the rubric into funder-facing writing constraints and repair targets; keep hard rules, reviewer preferences, and inferred panel risks distinct.
-7. Treat memory as advisory strategy context, not grant truth, route truth, fundability score, quality verdict, export verdict, package authority, or submission-ready evidence.
-8. Keep grant bodies, memory bodies, verdict bodies, receipt instances, package bodies, and runtime state out of repo source and OPL generated surfaces.
+6. Translate the rubric into funder-facing writing constraints, reviewer-facing frames, and repair targets; keep hard rules, reviewer preferences, and inferred panel risks distinct.
+7. Return a compact action matrix for proceed, repair, retarget, stop, or route-back, with source refs and the next owner action for each open risk.
+8. Treat memory as advisory strategy context, not grant truth, route truth, fundability score, quality verdict, export verdict, package authority, or submission-ready evidence.
+9. Keep grant bodies, memory bodies, verdict bodies, receipt instances, package bodies, and runtime state out of repo source and OPL generated surfaces.
 
 ## Stage Prompt Boundary
 

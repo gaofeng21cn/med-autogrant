@@ -23,16 +23,16 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 ## Outputs
 
 - Draft or revision instructions for proposal sections tied to accepted structure and source refs.
-- Unsupported-claim list, citation/source needs, known weak arguments, and reviewer-facing handoff.
+- Unsupported-claim list, citation/source needs, known weak arguments, reviewer-facing frame, and reviewer-facing handoff.
 - Reviewer-style critique with issue severity, evidence, affected section, required fix, and closure criterion.
 - Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, closure criterion, residual risk, or route-back.
 - Budget/support-material handoff mapping each needed change to budget justification, facilities/resources, biosketch, letters, appendices, portal fields, source refs, owner action, or blocker.
-- Local package audit with required files, provenance, quality gate state, manual portal actions, package/export recommendation, and exact blockers.
+- Package completeness judgment and route-back/action matrix covering required files, provenance, quality gate state, manual portal actions, owner actions, package/export recommendation, residual risks, and exact blockers.
 
 ## AI-First / Contract-Light Boundary
 
-- This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, rebuttal substance, package/portal handoff, budget/support-material gap routing, route-back decision, and owner-facing handoff framing.
-- Contracts, capability maps, package refs, and scorecards only provide locators, boundaries, and traceable return shapes. They must not become a second source of grant truth, quality truth, package authority, or submission-readiness authority.
+- This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, reviewer-facing framing, rebuttal substance, package completeness, package/portal handoff, budget/support-material gap routing, route-back/action-matrix decision, and owner-facing handoff framing.
+- Contracts, capability maps, scripts, package refs, and scorecards only provide identity, locators, refs, receipt/no-authority guards, boundaries, and traceable return shapes. They must not become a second source of grant truth, quality truth, package authority, or submission-readiness authority.
 - Use AI review to decide whether a weakness is local prose, source evidence, strategy/aims, package provenance, manual portal action, or owner decision. Route to the topmost owning layer instead of encoding a fallback workflow in contract metadata.
 - Keep quality, export, source, memory, and publication/package readiness elastic at the professional skill layer until the owning MAG authority surface issues the corresponding receipt, verdict, human gate, blocker, or route-back ref.
 
@@ -43,9 +43,10 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 3. Review independently from the authoring voice; scorecards organize evidence but do not declare quality-ready.
 4. Preserve reviewer concerns and map each substantive concern to a proposal delta or justified no-change response.
 5. Route strategy, aims, source, or fundability failures back to the owning stage instead of patching prose.
-6. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, and residual blockers.
-7. Verify quality closure before package readiness; keep local submission-ready distinct from external portal submission.
-8. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
+6. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, route-back targets, and residual blockers.
+7. Judge package completeness against funder instructions and MAG provenance refs, not file count alone; map every missing or uncertain item to owner action, route-back, typed blocker, or package-authority consumption.
+8. Verify quality closure before package readiness; keep local package completeness distinct from external portal submission, grant-ready, owner acceptance, and submission-ready authority.
+9. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
 
 ## Stage Prompt Boundary
 
