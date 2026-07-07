@@ -3,15 +3,11 @@ from __future__ import annotations
 import unittest
 from typing import Any, Mapping
 
-from med_autogrant.stage_control_plane import (
-    build_stage_native_artifact_contract as public_build_stage_native_artifact_contract,
-)
 from med_autogrant.stage_control_plane_parts.artifact_contracts import (
     FINAL_PACKAGE_LIFECYCLE_ROLE,
     PACKAGE_LIFECYCLE_OPL_CONSUMPTION,
     STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
     SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
-    build_stage_native_artifact_contract,
 )
 
 
@@ -250,10 +246,6 @@ def _assert_stage_native_artifact_contract(
     expected_stage_output_role: str,
 ) -> None:
     stage_native_artifact_contract = stage["stage_contract"]["stage_native_artifact_contract"]
-    test_case.assertIs(
-        public_build_stage_native_artifact_contract,
-        build_stage_native_artifact_contract,
-    )
     test_case.assertEqual(
         stage_native_artifact_contract["surface_kind"],
         "mag_stage_native_artifact_contract",

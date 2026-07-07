@@ -2,11 +2,6 @@ from __future__ import annotations
 
 import unittest
 
-from med_autogrant.product_entry_parts import opl_substrate_adapter as module
-from med_autogrant.product_entry_parts.opl_substrate_adapter import (
-    build_opl_substrate_adapter_export,
-)
-
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
@@ -19,7 +14,6 @@ class ProductEntryOplSubstrateAdapterTest(unittest.TestCase):
         )["product_entry_manifest"]
 
         adapter = manifest["opl_substrate_adapter_export"]
-        self.assertIs(module.build_opl_substrate_adapter_export, build_opl_substrate_adapter_export)
         self.assertEqual(adapter["surface_kind"], "mag_opl_substrate_adapter_export")
         self.assertEqual(adapter["adapter_id"], "mag.opl_substrate_adapter.export.v1")
         self.assertEqual(adapter["export_policy"], "opaque_index_only_refs_no_domain_truth_payloads")

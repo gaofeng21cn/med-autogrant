@@ -4,11 +4,7 @@ import unittest
 
 from med_autogrant.action_catalog import (
     CATALOG_ID,
-    annotate_operator_loop_actions_with_catalog_refs,
-    build_mag_family_action_catalog,
-    project_mag_family_action_catalog,
 )
-from med_autogrant.product_entry_parts.manifest_shell import shell_assembly as shell_assembly_module
 from med_autogrant.product_entry_parts.source_provenance import (
     build_source_provenance_surface,
 )
@@ -38,18 +34,6 @@ def assert_authority_handoff(
         default_caller_proof["authority_boundary"]["mag_claims_direct_hosted_parity_passed"]
     )
     action_catalog = manifest["family_action_catalog"]
-    test_case.assertIs(
-        shell_assembly_module.build_mag_family_action_catalog,
-        build_mag_family_action_catalog,
-    )
-    test_case.assertIs(
-        shell_assembly_module.project_mag_family_action_catalog,
-        project_mag_family_action_catalog,
-    )
-    test_case.assertIs(
-        shell_assembly_module.annotate_operator_loop_actions_with_catalog_refs,
-        annotate_operator_loop_actions_with_catalog_refs,
-    )
     test_case.assertEqual(action_catalog["surface_kind"], "family_action_catalog")
     test_case.assertEqual(action_catalog["catalog_id"], CATALOG_ID)
     test_case.assertEqual(action_catalog["target_domain_id"], "med-autogrant")

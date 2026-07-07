@@ -61,7 +61,7 @@ def build_grant_direct_entry_payload(
         context="grant_direct_entry.grant_cockpit",
     )
     identity = _read_grant_direct_entry_identity(direct_payload)
-    continuity_surfaces = _build_grant_direct_entry_runtime_surfaces(
+    continuity_surfaces = _build_default_runtime_continuity_surfaces(
         resolved_input_path=resolved_input_path,
         resolved_task_intent=resolved_task_intent,
         progress_projection=progress_projection,
@@ -144,27 +144,6 @@ def _read_grant_direct_entry_identity(payload: Mapping[str, Any]) -> dict[str, s
             context="grant_direct_entry",
         ),
     }
-
-
-def _build_grant_direct_entry_runtime_surfaces(
-    *,
-    resolved_input_path: Path,
-    resolved_task_intent: str,
-    progress_projection: Mapping[str, Any],
-    workspace_summary: Mapping[str, Any],
-    grant_run_id: str,
-    workspace_id: str,
-    lifecycle_stage: str,
-) -> dict[str, dict[str, Any]]:
-    return _build_default_runtime_continuity_surfaces(
-        resolved_input_path=resolved_input_path,
-        resolved_task_intent=resolved_task_intent,
-        progress_projection=progress_projection,
-        workspace_summary=workspace_summary,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        lifecycle_stage=lifecycle_stage,
-    )
 
 
 def _build_grant_direct_entry_surface(

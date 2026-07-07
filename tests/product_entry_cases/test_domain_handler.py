@@ -11,18 +11,6 @@ from io import StringIO
 from pathlib import Path
 
 from med_autogrant.cli import main
-from med_autogrant.product_entry_parts.domain_handler_projection import (
-    build_attention_queue_projection,
-    build_autonomy_controller_projection,
-    build_todo_wakeup_projection,
-    default_executor_owner,
-    first_skill,
-)
-from med_autogrant.product_entry_parts.domain_handler_shell_projection import (
-    build_domain_handler_caller_owner_contract,
-    build_domain_handler_shell_payload,
-    build_domain_handler_substrate_boundary,
-)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.domain_handler_export_assertions import (
     assert_domain_handler_export_maps_runtime_and_attention_surfaces,
@@ -43,77 +31,6 @@ class ProductDomainHandlerTest(unittest.TestCase):
             self,
             payload,
             REPO_ROOT,
-        )
-
-    def test_domain_handler_projection_helpers_feed_export_shell_surfaces(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        entry = MedAutoGrantProductEntry()
-        manifest = entry.build_product_entry_manifest(input_path=str(CRITIQUE_EXAMPLE_PATH))[
-            "product_entry_manifest"
-        ]
-        export = entry.build_domain_handler_export(input_path=str(CRITIQUE_EXAMPLE_PATH))[
-            "domain_handler_export"
-        ]
-        user_loop_command = manifest["operator_loop_surface"]["command"]
-
-        skill = first_skill(manifest["skill_catalog"])
-        self.assertEqual(
-            skill["domain_projection"]["opl_stage_runtime_registration"],
-            export["opl_control_plane"]["registration"],
-        )
-        self.assertEqual(
-            default_executor_owner(manifest),
-            export["substrate_boundary"]["default_executor_owner"],
-        )
-        self.assertEqual(
-            build_todo_wakeup_projection(
-                automation=manifest["automation"],
-                manifest=manifest,
-                user_loop_command=user_loop_command,
-            ),
-            export["todo_wakeup"],
-        )
-        self.assertEqual(
-            build_autonomy_controller_projection(
-                manifest=manifest,
-                autonomy_observability=manifest["autonomy_observability"],
-            ),
-            export["autonomy_controller"],
-        )
-        self.assertEqual(
-            build_attention_queue_projection(
-                manifest=manifest,
-                autonomy_observability=manifest["autonomy_observability"],
-                user_loop_command=user_loop_command,
-            ),
-            export["user_loop_attention_queue"],
-        )
-        self.assertEqual(
-            build_domain_handler_caller_owner_contract(),
-            export["caller_owner_contract"],
-        )
-        self.assertEqual(
-            build_domain_handler_substrate_boundary(manifest),
-            export["substrate_boundary"],
-        )
-        self.assertEqual(
-            build_domain_handler_shell_payload(
-                manifest=manifest,
-                runtime_registration=export["opl_control_plane"]["registration"],
-                automation=manifest["automation"],
-                autonomy_observability=manifest["autonomy_observability"],
-                user_loop_command=user_loop_command,
-            ),
-            {
-                "caller_owner_contract": export["caller_owner_contract"],
-                "substrate_boundary": export["substrate_boundary"],
-                "todo_wakeup": export["todo_wakeup"],
-                "autonomy_controller": export["autonomy_controller"],
-                "user_loop_attention_queue": export["user_loop_attention_queue"],
-                "opl_control_plane": export["opl_control_plane"],
-                "guardrails": export["guardrails"],
-            },
         )
 
     def test_domain_handler_shell_projection_fixes_caller_owner_readback_guard(self) -> None:

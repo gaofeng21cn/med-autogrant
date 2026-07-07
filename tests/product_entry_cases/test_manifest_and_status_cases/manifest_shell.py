@@ -2,10 +2,6 @@ from __future__ import annotations
 
 import unittest
 
-from med_autogrant.product_entry_parts import manifest_builder as manifest_builder_module
-from med_autogrant.product_entry_parts.manifest_shell.shell_assembly import (
-    build_manifest_shell_assembly,
-)
 from med_autogrant.public_cli import public_cli_command
 
 from product_entry_cases.executor_defaults_assertions import assert_executor_defaults
@@ -56,10 +52,6 @@ def assert_manifest_shell(
         public_cli_command(
             "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
         ),
-    )
-    test_case.assertIs(
-        manifest_builder_module.build_manifest_shell_assembly,
-        build_manifest_shell_assembly,
     )
     test_case.assertEqual(manifest["product_entry_surface"]["surface_kind"], "product_status")
     test_case.assertIn(

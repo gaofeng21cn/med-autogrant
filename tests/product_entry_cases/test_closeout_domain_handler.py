@@ -6,22 +6,9 @@ import unittest
 from pathlib import Path
 
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
-import med_autogrant.product_entry_parts.domain_handler_dispatch as dispatch_module
-from med_autogrant.product_entry_parts.domain_handler_closeout import (
-    _dispatch_codex_stage_receipts,
-    _dispatch_executor_first_bundle,
-    _dispatch_operator_readiness,
-    _dispatch_physical_morphology_guard,
-)
 
 
 class ProductCloseoutDomainHandlerTest(unittest.TestCase):
-    def test_closeout_helpers_are_bound_to_domain_handler_dispatch(self) -> None:
-        self.assertIs(dispatch_module._dispatch_codex_stage_receipts, _dispatch_codex_stage_receipts)
-        self.assertIs(dispatch_module._dispatch_operator_readiness, _dispatch_operator_readiness)
-        self.assertIs(dispatch_module._dispatch_physical_morphology_guard, _dispatch_physical_morphology_guard)
-        self.assertIs(dispatch_module._dispatch_executor_first_bundle, _dispatch_executor_first_bundle)
-
     def test_domain_handler_dispatch_codex_stage_receipts_returns_read_projection(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 

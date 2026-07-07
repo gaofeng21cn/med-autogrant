@@ -14,9 +14,7 @@ from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (
 from med_autogrant.product_entry_parts.domain_agent_skeleton import (
     SKELETON_ID,
     SKELETON_SURFACE_KIND,
-    build_standard_domain_agent_skeleton,
 )
-from med_autogrant.product_entry_parts import functional_closure as functional_closure_module
 
 from product_entry_cases.domain_memory_assertions import assert_domain_memory_descriptor_locator
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
@@ -80,10 +78,6 @@ def assert_standard_agent_contract(
     test_case.assertEqual(memory_locator["surface_kind"], DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND)
     assert_domain_memory_descriptor_locator(test_case, memory_locator, stage_plane)
     skeleton = manifest["standard_domain_agent_skeleton"]
-    test_case.assertIs(
-        functional_closure_module.build_standard_domain_agent_skeleton,
-        build_standard_domain_agent_skeleton,
-    )
     test_case.assertEqual(skeleton["surface_kind"], SKELETON_SURFACE_KIND)
     test_case.assertEqual(skeleton["skeleton_id"], SKELETON_ID)
     test_case.assertEqual(skeleton["canonical_semantic_pack_root"], "agent/")

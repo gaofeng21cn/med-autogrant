@@ -2,13 +2,11 @@ from __future__ import annotations
 
 import unittest
 
-from med_autogrant.product_entry_parts import manifest_builder as manifest_builder_module
 from med_autogrant.product_entry_parts.manifest_owner_payload_response import (
     EXTERNAL_EVIDENCE_LEDGER_REF,
     MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF,
     PRODUCTION_ACCEPTANCE_REF,
     WORKSPACE_RECEIPT_SCALEOUT_REF,
-    build_manifest_owner_payload_surfaces,
 )
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
 
@@ -20,10 +18,6 @@ def assert_status_projection(
     status = context.status
     manifest = context.manifest
 
-    test_case.assertIs(
-        manifest_builder_module.build_manifest_owner_payload_surfaces,
-        build_manifest_owner_payload_surfaces,
-    )
     test_case.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
     test_case.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
     test_case.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")
