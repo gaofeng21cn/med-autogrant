@@ -18,6 +18,51 @@
   },
   "capabilities": [
     {
+      "capability_id": "med-autogrant.primary_skill",
+      "surface_role": "primary_skill",
+      "capability_kind": "primary_skill",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/primary_skill/SKILL.md",
+        "role": "standard_opl_primary_skill_source"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "repo_path",
+          "ref": "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+          "role": "codex_plugin_carrier_compat_mirror"
+        },
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/opl_agent_package_manifest.json",
+          "role": "plugin_carrier_boundary"
+        }
+      ],
+      "sync_policy": "repo_local_standard_primary_skill_with_plugin_carrier_compat",
+      "externalization_reason": "Rich app skill is a required standard OPL primary skill source; plugin skill remains a Codex carrier mirror and does not own MAG truth.",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "canonical_target_paths": [
+        "agent/primary_skill/SKILL.md"
+      ],
+      "forbidden_surfaces": [
+        "global_codex_skill_registry",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ]
+    },
+    {
       "capability_id": "med-autogrant.call-intake.stage_prompt",
       "surface_role": "stage_prompt",
       "capability_kind": "stage_prompt",
@@ -553,6 +598,9 @@
     }
   ],
   "resolver_index": {
+    "primary_skill_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=primary_skill"
+    ],
     "stage_prompt_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=stage_prompt"
     ],

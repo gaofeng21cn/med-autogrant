@@ -63,6 +63,7 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 ## 当前保留面
 
 - `agent/` 是 Declarative Grant Pack：stage prompts、stage policies、domain skill declaration、professional skills、quality gates 和 knowledge refs 是 OPL pack compiler / generated surfaces 的 repo-source 语义输入。
+- `agent/primary_skill/SKILL.md` 是 MAG rich primary skill 的标准 OPL repo source，并由 `contracts/capability_map.json#/capabilities?surface_role=primary_skill` 登记；旧 `plugins/med-autogrant/skills/med-autogrant/SKILL.md` 继续作为 Codex plugin carrier / compat mirror，不持有 grant truth、fundability verdict、submission-ready verdict、owner receipt、typed blocker 或 runtime queue。
 - `contracts/` 是机器合同、handoff、receipt、external evidence request、production acceptance 和 runtime-program 指针。
 - `src/med_autogrant/**` 只作为 domain handler、refs-only adapter、minimal authority function、native helper、diagnostic、migration input 或 tombstone/provenance 支撑读取；不得写成 MAG 私有 runtime platform。
 - MAG retained private authority surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
