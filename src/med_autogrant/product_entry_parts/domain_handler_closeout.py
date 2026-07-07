@@ -3,6 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping, Protocol
 
+from med_autogrant.product_entry_parts.codex_stage_receipts import (
+    build_codex_stage_execution_receipt_bundle,
+)
+from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
+    build_executor_first_closeout_bundle,
+)
+from med_autogrant.product_entry_parts.operator_closeout import (
+    build_operator_closeout_readiness_projection,
+)
+from med_autogrant.product_entry_parts.physical_morphology_guard import (
+    build_physical_morphology_guard_projection,
+)
 from med_autogrant.product_entry_parts.primitives import (
     _optional_mapping,
     _require_mapping,
@@ -34,7 +46,8 @@ def _dispatch_codex_stage_receipts(
     task_path: Path,
     dispatch_payload: DispatchPayload,
 ) -> dict[str, Any]:
-    receipt_bundle = product_entry.build_codex_stage_execution_receipt_bundle(
+    del product_entry
+    receipt_bundle = build_codex_stage_execution_receipt_bundle(
         stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
         execution_attempts=_required_mapping_list(task, "execution_attempts"),
         review_attempts=_optional_mapping_list(task.get("review_attempts")),
@@ -62,7 +75,8 @@ def _dispatch_operator_readiness(
     task_path: Path,
     dispatch_payload: DispatchPayload,
 ) -> dict[str, Any]:
-    closeout_readiness = product_entry.build_operator_closeout_readiness_projection(
+    del product_entry
+    closeout_readiness = build_operator_closeout_readiness_projection(
         production_acceptance=_require_mapping(
             task,
             "production_acceptance",
@@ -102,7 +116,8 @@ def _dispatch_physical_morphology_guard(
     task_path: Path,
     dispatch_payload: DispatchPayload,
 ) -> dict[str, Any]:
-    morphology_guard = product_entry.build_physical_morphology_guard_projection(
+    del product_entry
+    morphology_guard = build_physical_morphology_guard_projection(
         source_items=_required_mapping_list(task, "source_items"),
         external_evidence_refs=_optional_string_list(task.get("external_evidence_refs")),
     )
@@ -129,7 +144,8 @@ def _dispatch_executor_first_bundle(
     task_path: Path,
     dispatch_payload: DispatchPayload,
 ) -> dict[str, Any]:
-    closeout_bundle = product_entry.build_executor_first_closeout_bundle(
+    del product_entry
+    closeout_bundle = build_executor_first_closeout_bundle(
         codex_stage_execution_receipt_bundle=_require_mapping(
             task,
             "codex_stage_execution_receipt_bundle",

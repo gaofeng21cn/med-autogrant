@@ -38,6 +38,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 evidence read-model wrapper thinning：controlled-soak observability、stage-attempt observability、OPL conflict envelope、hosted receipt verification、external evidence ledger、controlled-soak reconciliation proof/inventory 与 continuous reconciliation snapshot 不再通过 `ProductEntryEvidenceMixin` 暴露第二入口；测试和非 CLI caller 直接消费对应 leaf builder。保留的是 leaf contract 和 active CLI/domain handler path，不保留为 ProductEntry public wrapper；owner receipt signer 与 retained big-shell physical-delete gate 不变。
 
+2026-07-07 closeout projection wrapper thinning：codex stage execution receipt bundle、operator closeout readiness、physical morphology guard 与 executor-first closeout bundle 不再通过 `ProductEntryEvidenceMixin` 暴露 ProductEntry pass-through；CLI/domain_handler closeout caller 直接调用对应 leaf builder。该轮只移除 ProductEntry 第二入口，不改变 command output、owner receipt signer、grant truth、runtime-state 或 retained big-shell physical-delete gate。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。

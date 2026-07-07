@@ -32,9 +32,11 @@ def _review_attempt() -> dict[str, object]:
 
 class ProductEntryCodexStageReceiptTest(unittest.TestCase):
     def test_codex_stage_receipt_bundle_requires_independent_review_before_ready_refs(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.codex_stage_receipts import (
+            build_codex_stage_execution_receipt_bundle,
+        )
 
-        projection = MedAutoGrantProductEntry().build_codex_stage_execution_receipt_bundle(
+        projection = build_codex_stage_execution_receipt_bundle(
             stage_id="review_and_rebuttal",
             execution_attempts=[_execution_attempt()],
             review_attempts=[_review_attempt()],
@@ -136,4 +138,3 @@ class ProductEntryCodexStageReceiptTest(unittest.TestCase):
                 execution_attempts=[_execution_attempt()],
                 review_attempts=[review_with_ready_claim],
             )
-

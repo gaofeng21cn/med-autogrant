@@ -25,6 +25,8 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 evidence read-model wrapper cleanup：controlled-soak observability、stage-attempt observability、OPL conflict envelope、hosted receipt verification、external evidence ledger、controlled-soak reconciliation proof/inventory 与 continuous reconciliation snapshot 的 leaf builders 仍是 owner read-model contract；`ProductEntryEvidenceMixin` 不再为这些非 CLI / 非 domain-handler caller 提供第二套 pass-through 方法。后续新增 evidence read model 默认直接落 leaf module，不再先加 ProductEntry wrapper；owner receipt signer 与 retained big-shell physical-delete gate 不变。
 
+2026-07-07 closeout projection wrapper cleanup：codex stage execution receipt bundle、operator closeout readiness、physical morphology guard 与 executor-first closeout bundle 的 CLI/domain_handler caller 已改为直接调用 leaf builder；`ProductEntryEvidenceMixin` 不再为这些 closeout read-model projections 提供 ProductEntry pass-through。保留的是 leaf contract、CLI command output 与 domain_handler result shape，不保留测试驱动的 ProductEntry 第二入口。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |

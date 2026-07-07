@@ -196,9 +196,11 @@ def _external_consumption_ledger(*, complete: bool = True) -> dict[str, object]:
 
 class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
     def test_refs_ready_bundle_still_cannot_declare_grant_readiness(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
+            build_executor_first_closeout_bundle,
+        )
 
-        bundle = MedAutoGrantProductEntry().build_executor_first_closeout_bundle(
+        bundle = build_executor_first_closeout_bundle(
             codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
             operator_closeout_readiness_projection=_operator_closeout(),
             physical_morphology_guard_projection=_physical_guard(),
@@ -219,9 +221,11 @@ class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
         self.assertFalse(bundle["authority_boundary"]["bundle_ready_equals_grant_ready"])
 
     def test_refs_ready_bundle_projects_target_smoke_patch_loop_closeout_refs(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
+            build_executor_first_closeout_bundle,
+        )
 
-        bundle = MedAutoGrantProductEntry().build_executor_first_closeout_bundle(
+        bundle = build_executor_first_closeout_bundle(
             codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
             operator_closeout_readiness_projection=_operator_closeout(),
             physical_morphology_guard_projection=_physical_guard(),

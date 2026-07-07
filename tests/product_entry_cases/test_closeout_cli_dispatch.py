@@ -58,9 +58,10 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
             execution_attempt_path.write_text(json.dumps(execution_attempt), encoding="utf-8")
             review_attempt_path.write_text(json.dumps(review_attempt), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_codex_stage_execution_receipt_bundle.return_value = expected_payload
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_codex_stage_execution_receipt_bundle",
+                return_value=expected_payload,
+            ) as build_bundle:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -78,7 +79,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_codex_stage_execution_receipt_bundle.assert_called_once_with(
+        build_bundle.assert_called_once_with(
             stage_id="review_and_rebuttal",
             execution_attempts=[execution_attempt],
             review_attempts=[review_attempt],
@@ -109,9 +110,10 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
             }
             source_item_path.write_text(json.dumps(source_item), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_physical_morphology_guard_projection.return_value = expected_payload
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_physical_morphology_guard_projection",
+                return_value=expected_payload,
+            ) as build_guard:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -129,7 +131,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertEqual(payload, expected_payload)
         self.assertEqual(payload["public_readback_ref"], "authority morphology-guard")
-        product_entry.build_physical_morphology_guard_projection.assert_called_once_with(
+        build_guard.assert_called_once_with(
             source_items=[source_item],
             external_evidence_refs=["opl://receipts/mag/physical-morphology/parity.json"],
         )
@@ -172,9 +174,10 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
             evidence_ledger_path.write_text(json.dumps(evidence_ledger), encoding="utf-8")
             receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_executor_first_closeout_bundle.return_value = expected_payload
+            with patch(
+                "med_autogrant.cli_parts.handlers.build_executor_first_closeout_bundle",
+                return_value=expected_payload,
+            ) as build_bundle:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -196,7 +199,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_executor_first_closeout_bundle.assert_called_once_with(
+        build_bundle.assert_called_once_with(
             codex_stage_execution_receipt_bundle=codex_bundle,
             operator_closeout_readiness_projection=operator_projection,
             physical_morphology_guard_projection=physical_guard,

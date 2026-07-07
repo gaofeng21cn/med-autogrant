@@ -55,9 +55,11 @@ def _receipt_readiness(*, missing: list[str] | None = None) -> dict[str, object]
 
 class ProductEntryOperatorCloseoutTest(unittest.TestCase):
     def test_operator_closeout_distinguishes_accounting_from_real_evidence_gap(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.operator_closeout import (
+            build_operator_closeout_readiness_projection,
+        )
 
-        projection = MedAutoGrantProductEntry().build_operator_closeout_readiness_projection(
+        projection = build_operator_closeout_readiness_projection(
             production_acceptance=_production_acceptance(),
             external_evidence_receipt_ledger=_external_evidence_ledger(),
             receipt_readiness_projection=_receipt_readiness(),
@@ -152,4 +154,3 @@ class ProductEntryOperatorCloseoutTest(unittest.TestCase):
                 external_evidence_receipt_ledger=_external_evidence_ledger(),
                 receipt_readiness_projection=_receipt_readiness(),
             )
-

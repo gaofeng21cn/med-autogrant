@@ -34,9 +34,11 @@ def _source_item(
 
 class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
     def test_allowed_items_remain_evidence_gated_without_external_refs(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.physical_morphology_guard import (
+            build_physical_morphology_guard_projection,
+        )
 
-        projection = MedAutoGrantProductEntry().build_physical_morphology_guard_projection(
+        projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(),
                 _source_item(

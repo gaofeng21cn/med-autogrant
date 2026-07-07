@@ -14,6 +14,15 @@ from med_autogrant.foundry_series_cli import (
     build_foundry_series_validate,
 )
 from med_autogrant import mainline_status
+from med_autogrant.product_entry_parts.codex_stage_receipts import (
+    build_codex_stage_execution_receipt_bundle,
+)
+from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
+    build_executor_first_closeout_bundle,
+)
+from med_autogrant.product_entry_parts.physical_morphology_guard import (
+    build_physical_morphology_guard_projection,
+)
 from med_autogrant.product_entry_parts.receipt_readiness import (
     build_receipt_readiness_projection,
 )
@@ -206,7 +215,7 @@ def handle_product_receipt_readiness(args: argparse.Namespace) -> dict[str, Any]
 
 
 def handle_product_codex_stage_receipts(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_codex_stage_execution_receipt_bundle(
+    return build_codex_stage_execution_receipt_bundle(
         stage_id=args.stage_id,
         execution_attempts=[
             _read_json_object(attempt_path)
@@ -238,7 +247,7 @@ def handle_product_manifest_sustained_consumption_payload(args: argparse.Namespa
 
 
 def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_physical_morphology_guard_projection(
+    return build_physical_morphology_guard_projection(
         source_items=[
             _read_json_object(source_item_path)
             for source_item_path in args.source_item
@@ -260,7 +269,7 @@ def handle_product_executor_first_closeout_bundle(args: argparse.Namespace) -> d
     receipt_readiness_projection = None
     if args.receipt_readiness_projection is not None:
         receipt_readiness_projection = _read_json_object(args.receipt_readiness_projection)
-    return _product_entry().build_executor_first_closeout_bundle(
+    return build_executor_first_closeout_bundle(
         codex_stage_execution_receipt_bundle=_read_json_object(
             args.codex_stage_execution_receipt_bundle
         ),
