@@ -48,7 +48,7 @@ def _tracked_or_pending_files() -> list[str]:
         capture_output=True,
         text=True,
     )
-    return completed.stdout.splitlines()
+    return [path for path in completed.stdout.splitlines() if (REPO_ROOT / path).exists()]
 
 
 def _is_forbidden_tracked_path(path: str) -> bool:

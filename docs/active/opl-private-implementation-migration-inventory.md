@@ -33,6 +33,8 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 single-caller helper cleanup：workspace runtime stage policy/selection、grant quality issue builder 与 funding landscape static catalog 不再作为独立私有 helper 文件保留；`workspace_runtime_policy.py`、`workspace_runtime_selection.py`、`grant_quality_issue_builder.py`、`funding_landscape_catalog.py` 已并入唯一 active caller。该 cleanup 只删除跨文件扩展点，不改变 workspace validation、grant quality scorecard/diff/dossier、funding discovery 行为 contract，也不触碰 owner receipt、typed blocker、runtime state、package/export authority 或 retained product-entry physical-delete gate。
 
+2026-07-07 helper/read-model/test thinning：`cli_rendering_labels.py`、`grant_quality_value_helpers.py` 与 `consumer_thinning_pack_evidence.py` 已并入当前 owner module；CLI rendering label、grant quality value helper、consumer-thinning external evidence request pack 不再保留单调用 helper 文件。结构测试删除 mock 委派、导入字符串、Makefile/verify/healthcheck/pytest marker 细节和重复 literal 扫描，只保留 source-purity、generated aggregate、no-resurrection、authority boundary、repo-local policy 与 physical-delete false-ready guard。`consumer_thinning_shell.py` 未删除，因为当前仍是 consumed-surface/read-model 组装面；合并会扩大主文件且不能增加 deletion authority。该 cleanup 只收薄 helper/test portfolio，不改变 owner receipt、typed blocker、runtime state、package/export authority、`physical_delete_authorized=false` 或 retained product-entry/domain-handler/control-plane/lifecycle 删除门。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |

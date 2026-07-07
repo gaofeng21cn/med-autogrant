@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
-from med_autogrant.product_entry_parts.consumer_thinning_pack_evidence import (
+from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     EXTERNAL_EVIDENCE_REQUEST_IDS,
     build_external_evidence_request_pack,
     build_generated_hosted_default_caller_proof,

@@ -48,6 +48,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 single-caller helper cleanup：`workspace_runtime_policy.py`、`workspace_runtime_selection.py`、`grant_quality_issue_builder.py` 与 `funding_landscape_catalog.py` 已删除并并入唯一 active caller；保留的是 workspace validation、grant quality scorecard/diff/dossier 与 funding discovery 的行为 contract，不保留跨文件私有 helper 作为未来扩展点。该轮不改变 grant truth、owner receipt、typed blocker、runtime state、package/export authority 或 retained product-entry physical-delete gate。
 
+2026-07-07 helper/read-model/test thinning：`cli_rendering_labels.py`、`grant_quality_value_helpers.py` 与 `consumer_thinning_pack_evidence.py` 已删除并折回唯一 owner module；CLI label rendering、grant quality value/digest helper 与 consumer-thinning external evidence request pack 不再以单独私有 helper 文件保活。结构测试继续删除实现细节、路径字符串和旧 wrapper/compat 面断言，只保留 source-purity、no-resurrection、authority boundary 与 physical-delete false-ready guards。`consumer_thinning_shell.py` 因仍承载可审查的 consumed-surface/read-model 组装而暂留；本轮不改变 `physical_delete_authorized=false`、`default_caller_delete_ready=false`、owner receipt、typed blocker、runtime state、package/export authority 或 retained product-entry physical-delete gate。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。

@@ -10,8 +10,8 @@ from med_autogrant.grant_quality_parts import (
     _read_nested_string_list,
     _read_nonempty_string_list,
     _safe_int,
+    _stable_digest,
 )
-from med_autogrant.grant_quality_value_helpers import _stable_digest
 
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 _QUALITY_DIMENSION_SPECS: tuple[dict[str, str], ...] = (

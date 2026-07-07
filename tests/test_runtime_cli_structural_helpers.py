@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import med_autogrant.cli as cli
-import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
 import med_autogrant.hosted_contract_bundle as hosted_contract_bundle
-from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.domain_runtime_parts.shared import (
     DOMAIN_AUTHORITY_SURFACE_REF,
     GENERATED_SESSION_RESUME_SURFACE_REF,
@@ -91,54 +88,7 @@ def test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge() -> None:
     assert offenders == []
 
 
-def test_autonomy_quality_evaluator_uses_owner_module_quality_builders() -> None:
-    sentinel_scorecard = {
-        "surface_kind": "grant_quality_scorecard",
-        "overall_status": "submission_grade_candidate",
-        "ai_reviewer_required": False,
-        "unresolved_hard_issues": [],
-        "tracked_issues": [],
-        "dimensions": [],
-        "evidence_supply_queue": [],
-    }
-    sentinel_dossier = {"surface_kind": "grant_quality_closure_dossier"}
-
-    with patch.object(runtime_ops, "build_grant_quality_scorecard", return_value=sentinel_scorecard) as scorecard, patch.object(
-        runtime_ops,
-        "build_grant_quality_closure_dossier",
-        return_value=sentinel_dossier,
-    ) as dossier:
-        payload = runtime_ops.build_autonomy_quality_evaluator_output({"workspace_id": "ws-structure"})
-
-    assert payload["quality_status"] == "submission_grade_candidate"
-    assert payload["blocker_report"] is sentinel_scorecard
-    assert payload["quality_closure_dossier"] is sentinel_dossier
-    scorecard.assert_called_once_with({"workspace_id": "ws-structure"})
-    dossier.assert_called_once_with({"workspace_id": "ws-structure"})
-
-
-def test_functional_closure_skeleton_reads_command_catalog_without_domain_entry_runtime() -> None:
-    skeleton_path = (
-        SRC_ROOT
-        / "med_autogrant"
-        / "product_entry_parts"
-        / "functional_closure_skeleton.py"
-    )
-    skeleton_source = skeleton_path.read_text(encoding="utf-8")
-
-    assert "from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS" in skeleton_source
-    assert "from med_autogrant.domain_entry import SERVICE_SAFE_DOMAIN_COMMANDS" not in skeleton_source
-    assert SERVICE_SAFE_DOMAIN_COMMANDS["build-hosted-contract-bundle"].runtime_method == (
-        "build_hosted_contract_bundle"
-    )
-
-
-def test_hosted_contract_bundle_reads_surface_refs_from_runtime_shared_contracts() -> None:
-    bundle_path = SRC_ROOT / "med_autogrant" / "hosted_contract_bundle.py"
-    bundle_source = bundle_path.read_text(encoding="utf-8")
-
-    assert "from med_autogrant.domain_runtime_parts.shared import (" in bundle_source
-    assert "from med_autogrant.product_entry_parts.runtime_surfaces import" not in bundle_source
+def test_hosted_contract_bundle_exports_runtime_shared_surface_refs() -> None:
     assert hosted_contract_bundle.DOMAIN_AUTHORITY_SURFACE_REF == DOMAIN_AUTHORITY_SURFACE_REF
     assert (
         hosted_contract_bundle.GENERATED_SESSION_RESUME_SURFACE_REF

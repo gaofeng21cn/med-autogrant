@@ -27,11 +27,6 @@ def _contract_active_path_policy() -> dict[str, object]:
     return morphology["active_path_scan_policy"]
 
 
-def _contract_physical_source_morphology_policy() -> dict[str, object]:
-    payload = json.loads((REPO_ROOT / POLICY_REF).read_text(encoding="utf-8"))
-    return payload["physical_source_morphology_policy"]
-
-
 def _assert_repo_local_path(path: str) -> None:
     parsed = urlparse(path)
     assert not parsed.scheme, path
@@ -88,38 +83,6 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "python_single_claims_external_default_caller_consumption_complete_true",
         "toml_physical_delete_authorized_by_refs_true",
     } <= set(pattern_ids)
-
-
-def test_repo_shell_wrappers_are_explicitly_classified_as_verification_wrappers() -> None:
-    morphology = _contract_physical_source_morphology_policy()
-    classifications = {
-        surface["surface_id"]: surface
-        for surface in morphology["surface_classifications"]
-    }
-    shell_wrapper_surface = classifications["repo_shell_verification_wrappers"]
-
-    assert shell_wrapper_surface["classification"] == "repo_native_verification_wrapper"
-    assert shell_wrapper_surface["allowed_role"] == (
-        "repo_native_verification_hygiene_temp_env_bootstrap_quality_and_contract_check_entry"
-    )
-    assert shell_wrapper_surface["active_caller_status"] == "active_repo_verification_entry"
-    assert shell_wrapper_surface["target_owner_after_migration"] == "repo_hygiene_boundary"
-    assert shell_wrapper_surface["authority_boundary"] == {
-        "can_own_generic_runtime": False,
-        "can_own_generated_wrapper": False,
-        "can_authorize_physical_delete": False,
-        "can_claim_grant_readiness": False,
-        "can_claim_production_long_run_soak": False,
-    }
-
-    nested_repo_scripts = sorted(
-        path.relative_to(REPO_ROOT).as_posix()
-        for path in (REPO_ROOT / "scripts").rglob("*")
-        if path.is_file()
-        and path.parent != REPO_ROOT / "scripts"
-        and path.suffix in {".py", ".sh"}
-    )
-    assert nested_repo_scripts == []
 
 
 def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_literal() -> None:
@@ -463,24 +426,3 @@ def test_active_path_scan_fails_closed_on_default_caller_false_ready_resurrectio
         and match["pattern_id"] == pattern_id
         for match in scan["forbidden_role_matches"]
     )
-
-
-def test_functional_closure_skeleton_does_not_redeclare_retired_policy_literals() -> None:
-    source = (
-        REPO_ROOT
-        / "src"
-        / "med_autogrant"
-        / "product_entry_parts"
-        / "functional_closure_skeleton.py"
-    ).read_text(encoding="utf-8")
-    policy = _contract_active_path_policy()
-
-    assert POLICY_REF in source
-    assert "active_path_scan_policy" in source
-
-    for retired_path in policy["forbidden_active_paths"]:
-        assert retired_path not in source
-
-    for pattern in policy["forbidden_role_patterns"]:
-        forbidden_literal = "".join(pattern["literal_parts"])
-        assert forbidden_literal not in source
