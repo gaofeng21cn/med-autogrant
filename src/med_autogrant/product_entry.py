@@ -38,7 +38,6 @@ from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
-from med_autogrant.product_entry_parts.evidence import ProductEntryEvidenceMixin
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export, dispatch_domain_handler_task
 
 
@@ -46,7 +45,6 @@ class MedAutoGrantProductEntry(
     ProductEntryProgressMixin,
     ProductEntryManifestMixin,
     ProductEntryPreflightMixin,
-    ProductEntryEvidenceMixin,
 ):
     """轻量 grant product entry 壳，复用已 landed 的 domain entry 与默认 runtime contract。"""
 

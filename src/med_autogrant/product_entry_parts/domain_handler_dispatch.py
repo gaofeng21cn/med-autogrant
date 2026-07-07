@@ -4,6 +4,11 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
+)
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_nonempty_string,
@@ -24,6 +29,10 @@ from med_autogrant.product_entry_parts.domain_handler_contract import (
 from med_autogrant.product_entry_parts.typed_blocker_projection import (
     build_typed_blocker_projection,
 )
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_lifecycle_receipt_evidence,
+    write_owner_receipt_evidence,
+)
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
@@ -39,13 +48,13 @@ def dispatch_domain_handler_task(
         raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
     input_path = _require_nonempty_string_from_mapping(task, "input_path", context="domain_handler_task")
     if action == "domain-memory/propose":
-        return _dispatch_domain_memory_proposal(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+        return _dispatch_domain_memory_proposal(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/decide":
-        return _dispatch_domain_memory_decision(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+        return _dispatch_domain_memory_decision(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "stage-attempt/closeout":
-        return _dispatch_stage_attempt_closeout(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+        return _dispatch_stage_attempt_closeout(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "lifecycle/receipt":
-        return _dispatch_lifecycle_receipt(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+        return _dispatch_lifecycle_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "closeout/codex-stage-receipts":
         return _dispatch_codex_stage_receipts(
             product_entry,
@@ -82,13 +91,12 @@ def dispatch_domain_handler_task(
 
 
 def _dispatch_domain_memory_proposal(
-    product_entry: Any,
     *,
     task: Mapping[str, Any],
     input_path: str,
     task_path: Path,
 ) -> dict[str, Any]:
-    proposal = product_entry.build_domain_memory_writeback_proposal(
+    proposal = build_domain_memory_writeback_proposal(
         input_path=input_path,
         stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
         source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
@@ -111,19 +119,18 @@ def _dispatch_domain_memory_proposal(
 
 
 def _dispatch_domain_memory_decision(
-    product_entry: Any,
     *,
     task: Mapping[str, Any],
     input_path: str,
     task_path: Path,
 ) -> dict[str, Any]:
-    decision = product_entry.build_domain_memory_writeback_decision(
+    decision = build_domain_memory_writeback_decision(
         proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="domain_handler_task"),
         decision=_require_nonempty_string_from_mapping(task, "decision", context="domain_handler_task"),
         decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="domain_handler_task"),
         memory_id=_optional_nonempty_string(task.get("memory_id")),
     )
-    receipt_evidence = product_entry.write_domain_memory_receipt_evidence(
+    receipt_evidence = write_domain_memory_receipt_evidence(
         decision_payload=decision,
         runtime_root=_optional_nonempty_string(task.get("runtime_root")),
     )
@@ -144,14 +151,13 @@ def _dispatch_domain_memory_decision(
 
 
 def _dispatch_stage_attempt_closeout(
-    product_entry: Any,
     *,
     task: Mapping[str, Any],
     input_path: str,
     task_path: Path,
 ) -> dict[str, Any]:
     closeout_refs = _stage_attempt_closeout_refs(task)
-    receipt_evidence = product_entry.write_owner_receipt_evidence(
+    receipt_evidence = write_owner_receipt_evidence(
         input_path=input_path,
         receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),
         stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
@@ -190,13 +196,12 @@ def _dispatch_stage_attempt_closeout(
 
 
 def _dispatch_lifecycle_receipt(
-    product_entry: Any,
     *,
     task: Mapping[str, Any],
     input_path: str,
     task_path: Path,
 ) -> dict[str, Any]:
-    receipt_evidence = product_entry.write_lifecycle_receipt_evidence(
+    receipt_evidence = write_lifecycle_receipt_evidence(
         input_path=input_path,
         operation=_require_nonempty_string_from_mapping(task, "operation", context="domain_handler_task"),
         receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),

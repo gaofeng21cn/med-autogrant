@@ -4,6 +4,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_lifecycle_receipt_evidence,
+    write_owner_receipt_evidence,
+)
 from product_entry_cases.functional_closure_assertions import (
     assert_consumer_thinning_contract_for_opl_replacement_handoff,
 )
@@ -113,7 +117,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
-            payload = MedAutoGrantProductEntry().write_owner_receipt_evidence(
+            payload = write_owner_receipt_evidence(
                 input_path=str(CRITIQUE_EXAMPLE_PATH),
                 receipt_shape="no_regression_evidence",
                 stage_id="review_and_rebuttal",
@@ -146,7 +150,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
-            payload = MedAutoGrantProductEntry().write_lifecycle_receipt_evidence(
+            payload = write_lifecycle_receipt_evidence(
                 input_path=str(CRITIQUE_EXAMPLE_PATH),
                 operation="cleanup",
                 receipt_shape="typed_blocker",

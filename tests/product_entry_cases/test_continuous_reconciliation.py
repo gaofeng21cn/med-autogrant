@@ -9,6 +9,9 @@ from pathlib import Path
 from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
     build_controlled_soak_receipt_reconciliation_inventory,
 )
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_owner_receipt_evidence,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -32,7 +35,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
         entry = MedAutoGrantProductEntry()
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
-            no_regression = entry.write_owner_receipt_evidence(
+            no_regression = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="no_regression_evidence",
                 stage_id="review_and_rebuttal",
@@ -41,7 +44,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="continuous-no-regression",
             )["owner_receipt_evidence"]
-            typed_blocker = entry.write_owner_receipt_evidence(
+            typed_blocker = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="package_and_submit_ready",
@@ -50,7 +53,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="continuous-typed-blocker",
             )["owner_receipt_evidence"]
-            domain_owner = entry.write_owner_receipt_evidence(
+            domain_owner = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="fundability_strategy",

@@ -134,9 +134,10 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-            product_entry = product_entry_class.return_value
-            product_entry.build_domain_memory_writeback_proposal.return_value = expected_payload
+        with patch(
+            "med_autogrant.cli_parts.handlers.build_domain_memory_writeback_proposal",
+            return_value=expected_payload,
+        ) as build_proposal:
 
             exit_code, stdout, stderr = self.run_cli(
                 "authority",
@@ -158,7 +159,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_domain_memory_writeback_proposal.assert_called_once_with(
+        build_proposal.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
@@ -175,9 +176,10 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-            product_entry = product_entry_class.return_value
-            product_entry.build_domain_memory_writeback_decision.return_value = expected_payload
+        with patch(
+            "med_autogrant.cli_parts.handlers.build_domain_memory_writeback_decision",
+            return_value=expected_payload,
+        ) as build_decision:
 
             exit_code, stdout, stderr = self.run_cli(
                 "authority",
@@ -197,7 +199,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_domain_memory_writeback_decision.assert_called_once_with(
+        build_decision.assert_called_once_with(
             proposal_path="/tmp/proposal.json",
             decision="accepted",
             decision_reason="Reusable strategy memory.",
@@ -213,9 +215,10 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-            product_entry = product_entry_class.return_value
-            product_entry.write_domain_memory_receipt_evidence.return_value = expected_payload
+        with patch(
+            "med_autogrant.cli_parts.handlers.write_domain_memory_receipt_evidence",
+            return_value=expected_payload,
+        ) as write_receipt:
 
             exit_code, stdout, stderr = self.run_cli(
                 "authority",
@@ -231,7 +234,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.write_domain_memory_receipt_evidence.assert_called_once_with(
+        write_receipt.assert_called_once_with(
             decision_payload="/tmp/decision.json",
             runtime_root="/tmp/runtime-state",
         )
@@ -245,9 +248,10 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-            product_entry = product_entry_class.return_value
-            product_entry.write_owner_receipt_evidence.return_value = expected_payload
+        with patch(
+            "med_autogrant.cli_parts.handlers.write_owner_receipt_evidence",
+            return_value=expected_payload,
+        ) as write_receipt:
 
             exit_code, stdout, stderr = self.run_cli(
                 "authority",
@@ -273,7 +277,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.write_owner_receipt_evidence.assert_called_once_with(
+        write_receipt.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             receipt_shape="no_regression_evidence",
             stage_id="review_and_rebuttal",

@@ -6,6 +6,9 @@ import json
 import unittest
 from pathlib import Path
 import med_autogrant.product_entry_parts.owner_receipt_reconciliation as receipt_reconciliation
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_owner_receipt_evidence,
+)
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
@@ -106,7 +109,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="review_and_rebuttal",
@@ -150,7 +153,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="package_and_submit_ready",
@@ -193,7 +196,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             entry = MedAutoGrantProductEntry()
-            no_regression = entry.write_owner_receipt_evidence(
+            no_regression = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="no_regression_evidence",
                 stage_id="review_and_rebuttal",
@@ -202,7 +205,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="inventory-no-regression",
             )["owner_receipt_evidence"]
-            typed_blocker = entry.write_owner_receipt_evidence(
+            typed_blocker = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="package_and_submit_ready",

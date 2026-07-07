@@ -46,11 +46,11 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
             suite_result_path.write_text(json.dumps(suite_result), encoding="utf-8")
             meta_result_path.write_text(json.dumps(meta_result), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_production_live_acceptance_receipt_projection.return_value = (
-                    expected_payload
-                )
+            with patch(
+                "med_autogrant.cli_parts.handlers."
+                "build_production_live_acceptance_receipt_projection",
+                return_value=expected_payload,
+            ) as build_projection:
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",
@@ -68,7 +68,7 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_production_live_acceptance_receipt_projection.assert_called_once_with(
+        build_projection.assert_called_once_with(
             owner_receipt_evidence=owner_receipt,
             agent_lab_suite_result=suite_result,
             meta_agent_coordination_result=meta_result,
@@ -103,11 +103,11 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
             suite_result_path.write_text(json.dumps(suite_result), encoding="utf-8")
             meta_result_path.write_text(json.dumps(meta_result), encoding="utf-8")
 
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_production_live_acceptance_receipt_projection.return_value = (
-                    expected_payload
-                )
+            with patch(
+                "med_autogrant.cli_parts.handlers."
+                "build_production_live_acceptance_receipt_projection",
+                return_value=expected_payload,
+            ):
 
                 exit_code, stdout, stderr = self.run_cli(
                     "authority",

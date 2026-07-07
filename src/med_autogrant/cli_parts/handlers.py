@@ -17,6 +17,11 @@ from med_autogrant import mainline_status
 from med_autogrant.product_entry_parts.codex_stage_receipts import (
     build_codex_stage_execution_receipt_bundle,
 )
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
+)
 from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
     build_executor_first_closeout_bundle,
 )
@@ -26,8 +31,14 @@ from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload im
 from med_autogrant.product_entry_parts.opl_owner_payload_response import (
     build_opl_owner_payload_response,
 )
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_owner_receipt_evidence,
+)
 from med_autogrant.product_entry_parts.physical_morphology_guard import (
     build_physical_morphology_guard_projection,
+)
+from med_autogrant.product_entry_parts.production_live_acceptance import (
+    build_production_live_acceptance_receipt_projection,
 )
 from med_autogrant.product_entry_parts.receipt_readiness import (
     build_receipt_readiness_projection,
@@ -154,7 +165,7 @@ def handle_domain_handler_dispatch(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def handle_product_domain_memory_proposal(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_domain_memory_writeback_proposal(
+    return build_domain_memory_writeback_proposal(
         input_path=args.input,
         stage_id=args.stage_id,
         source_ref=args.source_ref,
@@ -164,7 +175,7 @@ def handle_product_domain_memory_proposal(args: argparse.Namespace) -> dict[str,
 
 
 def handle_product_domain_memory_decision(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_domain_memory_writeback_decision(
+    return build_domain_memory_writeback_decision(
         proposal_path=args.proposal,
         decision=args.decision,
         decision_reason=args.decision_reason,
@@ -173,14 +184,14 @@ def handle_product_domain_memory_decision(args: argparse.Namespace) -> dict[str,
 
 
 def handle_product_domain_memory_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().write_domain_memory_receipt_evidence(
+    return write_domain_memory_receipt_evidence(
         decision_payload=args.decision,
         runtime_root=args.runtime_root,
     )
 
 
 def handle_product_owner_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().write_owner_receipt_evidence(
+    return write_owner_receipt_evidence(
         input_path=args.input,
         receipt_shape=args.receipt_shape,
         stage_id=args.stage_id,
@@ -192,7 +203,7 @@ def handle_product_owner_receipt_evidence(args: argparse.Namespace) -> dict[str,
 
 
 def handle_product_live_acceptance_receipt(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_production_live_acceptance_receipt_projection(
+    return build_production_live_acceptance_receipt_projection(
         owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
         agent_lab_suite_result=_read_json_object(args.agent_lab_suite_result),
         meta_agent_coordination_result=_read_json_object(args.meta_agent_coordination_result),

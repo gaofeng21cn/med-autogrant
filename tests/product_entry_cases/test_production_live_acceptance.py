@@ -15,6 +15,9 @@ from med_autogrant.product_entry_parts.manifest_owner_receipt_surfaces import (
 from med_autogrant.product_entry_parts.production_live_acceptance import (
     build_production_live_acceptance_receipt_projection,
 )
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_owner_receipt_evidence,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -144,7 +147,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="package_and_submit_ready",
@@ -200,7 +203,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="package_and_submit_ready",
@@ -209,7 +212,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-blocked",
             )["owner_receipt_evidence"]
-            payload = entry.build_production_live_acceptance_receipt_projection(
+            payload = build_production_live_acceptance_receipt_projection(
                 owner_receipt_evidence=receipt,
                 agent_lab_suite_result=_agent_lab_suite_result(),
                 meta_agent_coordination_result=_meta_agent_patch_work_order_result(),
@@ -263,7 +266,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="typed_blocker",
                 stage_id="package_and_submit_ready",
@@ -278,7 +281,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             ]
 
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=_agent_lab_suite_result(),
                     meta_agent_coordination_result=meta_result,
@@ -290,7 +293,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="package_and_submit_ready",
@@ -304,7 +307,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             receipt["target_domain_id"] = "other-agent"
 
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=_agent_lab_suite_result(),
                     meta_agent_coordination_result=_meta_agent_coordination_result(),
@@ -316,7 +319,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="package_and_submit_ready",
@@ -331,7 +334,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             ] = "different-result-id"
 
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=_agent_lab_suite_result(),
                     meta_agent_coordination_result=meta_result,
@@ -343,7 +346,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="package_and_submit_ready",
@@ -356,7 +359,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             suite_result["summary"].pop("forbidden_authority_flag_count")
 
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=suite_result,
                     meta_agent_coordination_result=_meta_agent_coordination_result(),
@@ -368,7 +371,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
-            receipt = entry.write_owner_receipt_evidence(
+            receipt = write_owner_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 receipt_shape="domain_owner_receipt",
                 stage_id="package_and_submit_ready",
@@ -380,7 +383,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             suite_result = deepcopy(_agent_lab_suite_result())
 
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result={
                         "agent_lab_mag_live_acceptance": {
@@ -392,7 +395,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
 
             suite_result["suite_kind"] = "agent_lab_mag_live_acceptance_suite"
             with self.assertRaises(WorkspaceStateError):
-                entry.build_production_live_acceptance_receipt_projection(
+                build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=suite_result,
                     meta_agent_coordination_result=_meta_agent_coordination_result(),

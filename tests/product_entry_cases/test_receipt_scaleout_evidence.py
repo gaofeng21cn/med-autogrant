@@ -5,11 +5,20 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
+)
 from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
     build_lifecycle_receipt_bundle,
 )
 from med_autogrant.product_entry_parts.opl_owner_payload_response import (
     build_opl_owner_payload_response,
+)
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_lifecycle_receipt_evidence,
+    write_owner_receipt_evidence,
 )
 from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
     build_package_lifecycle_handoff_projection,
@@ -104,7 +113,7 @@ def _memory_receipt_for_sample(
     decision: str,
     runtime_root: Path,
 ) -> dict[str, object]:
-    proposal = entry.build_domain_memory_writeback_proposal(
+    proposal = build_domain_memory_writeback_proposal(
         input_path=workspace_path,
         stage_id=stage_id,
         source_ref=f"workspace-runtime-ref:mag/receipt-scaleout/{sample_id}/memory",
@@ -114,13 +123,13 @@ def _memory_receipt_for_sample(
     proposal_path = runtime_root / "proposals" / f"{sample_id}.json"
     proposal_path.parent.mkdir(parents=True, exist_ok=True)
     _write_json(proposal_path, proposal)
-    decision_payload = entry.build_domain_memory_writeback_decision(
+    decision_payload = build_domain_memory_writeback_decision(
         proposal_path=proposal_path,
         decision=decision,
         decision_reason=f"{sample_id} receipt scaleout {decision} decision.",
         memory_id=f"mag-receipt-scaleout-{sample_id}",
     )
-    return entry.write_domain_memory_receipt_evidence(
+    return write_domain_memory_receipt_evidence(
         decision_payload=decision_payload,
         runtime_root=runtime_root,
     )["domain_memory_receipt_evidence"]
@@ -134,7 +143,7 @@ def _lifecycle_bundle_for_sample(
     runtime_root: Path,
 ) -> dict[str, object]:
     receipts = [
-        entry.write_lifecycle_receipt_evidence(
+        write_lifecycle_receipt_evidence(
             input_path=workspace_path,
             operation=operation,
             receipt_shape=receipt_shape,
@@ -226,7 +235,7 @@ def _build_scaleout_payload() -> tuple[dict[str, object], dict[str, object], dic
     with tempfile.TemporaryDirectory() as tmp_dir:
         runtime_root = Path(tmp_dir) / "runtime-state"
         for sample_id, workspace_path, stage_id, receipt_shape, decision in _workspace_samples():
-            owner_receipt = entry.write_owner_receipt_evidence(
+            owner_receipt = write_owner_receipt_evidence(
                 input_path=workspace_path,
                 receipt_shape=receipt_shape,
                 stage_id=stage_id,

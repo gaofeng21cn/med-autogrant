@@ -5,6 +5,9 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
+    write_lifecycle_receipt_evidence,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -20,7 +23,7 @@ class ProductEntryLifecycleReceiptBundleTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             receipts = [
-                entry.write_lifecycle_receipt_evidence(
+                write_lifecycle_receipt_evidence(
                     input_path=CRITIQUE_EXAMPLE_PATH,
                     operation=operation,
                     receipt_shape=receipt_shape,
@@ -74,7 +77,7 @@ class ProductEntryLifecycleReceiptBundleTest(unittest.TestCase):
 
         entry = MedAutoGrantProductEntry()
         with tempfile.TemporaryDirectory() as tmp_dir:
-            receipt = entry.write_lifecycle_receipt_evidence(
+            receipt = write_lifecycle_receipt_evidence(
                 input_path=CRITIQUE_EXAMPLE_PATH,
                 operation="cleanup",
                 receipt_shape="typed_blocker",
@@ -97,7 +100,7 @@ class ProductEntryLifecycleReceiptBundleTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
             receipts = [
-                entry.write_lifecycle_receipt_evidence(
+                write_lifecycle_receipt_evidence(
                     input_path=CRITIQUE_EXAMPLE_PATH,
                     operation=operation,
                     receipt_shape="domain_owner_receipt",
@@ -129,7 +132,7 @@ class ProductEntryLifecycleReceiptBundleTest(unittest.TestCase):
             runtime_root = Path(tmp_dir) / "runtime-state"
             receipts = []
             for operation in ("cleanup", "restore", "retention"):
-                receipt = entry.write_lifecycle_receipt_evidence(
+                receipt = write_lifecycle_receipt_evidence(
                     input_path=CRITIQUE_EXAMPLE_PATH,
                     operation=operation,
                     receipt_shape="domain_owner_receipt",

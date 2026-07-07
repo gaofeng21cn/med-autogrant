@@ -8,6 +8,9 @@ from pathlib import Path
 
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
 )
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -22,14 +25,14 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         product_entry = MedAutoGrantProductEntry()
-        proposal_payload = product_entry.build_domain_memory_writeback_proposal(
+        proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Keep reusable reviewer risk framing as strategy memory.",
             proposal_id="review-risk-framing",
         )
-        decision_payload = product_entry.build_domain_memory_writeback_decision(
+        decision_payload = build_domain_memory_writeback_decision(
             proposal_path=self._write_proposal(proposal_payload),
             decision="accepted",
             decision_reason="Reusable reviewer risk framing.",
@@ -37,7 +40,7 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
         )
 
         with tempfile.TemporaryDirectory() as runtime_root:
-            evidence = product_entry.write_domain_memory_receipt_evidence(
+            evidence = write_domain_memory_receipt_evidence(
                 decision_payload=decision_payload,
                 runtime_root=runtime_root,
             )
@@ -64,21 +67,21 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         product_entry = MedAutoGrantProductEntry()
-        proposal_payload = product_entry.build_domain_memory_writeback_proposal(
+        proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Do not store this text in the receipt evidence.",
             proposal_id="reject-review-risk-framing",
         )
-        decision_payload = product_entry.build_domain_memory_writeback_decision(
+        decision_payload = build_domain_memory_writeback_decision(
             proposal_path=self._write_proposal(proposal_payload),
             decision="rejected",
             decision_reason="Not broadly reusable enough.",
         )
 
         with tempfile.TemporaryDirectory() as runtime_root:
-            evidence = product_entry.write_domain_memory_receipt_evidence(
+            evidence = write_domain_memory_receipt_evidence(
                 decision_payload=decision_payload,
                 runtime_root=runtime_root,
             )
