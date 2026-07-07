@@ -11,7 +11,8 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 
 - Funding call guidance, portal rules, eligibility text, reviewer rubric, scoring anchors, deadlines, budget/personnel limits, and appendix requirements.
 - Applicant/team profile, institution, preliminary evidence, candidate project notes, accepted route, reviewer risks, and source gaps.
-- Body-free strategy-memory refs, consumed-memory proof refs, writeback proposal refs, prior memory decision refs, owner receipts, and typed blockers.
+- Reviewer-panel memory refs, call-specific risk history, prior critique/repair patterns, consumed-memory proof refs, writeback proposal refs, prior memory decision refs, owner receipts, and typed blockers.
+- Funding-call constraint prefetch refs for hard eligibility, deadline, budget, portal, attachment, geography, career-stage, institution, and compliance rules before fundability judgment.
 - MAG refs:
   - `agent/prompts/call_and_candidate_intake.md`
   - `agent/prompts/fundability_strategy.md`
@@ -28,6 +29,8 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - Fundability recommendation: proceed, repair, retarget, or stop, with reviewer-risk ranking and mitigation requirements.
 - Central claim, specific aims strategy, section map, claim/evidence ledger, reviewer-facing frame, and reviewer-risk mitigation map for authoring.
 - Strategy-memory review classifying refs as accepted, rejected, stale, conflicting, or pending, without writing memory bodies or receipts.
+- Reviewer-panel memory and call-specific risk reuse summary: relevant prior panel risks, reusable mitigations, stale/non-transferable risks, and risks that must be rechecked against the locked call.
+- Funding-call constraint prefetch ledger with hard rules, soft reviewer preferences, unknowns, and source refs that must be consumed by strategy, aims, and later package work.
 - Typed blockers or repair targets when the call, applicant basis, fundability route, aims, or memory use is unsafe.
 
 ## AI-First / Contract-Light Boundary
@@ -42,12 +45,15 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 1. Read current call and applicant source refs literally before using memory or examples.
 2. Preserve the funding-call lock; do not silently switch funders, mechanisms, or project routes.
 3. Separate source facts from interpretation and mark uncertainty as evidence gaps.
-4. Judge as a skeptical grant reviewer: fit, eligibility, novelty, feasibility, impact, applicant credibility, timeline, budget realism, support-material credibility, and panel risk.
-5. Make each aim assessable: premise, approach, success criterion, risk/alternative, and evidence need.
-6. Translate the rubric into funder-facing writing constraints, reviewer-facing frames, and repair targets; keep hard rules, reviewer preferences, and inferred panel risks distinct.
-7. Return a compact action matrix for proceed, repair, retarget, stop, or route-back, with source refs and the next owner action for each open risk.
-8. Treat memory as advisory strategy context, not grant truth, route truth, fundability score, quality verdict, export verdict, package authority, or submission-ready evidence.
-9. Keep grant bodies, memory bodies, verdict bodies, receipt instances, package bodies, and runtime state out of repo source and OPL generated surfaces.
+4. Prefetch hard funding-call constraints before scoring fit; do not rely on generic mechanism memory when the locked call has a contrary rule.
+5. Judge as a skeptical grant reviewer: fit, eligibility, novelty, feasibility, impact, applicant credibility, timeline, budget realism, support-material credibility, and panel risk.
+6. Reuse reviewer-panel memory only as body-free risk context: name the prior risk pattern, why it transfers to this call, what mitigation transfers, and what must be revalidated.
+7. Reuse call-specific risk history only when mechanism, applicant class, source basis, and reviewer rubric remain compatible; otherwise mark it stale or non-transferable.
+8. Make each aim assessable: premise, approach, success criterion, risk/alternative, and evidence need.
+9. Translate the rubric into funder-facing writing constraints, reviewer-facing frames, and repair targets; keep hard rules, reviewer preferences, and inferred panel risks distinct.
+10. Return a compact action matrix for proceed, repair, retarget, stop, or route-back, with source refs and the next owner action for each open risk.
+11. Treat memory as advisory strategy context, not grant truth, route truth, fundability score, quality verdict, export verdict, package authority, or submission-ready evidence.
+12. Keep grant bodies, memory bodies, verdict bodies, receipt instances, package bodies, and runtime state out of repo source and OPL generated surfaces.
 
 ## Stage Prompt Boundary
 
@@ -57,7 +63,7 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 
 ## Legacy Coverage
 
-This workflow-level skill covers the retired `mag-call-fit-analyst`, `mag-fundability-strategist`, `mag-specific-aims-architect`, and `mag-grant-strategy-memory-curator` entries. Keep those pre-authoring strategy decisions together so call fit, fundability, aims, and strategy memory are judged against one locked funding route.
+This workflow-level skill covers the retired `mag-call-fit-analyst`, `mag-fundability-strategist`, `mag-specific-aims-architect`, and `mag-grant-strategy-memory-curator` entries. Keep those pre-authoring strategy decisions together so call fit, fundability, aims, reviewer-panel memory, call-specific risk reuse, and strategy memory are judged against one locked funding route; do not restore the retired fine-grained skill directories.
 
 ## Blockers And Repair Targets
 
@@ -73,5 +79,7 @@ Return `repair_target` when:
 
 - Call summary omits a hard rule that affects later writing.
 - Proceed/repair/retarget state, mitigation, or reviewer-risk severity is vague.
+- Reviewer-panel memory or call-specific risk reuse lacks transfer rationale, freshness check, or non-transferable-risk rejection.
+- Funding-call constraint prefetch omits a hard eligibility, budget, deadline, attachment, portal, or compliance rule.
 - Aims overlap, lack distinct success criteria, or hide evidence gaps in elegant framing.
 - Strategy-memory review lacks body-free refs, current source basis, rationale, or next-stage effect.

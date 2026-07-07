@@ -10,7 +10,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 ## Inputs
 
 - Accepted strategy, aims, section map, claim/evidence ledger, funder criteria, page limits, format rules, and source materials.
-- Reviewable draft refs, prior critique, scorecard, quality-diff, closure dossier, revision history, reviewer comments, and residual risks.
+- Reviewable draft refs, prior critique, critique-as-repair-hint refs, scorecard, quality-diff, closure dossier, revision history, reviewer comments, and residual risks.
 - Review gate receipt, quality verdict ref, final draft/package refs, required artifact list, portal instructions, upload slots, attachment rules, budget/support material refs, deadline constraints, and manual submission requirements.
 - MAG refs:
   - `agent/prompts/proposal_authoring.md`
@@ -25,9 +25,10 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - Draft or revision instructions for proposal sections tied to accepted structure and source refs.
 - Unsupported-claim list, citation/source needs, known weak arguments, reviewer-facing frame, and reviewer-facing handoff.
 - Reviewer-style critique with issue severity, evidence, affected section, required fix, and closure criterion.
-- Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, closure criterion, residual risk, or route-back.
+- Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, critique-as-repair-hint, closure criterion, residual risk, or route-back.
+- Closure dossier that records each critique, repair delta, source/provenance ref, quality-gate consumption ref, residual risk, and remaining owner action without signing readiness.
 - Budget/support-material handoff mapping each needed change to budget justification, facilities/resources, biosketch, letters, appendices, portal fields, source refs, owner action, or blocker.
-- Package completeness judgment and route-back/action matrix covering required files, provenance, quality gate state, manual portal actions, owner actions, package/export recommendation, residual risks, and exact blockers.
+- Package completeness judgment and package/portal owner handoff covering required files, provenance, quality gate state, upload slots, manual portal actions, owner actions, package/export recommendation, residual risks, and exact blockers.
 
 ## AI-First / Contract-Light Boundary
 
@@ -41,12 +42,14 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 1. Draft against accepted aims and funder criteria, not a generic grant template.
 2. Preserve source fidelity; mark unsupported claims instead of inventing citations, data, collaborators, resources, or outcomes.
 3. Review independently from the authoring voice; scorecards organize evidence but do not declare quality-ready.
-4. Preserve reviewer concerns and map each substantive concern to a proposal delta or justified no-change response.
-5. Route strategy, aims, source, or fundability failures back to the owning stage instead of patching prose.
-6. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, route-back targets, and residual blockers.
-7. Judge package completeness against funder instructions and MAG provenance refs, not file count alone; map every missing or uncertain item to owner action, route-back, typed blocker, or package-authority consumption.
-8. Verify quality closure before package readiness; keep local package completeness distinct from external portal submission, grant-ready, owner acceptance, and submission-ready authority.
-9. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
+4. Preserve reviewer concerns and treat critique as repair hints until verified against accepted strategy, source refs, and funder criteria; do not paste critique into prose as authority.
+5. Map each substantive concern to a proposal delta, source/material action, route-back, closure-dossier entry, or justified no-change response.
+6. Route strategy, aims, source, or fundability failures back to the owning stage instead of patching prose.
+7. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, route-back targets, closure-dossier refs, and residual blockers.
+8. Judge package completeness against funder instructions and MAG provenance refs, not file count alone; map every missing or uncertain item to owner action, route-back, typed blocker, or package-authority consumption.
+9. Produce a package/portal owner handoff when manual upload, portal field entry, institutional signoff, budget/support-material completion, or package-authority consumption remains.
+10. Verify quality closure before package readiness; keep local package completeness distinct from external portal submission, grant-ready, owner acceptance, and submission-ready authority.
+11. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
 
 ## Stage Prompt Boundary
 
@@ -56,7 +59,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Legacy Coverage
 
-This workflow-level skill covers the retired `mag-proposal-section-author`, `mag-grant-reviewer`, `mag-rebuttal-planner`, and `mag-submission-package-auditor` entries. Keep authoring, independent review, rebuttal repair, and local package audit together after strategy and aims are accepted.
+This workflow-level skill covers the retired `mag-proposal-section-author`, `mag-grant-reviewer`, `mag-rebuttal-planner`, and `mag-submission-package-auditor` entries. Keep authoring, independent review, critique-as-repair-hint, rebuttal repair, closure dossier, and local package/portal handoff together after strategy and aims are accepted; do not restore the retired fine-grained skill directories.
 
 ## Blockers And Repair Targets
 
@@ -71,7 +74,9 @@ Return `typed_blocker` when:
 Return `repair_target` when:
 
 - Polished prose hides weak claim/source support or missing reviewer logic.
+- Critique is treated as direct prose authority instead of a repair hint verified against accepted strategy, source refs, and funder criteria.
 - Rebuttal answers tone but not substance, lacks concrete proposal deltas, or has unchecked closure criteria.
+- Closure dossier omits critique-to-delta mapping, source/provenance refs, residual risk, or remaining owner action.
 - Budget/support-material or portal handoff is implied from package files instead of mapped to source refs, owner action, and closure criteria.
 - Residual risks are omitted from package-facing handoff.
 - Local package readiness is blurred with external submission or inferred from generated files alone.
