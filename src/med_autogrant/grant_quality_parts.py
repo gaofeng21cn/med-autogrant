@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Iterable, Mapping
 
-from med_autogrant.grant_quality_issue_builder import _build_issue
 from med_autogrant.grant_quality_value_helpers import (
     _dedupe_preserve_order,
     _ensure_mapping,
