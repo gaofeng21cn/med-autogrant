@@ -6,9 +6,6 @@ from typing import Any, Mapping
 from med_autogrant.product_entry_parts.codex_stage_receipts import (
     build_codex_stage_execution_receipt_bundle,
 )
-from med_autogrant.product_entry_parts.conflict_envelopes import (
-    build_opl_conflict_or_blocker_envelope,
-)
 from med_autogrant.product_entry_parts.continuous_reconciliation import (
     build_continuous_receipt_reconciliation_snapshot,
 )
@@ -19,12 +16,6 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
 )
 from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
     build_executor_first_closeout_bundle,
-)
-from med_autogrant.product_entry_parts.external_evidence_ledger import (
-    build_external_evidence_consumption_ledger,
-)
-from med_autogrant.product_entry_parts.hosted_receipt_verification import (
-    build_focused_hosted_receipt_verification,
 )
 from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
     build_manifest_sustained_consumption_payload_response,
@@ -48,12 +39,6 @@ from med_autogrant.product_entry_parts.physical_morphology_guard import (
 )
 from med_autogrant.product_entry_parts.production_live_acceptance import (
     build_production_live_acceptance_receipt_projection,
-)
-from med_autogrant.product_entry_parts.receipt_observability import (
-    build_controlled_soak_receipt_observability_summary,
-)
-from med_autogrant.product_entry_parts.stage_attempt_observability import (
-    build_stage_attempt_observability_projection,
 )
 
 
@@ -182,81 +167,6 @@ class ProductEntryEvidenceMixin:
             owner_receipt_evidence=owner_receipt_evidence,
             agent_lab_suite_result=agent_lab_suite_result,
             meta_agent_coordination_result=meta_agent_coordination_result,
-        )
-
-    def build_controlled_soak_receipt_observability_summary(
-        self,
-        *,
-        receipt_reconciliation_inventory: Mapping[str, Any],
-    ) -> dict[str, Any]:
-        return build_controlled_soak_receipt_observability_summary(
-            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
-        )
-
-    def build_stage_attempt_observability_projection(
-        self,
-        *,
-        controlled_stage_attempt_projection: Mapping[str, Any],
-        receipt_reconciliation_inventory: Mapping[str, Any],
-        opl_usage_projection_ref: str,
-        opl_control_loop_projection_ref: str,
-    ) -> dict[str, Any]:
-        return build_stage_attempt_observability_projection(
-            controlled_stage_attempt_projection=controlled_stage_attempt_projection,
-            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
-            opl_usage_projection_ref=opl_usage_projection_ref,
-            opl_control_loop_projection_ref=opl_control_loop_projection_ref,
-        )
-
-    def build_opl_conflict_or_blocker_envelope(
-        self,
-        payload: Mapping[str, Any] | None = None,
-        *,
-        classification: str | None = None,
-        severity: str | None = None,
-        owner_receipt: Mapping[str, Any] | None = None,
-        typed_blocker: Mapping[str, Any] | None = None,
-        no_regression_evidence: Mapping[str, Any] | None = None,
-        source_refs: list[str] | tuple[str, ...] | None = None,
-        receipt_refs: Mapping[str, Any] | None = None,
-        verdict_refs: Mapping[str, Any] | None = None,
-        safe_action_refs: Mapping[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        return build_opl_conflict_or_blocker_envelope(
-            payload,
-            classification=classification,
-            severity=severity,
-            owner_receipt=owner_receipt,
-            typed_blocker=typed_blocker,
-            no_regression_evidence=no_regression_evidence,
-            source_refs=source_refs,
-            receipt_refs=receipt_refs,
-            verdict_refs=verdict_refs,
-            safe_action_refs=safe_action_refs,
-        )
-
-    def build_focused_hosted_receipt_verification(
-        self,
-        *,
-        owner_receipt_evidence: Mapping[str, Any],
-        opl_attempt_evidence: Mapping[str, Any],
-        domain_handler_closeout_result: Mapping[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        return build_focused_hosted_receipt_verification(
-            owner_receipt_evidence=owner_receipt_evidence,
-            opl_attempt_evidence=opl_attempt_evidence,
-            domain_handler_closeout_result=domain_handler_closeout_result,
-        )
-
-    def build_external_evidence_consumption_ledger(
-        self,
-        *,
-        external_evidence_request_pack: Mapping[str, Any],
-        evidence_receipts: list[Mapping[str, Any]],
-    ) -> dict[str, Any]:
-        return build_external_evidence_consumption_ledger(
-            external_evidence_request_pack=external_evidence_request_pack,
-            evidence_receipts=evidence_receipts,
         )
 
     def build_codex_stage_execution_receipt_bundle(

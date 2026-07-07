@@ -103,7 +103,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 receipt_id="hosted-package-blocker-1",
             )["owner_receipt_evidence"]
 
-        payload = entry.build_focused_hosted_receipt_verification(
+        payload = build_focused_hosted_receipt_verification(
             owner_receipt_evidence=receipt,
             opl_attempt_evidence={
                 "surface_kind": "opl_hosted_stage_attempt_evidence",
@@ -148,7 +148,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
             )["owner_receipt_evidence"]
 
         with self.assertRaisesRegex(WorkspaceStateError, "grant readiness"):
-            entry.build_focused_hosted_receipt_verification(
+            build_focused_hosted_receipt_verification(
                 owner_receipt_evidence=receipt,
                 opl_attempt_evidence={
                     "surface_kind": "opl_hosted_stage_attempt_evidence",
@@ -209,7 +209,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            payload = entry.build_focused_hosted_receipt_verification(
+            payload = build_focused_hosted_receipt_verification(
                 owner_receipt_evidence=json.loads(owner_receipt_path.read_text(encoding="utf-8")),
                 opl_attempt_evidence=json.loads(opl_attempt_path.read_text(encoding="utf-8")),
                 domain_handler_closeout_result=json.loads(

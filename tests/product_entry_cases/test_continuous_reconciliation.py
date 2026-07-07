@@ -16,6 +16,15 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
         from med_autogrant.product_entry_parts.continuous_reconciliation import (
             build_continuous_receipt_reconciliation_snapshot,
         )
+        from med_autogrant.product_entry_parts.hosted_receipt_verification import (
+            build_focused_hosted_receipt_verification,
+        )
+        from med_autogrant.product_entry_parts.receipt_observability import (
+            build_controlled_soak_receipt_observability_summary,
+        )
+        from med_autogrant.product_entry_parts.stage_attempt_observability import (
+            build_stage_attempt_observability_projection,
+        )
 
         entry = MedAutoGrantProductEntry()
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -52,7 +61,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                 opl_ledger_ref="opl-ledger://mag/continuous-reconciliation",
                 domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
             )
-            no_regression_verification = entry.build_focused_hosted_receipt_verification(
+            no_regression_verification = build_focused_hosted_receipt_verification(
                 owner_receipt_evidence=no_regression,
                 opl_attempt_evidence={
                     "surface_kind": "opl_hosted_stage_attempt_evidence",
@@ -67,7 +76,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                     },
                 },
             )
-            typed_blocker_verification = entry.build_focused_hosted_receipt_verification(
+            typed_blocker_verification = build_focused_hosted_receipt_verification(
                 owner_receipt_evidence=typed_blocker,
                 opl_attempt_evidence={
                     "surface_kind": "opl_hosted_stage_attempt_evidence",
@@ -82,10 +91,10 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                     },
                 },
             )
-            observability_summary = entry.build_controlled_soak_receipt_observability_summary(
-                receipt_reconciliation_inventory=inventory_payload
+            observability_summary = build_controlled_soak_receipt_observability_summary(
+                inventory_payload
             )
-            stage_attempt_projection = entry.build_stage_attempt_observability_projection(
+            stage_attempt_projection = build_stage_attempt_observability_projection(
                 controlled_stage_attempt_projection={
                     "surface_kind": "controlled_stage_attempt_projection",
                     "attempt_id": "mag-continuous-reconciliation",

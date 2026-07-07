@@ -48,15 +48,8 @@ class ProductEntryStageAttemptObservabilityTest(unittest.TestCase):
             opl_usage_projection_ref="opl://family/stage-attempt/usage-projection/mag",
             opl_control_loop_projection_ref="opl://family/stage-attempt/control-loop/mag",
         )
-        method_payload = entry.build_stage_attempt_observability_projection(
-            controlled_stage_attempt_projection=manifest["controlled_stage_attempt_projection"],
-            receipt_reconciliation_inventory=inventory,
-            opl_usage_projection_ref="opl://family/stage-attempt/usage-projection/mag",
-            opl_control_loop_projection_ref="opl://family/stage-attempt/control-loop/mag",
-        )
 
         projection = payload["stage_attempt_observability_projection"]
-        self.assertEqual(method_payload, payload)
         self.assertEqual(projection["surface_kind"], "mag_stage_attempt_observability_projection")
         self.assertEqual(projection["state"], "refs_only_projection_ready_for_opl_consumption")
         self.assertEqual(

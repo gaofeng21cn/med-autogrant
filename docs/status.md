@@ -36,6 +36,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 wrapper / readback thinning：grouped CLI handler registry 已删除未注册历史 handler wrapper，`receipt-readiness` CLI 直连 leaf projection builder；`ProductEntryEvidenceMixin` 中一批只转调 leaf builder 的 receipt/readiness wrapper 已退役，测试 caller 改为直接验证 leaf contract；active-path / functional-closure 结构测试删除完整历史清单和 builder 镜像断言，只保留唯一性、no-resurrection、authority boundary、ref-only handoff、retired facade/no-active-caller、production evidence tail 与 forbidden output class sentinel。该轮是 source/test portfolio 收薄，不改变 retained big shell 的 MAG owner 裁决；`physical_delete_authorized=false`、`default_caller_delete_ready=false` 继续有效。
 
+2026-07-07 evidence read-model wrapper thinning：controlled-soak observability、stage-attempt observability、OPL conflict envelope、hosted receipt verification 与 external evidence ledger 不再通过 `ProductEntryEvidenceMixin` 暴露第二入口；测试和非 CLI caller 直接消费对应 leaf builder。保留的是 leaf contract 和 active CLI/domain handler path，不保留为 ProductEntry public wrapper。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。

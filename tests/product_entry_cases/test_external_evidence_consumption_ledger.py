@@ -76,10 +76,12 @@ def _first_live_receipts(request_pack: dict[str, object]) -> list[dict[str, obje
 
 class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
     def test_empty_receipts_keep_request_pack_declared_without_claiming_evidence(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.external_evidence_ledger import (
+            build_external_evidence_consumption_ledger,
+        )
 
         request_pack = _request_pack()
-        ledger = MedAutoGrantProductEntry().build_external_evidence_consumption_ledger(
+        ledger = build_external_evidence_consumption_ledger(
             external_evidence_request_pack=request_pack,
             evidence_receipts=[],
         )
@@ -121,11 +123,13 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
         self.assertFalse(ledger["claims"]["mag_authorizes_submission_ready"])
 
     def test_all_receipts_mark_consumed_complete_refs_only(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.external_evidence_ledger import (
+            build_external_evidence_consumption_ledger,
+        )
 
         request_pack = _request_pack()
         required_request_ids = list(request_pack["required_request_ids"])
-        ledger = MedAutoGrantProductEntry().build_external_evidence_consumption_ledger(
+        ledger = build_external_evidence_consumption_ledger(
             external_evidence_request_pack=request_pack,
             evidence_receipts=_receipts_for_request_ids(request_pack, required_request_ids),
         )
@@ -151,10 +155,12 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             self.assertIn("receipt_ref", receipt["refs"])
 
     def test_first_live_production_receipts_cover_all_requested_evidence_without_ready_authority(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.external_evidence_ledger import (
+            build_external_evidence_consumption_ledger,
+        )
 
         request_pack = _request_pack()
-        ledger = MedAutoGrantProductEntry().build_external_evidence_consumption_ledger(
+        ledger = build_external_evidence_consumption_ledger(
             external_evidence_request_pack=request_pack,
             evidence_receipts=_first_live_receipts(request_pack),
         )

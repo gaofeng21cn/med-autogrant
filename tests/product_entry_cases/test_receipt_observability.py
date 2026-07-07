@@ -45,15 +45,11 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
             )
 
         summary = build_controlled_soak_receipt_observability_summary(inventory_payload)
-        method_summary = entry.build_controlled_soak_receipt_observability_summary(
-            receipt_reconciliation_inventory=inventory_payload,
-        )
 
         self.assertEqual(
             summary["surface_kind"],
             "mag_controlled_soak_receipt_observability_summary",
         )
-        self.assertEqual(method_summary, summary)
         self.assertEqual(summary["owner"], "med-autogrant")
         self.assertEqual(summary["target_domain_id"], "med-autogrant")
         self.assertEqual(summary["state"], "read_only_observability_summary_not_live_soak_complete")
