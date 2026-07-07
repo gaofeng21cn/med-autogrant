@@ -6,6 +6,9 @@ from copy import deepcopy
 import json
 import unittest
 from pathlib import Path
+from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
+    build_controlled_soak_receipt_reconciliation_inventory,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -56,7 +59,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="continuous-domain-owner",
             )["owner_receipt_evidence"]
-            inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory_payload = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker, domain_owner],
                 opl_ledger_ref="opl-ledger://mag/continuous-reconciliation",
                 domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],

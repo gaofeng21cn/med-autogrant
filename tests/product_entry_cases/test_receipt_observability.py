@@ -6,6 +6,9 @@ from copy import deepcopy
 import json
 import unittest
 from pathlib import Path
+from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
+    build_controlled_soak_receipt_reconciliation_inventory,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -38,7 +41,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="observability-typed-blocker",
             )["owner_receipt_evidence"]
-            inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory_payload = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/observability",
                 domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
@@ -126,7 +129,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="observability-invalid",
             )["owner_receipt_evidence"]
-            inventory = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[receipt],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/invalid-observability",
             )["receipt_reconciliation_inventory"]
@@ -183,7 +186,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
                     "strategy_memory_body": "SECRET_STRATEGY_MEMORY_BODY",
                 },
             )["owner_receipt_evidence"]
-            inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory_payload = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[receipt],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/no-leak",
                 domain_handler_closeout_results=[{"receipt_ref": receipt["receipt_instance_ref"]}],

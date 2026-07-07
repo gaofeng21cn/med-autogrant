@@ -23,7 +23,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 wrapper/test portfolio cleanup：CLI registry 删除未注册历史 handler wrapper，保留正式 direct CLI entry 与 `receipt-readiness` leaf projection；receipt/readiness evidence tests 不再通过 `ProductEntryEvidenceMixin` 的一行转调 wrapper 镜像 leaf builder，改为直接覆盖 leaf contract；active-path / functional-closure structure tests 不再锁定完整历史清单或 builder module inventory，只保留 no-resurrection、authority boundary、ref-only handoff 和 forbidden output class sentinel。该 cleanup 说明测试组合不应替旧 wrapper 保活；它不改变仍有 active caller 的 product/status/user-loop/domain_handler/control_plane/lifecycle 删除门。
 
-2026-07-07 evidence read-model wrapper cleanup：controlled-soak observability、stage-attempt observability、OPL conflict envelope、hosted receipt verification 与 external evidence ledger 的 leaf builders 仍是 owner read-model contract；`ProductEntryEvidenceMixin` 不再为这些非 CLI / 非 domain-handler caller 提供第二套 pass-through 方法。后续新增 evidence read model 默认直接落 leaf module，不再先加 ProductEntry wrapper。
+2026-07-07 evidence read-model wrapper cleanup：controlled-soak observability、stage-attempt observability、OPL conflict envelope、hosted receipt verification、external evidence ledger、controlled-soak reconciliation proof/inventory 与 continuous reconciliation snapshot 的 leaf builders 仍是 owner read-model contract；`ProductEntryEvidenceMixin` 不再为这些非 CLI / 非 domain-handler caller 提供第二套 pass-through 方法。后续新增 evidence read model 默认直接落 leaf module，不再先加 ProductEntry wrapper；owner receipt signer 与 retained big-shell physical-delete gate 不变。
 
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 

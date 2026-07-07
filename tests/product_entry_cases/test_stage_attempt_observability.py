@@ -3,6 +3,9 @@ from __future__ import annotations
 import tempfile
 
 import unittest
+from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
+    build_controlled_soak_receipt_reconciliation_inventory,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -37,7 +40,7 @@ class ProductEntryStageAttemptObservabilityTest(unittest.TestCase):
                 runtime_root=tmp_dir,
                 receipt_id="observability-typed-blocker",
             )["owner_receipt_evidence"]
-            inventory = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/observability",
             )["receipt_reconciliation_inventory"]
@@ -96,7 +99,7 @@ class ProductEntryStageAttemptObservabilityTest(unittest.TestCase):
                 runtime_root=tmp_dir,
                 receipt_id="invalid-live-soak",
             )["owner_receipt_evidence"]
-            inventory = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            inventory = build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[receipt],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/invalid",
             )["receipt_reconciliation_inventory"]

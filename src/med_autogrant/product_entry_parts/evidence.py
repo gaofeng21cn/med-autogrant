@@ -6,9 +6,6 @@ from typing import Any, Mapping
 from med_autogrant.product_entry_parts.codex_stage_receipts import (
     build_codex_stage_execution_receipt_bundle,
 )
-from med_autogrant.product_entry_parts.continuous_reconciliation import (
-    build_continuous_receipt_reconciliation_snapshot,
-)
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
@@ -25,10 +22,6 @@ from med_autogrant.product_entry_parts.operator_closeout import (
 )
 from med_autogrant.product_entry_parts.opl_owner_payload_response import (
     build_opl_owner_payload_response,
-)
-from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
-    build_controlled_soak_receipt_reconciliation_inventory,
-    build_controlled_soak_receipt_reconciliation_proof,
 )
 from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_lifecycle_receipt_evidence,
@@ -130,32 +123,6 @@ class ProductEntryEvidenceMixin:
             receipt_id=receipt_id,
         )
 
-    def build_controlled_soak_receipt_reconciliation_proof(
-        self,
-        *,
-        owner_receipt_evidence: Mapping[str, Any],
-        opl_ledger_ref: str,
-        domain_handler_closeout_result: Mapping[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        return build_controlled_soak_receipt_reconciliation_proof(
-            owner_receipt_evidence=owner_receipt_evidence,
-            opl_ledger_ref=opl_ledger_ref,
-            domain_handler_closeout_result=domain_handler_closeout_result,
-        )
-
-    def build_controlled_soak_receipt_reconciliation_inventory(
-        self,
-        *,
-        owner_receipt_evidence_items: list[Mapping[str, Any]],
-        opl_ledger_ref: str,
-        domain_handler_closeout_results: list[Mapping[str, Any]] | None = None,
-    ) -> dict[str, Any]:
-        return build_controlled_soak_receipt_reconciliation_inventory(
-            owner_receipt_evidence_items=owner_receipt_evidence_items,
-            opl_ledger_ref=opl_ledger_ref,
-            domain_handler_closeout_results=domain_handler_closeout_results,
-        )
-
     def build_production_live_acceptance_receipt_projection(
         self,
         *,
@@ -247,19 +214,4 @@ class ProductEntryEvidenceMixin:
             physical_morphology_guard_projection=physical_morphology_guard_projection,
             external_evidence_consumption_ledger=external_evidence_consumption_ledger,
             receipt_readiness_projection=receipt_readiness_projection,
-        )
-
-    def build_continuous_receipt_reconciliation_snapshot(
-        self,
-        *,
-        focused_hosted_receipt_verification_items: list[Mapping[str, Any]],
-        receipt_reconciliation_inventory: Mapping[str, Any],
-        receipt_observability_summary: Mapping[str, Any] | None = None,
-        stage_attempt_observability_projection: Mapping[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        return build_continuous_receipt_reconciliation_snapshot(
-            focused_hosted_receipt_verification_items=focused_hosted_receipt_verification_items,
-            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
-            receipt_observability_summary=receipt_observability_summary,
-            stage_attempt_observability_projection=stage_attempt_observability_projection,
         )
