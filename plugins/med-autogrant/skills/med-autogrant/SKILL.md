@@ -1,11 +1,11 @@
 ---
-name: mag
+name: med-autogrant
 description: Use when Codex should operate Med Auto Grant through its grant-authoring domain entry, authority targets, and schema-backed contracts instead of ad-hoc repo scripting.
 ---
 
 # Med Auto Grant App Skill
 
-机器名与 canonical skill id 使用 `mag`；`med-autogrant` 只作为 repo/source path alias 保留，不作为 Codex-visible app skill id。
+机器名与 canonical skill id 使用 `med-autogrant`；旧 `mag` 只作为兼容 alias 输入保留，不再作为 repo-tracked source truth。
 
 当 Codex 需要把 `Med Auto Grant` 作为正式 domain app 来操作，而不是把仓库当成临时脚本集合时，使用这个 app skill。对外第一入口是这个单一 app skill；repo-local `CLI` / `MedAutoGrantDomainEntry` 只保留 grant-native handler 与 authority target，status、user-loop、direct-entry、domain_handler、workbench 等通用 shell 由 OPL/App generated surface 承担。
 
