@@ -54,7 +54,7 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 ## 当前保留面
 
-- `agent/` 是 Declarative Grant Pack：stage prompts、stage policies、skill declaration、quality gates 和 knowledge refs 是 OPL pack compiler / generated surfaces 的 repo-source 语义输入。
+- `agent/` 是 Declarative Grant Pack：stage prompts、stage policies、domain skill declaration、professional skills、quality gates 和 knowledge refs 是 OPL pack compiler / generated surfaces 的 repo-source 语义输入。
 - `contracts/` 是机器合同、handoff、receipt、external evidence request、production acceptance 和 runtime-program 指针。
 - `src/med_autogrant/**` 只作为 domain handler、refs-only adapter、minimal authority function、native helper、diagnostic、migration input 或 tombstone/provenance 支撑读取；不得写成 MAG 私有 runtime platform。
 - MAG retained private authority surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
@@ -81,7 +81,7 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 - OPL owner-payload refs：`authority receipt-readiness -> authority owner-payload-response -> authority manifest-consumption-payload -> OPL refs-only owner-payload record/verify`。
 - Pre-workspace：`discover-funding-opportunities -> select-project-profile -> initialize-intake-workspace`。
 - Grant stage plane：`call_and_candidate_intake`、`fundability_strategy`、`specific_aims_and_structure`、`proposal_authoring`、`review_and_rebuttal`、`package_and_submit_ready`。
-- Declarative Grant Pack：`agent/prompts/`、`agent/stages/`、`agent/skills/`、`agent/quality_gates/`、`agent/knowledge/`。
+- Declarative Grant Pack：`agent/prompts/`、`agent/stages/`、`agent/skills/`、`agent/professional_skills/`、`agent/quality_gates/`、`agent/knowledge/`。
 - DomainHandler：`domain handler export` / `dispatch` 只返回 refs、owner receipt、typed blocker、verdict refs 与 authority action metadata；它不是常驻 daemon。
 
 ## 当前不能声明

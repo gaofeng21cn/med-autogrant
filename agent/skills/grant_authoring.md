@@ -8,6 +8,7 @@ Professional grant judgment lives in repo-local Codex skills under `agent/profes
 
 - `mag-call-fit-analyst`
 - `mag-fundability-strategist`
+- `mag-grant-strategy-memory-curator`
 - `mag-specific-aims-architect`
 - `mag-proposal-section-author`
 - `mag-grant-reviewer`
