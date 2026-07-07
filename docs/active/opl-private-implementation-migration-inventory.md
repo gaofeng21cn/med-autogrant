@@ -31,6 +31,8 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 2026-07-07 evidence wrapper closeout：OPL owner payload response、manifest sustained-consumption payload response、production-live-acceptance receipt projection、domain memory writeback 与 owner/lifecycle receipt writer 的 CLI/domain_handler/test caller 已改为直接调用 leaf builder/writer；`ProductEntryEvidenceMixin` 已退役，不再提供 ProductEntry pass-through。domain memory、owner/lifecycle receipt writer 与 production acceptance leaf module 仍按 retained authority/write/projection surfaces 读取。
 
+2026-07-07 single-caller helper cleanup：workspace runtime stage policy/selection、grant quality issue builder 与 funding landscape static catalog 不再作为独立私有 helper 文件保留；`workspace_runtime_policy.py`、`workspace_runtime_selection.py`、`grant_quality_issue_builder.py`、`funding_landscape_catalog.py` 已并入唯一 active caller。该 cleanup 只删除跨文件扩展点，不改变 workspace validation、grant quality scorecard/diff/dossier、funding discovery 行为 contract，也不触碰 owner receipt、typed blocker、runtime state、package/export authority 或 retained product-entry physical-delete gate。
+
 当前 source-morphology / no-resurrection guard 已收敛为一组机器面，而不是逐日文档 closeout：
 
 | Guard | SSOT / readback | 当前读法 |

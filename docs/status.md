@@ -46,6 +46,8 @@ OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry 
 
 2026-07-07 evidence wrapper closeout：OPL owner payload response、manifest sustained-consumption payload response、production-live-acceptance receipt projection、domain memory writeback 与 owner/lifecycle receipt writer 不再通过 `ProductEntryEvidenceMixin` 暴露 ProductEntry pass-through；CLI、domain_handler 与测试 caller 直接调用 leaf builder/writer。`ProductEntryEvidenceMixin` 已退役；domain memory、owner/lifecycle receipt writer 与 production acceptance leaf modules 仍是 retained authority/write/projection surfaces；physical delete gate 仍为未授权。
 
+2026-07-07 single-caller helper cleanup：`workspace_runtime_policy.py`、`workspace_runtime_selection.py`、`grant_quality_issue_builder.py` 与 `funding_landscape_catalog.py` 已删除并并入唯一 active caller；保留的是 workspace validation、grant quality scorecard/diff/dossier 与 funding discovery 的行为 contract，不保留跨文件私有 helper 作为未来扩展点。该轮不改变 grant truth、owner receipt、typed blocker、runtime state、package/export authority 或 retained product-entry physical-delete gate。
+
 ## 当前状态索引
 
 本页只保留当前 owner、gate 和状态读法。Proof-by-proof receipt、payload、workorder、回归细节、dated closeout 流水和 per-surface 细节不在 status 继续展开；分别回到 `contracts/**`、[MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)、[MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)、spec lifecycle map、history 或提交历史。
