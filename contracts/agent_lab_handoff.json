@@ -114,7 +114,6 @@
       ],
       "editable_shared_bootstrap_ref": "src/med_autogrant/editable_shared_bootstrap.py",
       "environment_hint_refs": [
-        "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT",
         "PYTHONPYCACHEPREFIX",
         "PYTEST_ADDOPTS"
       ],

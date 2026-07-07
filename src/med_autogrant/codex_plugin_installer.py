@@ -110,11 +110,6 @@ def install_repo_local_codex_plugin(*, repo_root: Path, home: Path | None = None
         "codex_marketplace_owner": "opl_owned_wrapper",
     }
 
-
-def install_home_local_codex_plugin(*, repo_root: Path, home: Path | None = None) -> dict[str, str]:
-    return install_repo_local_codex_plugin(repo_root=repo_root, home=home)
-
-
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", required=True)

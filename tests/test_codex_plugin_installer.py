@@ -85,11 +85,11 @@ def test_install_repo_local_codex_plugin_preserves_non_stub_user_skill(tmp_path:
     assert "custom local MAG skill" in (skill / "SKILL.md").read_text(encoding="utf-8")
 
 
-def test_install_home_local_codex_plugin_is_idempotent(tmp_path: Path) -> None:
+def test_install_repo_local_codex_plugin_is_idempotent(tmp_path: Path) -> None:
     home = tmp_path / "home"
 
-    first = codex_plugin_installer.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
-    second = codex_plugin_installer.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    first = codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    second = codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     assert first["marketplace_path"] == second["marketplace_path"]
     assert first["plugin_root"] == second["plugin_root"]

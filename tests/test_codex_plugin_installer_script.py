@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import sys
 import subprocess
+import tomllib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -28,7 +29,6 @@ def test_codex_plugin_installer_script_keeps_codex_paths_repo_local(tmp_path: Pa
             str(home_dir),
             "--repo-root",
             str(REPO_ROOT),
-            "--skip-tools",
         ],
         cwd=REPO_ROOT,
         env=env,
@@ -50,7 +50,7 @@ def test_codex_plugin_installer_script_keeps_codex_paths_repo_local(tmp_path: Pa
     assert payload["codex_marketplace_owner"] == "opl_owned_wrapper"
 
 
-def test_codex_plugin_installer_writes_clean_runner_tool_wrappers_without_editable_install(tmp_path: Path) -> None:
+def test_codex_plugin_installer_leaves_cli_installation_to_python_packaging(tmp_path: Path) -> None:
     home_dir = tmp_path / "home"
     fake_bin = tmp_path / "bin"
     home_dir.mkdir()
@@ -76,15 +76,14 @@ def test_codex_plugin_installer_writes_clean_runner_tool_wrappers_without_editab
     )
 
     assert result.returncode == 0, result.stderr
-    wrapper = home_dir / ".local" / "bin" / "medautogrant"
-    wrapper_text = wrapper.read_text(encoding="utf-8")
-    assert wrapper.is_file()
-    assert 'exec "' + str(REPO_ROOT) + '/scripts/run-python-clean.sh" -m "med_autogrant.cli" "$@"' in wrapper_text
+    pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert pyproject["project"]["scripts"]["medautogrant"] == "med_autogrant.cli:entrypoint"
+    assert not (home_dir / ".local" / "bin" / "medautogrant").exists()
     assert "uv tool install" not in INSTALLER_PATH.read_text(encoding="utf-8")
     assert "--editable" not in INSTALLER_PATH.read_text(encoding="utf-8")
 
 
-def test_codex_plugin_installer_script_skip_tools_does_not_require_shared_runtime_dependency(
+def test_codex_plugin_installer_script_does_not_require_shared_runtime_dependency(
     tmp_path: Path,
 ) -> None:
     home_dir = tmp_path / "home"
@@ -119,7 +118,6 @@ def test_codex_plugin_installer_script_skip_tools_does_not_require_shared_runtim
             str(home_dir),
             "--repo-root",
             str(repo_copy),
-            "--skip-tools",
         ],
         cwd=repo_copy,
         env=env,

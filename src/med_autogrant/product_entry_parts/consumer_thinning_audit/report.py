@@ -1,23 +1,15 @@
 from __future__ import annotations
 
+import json
+from functools import lru_cache
+from importlib.resources import files
 from typing import Any
 
-from med_autogrant.product_entry_parts.consumer_thinning_audit.classification import (
-    build_declarative_pack_surfaces,
-    build_mag_owned_grant_authority_surfaces,
-    build_refs_only_adapter_surfaces,
-)
-from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
-    build_no_active_caller_refs_only_authority_boundary,
-)
-from med_autogrant.product_entry_parts.consumer_thinning_audit.retired_surfaces import (
-    build_retire_or_tombstone_surfaces,
-)
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
 
 def build_privatized_functional_module_audit() -> dict[str, Any]:
-    retire_or_tombstone_surfaces = build_retire_or_tombstone_surfaces()
+    retire_or_tombstone_surfaces = _retire_or_tombstone_surfaces()
     no_active_caller_evidence_summary = _build_no_active_caller_evidence_summary(
         retire_or_tombstone_surfaces
     )
@@ -44,9 +36,9 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
             "minimal_authority_function",
             "legacy_proof_tombstone",
         ],
-        "declarative_pack_surfaces": build_declarative_pack_surfaces(),
-        "refs_only_adapter_surfaces": build_refs_only_adapter_surfaces(),
-        "mag_owned_grant_authority_surfaces": build_mag_owned_grant_authority_surfaces(),
+        "declarative_pack_surfaces": _declarative_pack_surfaces(),
+        "refs_only_adapter_surfaces": _refs_only_adapter_surfaces(),
+        "mag_owned_grant_authority_surfaces": _mag_owned_grant_authority_surfaces(),
         "retire_or_tombstone_surfaces": retire_or_tombstone_surfaces,
         "no_active_caller_evidence_summary": no_active_caller_evidence_summary,
         "private_platform_retirement_owner_evidence": {
@@ -74,7 +66,7 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
             "next_owner_action": (
                 "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker"
             ),
-            "authority_boundary": build_no_active_caller_refs_only_authority_boundary(),
+            "authority_boundary": _no_active_caller_refs_only_authority_boundary(),
         },
         "domain_authority_do_not_retire": [
             "grant_lifecycle_stage",
@@ -200,5 +192,49 @@ def _build_no_active_caller_evidence_summary(
         ),
         "physical_delete_authorized": False,
         "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
-        "authority_boundary": build_no_active_caller_refs_only_authority_boundary(),
+        "authority_boundary": _no_active_caller_refs_only_authority_boundary(),
     }
+
+
+@lru_cache(maxsize=1)
+def _audit_data() -> dict[str, Any]:
+    data_path = files(__package__).joinpath("surfaces.json")
+    return json.loads(data_path.read_text(encoding="utf-8"))
+
+
+def _copy_data(value: Any) -> Any:
+    return json.loads(json.dumps(value, ensure_ascii=False))
+
+
+def _data_list(key: str) -> list[dict[str, Any]]:
+    value = _audit_data()[key]
+    if not isinstance(value, list):
+        raise TypeError(f"consumer thinning audit data {key} must be a list")
+    return _copy_data(value)
+
+
+def _data_mapping(key: str) -> dict[str, Any]:
+    value = _audit_data()[key]
+    if not isinstance(value, dict):
+        raise TypeError(f"consumer thinning audit data {key} must be an object")
+    return _copy_data(value)
+
+
+def _no_active_caller_refs_only_authority_boundary() -> dict[str, bool]:
+    return _data_mapping("no_active_caller_refs_only_authority_boundary")
+
+
+def _declarative_pack_surfaces() -> list[dict[str, Any]]:
+    return _data_list("declarative_pack_surfaces")
+
+
+def _refs_only_adapter_surfaces() -> list[dict[str, Any]]:
+    return _data_list("refs_only_adapter_surfaces")
+
+
+def _mag_owned_grant_authority_surfaces() -> list[dict[str, Any]]:
+    return _data_list("mag_owned_grant_authority_surfaces")
+
+
+def _retire_or_tombstone_surfaces() -> list[dict[str, Any]]:
+    return _data_list("retire_or_tombstone_surfaces")

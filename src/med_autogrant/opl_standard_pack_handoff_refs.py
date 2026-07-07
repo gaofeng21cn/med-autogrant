@@ -189,7 +189,6 @@ def _handoff_refs(*, generated_surface_owner: str) -> dict[str, Any]:
                 "scripts/run-pytest-clean.sh",
             ],
             "environment_hint_refs": [
-                "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT",
                 "PYTHONPYCACHEPREFIX",
                 "PYTEST_ADDOPTS",
             ],

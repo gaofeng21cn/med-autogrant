@@ -40,6 +40,9 @@ markers = [
 [tool.uv.sources]
 hermes-agent = { git = "https://github.com/NousResearch/hermes-agent.git", rev = "96051955755a83f22afed5e3501d447462fbe9c8" }
 
+[tool.setuptools.package-data]
+med_autogrant = ["product_entry_parts/consumer_thinning_audit/*.json"]
+
 [dependency-groups]
 dev = [
     "pytest>=9,<10",

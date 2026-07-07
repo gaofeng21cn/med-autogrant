@@ -21,70 +21,6 @@ from opl_harness_shared.runtime_task_companions import (
 )
 
 
-def build_manifest_runtime_task_shell(
-    *,
-    resolved_input_path: Path,
-    progress_payload: Mapping[str, Any],
-    product_entry_preflight: Mapping[str, Any],
-    runtime_summary: Mapping[str, Any],
-    opl_provider_runtime_contract: Mapping[str, Any],
-    checkpoint_status: str,
-    repo_mainline: Mapping[str, Any],
-    command_catalog: Mapping[str, str],
-    grant_user_loop_command: str,
-    operator_loop_actions: Mapping[str, Mapping[str, Any]],
-    family_orchestration: Mapping[str, Any],
-    human_gate_ids: list[str],
-    continuation_route_id: str,
-    continuation_route_status: str,
-    continuation_next_action: Mapping[str, Any],
-    continuation_action_kind: str,
-    verification_checkpoint: Mapping[str, Any],
-    verification_identity: Mapping[str, Any],
-    grant_authoring_readiness: Mapping[str, Any],
-) -> dict[str, Any]:
-    runtime_inventory = _build_runtime_inventory(
-        resolved_input_path=resolved_input_path,
-        progress_payload=progress_payload,
-        product_entry_preflight=product_entry_preflight,
-        runtime_summary=runtime_summary,
-        opl_provider_runtime_contract=opl_provider_runtime_contract,
-        checkpoint_status=checkpoint_status,
-        repo_mainline=repo_mainline,
-    )
-    task_lifecycle = _build_task_lifecycle(
-        progress_payload=progress_payload,
-        checkpoint_status=checkpoint_status,
-        grant_user_loop_command=grant_user_loop_command,
-        operator_loop_actions=operator_loop_actions,
-        family_orchestration=family_orchestration,
-        human_gate_ids=human_gate_ids,
-        continuation_route_id=continuation_route_id,
-        continuation_route_status=continuation_route_status,
-        continuation_next_action=continuation_next_action,
-        continuation_action_kind=continuation_action_kind,
-        verification_checkpoint=verification_checkpoint,
-        verification_identity=verification_identity,
-        repo_mainline=repo_mainline,
-    )
-    automation = _build_automation_catalog(
-        grant_authoring_readiness=grant_authoring_readiness,
-        operator_loop_actions=operator_loop_actions,
-        command_catalog=command_catalog,
-        grant_user_loop_command=grant_user_loop_command,
-        family_orchestration=family_orchestration,
-        continuation_route_id=continuation_route_id,
-        continuation_route_status=continuation_route_status,
-        continuation_next_action=continuation_next_action,
-        human_gate_ids=human_gate_ids,
-    )
-    return {
-        "runtime_inventory": runtime_inventory,
-        "task_lifecycle": task_lifecycle,
-        "automation": automation,
-    }
-
-
 def _build_runtime_inventory(
     *,
     resolved_input_path: Path,
@@ -120,7 +56,11 @@ def _build_runtime_inventory(
             "default_runtime_substrate",
             context="product_entry_manifest.runtime",
         ),
-        availability="ready_to_try_now" if bool(product_entry_preflight.get("ready_to_try_now")) else "preflight_blocked",
+        availability=(
+            "ready_to_try_now"
+            if bool(product_entry_preflight.get("ready_to_try_now"))
+            else "preflight_blocked"
+        ),
         health_status="attention_required" if checkpoint_status == "blocked" else "healthy",
         status_surface={
             "ref_kind": "json_pointer",

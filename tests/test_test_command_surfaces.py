@@ -63,7 +63,6 @@ def test_clean_python_runners_route_caches_outside_checkout() -> None:
     subprocess.run(["bash", "-n", "scripts/run-pytest-clean.sh"], cwd=REPO_ROOT, check=True)
     assert "PYTHONDONTWRITEBYTECODE=1" in python_runner
     assert "PYTHONPYCACHEPREFIX" in python_runner
-    assert "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT" in _read("src/med_autogrant/editable_shared_bootstrap.py")
     assert 'venv_python="${repo_root}/.venv/bin/python"' not in python_runner
 
 

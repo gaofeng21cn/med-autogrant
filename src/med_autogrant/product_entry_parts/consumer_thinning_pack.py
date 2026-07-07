@@ -345,8 +345,7 @@ def build_generated_surface_handoff() -> dict[str, Any]:
             current_mag_paths=[
                 "src/med_autogrant/product_entry_parts/progress.py",
                 "src/med_autogrant/product_entry_parts/manifest_builder.py",
-                "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py",
-                "src/med_autogrant/product_entry_parts/manifest_shell/runtime_task_shell.py",
+                "src/med_autogrant/product_entry_parts/manifest_runtime_task_surfaces.py",
                 "src/med_autogrant/product_entry_parts/receipt_observability.py",
             ],
             input_refs=[
