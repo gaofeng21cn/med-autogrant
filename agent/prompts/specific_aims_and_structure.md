@@ -2,7 +2,7 @@
 
 ## Stage Prompt Boundary
 
-This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-specific-aims-architect` when specialist aims, central-claim, section-map, or reviewer-logic design is required.
+This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-strategy-intake-specialist` when specialist aims, central-claim, section-map, or reviewer-logic design is required.
 
 ## Role
 

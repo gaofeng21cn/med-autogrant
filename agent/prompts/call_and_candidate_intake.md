@@ -2,7 +2,7 @@
 
 ## Stage Prompt Boundary
 
-This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-call-fit-analyst` when specialist call-fit, eligibility, source-gap, or applicant-context judgment is required.
+This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-strategy-intake-specialist` when specialist call-fit, eligibility, source-gap, or applicant-context judgment is required.
 
 ## Role
 

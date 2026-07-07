@@ -2,7 +2,7 @@
 
 ## Stage Prompt Boundary
 
-This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-submission-package-auditor` when specialist package-readiness, provenance, required-artifact, budget/support, or manual-portal audit is required.
+This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-grant-workflow-specialist` when specialist package-readiness, provenance, required-artifact, budget/support, or manual-portal audit is required.
 
 ## Role
 

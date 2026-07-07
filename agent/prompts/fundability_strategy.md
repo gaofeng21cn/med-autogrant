@@ -2,7 +2,7 @@
 
 ## Stage Prompt Boundary
 
-This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-fundability-strategist` when specialist proceed/repair/retarget/stop judgment or reviewer-risk strategy is required.
+This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-strategy-intake-specialist` when specialist proceed/repair/retarget/stop judgment or reviewer-risk strategy is required.
 
 ## Role
 

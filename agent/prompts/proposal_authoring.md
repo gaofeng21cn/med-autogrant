@@ -2,7 +2,7 @@
 
 ## Stage Prompt Boundary
 
-This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-proposal-section-author` when specialist section drafting, source-faithful revision, or claim/evidence repair is required.
+This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-grant-workflow-specialist` when specialist section drafting, source-faithful revision, or claim/evidence repair is required.
 
 ## Role
 
