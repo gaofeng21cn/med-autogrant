@@ -4,7 +4,6 @@ Owner: `Med Auto Grant`
 Purpose: `current_decision_log`
 State: `current`
 Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
-Last reviewed: `2026-06-12`
 
 ## 读法
 
