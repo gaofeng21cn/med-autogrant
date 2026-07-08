@@ -51,8 +51,16 @@
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
       },
+      "improvement_tokens": [
+        "primary_skill_quality",
+        "app_skill_boundary_quality"
+      ],
       "canonical_target_paths": [
         "agent/primary_skill/SKILL.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
       ],
       "forbidden_surfaces": [
         "global_codex_skill_registry",
@@ -60,7 +68,18 @@
         "typed_blockers",
         "runtime_queue_or_provider_attempt",
         "domain_ready_claim"
-      ]
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
     },
     {
       "capability_id": "med-autogrant.call-intake.stage_prompt",
@@ -90,6 +109,39 @@
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "stage_path_quality",
+        "stage_prompt_quality"
+      ],
+      "canonical_target_paths": [
+        "agent/prompts/call_and_candidate_intake.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
       }
     },
     {
@@ -121,6 +173,10 @@
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
       },
+      "improvement_tokens": [
+        "professional_skill_quality",
+        "grant_strategy_intake_quality"
+      ],
       "exposure_layer": "repo_internal_professional_skill",
       "codex_default_exposure": false,
       "allowed_exposure_scopes": [
@@ -138,6 +194,21 @@
         "runtime_queue_or_provider_attempt",
         "domain_ready_claim"
       ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
       "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
     },
     {
@@ -169,6 +240,10 @@
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
       },
+      "improvement_tokens": [
+        "professional_skill_quality",
+        "grant_workflow_quality"
+      ],
       "exposure_layer": "repo_internal_professional_skill",
       "codex_default_exposure": false,
       "allowed_exposure_scopes": [
@@ -186,6 +261,21 @@
         "runtime_queue_or_provider_attempt",
         "domain_ready_claim"
       ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
       "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
     },
     {
@@ -216,6 +306,39 @@
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "tool_connector_quality",
+        "grant_affordance_routing"
+      ],
+      "canonical_target_paths": [
+        "agent/tools/domain_affordances.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
       }
     },
     {
@@ -246,6 +369,39 @@
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "knowledge_pack_quality",
+        "grant_strategy_memory_quality"
+      ],
+      "canonical_target_paths": [
+        "agent/knowledge/grant_strategy_memory.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
       }
     },
     {
@@ -276,6 +432,39 @@
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "quality_gate_quality",
+        "grant_quality_boundary"
+      ],
+      "canonical_target_paths": [
+        "agent/quality_gates/quality.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
       }
     },
     {
@@ -306,6 +495,39 @@
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
         "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "eval_suite_quality",
+        "live_evidence_boundary"
+      ],
+      "canonical_target_paths": [
+        "contracts/live_stage_run_progress_evidence.json"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
       }
     }
   ],

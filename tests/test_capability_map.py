@@ -17,6 +17,13 @@ EXPECTED_LEGACY_PROFESSIONAL_SKILL_REDIRECTS = {
     "legacy-professional-skill:mag-submission-package-auditor": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
 }
 
+EXPECTED_OWNER_CLOSEOUT_RETURN_SHAPES = {
+    "owner_receipt_ref",
+    "typed_blocker_ref",
+    "human_gate_ref",
+    "route_back_ref",
+}
+
 
 def test_capability_map_declares_all_professional_skills() -> None:
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
@@ -62,6 +69,26 @@ def test_generated_pack_compiler_input_lists_all_professional_skills() -> None:
     }
 
     assert skill_paths <= set(generated["required_domain_pack_paths"])
+
+
+def test_capability_map_self_evolution_routing_fields_are_refs_only() -> None:
+    capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
+
+    for capability in capability_map["capabilities"]:
+        source_ref = capability["physical_source_ref"]["ref"]
+        assert capability["improvement_tokens"]
+        assert source_ref in capability["canonical_target_paths"]
+        assert "rtk ./scripts/verify.sh" in capability["verification_refs"]
+        assert "opl:agents-scaffold-validate" in capability["verification_refs"]
+        assert capability["forbidden_surfaces"]
+
+        closeout = capability["owner_closeout_boundary"]
+        assert closeout["owner"] == "med-autogrant"
+        assert set(closeout["required_return_shapes"]) == (
+            EXPECTED_OWNER_CLOSEOUT_RETURN_SHAPES
+        )
+        assert closeout["can_write_owner_receipt_body"] is False
+        assert closeout["can_create_typed_blocker"] is False
 
 
 def test_legacy_professional_skill_redirects_preserve_coverage_without_restoring_files() -> None:

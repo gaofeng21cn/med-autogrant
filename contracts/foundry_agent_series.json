@@ -324,6 +324,8 @@
     },
     "default_profiles": {
       "mas_portfolio": {
+        "canonical_profile_id": "portfolio",
+        "profile_role": "legacy_domain_alias",
         "project_collection_path": "projects",
         "project_stage_outputs_root": "artifacts/stage_outputs",
         "shared_resource_roots": [
@@ -335,6 +337,8 @@
         "workspace_mode": "portfolio"
       },
       "one_off": {
+        "canonical_profile_id": "one_off",
+        "profile_role": "canonical",
         "project_collection_path": "projects",
         "project_stage_outputs_root": "artifacts/stage_outputs",
         "series_capable_skeleton": true,
@@ -345,7 +349,36 @@
         ],
         "workspace_mode": "one_off"
       },
+      "portfolio": {
+        "canonical_profile_id": "portfolio",
+        "profile_role": "canonical",
+        "project_collection_path": "projects",
+        "project_stage_outputs_root": "artifacts/stage_outputs",
+        "shared_resource_roots": [
+          "data",
+          "literature",
+          "memory",
+          "shared/sources"
+        ],
+        "workspace_mode": "portfolio"
+      },
       "rca_series": {
+        "canonical_profile_id": "series",
+        "profile_role": "legacy_domain_alias",
+        "project_collection_path": "projects",
+        "project_stage_outputs_root": "artifacts/stage_outputs",
+        "shared_resource_roots": [
+          "shared/sources",
+          "shared/brand",
+          "shared/visual_memory",
+          "shared/style_system",
+          "shared/material_inventory"
+        ],
+        "workspace_mode": "series"
+      },
+      "series": {
+        "canonical_profile_id": "series",
+        "profile_role": "canonical",
         "project_collection_path": "projects",
         "project_stage_outputs_root": "artifacts/stage_outputs",
         "shared_resource_roots": [
@@ -366,13 +399,29 @@
       "runtime_state_is_default_user_surface": false
     },
     "domain_profile_defaults": {
+      "bookforge": "one_off",
       "mag": "one_off",
-      "mas": "mas_portfolio",
+      "mas": "portfolio",
       "oma": "one_off",
-      "rca": "rca_series"
+      "rca": "series"
     },
     "example_project_layouts": {
       "mas_portfolio": {
+        "alias_role": "legacy_domain_alias",
+        "canonical_layout": "portfolio",
+        "legacy_project_collection_aliases": [
+          "studies"
+        ]
+      },
+      "one_off": {
+        "legacy_project_collection_aliases": [
+          "deliverables"
+        ],
+        "project_collection_path": "projects",
+        "project_root_pattern": "projects/<project-id>",
+        "project_stage_outputs_pattern": "projects/<project-id>/artifacts/stage_outputs/<stage-id>/"
+      },
+      "portfolio": {
         "legacy_project_collection_aliases": [
           "studies"
         ],
@@ -385,15 +434,14 @@
           "memory"
         ]
       },
-      "one_off": {
+      "rca_series": {
+        "alias_role": "legacy_domain_alias",
+        "canonical_layout": "series",
         "legacy_project_collection_aliases": [
           "deliverables"
-        ],
-        "project_collection_path": "projects",
-        "project_root_pattern": "projects/<project-id>",
-        "project_stage_outputs_pattern": "projects/<project-id>/artifacts/stage_outputs/<stage-id>/"
+        ]
       },
-      "rca_series": {
+      "series": {
         "legacy_project_collection_aliases": [
           "deliverables"
         ],
@@ -407,6 +455,18 @@
           "shared/style_system",
           "shared/material_inventory"
         ]
+      }
+    },
+    "legacy_domain_profile_aliases": {
+      "mas_portfolio": {
+        "alias_for_domain": "mas",
+        "alias_role": "legacy_domain_alias",
+        "canonical_profile_id": "portfolio"
+      },
+      "rca_series": {
+        "alias_for_domain": "rca",
+        "alias_role": "legacy_domain_alias",
+        "canonical_profile_id": "series"
       }
     },
     "profile_id": "opl.workspace_topology_profile.v1",

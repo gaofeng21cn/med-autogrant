@@ -235,12 +235,24 @@ def _assert_workspace_topology_profile(series: dict[str, object]) -> None:
     assert workspace_topology["default_profiles"]["one_off"][
         "project_collection_path"
     ] == "projects"
-    assert workspace_topology["default_profiles"]["rca_series"][
-        "project_collection_path"
-    ] == "projects"
-    assert workspace_topology["default_profiles"]["mas_portfolio"][
-        "project_collection_path"
-    ] == "projects"
+    assert workspace_topology["default_profiles"]["series"]["profile_role"] == "canonical"
+    assert workspace_topology["default_profiles"]["series"]["project_collection_path"] == "projects"
+    assert workspace_topology["default_profiles"]["portfolio"]["profile_role"] == "canonical"
+    assert workspace_topology["default_profiles"]["portfolio"]["project_collection_path"] == "projects"
+    assert workspace_topology["domain_profile_defaults"]["mas"] == "portfolio"
+    assert workspace_topology["domain_profile_defaults"]["rca"] == "series"
+    assert workspace_topology["legacy_domain_profile_aliases"]["mas_portfolio"][
+        "canonical_profile_id"
+    ] == "portfolio"
+    assert workspace_topology["legacy_domain_profile_aliases"]["rca_series"][
+        "canonical_profile_id"
+    ] == "series"
+    assert workspace_topology["example_project_layouts"]["mas_portfolio"][
+        "canonical_layout"
+    ] == "portfolio"
+    assert workspace_topology["example_project_layouts"]["rca_series"][
+        "canonical_layout"
+    ] == "series"
     assert workspace_topology["workspace_initialization_policy"][
         "default_project_collection_path"
     ] == "projects"
