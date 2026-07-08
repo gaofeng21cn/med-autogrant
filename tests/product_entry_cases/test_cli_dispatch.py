@@ -2,30 +2,14 @@ from __future__ import annotations
 
 import json
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from unittest.mock import patch
 from argparse import _SubParsersAction
-from med_autogrant.cli import build_parser, main
+from med_autogrant.cli import build_parser
 from med_autogrant.public_cli import public_cli_command
-from support.cli import public_cli_argv
-from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
+from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH, run_public_cli
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def test_public_groups_are_registered_directly_without_flat_grouped_wrapper(self) -> None:
         parser = build_parser()
         root_subparsers = next(
@@ -60,7 +44,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             ("workspace", "cockpit"),
         ):
             with self.subTest(command=command):
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     *command,
                     "--input",
                     str(CRITIQUE_EXAMPLE_PATH),
@@ -78,7 +62,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
                     self.assertIn(f"invalid choice: '{command[0]}'", stderr)
 
     def test_flat_product_status_alias_has_no_special_compatibility_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
+        exit_code, stdout, stderr = run_public_cli(
             "product-status",
             "--input",
             str(CRITIQUE_EXAMPLE_PATH),
@@ -139,7 +123,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             return_value=expected_payload,
         ) as build_proposal:
 
-            exit_code, stdout, stderr = self.run_cli(
+            exit_code, stdout, stderr = run_public_cli(
                 "authority",
                 "memory-proposal",
                 "--input",
@@ -181,7 +165,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             return_value=expected_payload,
         ) as build_decision:
 
-            exit_code, stdout, stderr = self.run_cli(
+            exit_code, stdout, stderr = run_public_cli(
                 "authority",
                 "memory-decision",
                 "--proposal",
@@ -220,7 +204,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             return_value=expected_payload,
         ) as write_receipt:
 
-            exit_code, stdout, stderr = self.run_cli(
+            exit_code, stdout, stderr = run_public_cli(
                 "authority",
                 "memory-receipt-evidence",
                 "--decision",
@@ -253,7 +237,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             return_value=expected_payload,
         ) as write_receipt:
 
-            exit_code, stdout, stderr = self.run_cli(
+            exit_code, stdout, stderr = run_public_cli(
                 "authority",
                 "owner-receipt-evidence",
                 "--input",

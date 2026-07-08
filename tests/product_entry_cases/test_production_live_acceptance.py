@@ -6,6 +6,7 @@ from copy import deepcopy
 import unittest
 from pathlib import Path
 
+from med_autogrant.product_entry import MedAutoGrantProductEntry
 from med_autogrant.product_entry_parts.owner_receipt_common import (
     PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
 )
@@ -103,10 +104,29 @@ def _meta_agent_patch_work_order_result() -> dict[str, object]:
     return result
 
 
+def _owner_receipt(
+    runtime_root: Path,
+    *,
+    receipt_shape: str,
+    source_ref: str,
+    receipt_id: str,
+    closeout_summary: str,
+    closeout_refs: dict[str, object] | None = None,
+) -> dict[str, object]:
+    return write_owner_receipt_evidence(
+        input_path=CRITIQUE_EXAMPLE_PATH,
+        receipt_shape=receipt_shape,
+        stage_id="package_and_submit_ready",
+        source_ref=source_ref,
+        closeout_summary=closeout_summary,
+        runtime_root=runtime_root,
+        receipt_id=receipt_id,
+        closeout_refs=closeout_refs,
+    )["owner_receipt_evidence"]
+
+
 class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
     def test_manifest_exposes_mag_live_acceptance_receipt_surface(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
         payload = MedAutoGrantProductEntry().build_product_entry_manifest(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
@@ -142,24 +162,19 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         self.assertFalse(surface["authority_boundary"]["can_declare_submission_ready_export"])
 
     def test_live_acceptance_receipt_projection_closes_domain_owner_blocker_refs_only(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
         with tempfile.TemporaryDirectory() as tmp_dir:
             runtime_root = Path(tmp_dir) / "runtime-state"
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                runtime_root,
                 receipt_shape="domain_owner_receipt",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-owner-receipt",
                 closeout_summary="MAG owner accepted live production acceptance receipt scaleout refs.",
-                runtime_root=runtime_root,
                 receipt_id="production-live-acceptance-2026-05-20",
                 closeout_refs={
                     "agent_lab_suite_result_ref": "suite-result:mag/live-acceptance",
                     "meta_agent_coordination_ref": "meta-agent:mag/live-acceptance",
                 },
-            )["owner_receipt_evidence"]
+            )
             payload = build_production_live_acceptance_receipt_projection(
                 owner_receipt_evidence=receipt,
                 agent_lab_suite_result=_agent_lab_suite_result(),
@@ -199,19 +214,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         self.assertFalse(projection["forbidden_write_proof"]["fundability_verdict_written"])
 
     def test_live_acceptance_receipt_projection_accepts_typed_blocker_patch_smoke_refs(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="typed_blocker",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-blocked",
                 closeout_summary="MAG owner still blocked.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-blocked",
-            )["owner_receipt_evidence"]
+            )
             payload = build_production_live_acceptance_receipt_projection(
                 owner_receipt_evidence=receipt,
                 agent_lab_suite_result=_agent_lab_suite_result(),
@@ -261,20 +271,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         )
 
     def test_live_acceptance_receipt_projection_requires_complete_patch_loop_refs(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="typed_blocker",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-blocked",
                 closeout_summary="MAG owner still blocked.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-incomplete-patch-loop",
-            )["owner_receipt_evidence"]
+            )
             meta_result = _meta_agent_patch_work_order_result()
             del meta_result["learning_loop"]["developer_patch_work_order"][
                 "agent_lab_re_evaluation_ref"
@@ -288,20 +292,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 )
 
     def test_live_acceptance_receipt_projection_rejects_non_mag_owner_receipt(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="domain_owner_receipt",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-owner-receipt",
                 closeout_summary="MAG owner accepted live production acceptance receipt scaleout refs.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-non-mag-owner",
-            )["owner_receipt_evidence"]
+            )
             receipt = deepcopy(receipt)
             receipt["owner"] = "other-agent"
             receipt["target_domain_id"] = "other-agent"
@@ -314,20 +312,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 )
 
     def test_live_acceptance_receipt_projection_binds_meta_agent_to_same_agent_lab_result(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="domain_owner_receipt",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-owner-receipt",
                 closeout_summary="MAG owner accepted live production acceptance receipt scaleout refs.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-meta-mismatch",
-            )["owner_receipt_evidence"]
+            )
             meta_result = deepcopy(_meta_agent_coordination_result())
             meta_result["learning_loop"]["developer_patch_work_order"][
                 "source_agent_lab_result_ref"
@@ -341,20 +333,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 )
 
     def test_live_acceptance_receipt_projection_requires_complete_agent_lab_summary(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="domain_owner_receipt",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://mag/live-acceptance-owner-receipt",
                 closeout_summary="MAG owner accepted live production acceptance receipt scaleout refs.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-incomplete-agent-lab",
-            )["owner_receipt_evidence"]
+            )
             suite_result = deepcopy(_agent_lab_suite_result())
             suite_result["summary"].pop("forbidden_authority_flag_count")
 
@@ -366,20 +352,14 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 )
 
     def test_live_acceptance_receipt_projection_rejects_mag_specific_agent_lab_wrapper(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
-
         with tempfile.TemporaryDirectory() as tmp_dir:
-            entry = MedAutoGrantProductEntry()
-            receipt = write_owner_receipt_evidence(
-                input_path=CRITIQUE_EXAMPLE_PATH,
+            receipt = _owner_receipt(
+                Path(tmp_dir) / "runtime-state",
                 receipt_shape="domain_owner_receipt",
-                stage_id="package_and_submit_ready",
                 source_ref="opl-agent-lab://standard/live-acceptance-owner-receipt",
                 closeout_summary="MAG owner accepted standard Agent Lab result refs.",
-                runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-mag-wrapper",
-            )["owner_receipt_evidence"]
+            )
             suite_result = deepcopy(_agent_lab_suite_result())
 
             with self.assertRaises(WorkspaceStateError):

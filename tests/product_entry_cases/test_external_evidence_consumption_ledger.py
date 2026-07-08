@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import json
 import unittest
+from med_autogrant.product_entry_parts.external_evidence_ledger import (
+    build_external_evidence_consumption_ledger,
+)
 from med_autogrant.workspace import WorkspaceStateError
+from product_entry_cases.support import assert_false_keys
 
 
 def _request_pack() -> dict[str, object]:
@@ -76,10 +80,6 @@ def _first_live_receipts(request_pack: dict[str, object]) -> list[dict[str, obje
 
 class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
     def test_empty_receipts_keep_request_pack_declared_without_claiming_evidence(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         ledger = build_external_evidence_consumption_ledger(
             external_evidence_request_pack=request_pack,
@@ -92,17 +92,9 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
         self.assertEqual(ledger["satisfied_request_ids"], [])
         self.assertEqual(ledger["missing_request_ids"], request_pack["required_request_ids"])
         self.assertFalse(ledger["claims"]["mag_claims_external_evidence_exists"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_opl_runtime"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_app_workbench"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_fundability_ready"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_export_ready"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_submission_ready"])
+        assert_false_keys(self, ledger["authority_boundary"], ("mag_implements_opl_runtime", "mag_implements_app_workbench", "mag_can_authorize_fundability_ready", "mag_can_authorize_export_ready", "mag_can_authorize_submission_ready"))
 
     def test_partial_receipts_project_partial_consumption_without_ready_authority(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         partial_request_ids = list(request_pack["required_request_ids"][:2])
         ledger = build_external_evidence_consumption_ledger(
@@ -117,16 +109,9 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             ledger["summary"]["missing_request_count"],
             len(request_pack["required_request_ids"]) - 2,
         )
-        self.assertFalse(ledger["claims"]["mag_claims_external_evidence_exists"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_fundability_ready"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_export_ready"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_submission_ready"])
+        assert_false_keys(self, ledger["claims"], ("mag_claims_external_evidence_exists", "mag_authorizes_fundability_ready", "mag_authorizes_export_ready", "mag_authorizes_submission_ready"))
 
     def test_all_receipts_mark_consumed_complete_refs_only(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         required_request_ids = list(request_pack["required_request_ids"])
         ledger = build_external_evidence_consumption_ledger(
@@ -139,11 +124,7 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
         self.assertEqual(ledger["missing_request_ids"], [])
         self.assertTrue(ledger["claims"]["mag_claims_external_evidence_exists"])
         self.assertTrue(ledger["authority_boundary"]["mag_claims_external_evidence_exists"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_opl_runtime"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_app_workbench"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_fundability_ready"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_export_ready"])
-        self.assertFalse(ledger["authority_boundary"]["mag_can_authorize_submission_ready"])
+        assert_false_keys(self, ledger["authority_boundary"], ("mag_implements_opl_runtime", "mag_implements_app_workbench", "mag_can_authorize_fundability_ready", "mag_can_authorize_export_ready", "mag_can_authorize_submission_ready"))
 
         encoded = json.dumps(ledger, ensure_ascii=False, sort_keys=True)
         self.assertNotIn("PRIVATE_BODY_TOKEN", encoded)
@@ -155,10 +136,6 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             self.assertIn("receipt_ref", receipt["refs"])
 
     def test_first_live_production_receipts_cover_all_requested_evidence_without_ready_authority(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         ledger = build_external_evidence_consumption_ledger(
             external_evidence_request_pack=request_pack,
@@ -171,22 +148,14 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
         self.assertEqual(ledger["summary"]["missing_request_count"], 0)
         self.assertEqual(ledger["missing_request_ids"], [])
         self.assertTrue(ledger["claims"]["mag_claims_external_evidence_exists"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_fundability_ready"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_quality_ready"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_export_ready"])
-        self.assertFalse(ledger["claims"]["mag_authorizes_submission_ready"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_opl_runtime"])
-        self.assertFalse(ledger["authority_boundary"]["mag_implements_app_workbench"])
+        assert_false_keys(self, ledger["claims"], ("mag_authorizes_fundability_ready", "mag_authorizes_quality_ready", "mag_authorizes_export_ready", "mag_authorizes_submission_ready"))
+        assert_false_keys(self, ledger["authority_boundary"], ("mag_implements_opl_runtime", "mag_implements_app_workbench"))
         self.assertEqual(
             {receipt["request_id"] for receipt in ledger["accepted_receipts"]},
             set(request_pack["required_request_ids"]),
         )
 
     def test_illegal_request_id_fails_closed(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         receipt = _receipts_for_request_ids(
             request_pack,
@@ -201,10 +170,6 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             )
 
     def test_receipt_shape_mismatch_fails_closed(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         receipt = _receipts_for_request_ids(
             request_pack,
@@ -219,10 +184,6 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             )
 
     def test_producer_owner_mismatch_fails_closed(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         receipt = _receipts_for_request_ids(
             request_pack,
@@ -237,10 +198,6 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
             )
 
     def test_forbidden_body_payload_fails_closed(self) -> None:
-        from med_autogrant.product_entry_parts.external_evidence_ledger import (
-            build_external_evidence_consumption_ledger,
-        )
-
         request_pack = _request_pack()
         base_receipt = _receipts_for_request_ids(
             request_pack,

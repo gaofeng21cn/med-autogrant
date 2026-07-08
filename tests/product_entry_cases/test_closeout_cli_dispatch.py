@@ -4,28 +4,12 @@ import tempfile
 
 import json
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
-from med_autogrant.cli import main
-from support.cli import public_cli_argv
+from product_entry_cases.support import run_public_cli
 
 
 class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def test_codex_stage_receipts_dispatches_authority_target(self) -> None:
         expected_payload = {
             "surface_kind": "mag_codex_stage_execution_receipt_bundle",
@@ -63,7 +47,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_bundle:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "stage-receipts",
                     "--stage-id",
@@ -115,7 +99,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_guard:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "morphology-guard",
                     "--source-item",
@@ -179,7 +163,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_bundle:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "executor-closeout-bundle",
                     "--codex-stage-execution-receipt-bundle",

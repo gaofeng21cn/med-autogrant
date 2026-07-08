@@ -10,6 +10,7 @@ from med_autogrant.product_entry_parts.domain_handler_contract import (
 from product_entry_cases.support import (
     assert_contains_all,
     assert_false_keys,
+    assert_path_values,
     assert_true_keys,
 )
 
@@ -34,41 +35,36 @@ def assert_domain_handler_export_maps_runtime_and_attention_surfaces(
 
 
 def assert_domain_handler_export_identity(testcase: Any, export: Mapping[str, Any]) -> None:
-    testcase.assertEqual(export["surface_kind"], DOMAIN_HANDLER_EXPORT_KIND)
-    testcase.assertEqual(export["adapter_id"], DOMAIN_HANDLER_ADAPTER_ID)
-    caller_owner = export["caller_owner_contract"]
-    testcase.assertEqual(caller_owner["active_caller_owner"], "med-autogrant")
-    testcase.assertEqual(
-        caller_owner["active_caller_surface"],
-        "mag_domain_handler_handler_until_opl_caller_evidence",
+    assert_path_values(
+        testcase,
+        export,
+        {
+            "surface_kind": DOMAIN_HANDLER_EXPORT_KIND,
+            "adapter_id": DOMAIN_HANDLER_ADAPTER_ID,
+            "caller_owner_contract.active_caller_owner": "med-autogrant",
+            "caller_owner_contract.active_caller_surface": (
+                "mag_domain_handler_handler_until_opl_caller_evidence"
+            ),
+            "caller_owner_contract.target_caller_owner": "one-person-lab",
+            "caller_owner_contract.target_caller_surface": "opl_generated_or_hosted_domain_handler",
+            "caller_owner_contract.domain_handler_target": "med-autogrant",
+            "caller_owner_contract.domain_handler_owner": "med-autogrant",
+            "caller_owner_contract.claims_fully_cleaned": False,
+            "caller_owner_contract.mag_handler_boundary_ready": True,
+            "caller_owner_contract.external_opl_generated_or_hosted_caller_evidence_required": True,
+            "substrate_boundary.online_substrate_owner": "explicit_opl_provider",
+            "substrate_boundary.control_plane_owner": "one-person-lab",
+            "substrate_boundary.domain_truth_owner": "med-autogrant",
+            "substrate_boundary.hermes_proof_executor_default": False,
+            "runtime_control.surface_kind": "runtime_control",
+            "runtime_continuity.surface_kind": "skill_runtime_continuity",
+            "standard_domain_agent_skeleton.surface_kind": "standard_domain_agent_skeleton",
+            "artifact_locator_contract.surface_kind": "domain_artifact_locator_contract",
+            "source_provenance.surface_kind": "source_provenance",
+            "source_provenance.source_provenance_ref.ref": "docs/source/README.md",
+        },
     )
-    testcase.assertEqual(caller_owner["target_caller_owner"], "one-person-lab")
-    testcase.assertEqual(caller_owner["target_caller_surface"], "opl_generated_or_hosted_domain_handler")
-    testcase.assertEqual(caller_owner["domain_handler_target"], "med-autogrant")
-    testcase.assertEqual(caller_owner["domain_handler_owner"], "med-autogrant")
-    testcase.assertFalse(caller_owner["claims_fully_cleaned"])
-    testcase.assertTrue(caller_owner["mag_handler_boundary_ready"])
-    testcase.assertTrue(caller_owner["external_opl_generated_or_hosted_caller_evidence_required"])
-    testcase.assertEqual(export["substrate_boundary"]["online_substrate_owner"], "explicit_opl_provider")
-    testcase.assertEqual(export["substrate_boundary"]["control_plane_owner"], "one-person-lab")
-    testcase.assertEqual(export["substrate_boundary"]["domain_truth_owner"], "med-autogrant")
-    testcase.assertFalse(export["substrate_boundary"]["hermes_proof_executor_default"])
     testcase.assertIn("OPL may explicitly choose", export["substrate_boundary"]["default_executor_note"])
-    testcase.assertEqual(export["runtime_control"]["surface_kind"], "runtime_control")
-    testcase.assertEqual(export["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
-    testcase.assertEqual(
-        export["standard_domain_agent_skeleton"]["surface_kind"],
-        "standard_domain_agent_skeleton",
-    )
-    testcase.assertEqual(
-        export["artifact_locator_contract"]["surface_kind"],
-        "domain_artifact_locator_contract",
-    )
-    testcase.assertEqual(export["source_provenance"]["surface_kind"], "source_provenance")
-    testcase.assertEqual(
-        export["source_provenance"]["source_provenance_ref"]["ref"],
-        "docs/source/README.md",
-    )
     testcase.assertIn(
         "no_runtime_workbench_ledger_or_scheduler_authority_transferred",
         export["source_provenance"]["authority_boundary"],
@@ -77,98 +73,90 @@ def assert_domain_handler_export_identity(testcase: Any, export: Mapping[str, An
 
 def assert_domain_handler_substrate_and_receipts(testcase: Any, export: Mapping[str, Any]) -> None:
     substrate_adapter = export["opl_substrate_adapter_export"]
-    testcase.assertEqual(substrate_adapter["surface_kind"], "mag_opl_substrate_adapter_export")
-    testcase.assertEqual(substrate_adapter["adapter_id"], "mag.opl_substrate_adapter.export.v1")
-    testcase.assertEqual(substrate_adapter["workspace_ref_index"]["body_policy"], "locator_only_no_workspace_body")
-    testcase.assertEqual(
-        substrate_adapter["source_ref_index"]["index_policy"],
-        "source_refs_only_no_source_body",
-    )
-    testcase.assertEqual(
-        substrate_adapter["artifact_ref_index"]["body_policy"],
-        "locator_and_inventory_refs_only_no_package_body",
-    )
-    testcase.assertEqual(
-        substrate_adapter["memory_ref_index"]["body_policy"],
-        "locator_and_receipt_refs_only_no_memory_body",
-    )
-    testcase.assertEqual(
-        substrate_adapter["body_exposure_policy"]["owner_receipt"],
-        "receipt_ref_only_no_authority_transfer",
+    assert_path_values(
+        testcase,
+        substrate_adapter,
+        {
+            "surface_kind": "mag_opl_substrate_adapter_export",
+            "adapter_id": "mag.opl_substrate_adapter.export.v1",
+            "workspace_ref_index.body_policy": "locator_only_no_workspace_body",
+            "source_ref_index.index_policy": "source_refs_only_no_source_body",
+            "artifact_ref_index.body_policy": "locator_and_inventory_refs_only_no_package_body",
+            "memory_ref_index.body_policy": "locator_and_receipt_refs_only_no_memory_body",
+            "body_exposure_policy.owner_receipt": "receipt_ref_only_no_authority_transfer",
+        },
     )
     assert_false_keys(testcase, substrate_adapter["authority_boundary"], ("opl_can_read_package_body", "opl_can_read_memory_body", "opl_can_issue_owner_receipt"))
-    testcase.assertEqual(
-        export["opl_control_plane"]["substrate_adapter_export_ref"],
-        "/domain_handler_export/opl_substrate_adapter_export",
-    )
-    testcase.assertEqual(
-        export["controlled_stage_attempt_projection"]["surface_kind"],
-        "controlled_stage_attempt_projection",
-    )
     hosted_proof = export["controlled_stage_attempt_projection"][
         "opl_hosted_controlled_grant_stage_attempt_proof"
     ]
-    testcase.assertEqual(
-        hosted_proof["surface_kind"],
-        "opl_hosted_controlled_grant_stage_attempt_proof",
+    assert_path_values(
+        testcase,
+        export,
+        {
+            "opl_control_plane.substrate_adapter_export_ref": (
+                "/domain_handler_export/opl_substrate_adapter_export"
+            ),
+            "controlled_stage_attempt_projection.surface_kind": "controlled_stage_attempt_projection",
+        },
     )
-    testcase.assertEqual(
-        hosted_proof["maps_to_opl_contract"],
-        "opl_hosted_controlled_stage_attempt_proof.v1",
+    assert_path_values(
+        testcase,
+        hosted_proof,
+        {
+            "surface_kind": "opl_hosted_controlled_grant_stage_attempt_proof",
+            "maps_to_opl_contract": "opl_hosted_controlled_stage_attempt_proof.v1",
+            "consumed_memory_proof_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/"
+                "controlled_consumed_memory_proof"
+            ),
+            "writeback_receipt_proof_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
+            ),
+            "repo_tracked_real_receipt_instance": False,
+            "repo_tracked_real_memory_body": False,
+        },
     )
-    testcase.assertEqual(
-        hosted_proof["consumed_memory_proof_ref"],
-        "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
-    )
-    testcase.assertEqual(
-        hosted_proof["writeback_receipt_proof_ref"],
-        "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
-    )
-    testcase.assertFalse(hosted_proof["repo_tracked_real_receipt_instance"])
-    testcase.assertFalse(hosted_proof["repo_tracked_real_memory_body"])
     assert_false_keys(testcase, hosted_proof["authority_boundary"], ("opl_can_hold_fundability_verdict", "opl_can_hold_authoring_quality_verdict", "opl_can_hold_export_verdict"))
     testcase.assertEqual(
         export["receipt_refs"],
         export["controlled_stage_attempt_projection"]["receipt_refs"],
     )
     apply_proof = export["controlled_domain_memory_apply_proof"]
-    testcase.assertEqual(
-        apply_proof["surface_kind"],
-        "controlled_grant_stage_domain_memory_apply_proof",
+    assert_path_values(
+        testcase,
+        apply_proof,
+        {
+            "surface_kind": "controlled_grant_stage_domain_memory_apply_proof",
+            "operator_receipt_projection.surface_kind": "mag_domain_memory_operator_receipt_projection",
+            "authority_boundary.can_write_fundability_verdict": False,
+        },
     )
-    testcase.assertEqual(
-        apply_proof["operator_receipt_projection"]["surface_kind"],
-        "mag_domain_memory_operator_receipt_projection",
-    )
-    testcase.assertFalse(apply_proof["authority_boundary"]["can_write_fundability_verdict"])
-    testcase.assertEqual(
-        export["memory_receipt_refs"],
-        apply_proof["writeback_receipt_refs"],
-    )
-    testcase.assertEqual(
-        export["repo_source_layout_audit"],
-        apply_proof["repo_source_layout_audit"],
-    )
-    testcase.assertEqual(export["owner_receipt_contract"]["surface_kind"], "mag_owner_receipt_contract")
-    testcase.assertEqual(
-        export["owner_receipt_contract"]["allowed_return_shapes"],
-        ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
+    testcase.assertEqual(export["memory_receipt_refs"], apply_proof["writeback_receipt_refs"])
+    testcase.assertEqual(export["repo_source_layout_audit"], apply_proof["repo_source_layout_audit"])
+    assert_path_values(
+        testcase,
+        export["owner_receipt_contract"],
+        {
+            "surface_kind": "mag_owner_receipt_contract",
+            "allowed_return_shapes": ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
+        },
     )
 
 
 def assert_domain_handler_consumer_thinning_contract(testcase: Any, export: Mapping[str, Any], thinning: Mapping[str, Any]) -> None:
-    testcase.assertEqual(thinning["surface_kind"], "mag_consumer_thinning_contract")
-    testcase.assertEqual(thinning["active_caller_owner"], "med-autogrant")
-    testcase.assertEqual(
-        thinning["active_caller_surface"],
-        "mag_direct_domain_entry_until_opl_caller_evidence",
-    )
-    testcase.assertEqual(thinning["domain_handler_target"], "med-autogrant")
-    testcase.assertEqual(thinning["domain_handler_owner"], "med-autogrant")
-    testcase.assertEqual(thinning["state"], "mag_handler_boundary_ready_external_caller_evidence_gated")
-    testcase.assertEqual(
-        thinning["domain_handler_contract_ref"],
-        "/product_entry_manifest/mag_consumer_thinning_contract",
+    assert_path_values(
+        testcase,
+        thinning,
+        {
+            "surface_kind": "mag_consumer_thinning_contract",
+            "active_caller_owner": "med-autogrant",
+            "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
+            "domain_handler_target": "med-autogrant",
+            "domain_handler_owner": "med-autogrant",
+            "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
+            "domain_handler_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        },
     )
     testcase.assertEqual(
         thinning["exposed_domain_handler_return_refs"],
@@ -221,40 +209,44 @@ def assert_domain_handler_consumer_thinning_contract(testcase: Any, export: Mapp
         },
     )
     bridge_refs = thinning["bridge_exit_gate_refs"]
-    testcase.assertEqual(
-        bridge_refs["generated_surface_bridge_exit_gate_ref"],
-        "/product_entry_manifest/mag_consumer_thinning_contract/"
-        "generated_surface_handoff/bridge_exit_gate",
+    assert_path_values(
+        testcase,
+        bridge_refs,
+        {
+            "generated_surface_bridge_exit_gate_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff/bridge_exit_gate"
+            ),
+            "legacy_exit_gate_policy": "delete_or_history_tombstone_after_replacement_proof",
+            "claims_all_bridge_exits_complete": False,
+            "mag_handler_boundary_ready": True,
+        },
     )
-    testcase.assertEqual(
-        bridge_refs["legacy_exit_gate_policy"],
-        "delete_or_history_tombstone_after_replacement_proof",
-    )
-    testcase.assertFalse(bridge_refs["claims_all_bridge_exits_complete"])
-    testcase.assertTrue(bridge_refs["mag_handler_boundary_ready"])
     testcase.assertEqual(
         export["functional_followthrough_gap_classification"],
         thinning["functional_followthrough_gap_classification"],
     )
-    testcase.assertEqual(
-        export["functional_followthrough_gap_classification"][
-            "mag_functional_structure_gap_count"
-        ],
-        0,
-    )
-    testcase.assertFalse(
-        export["functional_followthrough_gap_classification"]["authority_boundary"][
-            "claims_production_long_run_soak_complete"
-        ]
-    )
-    testcase.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
-    testcase.assertEqual(
-        thinning["authority_boundary"]["generic_wrapper_active_caller_owner"],
-        "evidence_required_from_one-person-lab",
-    )
-    testcase.assertEqual(
-        thinning["authority_boundary"]["mag_role_for_generated_wrappers"],
-        "domain_handler_ref_only_adapter_and_minimal_authority_functions",
+    assert_path_values(
+        testcase,
+        thinning,
+        {
+            (
+                "functional_followthrough_gap_classification",
+                "mag_functional_structure_gap_count",
+            ): 0,
+            (
+                "functional_followthrough_gap_classification",
+                "authority_boundary",
+                "claims_production_long_run_soak_complete",
+            ): False,
+            "authority_boundary.mag_rebuilds_opl_runtime": False,
+            "authority_boundary.generic_wrapper_active_caller_owner": (
+                "evidence_required_from_one-person-lab"
+            ),
+            "authority_boundary.mag_role_for_generated_wrappers": (
+                "domain_handler_ref_only_adapter_and_minimal_authority_functions"
+            ),
+        },
     )
     testcase.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
     assert_contains_all(testcase, thinning["forbidden_mag_generic_owner_roles"], ("generic_operator_workbench_owner", "generic_workspace_source_intake_owner", "generic_memory_transport_owner", "generic_artifact_gallery_owner", "generic_observability_slo_owner"))
@@ -263,47 +255,65 @@ def assert_domain_handler_consumer_thinning_contract(testcase: Any, export: Mapp
 def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Mapping[str, Any], thinning: Mapping[str, Any]) -> None:
     consumed = export["consumed_opl_standard_surfaces"]
     testcase.assertEqual(consumed, thinning["consumed_opl_standard_surfaces"])
-    testcase.assertEqual(consumed["surface_kind"], "mag_consumed_opl_standard_surfaces")
-    testcase.assertEqual(
-        consumed["domain_handler_projection_ref"],
-        "/domain_handler_export/mag_consumer_thinning_contract",
+    assert_path_values(
+        testcase,
+        consumed,
+        {
+            "surface_kind": "mag_consumed_opl_standard_surfaces",
+            "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
+            "authority_boundary.opl_standard_scaffold_owner": "one-person-lab",
+        },
     )
-    testcase.assertEqual(consumed["authority_boundary"]["opl_standard_scaffold_owner"], "one-person-lab")
     assert_true_keys(testcase, consumed["authority_boundary"], ("mag_consumes_standard_scaffold", "mag_consumes_generic_primitives"))
     assert_false_keys(testcase, consumed["authority_boundary"], ("mag_can_own_generic_memory_transport", "mag_can_own_generic_artifact_gallery", "mag_can_own_generic_operator_workbench", "mag_can_own_generic_observability_slo", "mag_can_own_generic_artifact_lifecycle", "opl_harness_pass_can_declare_grant_ready", "opl_harness_pass_can_declare_export_ready"))
     assert_contains_all(testcase, consumed["consumed_projection_surfaces"], ("family_conflict_envelope", "runtime_observability_export"))
     assert_contains_all(testcase, consumed["mag_retained_authority"], ("grant_truth", "package_authority"))
     conflict_projection = export["opl_family_conflict_blocker_projection"]
     testcase.assertEqual(conflict_projection, thinning["opl_family_conflict_blocker_projection"])
-    testcase.assertEqual(conflict_projection["projection_policy"], "typed_blocker_only_no_fallback_completion")
-    testcase.assertFalse(conflict_projection["authority_boundary"]["can_write_domain_truth"])
-    testcase.assertFalse(conflict_projection["authority_boundary"]["can_fallback_complete"])
+    assert_path_values(
+        testcase,
+        conflict_projection,
+        {
+            "projection_policy": "typed_blocker_only_no_fallback_completion",
+            "authority_boundary.can_write_domain_truth": False,
+            "authority_boundary.can_fallback_complete": False,
+        },
+    )
     observability = export["opl_runtime_observability_consumption"]
     testcase.assertEqual(observability, thinning["opl_runtime_observability_consumption"])
-    testcase.assertEqual(observability["observability_export_kind"], "opl_runtime_observability_export")
-    testcase.assertEqual(observability["consumption_policy"], "read_only_refs_and_counts_no_repair_execution")
+    assert_path_values(
+        testcase,
+        observability,
+        {
+            "observability_export_kind": "opl_runtime_observability_export",
+            "consumption_policy": "read_only_refs_and_counts_no_repair_execution",
+            "stage_attempt_projection_consumption.provider_completion_is_grant_ready": False,
+            "authority_boundary.can_execute_repair": False,
+            "authority_boundary.can_authorize_quality_verdict": False,
+        },
+    )
     testcase.assertIn("stage_attempt_control_loop_projection", observability["consumed_opl_surfaces"])
-    testcase.assertFalse(observability["stage_attempt_projection_consumption"]["provider_completion_is_grant_ready"])
-    testcase.assertFalse(observability["authority_boundary"]["can_execute_repair"])
-    testcase.assertFalse(observability["authority_boundary"]["can_authorize_quality_verdict"])
     coverage = export["functional_harness_consumer_coverage"]
     testcase.assertEqual(coverage, thinning["functional_harness_consumer_coverage"])
-    testcase.assertEqual(coverage["surface_kind"], "mag_functional_harness_consumer_coverage")
-    testcase.assertEqual(
-        coverage["coverage_chain_ids"],
-        [
-            "memory_refs_only_writeback_chain",
-            "queue_stage_attempt_typed_closeout_chain",
-            "generic_transition_runner_chain",
-            "restart_dead_letter_repair_human_gate_chain",
-        ],
+    assert_path_values(
+        testcase,
+        coverage,
+        {
+            "surface_kind": "mag_functional_harness_consumer_coverage",
+            "coverage_chain_ids": [
+                "memory_refs_only_writeback_chain",
+                "queue_stage_attempt_typed_closeout_chain",
+                "generic_transition_runner_chain",
+                "restart_dead_letter_repair_human_gate_chain",
+            ],
+            "claims_opl_functional_harness_pass": False,
+            "claims_grant_ready": False,
+            "claims_export_ready": False,
+            "fail_closed_rules.opl_harness_pass_is_grant_ready": False,
+            "fail_closed_rules.opl_harness_pass_is_export_ready": False,
+            "fail_closed_rules.opl_can_hold_generic_runtime_in_mag": False,
+        },
     )
-    testcase.assertFalse(coverage["claims_opl_functional_harness_pass"])
-    testcase.assertFalse(coverage["claims_grant_ready"])
-    testcase.assertFalse(coverage["claims_export_ready"])
-    testcase.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_grant_ready"])
-    testcase.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_export_ready"])
-    testcase.assertFalse(coverage["fail_closed_rules"]["opl_can_hold_generic_runtime_in_mag"])
     audit = export["privatized_functional_module_audit"]
     testcase.assertEqual(audit, thinning["privatized_functional_module_audit"])
     testcase.assertEqual(audit["surface_kind"], "mag_privatized_functional_module_audit")
@@ -352,19 +362,23 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
         consumer_modules["source_intake_shell"]["cannot_absorb_reason"],
     )
     retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
-    testcase.assertEqual(
-        retire_modules["closed_default_path_history_index"]["active_caller_status"],
-        "closed_default_paths_absent_no_active_caller",
+    assert_path_values(
+        testcase,
+        retire_modules["closed_default_path_history_index"],
+        {"active_caller_status": "closed_default_paths_absent_no_active_caller"},
     )
     no_active_caller_evidence = retire_modules[
         "closed_default_path_history_index"
     ]["no_active_caller_evidence"]
-    testcase.assertEqual(
-        no_active_caller_evidence["status"],
-        "no_active_caller_observed",
+    assert_path_values(
+        testcase,
+        no_active_caller_evidence,
+        {
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": True,
+            "physical_delete_authorized": False,
+        },
     )
-    testcase.assertTrue(no_active_caller_evidence["no_active_caller_observed"])
-    testcase.assertFalse(no_active_caller_evidence["physical_delete_authorized"])
     testcase.assertEqual(
         retire_modules["closed_default_path_history_index"]["code_paths"],
         [
@@ -375,22 +389,31 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
         ],
     )
     no_active_caller_summary = audit["no_active_caller_evidence_summary"]
-    testcase.assertEqual(
-        no_active_caller_summary["status"],
-        "all_retired_surfaces_no_active_caller_observed",
+    assert_path_values(
+        testcase,
+        no_active_caller_summary,
+        {
+            "status": "all_retired_surfaces_no_active_caller_observed",
+            "retired_surface_count": 6,
+            "no_active_caller_observed_count": 6,
+            "physical_delete_authorized": False,
+        },
     )
-    testcase.assertEqual(no_active_caller_summary["retired_surface_count"], 6)
-    testcase.assertEqual(no_active_caller_summary["no_active_caller_observed_count"], 6)
-    testcase.assertFalse(no_active_caller_summary["physical_delete_authorized"])
     private_retirement_evidence = audit["private_platform_retirement_owner_evidence"]
-    testcase.assertEqual(
-        private_retirement_evidence["status"],
-        "no_active_caller_evidence_observed_not_delete_authorized",
+    assert_path_values(
+        testcase,
+        private_retirement_evidence,
+        {
+            "status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "physical_delete_authorized": False,
+            "ready_claim_authorized": False,
+        },
     )
-    testcase.assertFalse(private_retirement_evidence["physical_delete_authorized"])
-    testcase.assertFalse(private_retirement_evidence["ready_claim_authorized"])
-    testcase.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
-    testcase.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
+    assert_false_keys(
+        testcase,
+        audit["fail_closed_rules"],
+        ("provider_completion_is_grant_ready", "mag_can_rebuild_generic_runtime"),
+    )
     testcase.assertEqual(
         export["declarative_grant_pack_compiler_input"],
         thinning["declarative_grant_pack_compiler_input"],
@@ -404,19 +427,21 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
 
 def assert_domain_handler_external_evidence(testcase: Any, export: Mapping[str, Any], thinning: Mapping[str, Any]) -> None:
     external_pack = export["external_evidence_request_pack"]
-    testcase.assertEqual(external_pack["surface_kind"], "mag_external_evidence_request_pack")
-    testcase.assertEqual(external_pack["state"], "request_pack_declared_external_evidence_not_claimed")
+    assert_path_values(
+        testcase,
+        external_pack,
+        {
+            "surface_kind": "mag_external_evidence_request_pack",
+            "state": "request_pack_declared_external_evidence_not_claimed",
+            "consumer_thinning_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+            "required_refs_summary.domain_handler_projection_ref": (
+                "/domain_handler_export/external_evidence_request_pack"
+            ),
+        },
+    )
     testcase.assertIn("one-person-lab", external_pack["requested_from"])
     testcase.assertIn("codex_app", external_pack["requested_from"])
     testcase.assertIn("production_caller", external_pack["requested_from"])
-    testcase.assertEqual(
-        external_pack["consumer_thinning_contract_ref"],
-        "/product_entry_manifest/mag_consumer_thinning_contract",
-    )
-    testcase.assertEqual(
-        external_pack["required_refs_summary"]["domain_handler_projection_ref"],
-        "/domain_handler_export/external_evidence_request_pack",
-    )
     assert_false_keys(testcase, external_pack["forbidden_completion_claims"], ("provider_completion_is_fundability_ready", "provider_completion_is_quality_ready", "provider_completion_is_export_ready", "claims_all_bridge_exits_complete", "claims_production_long_run_soak_complete"))
     assert_false_keys(testcase, external_pack["authority_boundary"], ("mag_claims_external_evidence_exists", "mag_claims_direct_hosted_parity_passed", "opl_can_declare_fundability_verdict"))
     testcase.assertEqual(
@@ -424,20 +449,19 @@ def assert_domain_handler_external_evidence(testcase: Any, export: Mapping[str, 
         thinning["generated_hosted_default_caller_proof"],
     )
     default_caller_proof = export["generated_hosted_default_caller_proof"]
-    testcase.assertEqual(
-        default_caller_proof["default_caller_cutover_state"],
-        "mag_handler_boundary_ready_external_default_caller_evidence_gated",
-    )
-    testcase.assertEqual(
-        default_caller_proof["direct_hosted_parity_workorder"]["parity_owner"],
-        "one-person-lab",
-    )
-    testcase.assertFalse(
-        default_caller_proof["direct_hosted_parity_workorder"]["claims_parity_passed"]
-    )
-    testcase.assertEqual(
-        default_caller_proof["no_forbidden_write_boundary"]["runtime_receipt_write_policy"],
-        "runtime_store_only_no_repo_source_receipt_instances",
+    assert_path_values(
+        testcase,
+        default_caller_proof,
+        {
+            "default_caller_cutover_state": (
+                "mag_handler_boundary_ready_external_default_caller_evidence_gated"
+            ),
+            "direct_hosted_parity_workorder.parity_owner": "one-person-lab",
+            "direct_hosted_parity_workorder.claims_parity_passed": False,
+            "no_forbidden_write_boundary.runtime_receipt_write_policy": (
+                "runtime_store_only_no_repo_source_receipt_instances"
+            ),
+        },
     )
     assert_false_keys(testcase, default_caller_proof["authority_boundary"], ("mag_owns_generic_runtime", "opl_generated_caller_can_sign_owner_receipt"))
 

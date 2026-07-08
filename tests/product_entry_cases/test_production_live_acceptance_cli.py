@@ -4,28 +4,12 @@ import tempfile
 
 import json
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
-from med_autogrant.cli import main
-from support.cli import public_cli_argv
+from product_entry_cases.support import run_public_cli
 
 
 class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def test_production_live_acceptance_receipt_dispatches_product_surface(self) -> None:
         expected_payload = {
             "ok": True,
@@ -52,7 +36,7 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_projection:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "production-acceptance",
                     "--owner-receipt-evidence",
@@ -109,7 +93,7 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
                 return_value=expected_payload,
             ):
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "production-acceptance",
                     "--owner-receipt-evidence",

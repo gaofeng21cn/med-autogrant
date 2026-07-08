@@ -1,7 +1,19 @@
 from __future__ import annotations
 
 import unittest
+from med_autogrant.product_entry_parts.physical_morphology_guard import (
+    build_physical_morphology_guard_projection,
+)
 from med_autogrant.workspace import WorkspaceStateError
+from product_entry_cases.support import assert_contains_all, assert_false_keys, assert_path_values
+
+
+EXTERNAL_EVIDENCE_REFS = [
+    "opl://receipts/mag/physical-morphology/active-caller-migration.json",
+    "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
+    "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
+    "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
+]
 
 
 def _source_item(
@@ -34,10 +46,6 @@ def _source_item(
 
 class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
     def test_allowed_items_remain_evidence_gated_without_external_refs(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(),
@@ -64,75 +72,53 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             ],
         )
 
-        self.assertEqual(projection["surface_kind"], "mag_physical_morphology_guard_projection")
-        self.assertEqual(projection["state"], "allowed_evidence_gated")
-        self.assertEqual(projection["public_readback_ref"], "authority morphology-guard")
-        self.assertEqual(projection["internal_command_id"], "physical-morphology-guard")
-        self.assertTrue(
-            projection["readback_boundary"][
-                "internal_command_id_is_implementation_detail"
-            ]
-        )
-        self.assertFalse(
-            projection["readback_boundary"]["readback_can_authorize_physical_delete"]
-        )
-        self.assertFalse(
-            projection["readback_boundary"]["readback_can_sign_owner_receipt"]
-        )
-        self.assertEqual(projection["allowed_count"], 5)
-        self.assertEqual(projection["blocked_count"], 0)
-        self.assertEqual(projection["blocked_items"], [])
-        self.assertEqual(projection["source_ref_integrity_guard"]["state"], "passed")
-        self.assertEqual(
-            projection["source_ref_integrity_guard"]["checked_source_ref_count"],
-            5,
-        )
-        self.assertEqual(projection["source_ref_integrity_guard"]["invalid_source_refs"], [])
-        self.assertFalse(
-            projection["source_ref_integrity_guard"]["authority_boundary"][
-                "guard_can_authorize_physical_delete"
-            ]
-        )
-        self.assertFalse(
-            projection["source_ref_integrity_guard"]["authority_boundary"][
-                "guard_can_claim_grant_readiness"
-            ]
+        assert_path_values(
+            self,
+            projection,
+            {
+                "surface_kind": "mag_physical_morphology_guard_projection",
+                "state": "allowed_evidence_gated",
+                "public_readback_ref": "authority morphology-guard",
+                "internal_command_id": "physical-morphology-guard",
+                "readback_boundary.internal_command_id_is_implementation_detail": True,
+                "readback_boundary.readback_can_authorize_physical_delete": False,
+                "readback_boundary.readback_can_sign_owner_receipt": False,
+                "allowed_count": 5,
+                "blocked_count": 0,
+                "blocked_items": [],
+                "source_ref_integrity_guard.state": "passed",
+                "source_ref_integrity_guard.checked_source_ref_count": 5,
+                "source_ref_integrity_guard.invalid_source_refs": [],
+                (
+                    "source_ref_integrity_guard",
+                    "authority_boundary",
+                    "guard_can_authorize_physical_delete",
+                ): False,
+                (
+                    "source_ref_integrity_guard",
+                    "authority_boundary",
+                    "guard_can_claim_grant_readiness",
+                ): False,
+            },
         )
         strict_source_guard = projection["strict_source_purity_no_second_truth_guard"]
-        self.assertEqual(
-            strict_source_guard["guard_id"],
-            "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+        assert_path_values(
+            self,
+            strict_source_guard,
+            {
+                "guard_id": "mag.physical_morphology.strict_source_purity_no_second_truth_guard.v1",
+                "state": "passed",
+                "source_ref_integrity_state": "passed",
+                "source_ref_integrity_guard_ref": "source_ref_integrity_guard",
+                "public_readback_ref": "authority morphology-guard",
+                "claims.claims_strict_source_purity_complete": False,
+                "claims.claims_source_ref_integrity_complete": False,
+                "authority_boundary.guard_can_authorize_physical_delete": False,
+                "authority_boundary.guard_can_claim_grant_readiness": False,
+            },
         )
-        self.assertEqual(strict_source_guard["state"], "passed")
-        self.assertEqual(strict_source_guard["source_ref_integrity_state"], "passed")
-        self.assertEqual(
-            strict_source_guard["source_ref_integrity_guard_ref"],
-            "source_ref_integrity_guard",
-        )
-        self.assertEqual(
-            strict_source_guard["public_readback_ref"],
-            "authority morphology-guard",
-        )
-        self.assertIn(
-            "source_ref_integrity_status",
-            strict_source_guard["allowed_readback_outputs"],
-        )
-        self.assertIn(
-            "physical_delete_operation",
-            strict_source_guard["forbidden_readback_outputs"],
-        )
-        self.assertFalse(
-            strict_source_guard["claims"]["claims_strict_source_purity_complete"]
-        )
-        self.assertFalse(
-            strict_source_guard["claims"]["claims_source_ref_integrity_complete"]
-        )
-        self.assertFalse(
-            strict_source_guard["authority_boundary"]["guard_can_authorize_physical_delete"]
-        )
-        self.assertFalse(
-            strict_source_guard["authority_boundary"]["guard_can_claim_grant_readiness"]
-        )
+        self.assertIn("source_ref_integrity_status", strict_source_guard["allowed_readback_outputs"])
+        self.assertIn("physical_delete_operation", strict_source_guard["forbidden_readback_outputs"])
         self.assertEqual(projection["summary"]["external_evidence_ref_count"], 0)
         self.assertIn(
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
@@ -143,106 +129,78 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["required_next_evidence_refs"],
         )
         product_entry_deletion_readiness = projection["allowed_items"][0]["deletion_readiness"]
-        self.assertEqual(product_entry_deletion_readiness["surface_id"], "product_entry")
-        self.assertEqual(
-            product_entry_deletion_readiness["state"],
-            "blocked_by_surface_evidence_or_owner_receipt",
+        assert_path_values(
+            self,
+            product_entry_deletion_readiness,
+            {
+                "surface_id": "product_entry",
+                "state": "blocked_by_surface_evidence_or_owner_receipt",
+                "physical_delete_authorized": False,
+                "owner_receipt_required_ref": "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+                "typed_blocker_allowed_ref": "typed_blocker://mag/physical_delete_or_tombstone/product_entry",
+                "next_owner_delta_required": (
+                    "mag_owner_physical_delete_receipt_or_domain_owned_typed_blocker_required"
+                ),
+                "delete_or_tombstone_only_after_gate": True,
+                "blocked_by_surface_gate": False,
+                "claims_grant_ready": False,
+                "claims_submission_ready": False,
+                "claims_production_ready": False,
+            },
         )
-        self.assertFalse(product_entry_deletion_readiness["physical_delete_authorized"])
-        self.assertEqual(
-            product_entry_deletion_readiness["owner_receipt_required_ref"],
-            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
-        )
-        self.assertEqual(
-            product_entry_deletion_readiness["typed_blocker_allowed_ref"],
-            "typed_blocker://mag/physical_delete_or_tombstone/product_entry",
-        )
-        self.assertIn(
-            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+        assert_contains_all(
+            self,
             product_entry_deletion_readiness["missing_retirement_evidence_refs"],
+            (
+                "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+                "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            ),
         )
-        self.assertIn(
-            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-            product_entry_deletion_readiness["missing_retirement_evidence_refs"],
-        )
-        self.assertEqual(
-            product_entry_deletion_readiness["next_owner_delta_required"],
-            "mag_owner_physical_delete_receipt_or_domain_owned_typed_blocker_required",
-        )
-        self.assertTrue(product_entry_deletion_readiness["delete_or_tombstone_only_after_gate"])
-        self.assertFalse(product_entry_deletion_readiness["blocked_by_surface_gate"])
-        self.assertFalse(product_entry_deletion_readiness["claims_grant_ready"])
-        self.assertFalse(product_entry_deletion_readiness["claims_submission_ready"])
-        self.assertFalse(product_entry_deletion_readiness["claims_production_ready"])
-        self.assertEqual(
-            projection["retirement_gate"]["state"],
-            "active_caller_migration_evidence_required",
-        )
+        self.assertEqual(projection["retirement_gate"]["state"], "active_caller_migration_evidence_required")
         readback_guard = projection["retirement_readback_cleanup_guard"]
-        self.assertEqual(
-            readback_guard["guard_id"],
-            "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+        assert_path_values(
+            self,
+            readback_guard,
+            {
+                "guard_id": "mag.physical_morphology.retirement_readback_cleanup_guard.v1",
+                "readback_surface_ref": "authority morphology-guard",
+                "state": "readback_guard_available_physical_delete_not_authorized",
+                "readback_can_identify_cleanup_candidates": True,
+                "readback_can_route_owner_delta": True,
+                "readback_can_authorize_physical_delete": False,
+                "readback_can_sign_owner_receipt": False,
+                "readback_can_create_typed_blocker": False,
+            },
         )
-        self.assertEqual(
-            readback_guard["readback_surface_ref"],
-            "authority morphology-guard",
-        )
-        self.assertEqual(
-            readback_guard["state"],
-            "readback_guard_available_physical_delete_not_authorized",
-        )
-        self.assertTrue(readback_guard["readback_can_identify_cleanup_candidates"])
-        self.assertTrue(readback_guard["readback_can_route_owner_delta"])
-        self.assertFalse(readback_guard["readback_can_authorize_physical_delete"])
-        self.assertFalse(readback_guard["readback_can_sign_owner_receipt"])
-        self.assertFalse(readback_guard["readback_can_create_typed_blocker"])
         self.assertIn("missing_evidence_worklist", readback_guard["allowed_outputs"])
         self.assertIn("owner_receipt_signature", readback_guard["forbidden_outputs"])
         self.assertIn(
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             readback_guard["required_next_evidence_refs"],
         )
-        self.assertFalse(readback_guard["claims"]["claims_retirement_cleanup_complete"])
-        self.assertFalse(readback_guard["claims"]["claims_physical_delete_authorized"])
-        self.assertFalse(readback_guard["claims"]["claims_owner_receipt_signed"])
-        self.assertFalse(projection["retirement_gate"]["compatibility_alias_allowed"])
-        self.assertTrue(
-            projection["retirement_gate"]["owner_receipt_or_typed_blocker_roundtrip_required"]
-        )
-        self.assertFalse(
-            projection["current_role_guard"]["generic_runtime_owner_allowed"]
-        )
-        self.assertFalse(
-            projection["current_role_guard"]["facade_reexport_allowed"]
-        )
-        self.assertFalse(
-            projection["claims"]["claims_physical_morphology_cleanup_complete"]
-        )
-        self.assertFalse(
-            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
-        )
-        self.assertFalse(projection["authority_boundary"]["mag_implements_opl_runtime"])
-        self.assertFalse(projection["authority_boundary"]["mag_implements_app_workbench"])
-        self.assertFalse(
-            projection["authority_boundary"]["can_declare_physical_cleanup_complete"]
-        )
-        self.assertFalse(
-            projection["authority_boundary"]["can_declare_ready_for_owner_receipted_cleanup"]
-        )
-        self.assertFalse(
-            projection["authority_boundary"]["source_ref_integrity_can_claim_runtime_ready"]
-        )
-        self.assertFalse(
-            projection["authority_boundary"][
-                "source_ref_integrity_can_authorize_physical_delete"
-            ]
+        assert_path_values(
+            self,
+            projection,
+            {
+                ("retirement_readback_cleanup_guard", "claims", "claims_retirement_cleanup_complete"): False,
+                ("retirement_readback_cleanup_guard", "claims", "claims_physical_delete_authorized"): False,
+                ("retirement_readback_cleanup_guard", "claims", "claims_owner_receipt_signed"): False,
+                "retirement_gate.compatibility_alias_allowed": False,
+                "retirement_gate.owner_receipt_or_typed_blocker_roundtrip_required": True,
+                "current_role_guard.generic_runtime_owner_allowed": False,
+                "current_role_guard.facade_reexport_allowed": False,
+                "claims.claims_physical_morphology_cleanup_complete": False,
+                "claims.claims_ready_for_owner_receipted_cleanup": False,
+                "authority_boundary.mag_implements_opl_runtime": False,
+                "authority_boundary.mag_implements_app_workbench": False,
+                "authority_boundary.can_declare_physical_cleanup_complete": False,
+                "authority_boundary.can_declare_ready_for_owner_receipted_cleanup": False,
+                "authority_boundary.source_ref_integrity_can_claim_runtime_ready": False,
+                "authority_boundary.source_ref_integrity_can_authorize_physical_delete": False,
+            },
         )
 
     def test_forbidden_true_flags_fail_closed(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(),
@@ -295,10 +253,6 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         )
 
     def test_invalid_source_ref_shape_blocks_cleanup_readback(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(
@@ -318,36 +272,28 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
                     path="human_doc:docs/status.md",
                 ),
             ],
-            external_evidence_refs=[
-                "opl://receipts/mag/physical-morphology/active-caller-migration.json",
-                "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
-                "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
-                "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
-            ],
+            external_evidence_refs=EXTERNAL_EVIDENCE_REFS,
         )
 
         self.assertEqual(projection["state"], "blocked_by_source_ref_integrity")
         source_ref_guard = projection["source_ref_integrity_guard"]
-        self.assertEqual(
-            source_ref_guard["guard_id"],
-            "mag.physical_morphology.source_ref_integrity_guard.v1",
-        )
-        self.assertEqual(source_ref_guard["state"], "failed")
-        self.assertEqual(source_ref_guard["checked_source_ref_count"], 4)
-        self.assertEqual(
-            projection["strict_source_purity_no_second_truth_guard"]["state"],
-            "failed",
-        )
-        self.assertEqual(
-            projection["strict_source_purity_no_second_truth_guard"][
-                "source_ref_integrity_state"
-            ],
-            "failed",
-        )
-        self.assertFalse(
-            projection["strict_source_purity_no_second_truth_guard"]["authority_boundary"][
-                "guard_can_claim_production_ready"
-            ]
+        assert_path_values(
+            self,
+            projection,
+            {
+                "source_ref_integrity_guard.guard_id": (
+                    "mag.physical_morphology.source_ref_integrity_guard.v1"
+                ),
+                "source_ref_integrity_guard.state": "failed",
+                "source_ref_integrity_guard.checked_source_ref_count": 4,
+                "strict_source_purity_no_second_truth_guard.state": "failed",
+                "strict_source_purity_no_second_truth_guard.source_ref_integrity_state": "failed",
+                (
+                    "strict_source_purity_no_second_truth_guard",
+                    "authority_boundary",
+                    "guard_can_claim_production_ready",
+                ): False,
+            },
         )
         invalid_by_module = {
             item["module_id"]: item["reason"]
@@ -357,29 +303,17 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(invalid_by_module["parent_traversal"], "parent_directory_traversal")
         self.assertEqual(invalid_by_module["uri_ref"], "uri_or_url")
         self.assertEqual(invalid_by_module["human_doc"], "human_doc_ref_as_machine_source_ref")
-        self.assertFalse(
-            source_ref_guard["authority_boundary"]["guard_can_create_alias_files"]
-        )
-        self.assertFalse(
-            source_ref_guard["authority_boundary"]["guard_can_authorize_physical_delete"]
-        )
-        self.assertFalse(
-            source_ref_guard["authority_boundary"]["guard_can_claim_production_ready"]
-        )
-        self.assertFalse(
-            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
-        )
-        self.assertFalse(
-            projection["authority_boundary"][
-                "source_ref_integrity_can_authorize_physical_delete"
-            ]
+        assert_false_keys(self, source_ref_guard["authority_boundary"], ("guard_can_create_alias_files", "guard_can_authorize_physical_delete", "guard_can_claim_production_ready"))
+        assert_path_values(
+            self,
+            projection,
+            {
+                "claims.claims_ready_for_owner_receipted_cleanup": False,
+                "authority_boundary.source_ref_integrity_can_authorize_physical_delete": False,
+            },
         )
 
     def test_unclassified_runtime_owner_role_is_blocked(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(
@@ -411,10 +345,6 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         )
 
     def test_all_allowed_with_external_evidence_refs_can_mark_ready_for_owner_receipted_cleanup(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         projection = build_physical_morphology_guard_projection(
             source_items=[
                 _source_item(
@@ -428,12 +358,7 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
                     declared_role="native_helper",
                 ),
             ],
-            external_evidence_refs=[
-                "opl://receipts/mag/physical-morphology/active-caller-migration.json",
-                "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
-                "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
-                "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
-            ],
+            external_evidence_refs=EXTERNAL_EVIDENCE_REFS,
         )
 
         self.assertEqual(projection["state"], "allowed_external_evidence_present")
@@ -444,42 +369,22 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             "owner_receipt://mag/physical_delete_or_tombstone_authorization",
             projection["allowed_items"][0]["deletion_readiness"]["missing_retirement_evidence_refs"],
         )
-        self.assertEqual(
-            projection["retirement_gate"]["state"],
-            "eligible_for_owner_receipted_cleanup",
-        )
-        self.assertEqual(
-            projection["retirement_readback_cleanup_guard"]["required_next_evidence_refs"],
-            [],
-        )
-        self.assertFalse(
-            projection["retirement_readback_cleanup_guard"][
-                "readback_can_authorize_physical_delete"
-            ]
-        )
-        self.assertFalse(
-            projection["retirement_readback_cleanup_guard"]["claims"][
-                "claims_retirement_cleanup_complete"
-            ]
-        )
-        self.assertFalse(
-            projection["claims"]["claims_physical_morphology_cleanup_complete"]
-        )
-        self.assertTrue(
-            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
-        )
-        self.assertFalse(
-            projection["authority_boundary"]["can_declare_physical_cleanup_complete"]
-        )
-        self.assertTrue(
-            projection["authority_boundary"]["can_declare_ready_for_owner_receipted_cleanup"]
+        assert_path_values(
+            self,
+            projection,
+            {
+                "retirement_gate.state": "eligible_for_owner_receipted_cleanup",
+                "retirement_readback_cleanup_guard.required_next_evidence_refs": [],
+                "retirement_readback_cleanup_guard.readback_can_authorize_physical_delete": False,
+                ("retirement_readback_cleanup_guard", "claims", "claims_retirement_cleanup_complete"): False,
+                "claims.claims_physical_morphology_cleanup_complete": False,
+                "claims.claims_ready_for_owner_receipted_cleanup": True,
+                "authority_boundary.can_declare_physical_cleanup_complete": False,
+                "authority_boundary.can_declare_ready_for_owner_receipted_cleanup": True,
+            },
         )
 
     def test_invalid_flags_and_missing_evidence_shape_fail_closed(self) -> None:
-        from med_autogrant.product_entry_parts.physical_morphology_guard import (
-            build_physical_morphology_guard_projection,
-        )
-
         with self.assertRaises(WorkspaceStateError):
             build_physical_morphology_guard_projection(
                 source_items=[

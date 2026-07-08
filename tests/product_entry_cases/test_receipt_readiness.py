@@ -4,16 +4,10 @@ import tempfile
 
 import json
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
-from med_autogrant.cli import main
 from med_autogrant.workspace import WorkspaceStateError
-from support.cli import public_cli_argv
+from product_entry_cases.support import run_public_cli
 
 
 def _owner_receipt() -> dict[str, object]:
@@ -75,16 +69,6 @@ def _cleanup_restore_retention_bundle() -> dict[str, object]:
 
 
 class ProductEntryReceiptReadinessTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def test_missing_receipts_project_missing_without_quality_authority(self) -> None:
         from med_autogrant.product_entry_parts.receipt_readiness import (
             build_receipt_readiness_projection,
@@ -212,7 +196,7 @@ class ProductEntryReceiptReadinessTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_receipt_readiness:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "receipt-readiness",
                     "--owner-receipt-evidence",

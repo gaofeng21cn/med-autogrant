@@ -44,6 +44,17 @@ CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces
 PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
 
 
+def run_public_cli(*args: str) -> tuple[int, str, str]:
+    stdout = StringIO()
+    stderr = StringIO()
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            exit_code = main(public_cli_argv(args))
+        except SystemExit as exc:
+            exit_code = int(exc.code)
+    return exit_code, stdout.getvalue(), stderr.getvalue()
+
+
 def assert_contains_all(test_case: unittest.TestCase, container: Any, expected_items: tuple[str, ...]) -> None:
     for item in expected_items:
         test_case.assertIn(item, container)
@@ -57,6 +68,18 @@ def assert_false_keys(test_case: unittest.TestCase, mapping: Mapping[str, Any], 
 def assert_true_keys(test_case: unittest.TestCase, mapping: Mapping[str, Any], keys: tuple[str, ...]) -> None:
     for key in keys:
         test_case.assertTrue(mapping[key])
+
+
+def assert_path_values(
+    test_case: unittest.TestCase,
+    payload: Mapping[str, Any],
+    expected_by_path: Mapping[str | tuple[Any, ...], Any],
+) -> None:
+    for path, expected in expected_by_path.items():
+        current: Any = payload
+        for part in path if isinstance(path, tuple) else path.split("."):
+            current = current[part]
+        test_case.assertEqual(current, expected, path)
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:

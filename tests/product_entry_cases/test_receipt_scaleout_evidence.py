@@ -32,6 +32,8 @@ from product_entry_cases.support import (
     INPUT_EXAMPLE_PATH,
     REPO_ROOT,
     REVISION_EXAMPLE_PATH,
+    assert_false_keys,
+    assert_path_values,
 )
 
 
@@ -321,28 +323,37 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertIn(SUBMISSION_GATE_BLOCKER_REF, owner_payload["typed_blocker_refs"])
         self.assertGreaterEqual(len(owner_payload["domain_owner_receipt_refs"]), 11)
         self.assertGreaterEqual(len(owner_payload["owner_chain_refs"]), 45)
-        self.assertFalse(owner_payload["grant_ready_claimed"])
-        self.assertFalse(owner_payload["quality_ready_claimed"])
-        self.assertFalse(owner_payload["export_ready_claimed"])
-        self.assertFalse(owner_payload["submission_ready_claimed"])
-        self.assertFalse(owner_payload["authority_boundary"]["can_declare_submission_ready"])
-        self.assertFalse(owner_payload["authority_boundary"]["typed_blocker_is_submission_ready"])
-        stage_summary = owner_payload["stage_expected_receipt_payload_summary"]
-        self.assertEqual(stage_summary["stage_count"], 6)
-        self.assertEqual(
-            stage_summary["status"],
-            "per_stage_expected_receipt_payload_refs_ready_with_live_evidence_typed_blockers",
+        assert_false_keys(
+            self,
+            owner_payload,
+            ("grant_ready_claimed", "quality_ready_claimed", "export_ready_claimed", "submission_ready_claimed"),
         )
-        self.assertFalse(stage_summary["payload_body_allowed"])
-        self.assertFalse(stage_summary["operator_payload_submitted"])
-        self.assertFalse(stage_summary["success_refs_visible_is_completion"])
-        self.assertFalse(stage_summary["grant_ready_claimed"])
-        self.assertFalse(stage_summary["quality_ready_claimed"])
-        self.assertFalse(stage_summary["export_ready_claimed"])
-        self.assertFalse(stage_summary["submission_ready_claimed"])
-        self.assertFalse(stage_summary["production_soak_complete_claimed"])
-        self.assertFalse(stage_summary["authority_boundary"]["can_create_owner_receipt"])
-        self.assertFalse(stage_summary["authority_boundary"]["can_declare_submission_ready"])
+        assert_false_keys(
+            self,
+            owner_payload["authority_boundary"],
+            ("can_declare_submission_ready", "typed_blocker_is_submission_ready"),
+        )
+        stage_summary = owner_payload["stage_expected_receipt_payload_summary"]
+        assert_path_values(
+            self,
+            stage_summary,
+            {
+                "stage_count": 6,
+                "status": (
+                    "per_stage_expected_receipt_payload_refs_ready_with_live_evidence_typed_blockers"
+                ),
+                "payload_body_allowed": False,
+                "operator_payload_submitted": False,
+                "success_refs_visible_is_completion": False,
+                "grant_ready_claimed": False,
+                "quality_ready_claimed": False,
+                "export_ready_claimed": False,
+                "submission_ready_claimed": False,
+                "production_soak_complete_claimed": False,
+                "authority_boundary.can_create_owner_receipt": False,
+                "authority_boundary.can_declare_submission_ready": False,
+            },
+        )
         self.assertEqual(
             len(stage_summary["typed_blocker_path_payload"]["typed_blocker_refs"]),
             6,
@@ -393,25 +404,22 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
     def test_contract_snapshot_records_scaleout_closeout_without_grant_ready_claim(self) -> None:
         snapshot = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual(snapshot["surface_kind"], "mag_workspace_receipt_scaleout_evidence.v1")
-        self.assertEqual(snapshot["state"], "workspace_receipt_refs_scaleout_observed")
-        self.assertEqual(snapshot["workspace_receipt_scaleout"]["workspace_count"], 4)
-        self.assertEqual(snapshot["workspace_receipt_scaleout"]["total_receipt_ref_count"], 36)
-        self.assertTrue(snapshot["workspace_receipt_scaleout"]["receipt_kind_coverage_ready"])
-        self.assertEqual(
-            snapshot["owner_payload_response"]["status"],
-            "blocked_by_submission_ready_human_gate",
+        assert_path_values(
+            self,
+            snapshot,
+            {
+                "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
+                "state": "workspace_receipt_refs_scaleout_observed",
+                "workspace_receipt_scaleout.workspace_count": 4,
+                "workspace_receipt_scaleout.total_receipt_ref_count": 36,
+                "workspace_receipt_scaleout.receipt_kind_coverage_ready": True,
+                "owner_payload_response.status": "blocked_by_submission_ready_human_gate",
+                "owner_payload_response.typed_blocker_refs": [SUBMISSION_GATE_BLOCKER_REF],
+                "owner_payload_response.stage_expected_receipt_payload_stage_count": 6,
+                "owner_payload_response.stage_payload_body_allowed": False,
+                "owner_payload_response.stage_success_refs_visible_is_completion": False,
+            },
         )
-        self.assertEqual(
-            snapshot["owner_payload_response"]["typed_blocker_refs"],
-            [SUBMISSION_GATE_BLOCKER_REF],
-        )
-        self.assertEqual(
-            snapshot["owner_payload_response"]["stage_expected_receipt_payload_stage_count"],
-            6,
-        )
-        self.assertFalse(snapshot["owner_payload_response"]["stage_payload_body_allowed"])
-        self.assertFalse(snapshot["owner_payload_response"]["stage_success_refs_visible_is_completion"])
         manifest_consumer = snapshot["manifest_consumer_evidence"]
         workorder = manifest_consumer["sustained_consumption_followthrough_workorder"]
         self.assertEqual(
@@ -437,39 +445,43 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             workorder["provider_long_soak_followthrough"]["status"],
             "requires_temporal_provider_long_soak_window_evidence",
         )
-        self.assertFalse(
-            workorder["provider_long_soak_followthrough"][
-                "typed_blocker_is_provider_long_soak_completion"
-            ]
+        assert_path_values(
+            self,
+            workorder,
+            {
+                "provider_long_soak_followthrough.typed_blocker_is_provider_long_soak_completion": False,
+                "provider_long_soak_followthrough.claims_provider_long_soak_complete": False,
+                "claims_sustained_app_consumption_complete": False,
+            },
         )
-        self.assertFalse(
-            workorder["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
-        )
-        self.assertFalse(workorder["claims_sustained_app_consumption_complete"])
-        self.assertFalse(snapshot["claims"]["claims_grant_ready"])
-        self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
-        self.assertFalse(snapshot["authority_boundary"]["can_write_memory_body"])
-        self.assertFalse(snapshot["authority_boundary"]["can_mutate_grant_artifact"])
+        assert_false_keys(self, snapshot["claims"], ("claims_grant_ready", "claims_submission_ready_export"))
+        assert_false_keys(self, snapshot["authority_boundary"], ("can_write_memory_body", "can_mutate_grant_artifact"))
 
     def test_manifest_sustained_consumption_snapshot_records_payload_without_ready_claim(self) -> None:
         snapshot = json.loads(SUSTAINED_CONSUMPTION_CONTRACT_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual(
-            snapshot["surface_kind"],
-            "mag_manifest_sustained_consumption_evidence.v1",
+        assert_path_values(
+            self,
+            snapshot,
+            {
+                "surface_kind": "mag_manifest_sustained_consumption_evidence.v1",
+                "state": "app_operator_default_caller_payload_observed_refs_only",
+                "operator_payload.owner_payload_response_ref": [
+                    "/product_entry_manifest/owner_payload_response"
+                ],
+            },
         )
-        self.assertEqual(snapshot["state"], "app_operator_default_caller_payload_observed_refs_only")
-        self.assertEqual(snapshot["operator_payload"]["owner_payload_response_ref"], [
-            "/product_entry_manifest/owner_payload_response",
-        ])
         response = snapshot["manifest_sustained_consumption_payload_response"]
-        self.assertEqual(
-            response["surface_kind"],
-            "mag_manifest_sustained_consumption_payload_response",
+        assert_path_values(
+            self,
+            response,
+            {
+                "surface_kind": "mag_manifest_sustained_consumption_payload_response",
+                "status": "sustained_consumption_payload_refs_ready",
+                "recommended_payload_path": "sustained_consumption_refs_path",
+                "operator_payload_submitted": True,
+            },
         )
-        self.assertEqual(response["status"], "sustained_consumption_payload_refs_ready")
-        self.assertEqual(response["recommended_payload_path"], "sustained_consumption_refs_path")
-        self.assertTrue(response["operator_payload_submitted"])
         self.assertNotIn("domain_id", response["record_payload"])
         self.assertNotIn("typed_blocker_refs", response["record_payload"])
         self.assertEqual(
@@ -490,39 +502,37 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
                 "provider-long-soak-window-still-open/2026-05-28"
             ],
         )
-        self.assertEqual(response["provider_long_soak_followthrough"]["long_soak_evidence_refs"], [])
-        self.assertFalse(
-            response["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
-        )
-        self.assertEqual(
-            response["opl_runtime_action_execute_payload"],
-            response["record_payload"],
-        )
-        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
-        self.assertFalse(
-            response["operator_payload_attempt_summary"][
-                "attempt_records_are_app_sustained_consumption_closeout"
-            ]
-        )
-        self.assertFalse(response["body_included"])
-        self.assertFalse(response["claims_sustained_app_consumption_complete"])
-        self.assertFalse(response["claims_provider_long_soak_complete"])
-        self.assertFalse(response["claims_grant_ready"])
-        self.assertFalse(response["claims_quality_ready"])
-        self.assertFalse(response["claims_export_ready"])
-        self.assertFalse(response["claims_submission_ready"])
-        self.assertFalse(response["authority_boundary"]["can_create_owner_receipt"])
-        self.assertFalse(
-            response["authority_boundary"]["can_declare_app_sustained_consumption_complete"]
+        assert_path_values(
+            self,
+            response,
+            {
+                "provider_long_soak_followthrough.long_soak_evidence_refs": [],
+                "provider_long_soak_followthrough.claims_provider_long_soak_complete": False,
+                "opl_runtime_action_execute_payload": response["record_payload"],
+                "operator_payload_attempt_summary.attempt_count": 1,
+                (
+                    "operator_payload_attempt_summary",
+                    "attempt_records_are_app_sustained_consumption_closeout",
+                ): False,
+                "body_included": False,
+                "claims_sustained_app_consumption_complete": False,
+                "claims_provider_long_soak_complete": False,
+                "claims_grant_ready": False,
+                "claims_quality_ready": False,
+                "claims_export_ready": False,
+                "claims_submission_ready": False,
+                "authority_boundary.can_create_owner_receipt": False,
+                "authority_boundary.can_declare_app_sustained_consumption_complete": False,
+            },
         )
         cli_regression = snapshot["grouped_cli_regression_evidence"]
-        self.assertEqual(
-            cli_regression["surface_kind"],
-            "mag_manifest_sustained_consumption_grouped_cli_regression_evidence",
-        )
-        self.assertEqual(
-            cli_regression["status"],
-            "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+        assert_path_values(
+            self,
+            cli_regression,
+            {
+                "surface_kind": "mag_manifest_sustained_consumption_grouped_cli_regression_evidence",
+                "status": "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+            },
         )
         self.assertIn(
             "sustained_consumption_refs_path_returns_provider_followthrough_typed_blocker",
@@ -539,17 +549,14 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertTrue(cli_regression["unknown_field_rejection_verified"])
         self.assertTrue(cli_regression["mixed_path_rejection_verified"])
         self.assertTrue(cli_regression["attempt_batch_path_verified"])
-        self.assertFalse(cli_regression["body_included"])
-        self.assertFalse(cli_regression["claims_sustained_app_consumption_complete"])
-        self.assertFalse(cli_regression["claims_provider_long_soak_complete"])
-        self.assertFalse(cli_regression["closes_provider_long_soak"])
-        self.assertFalse(
-            cli_regression["authority_boundary"][
-                "can_declare_app_sustained_consumption_complete"
-            ]
-        )
-        self.assertFalse(
-            cli_regression["authority_boundary"]["can_declare_provider_long_soak_complete"]
+        assert_false_keys(self, cli_regression, ("body_included", "claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete", "closes_provider_long_soak"))
+        assert_false_keys(
+            self,
+            cli_regression["authority_boundary"],
+            (
+                "can_declare_app_sustained_consumption_complete",
+                "can_declare_provider_long_soak_complete",
+            ),
         )
         self.assertFalse(snapshot["claims"]["claims_owner_receipt_created"])
         self.assertFalse(snapshot["authority_boundary"]["can_submit_operator_payload"])

@@ -4,28 +4,57 @@ import tempfile
 
 import json
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
-from med_autogrant.cli import main
-from support.cli import public_cli_argv
+from product_entry_cases.support import run_public_cli
+
+
+def _owner_payload_response(*, full: bool = False) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "surface_kind": "mag_opl_owner_payload_response",
+        "status": "blocked_by_submission_ready_human_gate",
+    }
+    if full:
+        payload.update(
+            {
+                "domain_owner_receipt_refs": ["receipt:mag/production-live-acceptance/2026-05-20"],
+                "typed_blocker_refs": [
+                    "typed-blocker:mag/package_and_submit_ready/"
+                    "submission_ready_export_gate/human-approval-required/2026-05-22"
+                ],
+                "owner_chain_refs": ["receipt:mag/production-live-acceptance/2026-05-20"],
+                "no_regression_evidence_refs": ["no-regression:mag/direct-hosted-parity/2026-05-20"],
+            }
+        )
+    return payload
+
+
+def _workspace_receipt_scaleout_evidence() -> dict[str, object]:
+    return {
+        "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
+        "workspace_receipt_scaleout": {"workspace_count": 4},
+    }
+
+
+def _provider_long_soak_blocker(day: str) -> str:
+    return (
+        "typed-blocker:mag/manifest-sustained-consumption/"
+        f"provider-long-soak-window-still-open/{day}"
+    )
+
+
+def _success_operator_payload(day: str, provider_long_soak_typed_blocker_ref: str) -> dict[str, object]:
+    return {
+        "app_operator_consumption_ref": [f"opl://app/operator/mag/owner-payload-consumed/{day}"],
+        "default_caller_consumption_ref": [f"opl://release/default-caller/mag/owner-payload-consumed/{day}"],
+        "owner_payload_response_ref": ["/product_entry_manifest/owner_payload_response"],
+        "workspace_receipt_scaleout_evidence_ref": ["/product_entry_manifest/workspace_receipt_scaleout_evidence"],
+        "no_forbidden_write_ref": [f"no-forbidden-write:mag/manifest-consumption/{day}"],
+        "long_soak_or_typed_blocker_ref": [provider_long_soak_typed_blocker_ref],
+    }
 
 
 class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def run_manifest_consumption_payload_cli(
         self,
         *,
@@ -47,7 +76,7 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
             )
             operator_payload_path.write_text(json.dumps(operator_payload), encoding="utf-8")
 
-            return self.run_cli(
+            return run_public_cli(
                 "authority",
                 "manifest-consumption-payload",
                 "--owner-payload-response",
@@ -99,7 +128,7 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
                 return_value=expected_payload,
             ) as build_response:
 
-                exit_code, stdout, stderr = self.run_cli(
+                exit_code, stdout, stderr = run_public_cli(
                     "authority",
                     "owner-payload-response",
                     "--production-acceptance",
@@ -126,50 +155,23 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
             "surface_kind": "mag_manifest_sustained_consumption_payload_response",
             "status": "blocked_by_app_operator_typed_blocker",
         }
-        owner_payload_response = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-        }
-        workspace_receipt_scaleout_evidence = {
-            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
-        }
+        owner_payload_response = _owner_payload_response()
+        workspace_receipt_scaleout_evidence = {"surface_kind": "mag_workspace_receipt_scaleout_evidence.v1"}
         operator_payload = {
             "typed_blocker_refs": [
                 "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-28"
             ]
         }
 
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            owner_payload_response_path = Path(tmp_dir) / "owner-payload-response.json"
-            workspace_receipt_scaleout_evidence_path = Path(tmp_dir) / "workspace-scaleout.json"
-            operator_payload_path = Path(tmp_dir) / "operator-payload.json"
-            owner_payload_response_path.write_text(
-                json.dumps(owner_payload_response),
-                encoding="utf-8",
+        with patch(
+            "med_autogrant.cli_parts.handlers.build_manifest_sustained_consumption_payload_response",
+            return_value=expected_payload,
+        ) as build_response:
+            exit_code, stdout, stderr = self.run_manifest_consumption_payload_cli(
+                owner_payload_response=owner_payload_response,
+                workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
+                operator_payload=operator_payload,
             )
-            workspace_receipt_scaleout_evidence_path.write_text(
-                json.dumps(workspace_receipt_scaleout_evidence),
-                encoding="utf-8",
-            )
-            operator_payload_path.write_text(json.dumps(operator_payload), encoding="utf-8")
-
-            with patch(
-                "med_autogrant.cli_parts.handlers.build_manifest_sustained_consumption_payload_response",
-                return_value=expected_payload,
-            ) as build_response:
-
-                exit_code, stdout, stderr = self.run_cli(
-                    "authority",
-                    "manifest-consumption-payload",
-                    "--owner-payload-response",
-                    str(owner_payload_response_path),
-                    "--workspace-receipt-scaleout-evidence",
-                    str(workspace_receipt_scaleout_evidence_path),
-                    "--operator-payload",
-                    str(operator_payload_path),
-                    "--format",
-                    "json",
-                )
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
@@ -181,47 +183,10 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         )
 
     def test_manifest_consumption_payload_cli_returns_provider_followthrough_shape(self) -> None:
-        owner_payload_response = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-            "domain_owner_receipt_refs": [
-                "receipt:mag/production-live-acceptance/2026-05-20",
-            ],
-            "typed_blocker_refs": [
-                "typed-blocker:mag/package_and_submit_ready/"
-                "submission_ready_export_gate/human-approval-required/2026-05-22"
-            ],
-            "owner_chain_refs": [
-                "receipt:mag/production-live-acceptance/2026-05-20",
-            ],
-            "no_regression_evidence_refs": [
-                "no-regression:mag/direct-hosted-parity/2026-05-20",
-            ],
-        }
-        workspace_receipt_scaleout_evidence = {
-            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
-            "workspace_receipt_scaleout": {"workspace_count": 4},
-        }
-        provider_long_soak_typed_blocker_ref = (
-            "typed-blocker:mag/manifest-sustained-consumption/"
-            "provider-long-soak-window-still-open/2026-05-31"
-        )
-        operator_payload = {
-            "app_operator_consumption_ref": [
-                "opl://app/operator/mag/owner-payload-consumed/2026-05-31"
-            ],
-            "default_caller_consumption_ref": [
-                "opl://release/default-caller/mag/owner-payload-consumed/2026-05-31"
-            ],
-            "owner_payload_response_ref": ["/product_entry_manifest/owner_payload_response"],
-            "workspace_receipt_scaleout_evidence_ref": [
-                "/product_entry_manifest/workspace_receipt_scaleout_evidence"
-            ],
-            "no_forbidden_write_ref": [
-                "no-forbidden-write:mag/manifest-consumption/2026-05-31",
-            ],
-            "long_soak_or_typed_blocker_ref": [provider_long_soak_typed_blocker_ref],
-        }
+        owner_payload_response = _owner_payload_response(full=True)
+        workspace_receipt_scaleout_evidence = _workspace_receipt_scaleout_evidence()
+        provider_long_soak_typed_blocker_ref = _provider_long_soak_blocker("2026-05-31")
+        operator_payload = _success_operator_payload("2026-05-31", provider_long_soak_typed_blocker_ref)
 
         exit_code, stdout, stderr = self.run_manifest_consumption_payload_cli(
             owner_payload_response=owner_payload_response,
@@ -280,31 +245,9 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
     def test_manifest_consumption_payload_cli_accepts_attempt_batch_without_closeout_claim(
         self,
     ) -> None:
-        owner_payload_response = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-            "domain_owner_receipt_refs": [
-                "receipt:mag/production-live-acceptance/2026-05-20",
-            ],
-            "typed_blocker_refs": [
-                "typed-blocker:mag/package_and_submit_ready/"
-                "submission_ready_export_gate/human-approval-required/2026-05-22"
-            ],
-            "owner_chain_refs": [
-                "receipt:mag/production-live-acceptance/2026-05-20",
-            ],
-            "no_regression_evidence_refs": [
-                "no-regression:mag/direct-hosted-parity/2026-05-20",
-            ],
-        }
-        workspace_receipt_scaleout_evidence = {
-            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
-            "workspace_receipt_scaleout": {"workspace_count": 4},
-        }
-        provider_long_soak_typed_blocker_ref = (
-            "typed-blocker:mag/manifest-sustained-consumption/"
-            "provider-long-soak-window-still-open/2026-06-01"
-        )
+        owner_payload_response = _owner_payload_response(full=True)
+        workspace_receipt_scaleout_evidence = _workspace_receipt_scaleout_evidence()
+        provider_long_soak_typed_blocker_ref = _provider_long_soak_blocker("2026-06-01")
         operator_payload = {
             "operator_payload_attempts": [
                 {
@@ -366,14 +309,8 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertFalse(response["claims_provider_long_soak_complete"])
 
     def test_manifest_consumption_payload_cli_rejects_unknown_operator_field(self) -> None:
-        owner_payload_response = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-        }
-        workspace_receipt_scaleout_evidence = {
-            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
-            "workspace_receipt_scaleout": {"workspace_count": 4},
-        }
+        owner_payload_response = _owner_payload_response()
+        workspace_receipt_scaleout_evidence = _workspace_receipt_scaleout_evidence()
         operator_payload = {
             "typed_blocker_refs": [
                 "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-31"
@@ -398,36 +335,12 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
     def test_manifest_consumption_payload_cli_rejects_mixed_success_and_blocker_paths(
         self,
     ) -> None:
-        owner_payload_response = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-        }
-        workspace_receipt_scaleout_evidence = {
-            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
-            "workspace_receipt_scaleout": {"workspace_count": 4},
-        }
-        operator_payload = {
-            "app_operator_consumption_ref": [
-                "opl://app/operator/mag/owner-payload-consumed/2026-05-31"
-            ],
-            "default_caller_consumption_ref": [
-                "opl://release/default-caller/mag/owner-payload-consumed/2026-05-31"
-            ],
-            "owner_payload_response_ref": ["/product_entry_manifest/owner_payload_response"],
-            "workspace_receipt_scaleout_evidence_ref": [
-                "/product_entry_manifest/workspace_receipt_scaleout_evidence"
-            ],
-            "no_forbidden_write_ref": [
-                "no-forbidden-write:mag/manifest-consumption/2026-05-31",
-            ],
-            "long_soak_or_typed_blocker_ref": [
-                "typed-blocker:mag/manifest-sustained-consumption/"
-                "provider-long-soak-window-still-open/2026-05-31"
-            ],
-            "typed_blocker_refs": [
-                "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-31"
-            ],
-        }
+        owner_payload_response = _owner_payload_response()
+        workspace_receipt_scaleout_evidence = _workspace_receipt_scaleout_evidence()
+        operator_payload = _success_operator_payload("2026-05-31", _provider_long_soak_blocker("2026-05-31"))
+        operator_payload["typed_blocker_refs"] = [
+            "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-31"
+        ]
 
         exit_code, stdout, stderr = self.run_manifest_consumption_payload_cli(
             owner_payload_response=owner_payload_response,
