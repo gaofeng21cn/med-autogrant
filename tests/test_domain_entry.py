@@ -32,391 +32,145 @@ DISCOVERY_INPUT = REPO_ROOT / "examples" / "funding_discovery_input_cardiovascul
 
 
 class DomainEntryDispatchTest(unittest.TestCase):
-    def test_domain_entry_rejects_legacy_runtime_alias(self) -> None:
-        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: run-local"):
-            MedAutoGrantDomainEntry(runtime=Mock()).dispatch(
+    def test_domain_entry_dispatches_runtime_commands(self) -> None:
+        opl_stage_attempt = {
+            "runtime_owner": "one-person-lab",
+            "executor_kind": "codex_cli",
+            "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
+        }
+        cases = (
+            (
+                "grant-intake-audit",
+                "grant_intake_audit",
+                {"input_path": str(INPUT_EXAMPLE_PATH)},
+            ),
+            (
+                "grant-evidence-grounding",
+                "grant_evidence_grounding",
+                {"input_path": str(INPUT_EXAMPLE_PATH)},
+            ),
+            (
+                "grant-quality-scorecard",
+                "grant_quality_scorecard",
+                {"input_path": str(CRITIQUE_EXAMPLE_PATH)},
+            ),
+            (
+                "grant-quality-diff",
+                "grant_quality_diff",
                 {
-                    "command": "run-local",
-                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                }
-            )
-
-    def test_domain_entry_rejects_retired_runtime_commands(self) -> None:
-        entry = MedAutoGrantDomainEntry(runtime=Mock())
-
-        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
-            entry.dispatch(
+                    "input_path": str(FROZEN_EXAMPLE_PATH),
+                    "previous_input_path": str(CRITIQUE_EXAMPLE_PATH),
+                },
+            ),
+            (
+                "grant-quality-closure-dossier",
+                "grant_quality_closure_dossier",
+                {"input_path": str(CRITIQUE_EXAMPLE_PATH)},
+            ),
+            (
+                "execute-critique-pass",
+                "execute_critique_pass",
                 {
-                    "command": "runtime-run",
                     "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                    "output_path": "/tmp/critique-output.json",
+                },
+            ),
+            (
+                "execute-critique-pass",
+                "execute_critique_pass",
+                {
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                    "output_path": "/tmp/critique-output.json",
+                    "executor_kind": "hermes_agent",
+                },
+            ),
+            (
+                "execute-direction-screening-pass",
+                "execute_direction_screening_pass",
+                {
+                    "input_path": str(INPUT_EXAMPLE_PATH),
+                    "output_path": "/tmp/direction-screening-output.json",
+                },
+            ),
+            (
+                "select-project-profile",
+                "select_project_profile",
+                {"input_path": str(NSFC_SELECTION_INPUT)},
+            ),
+            (
+                "initialize-intake-workspace",
+                "initialize_intake_workspace",
+                {
+                    "input_path": str(NSFC_SELECTION_INPUT),
+                    "output_path": "/tmp/initialized-workspace.json",
+                },
+            ),
+            (
+                "discover-funding-opportunities",
+                "discover_funding_opportunities",
+                {"input_path": str(DISCOVERY_INPUT)},
+            ),
+            (
+                "refresh-funding-opportunities-cache",
+                "refresh_funding_opportunities_cache",
+                {
+                    "input_path": str(DISCOVERY_INPUT),
+                    "output_path": "/tmp/funding-cache.json",
+                },
+            ),
+            (
+                "execute-critique-revision-loop",
+                "execute_critique_revision_loop",
+                {
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                    "output_dir": "/tmp/critique-loop",
+                    "max_rounds": 4,
+                    "opl_stage_attempt": opl_stage_attempt,
+                },
+            ),
+            (
+                "execute-authoring-mainline-loop",
+                "execute_authoring_mainline_loop",
+                {
+                    "input_path": str(INPUT_EXAMPLE_PATH),
+                    "output_dir": "/tmp/mainline-loop",
+                    "max_cycles": 6,
+                    "opl_stage_attempt": opl_stage_attempt,
+                },
+            ),
+            (
+                "execute-grant-autonomy-controller",
+                "execute_grant_autonomy_controller",
+                {
+                    "input_path": "/tmp/autonomy-request.json",
+                    "output_dir": "/tmp/autonomy-output",
+                    "opl_stage_attempt": opl_stage_attempt,
+                },
+            ),
+            (
+                "build-submission-ready-package",
+                "build_submission_ready_package",
+                {
+                    "input_path": str(FROZEN_EXAMPLE_PATH),
+                    "output_dir": "/tmp/submission-ready-output",
+                },
+            ),
+        )
+
+        for command, runtime_method, request_args in cases:
+            with self.subTest(command=command, runtime_method=runtime_method):
+                runtime = Mock()
+                getattr(runtime, runtime_method).return_value = {
+                    "ok": True,
+                    "command": command,
                 }
-            )
 
-        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-resume"):
-            entry.dispatch({"command": "runtime-resume"})
+                payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+                    {"command": command, **request_args}
+                )
 
-        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: probe-upstream-hermes"):
-            entry.dispatch({"command": "probe-upstream-hermes"})
-
-    def test_domain_entry_dispatches_grant_intake_audit(self) -> None:
-        runtime = Mock()
-        runtime.grant_intake_audit.return_value = {
-            "ok": True,
-            "command": "grant-intake-audit",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "grant-intake-audit",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "grant-intake-audit"})
-        runtime.grant_intake_audit.assert_called_once_with(
-            input_path=str(INPUT_EXAMPLE_PATH),
-        )
-
-    def test_domain_entry_dispatches_grant_evidence_grounding(self) -> None:
-        runtime = Mock()
-        runtime.grant_evidence_grounding.return_value = {
-            "ok": True,
-            "command": "grant-evidence-grounding",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "grant-evidence-grounding",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "grant-evidence-grounding"})
-        runtime.grant_evidence_grounding.assert_called_once_with(
-            input_path=str(INPUT_EXAMPLE_PATH),
-        )
-
-    def test_domain_entry_dispatches_grant_quality_scorecard(self) -> None:
-        runtime = Mock()
-        runtime.grant_quality_scorecard.return_value = {
-            "ok": True,
-            "command": "grant-quality-scorecard",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "grant-quality-scorecard",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "grant-quality-scorecard"})
-        runtime.grant_quality_scorecard.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-        )
-
-    def test_domain_entry_dispatches_grant_quality_diff(self) -> None:
-        runtime = Mock()
-        runtime.grant_quality_diff.return_value = {
-            "ok": True,
-            "command": "grant-quality-diff",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "grant-quality-diff",
-                "input_path": str(FROZEN_EXAMPLE_PATH),
-                "previous_input_path": str(CRITIQUE_EXAMPLE_PATH),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "grant-quality-diff"})
-        runtime.grant_quality_diff.assert_called_once_with(
-            input_path=str(FROZEN_EXAMPLE_PATH),
-            previous_input_path=str(CRITIQUE_EXAMPLE_PATH),
-        )
-
-    def test_domain_entry_dispatches_grant_quality_closure_dossier(self) -> None:
-        runtime = Mock()
-        runtime.grant_quality_closure_dossier.return_value = {
-            "ok": True,
-            "command": "grant-quality-closure-dossier",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "grant-quality-closure-dossier",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "grant-quality-closure-dossier"})
-        runtime.grant_quality_closure_dossier.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-        )
-
-    def test_domain_entry_dispatches_execute_critique_pass(self) -> None:
-        runtime = Mock()
-        runtime.execute_critique_pass.return_value = {
-            "ok": True,
-            "command": "execute-critique-pass",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-critique-pass",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                "output_path": "/tmp/critique-output.json",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-critique-pass"})
-        runtime.execute_critique_pass.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            output_path="/tmp/critique-output.json",
-        )
-
-    def test_domain_entry_dispatches_execute_critique_pass_with_explicit_executor(self) -> None:
-        runtime = Mock()
-        runtime.execute_critique_pass.return_value = {
-            "ok": True,
-            "command": "execute-critique-pass",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-critique-pass",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                "output_path": "/tmp/critique-output.json",
-                "executor_kind": "hermes_agent",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-critique-pass"})
-        runtime.execute_critique_pass.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            output_path="/tmp/critique-output.json",
-            executor_kind="hermes_agent",
-        )
-
-    def test_domain_entry_dispatches_execute_direction_screening_pass(self) -> None:
-        runtime = Mock()
-        runtime.execute_direction_screening_pass.return_value = {
-            "ok": True,
-            "command": "execute-direction-screening-pass",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-direction-screening-pass",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-                "output_path": "/tmp/direction-screening-output.json",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-direction-screening-pass"})
-        runtime.execute_direction_screening_pass.assert_called_once_with(
-            input_path=str(INPUT_EXAMPLE_PATH),
-            output_path="/tmp/direction-screening-output.json",
-        )
-
-    def test_domain_entry_dispatches_select_project_profile(self) -> None:
-        runtime = Mock()
-        runtime.select_project_profile.return_value = {
-            "ok": True,
-            "command": "select-project-profile",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "select-project-profile",
-                "input_path": str(NSFC_SELECTION_INPUT),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "select-project-profile"})
-        runtime.select_project_profile.assert_called_once_with(
-            input_path=str(NSFC_SELECTION_INPUT),
-        )
-
-    def test_domain_entry_dispatches_initialize_intake_workspace(self) -> None:
-        runtime = Mock()
-        runtime.initialize_intake_workspace.return_value = {
-            "ok": True,
-            "command": "initialize-intake-workspace",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "initialize-intake-workspace",
-                "input_path": str(NSFC_SELECTION_INPUT),
-                "output_path": "/tmp/initialized-workspace.json",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "initialize-intake-workspace"})
-        runtime.initialize_intake_workspace.assert_called_once_with(
-            input_path=str(NSFC_SELECTION_INPUT),
-            output_path="/tmp/initialized-workspace.json",
-        )
-
-    def test_domain_entry_dispatches_discover_funding_opportunities(self) -> None:
-        runtime = Mock()
-        runtime.discover_funding_opportunities.return_value = {
-            "ok": True,
-            "command": "discover-funding-opportunities",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "discover-funding-opportunities",
-                "input_path": str(DISCOVERY_INPUT),
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "discover-funding-opportunities"})
-        runtime.discover_funding_opportunities.assert_called_once_with(
-            input_path=str(DISCOVERY_INPUT),
-        )
-
-    def test_domain_entry_dispatches_refresh_funding_opportunities_cache(self) -> None:
-        runtime = Mock()
-        runtime.refresh_funding_opportunities_cache.return_value = {
-            "ok": True,
-            "command": "refresh-funding-opportunities-cache",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "refresh-funding-opportunities-cache",
-                "input_path": str(DISCOVERY_INPUT),
-                "output_path": "/tmp/funding-cache.json",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "refresh-funding-opportunities-cache"})
-        runtime.refresh_funding_opportunities_cache.assert_called_once_with(
-            input_path=str(DISCOVERY_INPUT),
-            output_path="/tmp/funding-cache.json",
-        )
-
-    def test_domain_entry_dispatches_execute_critique_revision_loop(self) -> None:
-        runtime = Mock()
-        runtime.execute_critique_revision_loop.return_value = {
-            "ok": True,
-            "command": "execute-critique-revision-loop",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-critique-revision-loop",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                "output_dir": "/tmp/critique-loop",
-                "max_rounds": 4,
-                "opl_stage_attempt": {
-                    "runtime_owner": "one-person-lab",
-                    "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-                },
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-critique-revision-loop"})
-        runtime.execute_critique_revision_loop.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            output_dir="/tmp/critique-loop",
-            opl_stage_attempt={
-                "runtime_owner": "one-person-lab",
-                "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-            },
-            max_rounds=4,
-        )
-
-    def test_domain_entry_dispatches_execute_authoring_mainline_loop(self) -> None:
-        runtime = Mock()
-        runtime.execute_authoring_mainline_loop.return_value = {
-            "ok": True,
-            "command": "execute-authoring-mainline-loop",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-authoring-mainline-loop",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-                "output_dir": "/tmp/mainline-loop",
-                "max_cycles": 6,
-                "opl_stage_attempt": {
-                    "runtime_owner": "one-person-lab",
-                    "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-                },
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-authoring-mainline-loop"})
-        runtime.execute_authoring_mainline_loop.assert_called_once_with(
-            input_path=str(INPUT_EXAMPLE_PATH),
-            output_dir="/tmp/mainline-loop",
-            opl_stage_attempt={
-                "runtime_owner": "one-person-lab",
-                "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-            },
-            max_cycles=6,
-        )
-
-    def test_domain_entry_dispatches_execute_grant_autonomy_controller(self) -> None:
-        runtime = Mock()
-        runtime.execute_grant_autonomy_controller.return_value = {
-            "ok": True,
-            "command": "execute-grant-autonomy-controller",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "execute-grant-autonomy-controller",
-                "input_path": "/tmp/autonomy-request.json",
-                "output_dir": "/tmp/autonomy-output",
-                "opl_stage_attempt": {
-                    "runtime_owner": "one-person-lab",
-                    "executor_kind": "codex_cli",
-                    "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-                },
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "execute-grant-autonomy-controller"})
-        runtime.execute_grant_autonomy_controller.assert_called_once_with(
-            input_path="/tmp/autonomy-request.json",
-            output_dir="/tmp/autonomy-output",
-            opl_stage_attempt={
-                "runtime_owner": "one-person-lab",
-                "executor_kind": "codex_cli",
-                "attempt_lease_ref": "lease:opl/stage-run/mag/domain-entry/owner-chain-default-caller",
-            },
-        )
-
-    def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:
-        runtime = Mock()
-        runtime.build_submission_ready_package.return_value = {
-            "ok": True,
-            "command": "build-submission-ready-package",
-        }
-
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "build-submission-ready-package",
-                "input_path": str(FROZEN_EXAMPLE_PATH),
-                "output_dir": "/tmp/submission-ready-output",
-            }
-        )
-
-        self.assertEqual(payload, {"ok": True, "command": "build-submission-ready-package"})
-        runtime.build_submission_ready_package.assert_called_once_with(
-            input_path=str(FROZEN_EXAMPLE_PATH),
-            output_dir="/tmp/submission-ready-output",
-        )
+                self.assertEqual(payload, {"ok": True, "command": command})
+                getattr(runtime, runtime_method).assert_called_once_with(**request_args)
 
     def test_domain_entry_rejects_missing_required_field(self) -> None:
         with self.assertRaisesRegex(WorkspaceStateError, "缺少必填字段: output_path"):
