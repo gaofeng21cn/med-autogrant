@@ -7,6 +7,11 @@ from med_autogrant.product_entry_parts.domain_handler_contract import (
     DOMAIN_HANDLER_ADAPTER_ID,
     DOMAIN_HANDLER_EXPORT_KIND,
 )
+from product_entry_cases.support import (
+    assert_contains_all,
+    assert_false_keys,
+    assert_true_keys,
+)
 
 
 def assert_domain_handler_export_maps_runtime_and_attention_surfaces(
@@ -91,9 +96,7 @@ def assert_domain_handler_substrate_and_receipts(testcase: Any, export: Mapping[
         substrate_adapter["body_exposure_policy"]["owner_receipt"],
         "receipt_ref_only_no_authority_transfer",
     )
-    testcase.assertFalse(substrate_adapter["authority_boundary"]["opl_can_read_package_body"])
-    testcase.assertFalse(substrate_adapter["authority_boundary"]["opl_can_read_memory_body"])
-    testcase.assertFalse(substrate_adapter["authority_boundary"]["opl_can_issue_owner_receipt"])
+    assert_false_keys(testcase, substrate_adapter["authority_boundary"], ("opl_can_read_package_body", "opl_can_read_memory_body", "opl_can_issue_owner_receipt"))
     testcase.assertEqual(
         export["opl_control_plane"]["substrate_adapter_export_ref"],
         "/domain_handler_export/opl_substrate_adapter_export",
@@ -123,9 +126,7 @@ def assert_domain_handler_substrate_and_receipts(testcase: Any, export: Mapping[
     )
     testcase.assertFalse(hosted_proof["repo_tracked_real_receipt_instance"])
     testcase.assertFalse(hosted_proof["repo_tracked_real_memory_body"])
-    testcase.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_fundability_verdict"])
-    testcase.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_authoring_quality_verdict"])
-    testcase.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_export_verdict"])
+    assert_false_keys(testcase, hosted_proof["authority_boundary"], ("opl_can_hold_fundability_verdict", "opl_can_hold_authoring_quality_verdict", "opl_can_hold_export_verdict"))
     testcase.assertEqual(
         export["receipt_refs"],
         export["controlled_stage_attempt_projection"]["receipt_refs"],
@@ -256,11 +257,7 @@ def assert_domain_handler_consumer_thinning_contract(testcase: Any, export: Mapp
         "domain_handler_ref_only_adapter_and_minimal_authority_functions",
     )
     testcase.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
-    testcase.assertIn("generic_operator_workbench_owner", thinning["forbidden_mag_generic_owner_roles"])
-    testcase.assertIn("generic_workspace_source_intake_owner", thinning["forbidden_mag_generic_owner_roles"])
-    testcase.assertIn("generic_memory_transport_owner", thinning["forbidden_mag_generic_owner_roles"])
-    testcase.assertIn("generic_artifact_gallery_owner", thinning["forbidden_mag_generic_owner_roles"])
-    testcase.assertIn("generic_observability_slo_owner", thinning["forbidden_mag_generic_owner_roles"])
+    assert_contains_all(testcase, thinning["forbidden_mag_generic_owner_roles"], ("generic_operator_workbench_owner", "generic_workspace_source_intake_owner", "generic_memory_transport_owner", "generic_artifact_gallery_owner", "generic_observability_slo_owner"))
 
 
 def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Mapping[str, Any], thinning: Mapping[str, Any]) -> None:
@@ -272,19 +269,10 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
         "/domain_handler_export/mag_consumer_thinning_contract",
     )
     testcase.assertEqual(consumed["authority_boundary"]["opl_standard_scaffold_owner"], "one-person-lab")
-    testcase.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
-    testcase.assertTrue(consumed["authority_boundary"]["mag_consumes_generic_primitives"])
-    testcase.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_memory_transport"])
-    testcase.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_gallery"])
-    testcase.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_operator_workbench"])
-    testcase.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_observability_slo"])
-    testcase.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_lifecycle"])
-    testcase.assertFalse(consumed["authority_boundary"]["opl_harness_pass_can_declare_grant_ready"])
-    testcase.assertFalse(consumed["authority_boundary"]["opl_harness_pass_can_declare_export_ready"])
-    testcase.assertIn("family_conflict_envelope", consumed["consumed_projection_surfaces"])
-    testcase.assertIn("runtime_observability_export", consumed["consumed_projection_surfaces"])
-    testcase.assertIn("grant_truth", consumed["mag_retained_authority"])
-    testcase.assertIn("package_authority", consumed["mag_retained_authority"])
+    assert_true_keys(testcase, consumed["authority_boundary"], ("mag_consumes_standard_scaffold", "mag_consumes_generic_primitives"))
+    assert_false_keys(testcase, consumed["authority_boundary"], ("mag_can_own_generic_memory_transport", "mag_can_own_generic_artifact_gallery", "mag_can_own_generic_operator_workbench", "mag_can_own_generic_observability_slo", "mag_can_own_generic_artifact_lifecycle", "opl_harness_pass_can_declare_grant_ready", "opl_harness_pass_can_declare_export_ready"))
+    assert_contains_all(testcase, consumed["consumed_projection_surfaces"], ("family_conflict_envelope", "runtime_observability_export"))
+    assert_contains_all(testcase, consumed["mag_retained_authority"], ("grant_truth", "package_authority"))
     conflict_projection = export["opl_family_conflict_blocker_projection"]
     testcase.assertEqual(conflict_projection, thinning["opl_family_conflict_blocker_projection"])
     testcase.assertEqual(conflict_projection["projection_policy"], "typed_blocker_only_no_fallback_completion")
@@ -429,26 +417,8 @@ def assert_domain_handler_external_evidence(testcase: Any, export: Mapping[str, 
         external_pack["required_refs_summary"]["domain_handler_projection_ref"],
         "/domain_handler_export/external_evidence_request_pack",
     )
-    testcase.assertFalse(
-        external_pack["forbidden_completion_claims"][
-            "provider_completion_is_fundability_ready"
-        ]
-    )
-    testcase.assertFalse(
-        external_pack["forbidden_completion_claims"]["provider_completion_is_quality_ready"]
-    )
-    testcase.assertFalse(
-        external_pack["forbidden_completion_claims"]["provider_completion_is_export_ready"]
-    )
-    testcase.assertFalse(external_pack["forbidden_completion_claims"]["claims_all_bridge_exits_complete"])
-    testcase.assertFalse(
-        external_pack["forbidden_completion_claims"][
-            "claims_production_long_run_soak_complete"
-        ]
-    )
-    testcase.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
-    testcase.assertFalse(external_pack["authority_boundary"]["mag_claims_direct_hosted_parity_passed"])
-    testcase.assertFalse(external_pack["authority_boundary"]["opl_can_declare_fundability_verdict"])
+    assert_false_keys(testcase, external_pack["forbidden_completion_claims"], ("provider_completion_is_fundability_ready", "provider_completion_is_quality_ready", "provider_completion_is_export_ready", "claims_all_bridge_exits_complete", "claims_production_long_run_soak_complete"))
+    assert_false_keys(testcase, external_pack["authority_boundary"], ("mag_claims_external_evidence_exists", "mag_claims_direct_hosted_parity_passed", "opl_can_declare_fundability_verdict"))
     testcase.assertEqual(
         export["generated_hosted_default_caller_proof"],
         thinning["generated_hosted_default_caller_proof"],
@@ -469,14 +439,7 @@ def assert_domain_handler_external_evidence(testcase: Any, export: Mapping[str, 
         default_caller_proof["no_forbidden_write_boundary"]["runtime_receipt_write_policy"],
         "runtime_store_only_no_repo_source_receipt_instances",
     )
-    testcase.assertFalse(
-        default_caller_proof["authority_boundary"]["mag_owns_generic_runtime"]
-    )
-    testcase.assertFalse(
-        default_caller_proof["authority_boundary"][
-            "opl_generated_caller_can_sign_owner_receipt"
-        ]
-    )
+    assert_false_keys(testcase, default_caller_proof["authority_boundary"], ("mag_owns_generic_runtime", "opl_generated_caller_can_sign_owner_receipt"))
 
 
 def assert_domain_handler_generated_handoff_and_authority(testcase: Any, export: Mapping[str, Any], thinning: Mapping[str, Any], repo_root: Path) -> None:
@@ -600,29 +563,8 @@ def assert_domain_handler_output_guard_and_follow_through(testcase: Any, export:
             "hermes_state_db_runtime_state",
         ],
     )
-    testcase.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("generic_observability_slo_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("local_attempt_record_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("package_lifecycle_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("source_intake_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("hermes_state_db_runtime_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("family_conflict_envelope_completion_claim", output_guard["forbidden_output_classes"])
-    testcase.assertIn("functional_harness_runtime_state", output_guard["forbidden_output_classes"])
-    testcase.assertIn("opl_harness_pass_grant_ready", output_guard["forbidden_output_classes"])
-    testcase.assertIn("opl_harness_pass_export_ready", output_guard["forbidden_output_classes"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_private_functional_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_record_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_source_intake_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_package_lifecycle_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_hermes_state_db_runtime_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_family_conflict_completion_claim"])
-    testcase.assertFalse(output_guard["authority_boundary"]["mag_can_emit_functional_harness_runtime_state"])
-    testcase.assertFalse(output_guard["authority_boundary"]["opl_harness_pass_can_declare_grant_ready"])
-    testcase.assertFalse(output_guard["authority_boundary"]["opl_harness_pass_can_declare_export_ready"])
+    assert_contains_all(testcase, output_guard["forbidden_output_classes"], ("generic_memory_transport_state", "generic_artifact_lifecycle_state", "generic_observability_slo_state", "local_attempt_record_state", "package_lifecycle_state", "source_intake_state", "hermes_state_db_runtime_state", "family_conflict_envelope_completion_claim", "functional_harness_runtime_state", "opl_harness_pass_grant_ready", "opl_harness_pass_export_ready"))
+    assert_false_keys(testcase, output_guard["authority_boundary"], ("mag_can_emit_generic_runtime_state", "mag_can_emit_generic_workbench_state", "mag_can_emit_generic_observability_state", "mag_can_emit_private_functional_state", "mag_can_emit_local_attempt_record_state", "mag_can_emit_source_intake_state", "mag_can_emit_package_lifecycle_state", "mag_can_emit_hermes_state_db_runtime_state", "mag_can_emit_family_conflict_completion_claim", "mag_can_emit_functional_harness_runtime_state", "opl_harness_pass_can_declare_grant_ready", "opl_harness_pass_can_declare_export_ready"))
     scaffold_guard = thinning["standard_agent_scaffold_alignment"]
     testcase.assertEqual(
         scaffold_guard["surface_kind"],

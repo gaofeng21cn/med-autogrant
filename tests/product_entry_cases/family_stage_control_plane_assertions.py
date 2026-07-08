@@ -9,6 +9,11 @@ from med_autogrant.stage_control_plane_parts.artifact_contracts import (
     STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
     SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
 )
+from product_entry_cases.support import (
+    assert_contains_all,
+    assert_false_keys,
+    assert_true_keys,
+)
 
 
 def assert_family_stage_control_plane_preserves_opl_projection_and_mag_authority(
@@ -66,9 +71,7 @@ def _assert_stage_plane_identity(
     test_case.assertEqual(stage_plane["plane_id"], "med_autogrant_stage_control_plane")
     test_case.assertEqual(stage_plane["target_domain_id"], "med-autogrant")
     test_case.assertEqual(stage_plane["authority_boundary"]["opl_role"], "projection_consumer_only")
-    test_case.assertFalse(stage_plane["authority_boundary"]["can_write_grant_truth"])
-    test_case.assertFalse(stage_plane["authority_boundary"]["can_override_fundability_judgment"])
-    test_case.assertFalse(stage_plane["authority_boundary"]["can_bypass_submission_ready_gate"])
+    assert_false_keys(test_case, stage_plane["authority_boundary"], ("can_write_grant_truth", "can_override_fundability_judgment", "can_bypass_submission_ready_gate"))
     test_case.assertEqual(stage_plane["discovery_smoke"]["status"], "ready")
     test_case.assertEqual(
         stage_plane["discovery_smoke"]["allowed_action_catalog_ref"],
@@ -352,21 +355,11 @@ def _assert_physical_kernel_contract(
         "opl_stage_artifact_runtime_contract.v1",
     )
     test_case.assertEqual(physical_kernel["stage_output_role"], expected_stage_output_role)
-    test_case.assertIn("stage.json", physical_kernel["required_attempt_entries"])
-    test_case.assertIn("attempt.json", physical_kernel["required_attempt_entries"])
-    test_case.assertIn("manifest.json", physical_kernel["required_attempt_entries"])
-    test_case.assertIn("receipts/receipt.json", physical_kernel["required_attempt_entries"])
-    test_case.assertIn("current_json_ref", physical_kernel["required_physical_locator_roles"])
-    test_case.assertIn("lineage_events_ref", physical_kernel["required_physical_locator_roles"])
-    test_case.assertIn("retention_policy_ref", physical_kernel["required_physical_locator_roles"])
+    assert_contains_all(test_case, physical_kernel["required_attempt_entries"], ("stage.json", "attempt.json", "manifest.json", "receipts/receipt.json"))
+    assert_contains_all(test_case, physical_kernel["required_physical_locator_roles"], ("current_json_ref", "lineage_events_ref", "retention_policy_ref"))
     test_case.assertFalse(physical_kernel["conformance_refs"]["domain_readiness_claim"])
-    test_case.assertTrue(physical_kernel["authority_boundary"]["opl_can_index_refs"])
-    test_case.assertTrue(
-        physical_kernel["authority_boundary"]["opl_can_index_canonical_pointer_ref"]
-    )
-    test_case.assertFalse(physical_kernel["authority_boundary"]["opl_can_promote_canonical_pointer"])
-    test_case.assertFalse(physical_kernel["authority_boundary"]["opl_can_create_mag_owner_receipt"])
-    test_case.assertFalse(physical_kernel["authority_boundary"]["opl_can_interpret_grant_quality"])
+    assert_true_keys(test_case, physical_kernel["authority_boundary"], ("opl_can_index_refs", "opl_can_index_canonical_pointer_ref"))
+    assert_false_keys(test_case, physical_kernel["authority_boundary"], ("opl_can_promote_canonical_pointer", "opl_can_create_mag_owner_receipt", "opl_can_interpret_grant_quality"))
 
 
 def _assert_owner_verdict_and_closeout_requirements(
@@ -532,11 +525,7 @@ def _assert_stage_receipts_monitors_and_closeout(
         expected_receipt["ref"],
     )
     monitor_roles = {ref["role"] for ref in stage["stage_contract"]["monitor_refs"]}
-    test_case.assertIn("stage_replay_monitor", monitor_roles)
-    test_case.assertIn("stage_owner_receipt_handoff_monitor", monitor_roles)
-    test_case.assertIn("live_stage_attempt_monitor", monitor_roles)
-    test_case.assertIn("no_forbidden_write_guard_monitor", monitor_roles)
-    test_case.assertIn("direct_hosted_parity_no_regression_monitor", monitor_roles)
+    assert_contains_all(test_case, monitor_roles, ("stage_replay_monitor", "stage_owner_receipt_handoff_monitor", "live_stage_attempt_monitor", "no_forbidden_write_guard_monitor", "direct_hosted_parity_no_regression_monitor"))
     closeout = stage["stage_production_evidence_closeout"]
     test_case.assertEqual(closeout["surface_kind"], "mag_stage_production_evidence_closeout_refs")
     test_case.assertEqual(closeout["stage_id"], stage["stage_id"])
@@ -565,25 +554,8 @@ def _assert_stage_receipts_monitors_and_closeout(
     test_case.assertFalse(audit["claim_permissions"]["quality_ready"])
     test_case.assertFalse(audit["claim_permissions"]["export_ready"])
     test_case.assertFalse(audit["claim_permissions"]["submission_ready"])
-    test_case.assertIn("provider_completion", audit["false_completion_signals"])
-    test_case.assertIn("schema_completeness", audit["false_completion_signals"])
-    test_case.assertIn("generated_surface_ready", audit["false_completion_signals"])
-    test_case.assertIn("focused_tests_passed", audit["false_completion_signals"])
-    test_case.assertFalse(closeout["authority_boundary"]["opl_can_sign_owner_receipt"])
-    test_case.assertFalse(closeout["authority_boundary"]["opl_can_write_grant_truth"])
-    test_case.assertFalse(closeout["authority_boundary"]["opl_can_declare_export_ready"])
-    test_case.assertFalse(
-        closeout["authority_boundary"]["provider_completion_counts_as_grant_ready"]
-    )
-    test_case.assertFalse(
-        closeout["authority_boundary"]["schema_completeness_counts_as_grant_ready"]
-    )
-    test_case.assertFalse(
-        closeout["authority_boundary"]["generated_surface_ready_counts_as_grant_ready"]
-    )
-    test_case.assertFalse(
-        closeout["authority_boundary"]["focused_tests_count_as_grant_ready"]
-    )
+    assert_contains_all(test_case, audit["false_completion_signals"], ("provider_completion", "schema_completeness", "generated_surface_ready", "focused_tests_passed"))
+    assert_false_keys(test_case, closeout["authority_boundary"], ("opl_can_sign_owner_receipt", "opl_can_write_grant_truth", "opl_can_declare_export_ready", "provider_completion_counts_as_grant_ready", "schema_completeness_counts_as_grant_ready", "generated_surface_ready_counts_as_grant_ready", "focused_tests_count_as_grant_ready"))
 
 
 def _assert_stage_authority_boundary(
@@ -608,9 +580,7 @@ def _assert_stage_authority_boundary(
         stage["freshness"]["refresh_policy"],
         "rebuild_product_entry_manifest_before_opl_discovery",
     )
-    test_case.assertFalse(stage["authority_boundary"]["can_write_grant_truth"])
-    test_case.assertFalse(stage["authority_boundary"]["can_override_fundability_judgment"])
-    test_case.assertFalse(stage["authority_boundary"]["can_bypass_submission_ready_gate"])
+    assert_false_keys(test_case, stage["authority_boundary"], ("can_write_grant_truth", "can_override_fundability_judgment", "can_bypass_submission_ready_gate"))
 
 
 def _assert_proposal_stage_delta(

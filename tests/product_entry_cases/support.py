@@ -7,6 +7,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
+from typing import Any, Mapping
 from unittest.mock import Mock, patch
 
 
@@ -41,6 +42,21 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = _DOMAIN_ENTRY_CONTRACT["command_contracts"]
 CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
 
 PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
+
+
+def assert_contains_all(test_case: unittest.TestCase, container: Any, expected_items: tuple[str, ...]) -> None:
+    for item in expected_items:
+        test_case.assertIn(item, container)
+
+
+def assert_false_keys(test_case: unittest.TestCase, mapping: Mapping[str, Any], keys: tuple[str, ...]) -> None:
+    for key in keys:
+        test_case.assertFalse(mapping[key])
+
+
+def assert_true_keys(test_case: unittest.TestCase, mapping: Mapping[str, Any], keys: tuple[str, ...]) -> None:
+    for key in keys:
+        test_case.assertTrue(mapping[key])
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
