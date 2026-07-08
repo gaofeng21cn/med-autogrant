@@ -15,6 +15,37 @@ from product_entry_cases.support import (
 )
 
 
+def _command_for(input_path, command: str, *extra_args: str) -> str:
+    return public_cli_command(
+        command,
+        "--input",
+        str(input_path.resolve()),
+        *extra_args,
+        "--format",
+        "json",
+    )
+
+
+def _critique_command(command: str, *extra_args: str) -> str:
+    return _command_for(CRITIQUE_EXAMPLE_PATH, command, *extra_args)
+
+
+def _question_refinement_command() -> str:
+    return _command_for(
+        DIRECTION_EXAMPLE_PATH,
+        "execute-question-refinement-pass",
+        "--output",
+        str(
+            _expected_runtime_output_path(
+                grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                workspace_id="nsfc-demo-001",
+                draft_id=None,
+                file_name="question-refinement-workspace.json",
+            )
+        ),
+    )
+
+
 class ProductEntryStatusStartCaseTest(unittest.TestCase):
     def test_grant_user_loop_projects_landed_question_refinement_route_when_direction_screening_can_execute_directly(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -36,44 +67,12 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         )
         self.assertEqual(payload["grant_user_loop"]["next_action"]["route_id"], "question_refinement")
         self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "landed")
-        self.assertEqual(
-            payload["grant_user_loop"]["next_action"]["command"],
-            public_cli_command(
-                "execute-question-refinement-pass",
-                "--input",
-                str(DIRECTION_EXAMPLE_PATH.resolve()),
-                "--output",
-                str(
-                    _expected_runtime_output_path(
-                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
-                        workspace_id="nsfc-demo-001",
-                        draft_id=None,
-                        file_name="question-refinement-workspace.json",
-                    )
-                ),
-                "--format",
-                "json",
-            ),
-        )
+        expected_route_command = _question_refinement_command()
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["command"], expected_route_command)
         self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
-            public_cli_command(
-                "execute-question-refinement-pass",
-                "--input",
-                str(DIRECTION_EXAMPLE_PATH.resolve()),
-                "--output",
-                str(
-                    _expected_runtime_output_path(
-                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
-                        workspace_id="nsfc-demo-001",
-                        draft_id=None,
-                        file_name="question-refinement-workspace.json",
-                    )
-                ),
-                "--format",
-                "json",
-            ),
+            expected_route_command,
         )
 
     def test_product_status_projects_product_entry_surface_over_current_grant_loop(self) -> None:
@@ -90,6 +89,19 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "product-status")
         status = payload["product_status"]
+        product_status_command = _critique_command("product-status")
+        grant_user_loop_command = _critique_command(
+            "grant-user-loop",
+            "--task-intent",
+            "<describe-task-intent>",
+        )
+        direct_entry_command = _critique_command(
+            "build-product-entry",
+            "--entry-mode",
+            "direct",
+            "--task-intent",
+            "<describe-task-intent>",
+        )
         self.assertEqual(status["surface_kind"], "product_status")
         self.assertEqual(status["recommended_action"], "inspect_or_prepare_grant_loop")
         self.assertEqual(status["target_domain_id"], "med-autogrant")
@@ -129,63 +141,13 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
             ]
         )
         self.assertEqual(status["product_entry_surface"]["shell_key"], "product_status")
-        self.assertEqual(
-            status["product_entry_surface"]["command"],
-            public_cli_command(
-                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
-            ),
-        )
+        self.assertEqual(status["product_entry_surface"]["command"], product_status_command)
         self.assertEqual(status["operator_loop_surface"]["shell_key"], "grant_user_loop")
-        self.assertEqual(
-            status["product_entry_surfaces"]["status"]["command"],
-            public_cli_command(
-                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
-            ),
-        )
-        self.assertEqual(
-            status["product_entry_surfaces"]["grant_user_loop"]["command"],
-            public_cli_command(
-                "grant-user-loop",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                "--task-intent",
-                "<describe-task-intent>",
-                "--format",
-                "json",
-            ),
-        )
-        self.assertEqual(
-            status["product_entry_surfaces"]["direct_entry_builder"]["command"],
-            public_cli_command(
-                "build-product-entry",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                "--entry-mode",
-                "direct",
-                "--task-intent",
-                "<describe-task-intent>",
-                "--format",
-                "json",
-            ),
-        )
-        self.assertEqual(
-            status["summary"]["product_entry_command"],
-            public_cli_command(
-                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
-            ),
-        )
-        self.assertEqual(
-            status["summary"]["operator_loop_command"],
-            public_cli_command(
-                "grant-user-loop",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                "--task-intent",
-                "<describe-task-intent>",
-                "--format",
-                "json",
-            ),
-        )
+        self.assertEqual(status["product_entry_surfaces"]["status"]["command"], product_status_command)
+        self.assertEqual(status["product_entry_surfaces"]["grant_user_loop"]["command"], grant_user_loop_command)
+        self.assertEqual(status["product_entry_surfaces"]["direct_entry_builder"]["command"], direct_entry_command)
+        self.assertEqual(status["summary"]["product_entry_command"], product_status_command)
+        self.assertEqual(status["summary"]["operator_loop_command"], grant_user_loop_command)
         _assert_family_orchestration_companion(
             self,
             status.get("family_orchestration"),
@@ -215,23 +177,13 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         )
         self.assertEqual(
             status["product_entry_overview"]["resume_surface"]["command"],
-            public_cli_command(
-                "grant-user-loop",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                "--task-intent",
-                "<describe-task-intent>",
-                "--format",
-                "json",
-            ),
+            grant_user_loop_command,
         )
         self.assertEqual(status["product_entry_preflight"]["surface_kind"], "product_entry_preflight")
         self.assertTrue(status["product_entry_preflight"]["ready_to_try_now"])
         self.assertEqual(
             status["product_entry_preflight"]["recommended_check_command"],
-            public_cli_command(
-                "validate-workspace", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
-            ),
+            _critique_command("validate-workspace"),
         )
         self.assertEqual(
             status["product_entry_preflight"],
