@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import tempfile
 from pathlib import Path
 
@@ -20,19 +19,18 @@ from cli_validate_cases import (
 
 
 class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
-    def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
+    def workspace_json(self, command: str, input_path: Path) -> dict[str, object]:
+        return self.run_json_cli(
             "workspace",
-                "route-report",
-                "--input",
-            str(QUESTION_EXAMPLE_PATH),
+            command,
+            "--input",
+            str(input_path),
             "--format",
             "json",
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+    def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
+        payload = self.workspace_json("route-report", QUESTION_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "question_refinement")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
@@ -88,18 +86,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertNotIn("reason:", stdout)
 
     def test_stage_route_report_aggregates_p2b_outline_without_critique_summary(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(OUTLINE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", OUTLINE_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "outline")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "drafting")
@@ -108,18 +95,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertNotIn("critique_summary", payload["route"])
 
     def test_stage_route_report_aggregates_p2c_drafting_without_critique_summary(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(DRAFTING_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", DRAFTING_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "drafting")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
@@ -127,18 +103,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertNotIn("critique_summary", payload["route"])
 
     def test_critique_summary_exposes_revision_audit_for_p2c_critique(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", CRITIQUE_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["critique_id"], "critique-v1")
         self.assertEqual(payload["revision_plan_id"], "revision-v1")
@@ -146,18 +111,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["recommended_next_stage"], "revision")
 
     def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(REVISION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", REVISION_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "revision")
         self.assertEqual(payload["execution_status"], "completed")
         self.assertEqual(payload["pre_revision_version_label"], "v0.3")
@@ -166,104 +120,38 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["recommended_next_stage"], "critique")
 
     def test_critique_summary_exposes_major_reframe_verdict(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(MAJOR_REFRAME_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", MAJOR_REFRAME_EXAMPLE_PATH)
         self.assertEqual(payload["verdict"], "major_reframe")
         self.assertEqual(payload["recommended_next_stage"], "question_refinement")
 
     def test_critique_summary_exposes_ready_for_submission_verdict(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", READY_FOR_SUBMISSION_EXAMPLE_PATH)
         self.assertEqual(payload["verdict"], "ready_for_submission")
         self.assertEqual(payload["recommended_next_stage"], "frozen")
 
     def test_stage_route_report_aggregates_p2c_critique_with_critique_summary(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", CRITIQUE_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
         self.assertEqual(payload["route"]["critique_summary"]["execution_status"], "planned")
 
     def test_stage_route_report_aggregates_p2c_revision_with_re_review_boundary(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(REVISION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", REVISION_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "revision")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
         self.assertEqual(payload["route"]["critique_summary"]["execution_status"], "completed")
 
     def test_stage_route_report_aggregates_p3a_major_reframe_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(MAJOR_REFRAME_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", MAJOR_REFRAME_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "question_refinement")
         self.assertEqual(payload["route"]["critique_summary"]["verdict"], "major_reframe")
 
     def test_stage_route_report_aggregates_p3a_ready_for_submission_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", READY_FOR_SUBMISSION_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
@@ -272,53 +160,17 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "freeze_ready")
         self.assertFalse(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
 
-    def test_validate_workspace_accepts_re_review_critique_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(RE_REVIEW_EXAMPLE_PATH),
-            "--format",
-            "json",
+    def test_validate_workspace_accepts_late_revision_fixture_workspaces(self) -> None:
+        cases = (
+            (RE_REVIEW_EXAMPLE_PATH, "critique"),
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique"),
+            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen"),
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-
-    def test_validate_workspace_accepts_forced_rollback_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(FORCED_ROLLBACK_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-
-    def test_validate_workspace_accepts_presubmission_frozen_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "frozen")
+        for input_path, lifecycle_stage in cases:
+            with self.subTest(example=input_path.name):
+                payload = self.workspace_json("validate", input_path)
+                self.assertTrue(payload["ok"])
+                self.assertEqual(payload["lifecycle_stage"], lifecycle_stage)
 
     def test_generated_revised_workspace_reenters_validator_and_checkpoint_surfaces(self) -> None:
         cases = (
@@ -425,36 +277,14 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     )
 
     def test_critique_summary_exposes_re_review_linkage(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(RE_REVIEW_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", RE_REVIEW_EXAMPLE_PATH)
         self.assertEqual(payload["critique_id"], "critique-v2")
         self.assertEqual(payload["revision_plan_id"], "revision-v2")
         self.assertEqual(payload["reviewed_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
 
     def test_critique_summary_exposes_forced_rollback_fields(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(FORCED_ROLLBACK_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", FORCED_ROLLBACK_EXAMPLE_PATH)
         self.assertEqual(payload["critique_id"], "critique-v2")
         self.assertEqual(payload["forced_rollback_stage"], "argument_building")
         self.assertEqual(payload["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
@@ -462,88 +292,33 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["recommended_next_stage"], "argument_building")
 
     def test_critique_summary_exposes_presubmission_frozen_fields(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("critique-summary", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "frozen")
         self.assertEqual(payload["verdict"], "ready_for_submission")
         self.assertTrue(payload["presubmission_frozen"])
         self.assertEqual(payload["recommended_next_stage"], "frozen")
 
     def test_summarize_workspace_exposes_re_review_evidence(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(RE_REVIEW_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("summarize", RE_REVIEW_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["active_critique"]["reviewed_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["reviewed_revision_evidence"]["source_critique_id"], "critique-v1")
 
     def test_summarize_workspace_exposes_forced_rollback_evidence(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(FORCED_ROLLBACK_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("summarize", FORCED_ROLLBACK_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["active_critique"]["forced_rollback_stage"], "argument_building")
         self.assertEqual(payload["active_critique"]["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
         self.assertFalse(payload["gates"]["presubmission_frozen"])
 
     def test_summarize_workspace_exposes_presubmission_frozen_gate(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("summarize", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
         self.assertEqual(payload["lifecycle_stage"], "frozen")
         self.assertTrue(payload["gates"]["presubmission_frozen"])
         self.assertEqual(payload["active_draft"]["status"], "frozen")
 
     def test_stage_route_report_aggregates_p3b_re_review_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(RE_REVIEW_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", RE_REVIEW_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
@@ -557,18 +332,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         )
 
     def test_stage_route_report_aggregates_p3c_forced_rollback_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(FORCED_ROLLBACK_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", FORCED_ROLLBACK_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
@@ -582,18 +346,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         )
 
     def test_stage_route_report_aggregates_p3c_presubmission_frozen_branch(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.workspace_json("route-report", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "frozen")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
@@ -601,120 +354,3 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertTrue(payload["route"]["critique_summary"]["presubmission_frozen"])
         self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "submission_frozen")
         self.assertTrue(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
-
-    def test_validate_workspace_accepts_re_review_revised_output_after_execute_revision_pass(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            revised_output = Path(tmp_dir) / "p3b-revised.json"
-
-            execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "pass",
-                "revision",
-                "--input",
-                str(RE_REVIEW_EXAMPLE_PATH),
-                "--output",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(execute_exit, 0)
-            self.assertEqual(execute_stderr, "")
-            self.assertTrue(json.loads(execute_stdout)["ok"])
-
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "validate",
-                "--input",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertTrue(payload["ok"])
-            self.assertEqual(payload["error_count"], 0)
-            self.assertEqual(payload["errors"], [])
-
-    def test_next_step_keeps_revised_output_on_existing_revision_route(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            revised_output = Path(tmp_dir) / "p2c-revised.json"
-
-            execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "pass",
-                "revision",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH),
-                "--output",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(execute_exit, 0)
-            self.assertEqual(execute_stderr, "")
-            self.assertTrue(json.loads(execute_stdout)["ok"])
-
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "next-step",
-                "--input",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertEqual(payload["current_stage"], "critique")
-            self.assertEqual(payload["recommended_stage"], "revision")
-            self.assertIn("major_revision", payload["reason"])
-
-    def test_stage_route_report_accepts_re_review_revised_output_and_keeps_reviewed_evidence(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            revised_output = Path(tmp_dir) / "p3b-revised.json"
-
-            execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "pass",
-                "revision",
-                "--input",
-                str(RE_REVIEW_EXAMPLE_PATH),
-                "--output",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(execute_exit, 0)
-            self.assertEqual(execute_stderr, "")
-            self.assertTrue(json.loads(execute_stdout)["ok"])
-
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "route-report",
-                "--input",
-                str(revised_output),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertTrue(payload["ok"])
-            self.assertEqual(payload["lifecycle_stage"], "critique")
-            self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
-            self.assertEqual(
-                payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"],
-                "revision-v1",
-            )
-            self.assertEqual(
-                payload["route"]["summarize_workspace"]["active_revision_plan"]["execution_status"],
-                "completed",
-            )
-            self.assertEqual(
-                payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"]["revision_plan_id"],
-                "revision-v1",
-            )

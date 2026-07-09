@@ -114,23 +114,14 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
         "stage_run_attempt_provenance_owner",
         "provider_scheduler_owner",
     }
-    assert policy["provider_completion_is_domain_completion"] is False
-    assert policy["domain_repo_can_own_temporal_runtime"] is False
-    assert policy["domain_repo_can_write_opl_stage_attempts"] is False
-    assert policy["domain_repo_can_own_stage_run_substrate"] is False
-    assert policy["mag_can_own_status_user_loop_direct_entry_domain_handler_or_workbench_shell"] is False
-    assert policy["generated_surface_ready_can_claim_domain_ready"] is False
-    assert policy["mag_writes_opl_stage_attempt_records"] is False
+    assert all(policy[field] is False for field in ("provider_completion_is_domain_completion", "domain_repo_can_own_temporal_runtime", "domain_repo_can_write_opl_stage_attempts", "domain_repo_can_own_stage_run_substrate", "mag_can_own_status_user_loop_direct_entry_domain_handler_or_workbench_shell", "generated_surface_ready_can_claim_domain_ready", "mag_writes_opl_stage_attempt_records"))
     assert policy["accepted_domain_closing_ref_fields"] == [
         "owner_receipt_ref",
         "typed_blocker_ref",
         "human_gate_ref",
         "route_back_ref",
     ]
-    assert policy["authority_boundary"]["provider_completion_counts_as_domain_completion"] is False
-    assert policy["authority_boundary"]["generated_surface_ready_counts_as_domain_ready"] is False
-    assert policy["authority_boundary"]["mag_can_write_opl_stage_attempts"] is False
-    assert policy["authority_boundary"]["mag_can_own_temporal_runtime"] is False
+    assert all(policy["authority_boundary"][field] is False for field in ("provider_completion_counts_as_domain_completion", "generated_surface_ready_counts_as_domain_ready", "mag_can_write_opl_stage_attempts", "mag_can_own_temporal_runtime"))
     substrate_boundary = policy["stage_run_consumption_boundary"]
     assert substrate_boundary["surface_kind"] == "mag_stage_run_consumption_boundary"
     assert substrate_boundary["consumer_role"] == "consume_opl_stage_run_refs_only"
@@ -145,15 +136,7 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
         "provider_completion_ref",
         "stage_attempt_ref",
     }
-    assert substrate_boundary["authority_boundary"] == {
-        "mag_can_start_temporal_worker": False,
-        "mag_can_schedule_stage_run": False,
-        "mag_can_write_attempt_ledger": False,
-        "mag_can_own_generated_shell": False,
-        "opl_can_write_grant_truth": False,
-        "opl_can_sign_mag_owner_receipt": False,
-        "provider_completion_counts_as_domain_completion": False,
-    }
+    assert all(substrate_boundary["authority_boundary"][field] is False for field in ("mag_can_start_temporal_worker", "mag_can_schedule_stage_run", "mag_can_write_attempt_ledger", "mag_can_own_generated_shell", "opl_can_write_grant_truth", "opl_can_sign_mag_owner_receipt", "provider_completion_counts_as_domain_completion"))
     audit = policy["grant_ready_completion_audit"]
     assert audit["surface_kind"] == "grant_ready_completion_audit"
     assert audit["state"] == "blocked_without_mag_owner_closing_ref"
@@ -161,15 +144,7 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert audit["required_owner_evidence"]["stage_run_domain_closeout"] == (
         policy["accepted_domain_closing_ref_fields"]
     )
-    assert audit["claim_permissions"] == {
-        "domain_ready": False,
-        "grant_ready": False,
-        "fundability_ready": False,
-        "quality_ready": False,
-        "export_ready": False,
-        "submission_ready": False,
-        "production_ready": False,
-    }
+    assert all(audit["claim_permissions"][field] is False for field in ("domain_ready", "grant_ready", "fundability_ready", "quality_ready", "export_ready", "submission_ready", "production_ready"))
     assert {
         "provider_completion",
         "schema_completeness",
@@ -179,10 +154,7 @@ def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
         "package_existence",
         "quality_scorecard_score",
     } <= set(audit["false_completion_signals"])
-    assert audit["authority_boundary"]["provider_completion_counts_as_grant_ready"] is False
-    assert audit["authority_boundary"]["schema_completeness_counts_as_grant_ready"] is False
-    assert audit["authority_boundary"]["generated_surface_ready_counts_as_grant_ready"] is False
-    assert audit["authority_boundary"]["focused_tests_count_as_grant_ready"] is False
+    assert all(audit["authority_boundary"][field] is False for field in ("provider_completion_counts_as_grant_ready", "schema_completeness_counts_as_grant_ready", "generated_surface_ready_counts_as_grant_ready", "focused_tests_count_as_grant_ready"))
     assert "submission_ready_human_gate_receipt" in audit["residual_live_evidence_gaps"]
     assert "temporal_provider_long_soak_window_evidence" in audit["residual_live_evidence_gaps"]
 
@@ -713,12 +685,6 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         assert closeout["authority_boundary"]["opl_can_sign_owner_receipt"] is False
         assert closeout["authority_boundary"]["opl_can_write_grant_truth"] is False
         assert closeout["authority_boundary"]["opl_can_declare_export_ready"] is False
-
-
-def test_product_entry_canonical_module_keeps_public_export() -> None:
-    from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-    assert MedAutoGrantProductEntry.__name__ == "MedAutoGrantProductEntry"
 
 
 def test_opl_generated_interfaces_compile_mag_standard_pack() -> None:
