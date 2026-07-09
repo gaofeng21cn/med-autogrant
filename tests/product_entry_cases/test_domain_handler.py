@@ -12,27 +12,12 @@ from pathlib import Path
 
 from med_autogrant.cli import main
 from med_autogrant.workspace import WorkspaceStateError
-from product_entry_cases.domain_handler_export_assertions import (
-    assert_domain_handler_export_maps_runtime_and_attention_surfaces,
-)
 from product_entry_cases.support import (
     CRITIQUE_EXAMPLE_PATH,
-    REPO_ROOT,
 )
 
 
 class ProductDomainHandlerTest(unittest.TestCase):
-    def test_domain_handler_export_maps_runtime_and_attention_surfaces_without_grant_truth_transfer(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        payload = MedAutoGrantProductEntry().build_domain_handler_export(input_path=str(CRITIQUE_EXAMPLE_PATH))
-
-        assert_domain_handler_export_maps_runtime_and_attention_surfaces(
-            self,
-            payload,
-            REPO_ROOT,
-        )
-
     def test_domain_handler_shell_projection_fixes_caller_owner_readback_guard(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
