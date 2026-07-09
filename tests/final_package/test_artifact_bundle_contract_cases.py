@@ -1,15 +1,9 @@
 from __future__ import annotations
 
-import json
 import tempfile
 from pathlib import Path
 
-from .context import (
-    FORWARD_PROGRESS_EXAMPLE_PATH,
-    FREEZE_READY_EXAMPLE_PATH,
-    FROZEN_EXAMPLE_PATH,
-    FinalPackageCliCase,
-)
+from .context import FREEZE_READY_EXAMPLE_PATH, FinalPackageCliCase
 
 
 class TestFinalPackageArtifactBundleContractCases(FinalPackageCliCase):
@@ -17,98 +11,36 @@ class TestFinalPackageArtifactBundleContractCases(FinalPackageCliCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             bundle_path = Path(tmp_dir) / "bundle.json"
             package_path = Path(tmp_dir) / "package.json"
-            bundle_path.write_text(
-                json.dumps(
-                    {
-                        "bundle_kind": "artifact_bundle",
-                        "grant_run_id": "other-run",
-                        "workspace_id": "other-workspace",
-                        "draft_id": "other-draft",
-                    },
-                    ensure_ascii=False,
-                    indent=2,
-                ),
-                encoding="utf-8",
+            self._write_json(
+                bundle_path,
+                {
+                    "bundle_kind": "artifact_bundle",
+                    "grant_run_id": "other-run",
+                    "workspace_id": "other-workspace",
+                    "draft_id": "other-draft",
+                },
             )
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FREEZE_READY_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
+            self._assert_final_package_fails(
+                FREEZE_READY_EXAMPLE_PATH,
+                bundle_path,
+                package_path,
+                "artifact bundle identity 不匹配",
             )
 
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("artifact bundle identity 不匹配", payload["error"])
-
-    def test_build_final_package_fails_closed_when_artifact_bundle_manifest_is_missing(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            bundle_path = Path(tmp_dir) / "missing-manifest-bundle.json"
-            package_path = Path(tmp_dir) / "package.json"
-            self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
-            bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-            bundle.pop("manifest")
-            bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FROZEN_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("artifact bundle 缺少必填字段", payload["error"])
-            self.assertIn("manifest", payload["error"])
-            self.assertFalse(package_path.exists())
-
-    def test_build_final_package_fails_closed_when_artifact_bundle_artifacts_are_missing(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            bundle_path = Path(tmp_dir) / "missing-artifacts-bundle.json"
-            package_path = Path(tmp_dir) / "package.json"
-            self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
-            bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-            bundle.pop("artifacts")
-            bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FROZEN_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("artifact bundle 缺少必填字段", payload["error"])
-            self.assertIn("artifacts", payload["error"])
-            self.assertFalse(package_path.exists())
+    def test_build_final_package_fails_closed_when_artifact_bundle_manifest_or_artifacts_are_missing(self) -> None:
+        cases = (
+            ("manifest", "artifact bundle 缺少必填字段"),
+            ("artifacts", "artifact bundle 缺少必填字段"),
+        )
+        for field, error_snippet in cases:
+            with self.subTest(field=field):
+                self._assert_bundle_path_fails(
+                    f"missing-{field}-bundle.json",
+                    (field,),
+                    error_snippet,
+                    field,
+                )
 
     def test_build_final_package_fails_closed_when_artifact_bundle_required_nested_fields_are_missing(self) -> None:
         cases = (
@@ -138,34 +70,12 @@ class TestFinalPackageArtifactBundleContractCases(FinalPackageCliCase):
         )
         for object_field, nested_field in cases:
             with self.subTest(object_field=object_field, nested_field=nested_field):
-                with tempfile.TemporaryDirectory() as tmp_dir:
-                    bundle_path = Path(tmp_dir) / f"missing-{object_field}-{nested_field}.json"
-                    package_path = Path(tmp_dir) / "package.json"
-                    self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
-                    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-                    bundle[object_field].pop(nested_field)
-                    bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-
-                    exit_code, stdout, stderr = self.run_cli(
-                        "package",
-                "final-package",
-                "--input",
-                        str(FROZEN_EXAMPLE_PATH),
-                        "--artifact-bundle",
-                        str(bundle_path),
-                        "--output",
-                        str(package_path),
-                        "--format",
-                        "json",
-                    )
-
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
-                    self.assertFalse(payload["ok"])
-                    self.assertIn(f"artifact bundle {object_field} 缺少字段", payload["error"])
-                    self.assertIn(nested_field, payload["error"])
-                    self.assertFalse(package_path.exists())
+                self._assert_bundle_path_fails(
+                    f"missing-{object_field}-{nested_field}.json",
+                    (object_field, nested_field),
+                    f"artifact bundle {object_field} 缺少字段",
+                    nested_field,
+                )
 
     def test_build_final_package_fails_closed_when_artifact_bundle_required_scalar_values_are_not_nonempty_strings(self) -> None:
         cases = (
@@ -187,33 +97,12 @@ class TestFinalPackageArtifactBundleContractCases(FinalPackageCliCase):
         )
         for object_field, nested_field, bad_value in cases:
             with self.subTest(object_field=object_field, nested_field=nested_field, bad_value=bad_value):
-                with tempfile.TemporaryDirectory() as tmp_dir:
-                    bundle_path = Path(tmp_dir) / f"bad-{object_field}-{nested_field}.json"
-                    package_path = Path(tmp_dir) / "package.json"
-                    self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
-                    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-                    bundle[object_field][nested_field] = bad_value
-                    bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-
-                    exit_code, stdout, stderr = self.run_cli(
-                        "package",
-                "final-package",
-                "--input",
-                        str(FROZEN_EXAMPLE_PATH),
-                        "--artifact-bundle",
-                        str(bundle_path),
-                        "--output",
-                        str(package_path),
-                        "--format",
-                        "json",
-                    )
-
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
-                    self.assertFalse(payload["ok"])
-                    self.assertIn(f"artifact bundle {object_field}.{nested_field} 非法", payload["error"])
-                    self.assertFalse(package_path.exists())
+                self._assert_bundle_path_fails(
+                    f"bad-{object_field}-{nested_field}.json",
+                    (object_field, nested_field),
+                    f"artifact bundle {object_field}.{nested_field} 非法",
+                    bad_value=bad_value,
+                )
 
     def test_build_final_package_fails_closed_when_artifact_bundle_summary_counts_are_not_nonnegative_integers(self) -> None:
         cases = (
@@ -225,32 +114,9 @@ class TestFinalPackageArtifactBundleContractCases(FinalPackageCliCase):
         )
         for nested_field, bad_value in cases:
             with self.subTest(nested_field=nested_field, bad_value=bad_value):
-                with tempfile.TemporaryDirectory() as tmp_dir:
-                    bundle_path = Path(tmp_dir) / f"bad-bundle-summary-{nested_field}.json"
-                    package_path = Path(tmp_dir) / "package.json"
-                    self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
-                    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-                    bundle["bundle_summary"][nested_field] = bad_value
-                    bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-
-                    exit_code, stdout, stderr = self.run_cli(
-                        "package",
-                "final-package",
-                "--input",
-                        str(FROZEN_EXAMPLE_PATH),
-                        "--artifact-bundle",
-                        str(bundle_path),
-                        "--output",
-                        str(package_path),
-                        "--format",
-                        "json",
-                    )
-
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
-                    self.assertFalse(payload["ok"])
-                    self.assertIn(f"artifact bundle bundle_summary.{nested_field} 非法", payload["error"])
-                    self.assertFalse(package_path.exists())
-
-
+                self._assert_bundle_path_fails(
+                    f"bad-bundle-summary-{nested_field}.json",
+                    ("bundle_summary", nested_field),
+                    f"artifact bundle bundle_summary.{nested_field} 非法",
+                    bad_value=bad_value,
+                )

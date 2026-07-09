@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import tempfile
 from pathlib import Path
 
@@ -22,23 +21,7 @@ class TestFinalPackageBuildCases(FinalPackageCliCase):
             package_path = Path(tmp_dir) / "freeze-ready-package.json"
             self._build_bundle(FREEZE_READY_EXAMPLE_PATH, bundle_path)
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FREEZE_READY_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertTrue(payload["ok"])
+            payload = self._assert_final_package_ok(FREEZE_READY_EXAMPLE_PATH, bundle_path, package_path)
             self.assertEqual(payload["command"], "build-final-package")
             self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
             self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
@@ -89,11 +72,11 @@ class TestFinalPackageBuildCases(FinalPackageCliCase):
                 },
             )
 
-            bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+            bundle = self._read_json(bundle_path)
             self.assertEqual(final_package["deliverables"]["artifact_bundle_manifest"], bundle["manifest"])
             self.assertEqual(len(final_package["deliverables"]["final_draft_outline"]), 2)
             self.assertEqual(len(final_package["deliverables"]["final_draft_sections"]), 3)
-            self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), final_package)
+            self.assertEqual(self._read_json(package_path), final_package)
 
     def test_build_final_package_writes_submission_frozen_package(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -101,22 +84,7 @@ class TestFinalPackageBuildCases(FinalPackageCliCase):
             package_path = Path(tmp_dir) / "frozen-package.json"
             self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FROZEN_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
+            payload = self._assert_final_package_ok(FROZEN_EXAMPLE_PATH, bundle_path, package_path)
             final_package = payload["final_package"]
             self.assertEqual(final_package["freeze_manifest"]["draft_status"], "frozen")
             self.assertEqual(final_package["freeze_manifest"]["checkpoint_status"], "submission_frozen")
@@ -129,24 +97,10 @@ class TestFinalPackageBuildCases(FinalPackageCliCase):
             package_path = Path(tmp_dir) / "forward-progress-package.json"
             self._build_bundle(FORWARD_PROGRESS_EXAMPLE_PATH, bundle_path)
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(FORWARD_PROGRESS_EXAMPLE_PATH),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(package_path),
-                "--format",
-                "json",
+            self._assert_final_package_fails(
+                FORWARD_PROGRESS_EXAMPLE_PATH,
+                bundle_path,
+                package_path,
+                "checkpoint_status",
             )
-
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("checkpoint_status", payload["error"])
-            self.assertFalse(package_path.exists())
-
 
