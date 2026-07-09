@@ -211,14 +211,159 @@ class WorkspaceSummaryTest(unittest.TestCase):
             )
         )
 
-    def test_validation_rejects_direction_screening_with_only_one_direction_candidate(self) -> None:
-        document = self.load_example(DIRECTION_EXAMPLE_PATH)
-        document["direction_hypotheses"] = [document["direction_hypotheses"][0]]
+    def test_validation_rejects_stage_invariants(self) -> None:
+        def remove_draft_question_links(document: dict[str, object]) -> None:
+            for item in document["application_drafts"][0]["sections"]:
+                if "linked_object_ids" in item:
+                    item["linked_object_ids"] = [
+                        ref for ref in item["linked_object_ids"] if ref != "question-immune-fibrosis"
+                    ]
 
-        self.assert_validation_error(
-            document,
-            ("direction_hypotheses", "P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。"),
+        def remove_outline_fit_links(document: dict[str, object]) -> None:
+            for item in document["application_drafts"][0]["outline"]:
+                if "linked_object_ids" in item:
+                    item["linked_object_ids"] = [ref for ref in item["linked_object_ids"] if ref != "fit-001"]
+
+        def mark_frozen_without_completed_revision(document: dict[str, object]) -> None:
+            document["revision_plans"][0]["execution_status"] = "planned"
+            for field in ("pre_revision_version_label", "post_revision_version_label", "comparison_summary"):
+                document["revision_plans"][0].pop(field, None)
+
+        def mark_completed_revision_without_revised_draft(document: dict[str, object]) -> None:
+            document["lifecycle_stage"] = "revision"
+            document["revision_plans"][0]["execution_status"] = "completed"
+            document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+            document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+            document["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成修订。"
+
+        cases = (
+            (
+                "direction_screening_min_candidates",
+                DIRECTION_EXAMPLE_PATH,
+                lambda document: document.__setitem__("direction_hypotheses", [document["direction_hypotheses"][0]]),
+                ("direction_hypotheses", "P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。"),
+            ),
+            (
+                "fit_alignment_active_mapping",
+                FIT_EXAMPLE_PATH,
+                lambda document: document["current_selection"].pop("active_fit_mapping_id"),
+                ("current_selection.active_fit_mapping_id", "fit_alignment 阶段必须显式绑定当前 ApplicantFitMapping。"),
+            ),
+            (
+                "drafting_sections",
+                DRAFTING_EXAMPLE_PATH,
+                lambda document: document["application_drafts"][0].__setitem__("sections", []),
+                ("application_drafts.sections", "drafting 阶段的激活草稿必须包含非空 sections。"),
+            ),
+            (
+                "drafting_selected_question_links",
+                DRAFTING_EXAMPLE_PATH,
+                remove_draft_question_links,
+                ("application_drafts.sections", "drafting 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。"),
+            ),
+            (
+                "outline_fit_links",
+                OUTLINE_EXAMPLE_PATH,
+                remove_outline_fit_links,
+                ("application_drafts", "激活草稿必须显式链接当前问题对应的 ApplicantFitMapping。"),
+            ),
+            (
+                "question_refinement_binding",
+                QUESTION_EXAMPLE_PATH,
+                lambda document: document["current_selection"].pop("selected_question_id"),
+                ("current_selection.selected_question_id", "question_refinement 阶段必须显式绑定当前 ScientificQuestionCard。"),
+            ),
+            (
+                "missing_selected_question_reference",
+                EXAMPLE_PATH,
+                lambda document: document["current_selection"].__setitem__("selected_question_id", "question-missing"),
+                ("current_selection.selected_question_id", "未找到对应的 ScientificQuestionCard。"),
+            ),
+            (
+                "critique_current_question",
+                CRITIQUE_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][0].__setitem__("current_scientific_question", "错误的问题表述"),
+                ("mentor_critiques.current_scientific_question", "激活批注必须锚定当前选中问题的 core_question。"),
+            ),
+            (
+                "critique_revision_plan_items",
+                EXAMPLE_PATH,
+                lambda document: document["revision_plans"][0].__setitem__("items", []),
+                ("revision_plans", "critique 阶段必须存在非空 RevisionPlan。"),
+            ),
+            (
+                "frozen_ready_verdict",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "frozen"),
+                    document["gates"].__setitem__("presubmission_frozen", True),
+                ),
+                ("mentor_critiques.verdict", "frozen 阶段的激活批注 verdict 必须为 ready_for_submission。"),
+            ),
+            (
+                "frozen_draft_status",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "frozen"),
+                    document["gates"].__setitem__("presubmission_frozen", True),
+                    document["mentor_critiques"][0].__setitem__("verdict", "ready_for_submission"),
+                ),
+                ("application_drafts.status", "frozen 阶段的激活草稿 status 必须为 frozen。"),
+            ),
+            (
+                "forced_rollback_reason",
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][1].pop("forced_rollback_reason"),
+                ("mentor_critiques.forced_rollback_reason", "forced_rollback_stage 存在时必须提供非空 forced_rollback_reason。"),
+            ),
+            (
+                "forced_rollback_target",
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][1].__setitem__("forced_rollback_stage", "question_refinement"),
+                ("mentor_critiques.forced_rollback_stage", "verdict=major_revision 时 forced_rollback_stage 只能是 argument_building 或 fit_alignment。"),
+            ),
+            (
+                "non_frozen_presubmission_gate",
+                READY_FOR_SUBMISSION_EXAMPLE_PATH,
+                lambda document: document["gates"].__setitem__("presubmission_frozen", True),
+                ("gates.presubmission_frozen", "只有 frozen 阶段才允许将 presubmission_frozen 置为 true。"),
+            ),
+            (
+                "frozen_completed_revision",
+                PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+                mark_frozen_without_completed_revision,
+                ("revision_plans.execution_status", "frozen 阶段的激活 RevisionPlan.execution_status 必须为 completed。"),
+            ),
+            (
+                "frozen_blocking_issues",
+                PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][0]["feasibility"].__setitem__(
+                    "blocking_issues", ["仍缺关键闭环实验。"]
+                ),
+                ("mentor_critiques.feasibility.blocking_issues", "frozen 阶段的 feasibility.blocking_issues 必须为空。"),
+            ),
+            (
+                "completed_revision_requires_revised_draft",
+                EXAMPLE_PATH,
+                mark_completed_revision_without_revised_draft,
+                ("application_drafts.status", "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。"),
+            ),
+            (
+                "revised_draft_requires_completed_revision",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "revision"),
+                    document["application_drafts"][0].__setitem__("status", "revised"),
+                    document["application_drafts"][0].__setitem__("version_label", "v0.4"),
+                ),
+                ("revision_plans.execution_status", "激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。"),
+            ),
         )
+        for label, path, mutate, expected in cases:
+            with self.subTest(case=label):
+                document = copy.deepcopy(self.load_example(path))
+                mutate(document)
+                self.assert_validation_error(document, expected)
 
     def test_summary_exposes_direction_question_binding_for_question_refinement(self) -> None:
         summary = self.summarize_example(QUESTION_EXAMPLE_PATH)
@@ -246,15 +391,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_fit_mapping"]["argument_chain_id"], "arg-001")
         self.assertIsNone(summary["active_draft"])
 
-    def test_validation_rejects_fit_alignment_without_active_fit_mapping_binding(self) -> None:
-        document = self.load_example(FIT_EXAMPLE_PATH)
-        document["current_selection"].pop("active_fit_mapping_id")
-
-        self.assert_validation_error(
-            document,
-            ("current_selection.active_fit_mapping_id", "fit_alignment 阶段必须显式绑定当前 ApplicantFitMapping。"),
-        )
-
     def test_summary_exposes_draft_audit_for_drafting(self) -> None:
         summary = self.summarize_example(DRAFTING_EXAMPLE_PATH)
 
@@ -264,85 +400,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_draft"]["section_count"], 3)
         self.assertIsNone(summary["active_revision_plan"])
         self.assertIsNone(summary["active_critique"])
-
-    def test_validation_rejects_drafting_without_sections(self) -> None:
-        document = self.load_example(DRAFTING_EXAMPLE_PATH)
-        document["application_drafts"][0]["sections"] = []
-
-        self.assert_validation_error(
-            document,
-            ("application_drafts.sections", "drafting 阶段的激活草稿必须包含非空 sections。"),
-        )
-
-    def test_validation_rejects_drafting_without_selected_question_link_in_sections(self) -> None:
-        document = self.load_example(DRAFTING_EXAMPLE_PATH)
-        for item in document["application_drafts"][0]["sections"]:
-            if "linked_object_ids" in item:
-                item["linked_object_ids"] = [
-                    ref for ref in item["linked_object_ids"] if ref != "question-immune-fibrosis"
-                ]
-
-        self.assert_validation_error(
-            document,
-            ("application_drafts.sections", "drafting 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。"),
-        )
-
-    def test_validation_rejects_outline_without_fit_mapping_link_on_active_draft(self) -> None:
-        document = self.load_example(OUTLINE_EXAMPLE_PATH)
-        for item in document["application_drafts"][0]["outline"]:
-            if "linked_object_ids" in item:
-                item["linked_object_ids"] = [ref for ref in item["linked_object_ids"] if ref != "fit-001"]
-
-        self.assert_validation_error(
-            document,
-            ("application_drafts", "激活草稿必须显式链接当前问题对应的 ApplicantFitMapping。"),
-        )
-
-    def test_validation_rejects_question_refinement_without_selected_question_binding(self) -> None:
-        document = self.load_example(QUESTION_EXAMPLE_PATH)
-        document["current_selection"].pop("selected_question_id")
-
-        self.assert_validation_error(
-            document,
-            ("current_selection.selected_question_id", "question_refinement 阶段必须显式绑定当前 ScientificQuestionCard。"),
-        )
-
-    def test_validation_rejects_missing_selected_question_reference(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["current_selection"]["selected_question_id"] = "question-missing"
-
-        self.assert_validation_error(
-            document,
-            ("current_selection.selected_question_id", "未找到对应的 ScientificQuestionCard。"),
-        )
-
-    def test_validation_rejects_critique_with_mismatched_current_scientific_question(self) -> None:
-        document = self.load_example(CRITIQUE_EXAMPLE_PATH)
-        document["mentor_critiques"][0]["current_scientific_question"] = "错误的问题表述"
-
-        self.assert_validation_error(
-            document,
-            ("mentor_critiques.current_scientific_question", "激活批注必须锚定当前选中问题的 core_question。"),
-        )
-
-    def test_validation_rejects_empty_revision_plan_during_critique(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["revision_plans"][0]["items"] = []
-
-        self.assert_validation_error(
-            document,
-            ("revision_plans", "critique 阶段必须存在非空 RevisionPlan。"),
-        )
-
-    def test_validation_rejects_frozen_stage_without_ready_for_submission_verdict(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "frozen"
-        document["gates"]["presubmission_frozen"] = True
-
-        self.assert_validation_error(
-            document,
-            ("mentor_critiques.verdict", "frozen 阶段的激活批注 verdict 必须为 ready_for_submission。"),
-        )
 
     def test_validation_rejects_revision_stage_with_invalid_verdicts(self) -> None:
         for verdict in ("major_reframe", "ready_for_submission"):
@@ -369,17 +426,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
 
                 self.assert_validation_error(document, ("application_drafts.status", message))
 
-    def test_validation_rejects_frozen_stage_without_frozen_draft_status(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "frozen"
-        document["gates"]["presubmission_frozen"] = True
-        document["mentor_critiques"][0]["verdict"] = "ready_for_submission"
-
-        self.assert_validation_error(
-            document,
-            ("application_drafts.status", "frozen 阶段的激活草稿 status 必须为 frozen。"),
-        )
-
     def test_validation_rejects_terminal_verdicts_with_forced_rollback_stage(self) -> None:
         for verdict in ("minor_revision", "ready_for_submission"):
             with self.subTest(verdict=verdict):
@@ -390,53 +436,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
                     document,
                     ("mentor_critiques.forced_rollback_stage", f"{verdict} 不得携带 forced_rollback_stage。"),
                 )
-
-    def test_validation_rejects_forced_rollback_stage_without_reason(self) -> None:
-        document = copy.deepcopy(self.load_example(FORCED_ROLLBACK_EXAMPLE_PATH))
-        document["mentor_critiques"][1].pop("forced_rollback_reason")
-
-        self.assert_validation_error(
-            document,
-            ("mentor_critiques.forced_rollback_reason", "forced_rollback_stage 存在时必须提供非空 forced_rollback_reason。"),
-        )
-
-    def test_validation_rejects_major_revision_with_invalid_forced_rollback_target(self) -> None:
-        document = copy.deepcopy(self.load_example(FORCED_ROLLBACK_EXAMPLE_PATH))
-        document["mentor_critiques"][1]["forced_rollback_stage"] = "question_refinement"
-
-        self.assert_validation_error(
-            document,
-            ("mentor_critiques.forced_rollback_stage", "verdict=major_revision 时 forced_rollback_stage 只能是 argument_building 或 fit_alignment。"),
-        )
-
-    def test_validation_rejects_non_frozen_stage_with_presubmission_gate_marked_true(self) -> None:
-        document = self.load_example(READY_FOR_SUBMISSION_EXAMPLE_PATH)
-        document["gates"]["presubmission_frozen"] = True
-
-        self.assert_validation_error(
-            document,
-            ("gates.presubmission_frozen", "只有 frozen 阶段才允许将 presubmission_frozen 置为 true。"),
-        )
-
-    def test_validation_rejects_frozen_stage_without_completed_revision_plan(self) -> None:
-        document = self.load_example(PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-        document["revision_plans"][0]["execution_status"] = "planned"
-        for field in ("pre_revision_version_label", "post_revision_version_label", "comparison_summary"):
-            document["revision_plans"][0].pop(field, None)
-
-        self.assert_validation_error(
-            document,
-            ("revision_plans.execution_status", "frozen 阶段的激活 RevisionPlan.execution_status 必须为 completed。"),
-        )
-
-    def test_validation_rejects_frozen_stage_with_criterion_blocking_issues(self) -> None:
-        document = self.load_example(PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-        document["mentor_critiques"][0]["feasibility"]["blocking_issues"] = ["仍缺关键闭环实验。"]
-
-        self.assert_validation_error(
-            document,
-            ("mentor_critiques.feasibility.blocking_issues", "frozen 阶段的 feasibility.blocking_issues 必须为空。"),
-        )
 
     def test_summary_exposes_revision_audit_for_completed_revision(self) -> None:
         summary = self.summarize_example(REVISION_EXAMPLE_PATH)
@@ -494,30 +493,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_revision_plan"]["execution_status"], "planned")
         self.assertEqual(summary["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
         self.assertEqual(summary["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
-
-    def test_validation_rejects_completed_revision_without_revised_status_switch(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "revision"
-        document["revision_plans"][0]["execution_status"] = "completed"
-        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
-        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
-        document["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成修订。"
-
-        self.assert_validation_error(
-            document,
-            ("application_drafts.status", "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。"),
-        )
-
-    def test_validation_rejects_revised_status_without_completed_revision_evidence(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "revision"
-        document["application_drafts"][0]["status"] = "revised"
-        document["application_drafts"][0]["version_label"] = "v0.4"
-
-        self.assert_validation_error(
-            document,
-            ("revision_plans.execution_status", "激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。"),
-        )
 
 if __name__ == "__main__":
     unittest.main()

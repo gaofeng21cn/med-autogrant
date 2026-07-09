@@ -86,79 +86,55 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 self.assertTrue(payload["ok"])
                 self.assertEqual(payload[field], expected)
 
-    def test_grant_intake_audit_dispatches_workspace_surface(self) -> None:
-        expected_payload = {
-            "ok": True,
-            "command": "grant-intake-audit",
-            "grant_run_id": "grant-run-test",
-            "workspace_id": "workspace-test",
-            "draft_id": None,
-            "lifecycle_stage": "input_intake",
-            "input_path": str(INPUT_EXAMPLE_PATH),
-            "grant_intake_audit": {
-                "audit_kind": "grant_intake_audit",
-                "intake_status": "ready",
-            },
-        }
-
-        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-            entry = entry_class.return_value
-            entry.dispatch.return_value = expected_payload
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
+    def test_grant_intake_surfaces_dispatch_workspace_surface(self) -> None:
+        cases = (
+            (
                 "intake-audit",
-                "--input",
-                str(INPUT_EXAMPLE_PATH),
-                "--format",
-                "json",
-            )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        entry.dispatch.assert_called_once_with(
-            {
-                "command": "grant-intake-audit",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-            }
-        )
-
-    def test_grant_evidence_grounding_dispatches_workspace_surface(self) -> None:
-        expected_payload = {
-            "ok": True,
-            "command": "grant-evidence-grounding",
-            "grant_run_id": "grant-run-test",
-            "workspace_id": "workspace-test",
-            "draft_id": None,
-            "lifecycle_stage": "input_intake",
-            "input_path": str(INPUT_EXAMPLE_PATH),
-            "grant_evidence_grounding": {
-                "grounding_kind": "grant_evidence_grounding",
-                "grounding_status": "intake_grounded",
-            },
-        }
-
-        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-            entry = entry_class.return_value
-            entry.dispatch.return_value = expected_payload
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
+                "grant-intake-audit",
+                "grant_intake_audit",
+                {"audit_kind": "grant_intake_audit", "intake_status": "ready"},
+            ),
+            (
                 "evidence-grounding",
-                "--input",
-                str(INPUT_EXAMPLE_PATH),
-                "--format",
-                "json",
-            )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        entry.dispatch.assert_called_once_with(
-            {
-                "command": "grant-evidence-grounding",
-                "input_path": str(INPUT_EXAMPLE_PATH),
-            }
+                "grant-evidence-grounding",
+                "grant_evidence_grounding",
+                {"grounding_kind": "grant_evidence_grounding", "grounding_status": "intake_grounded"},
+            ),
         )
+        for cli_command, domain_command, payload_key, payload_value in cases:
+            with self.subTest(command=domain_command):
+                expected_payload = {
+                    "ok": True,
+                    "command": domain_command,
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": None,
+                    "lifecycle_stage": "input_intake",
+                    "input_path": str(INPUT_EXAMPLE_PATH),
+                    payload_key: payload_value,
+                }
+
+                with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
+                    entry = entry_class.return_value
+                    entry.dispatch.return_value = expected_payload
+                    exit_code, stdout, stderr = self.run_cli(
+                        "workspace",
+                        cli_command,
+                        "--input",
+                        str(INPUT_EXAMPLE_PATH),
+                        "--format",
+                        "json",
+                    )
+
+                self.assertEqual(exit_code, 0)
+                self.assertEqual(stderr, "")
+                self.assertEqual(json.loads(stdout), expected_payload)
+                entry.dispatch.assert_called_once_with(
+                    {
+                        "command": domain_command,
+                        "input_path": str(INPUT_EXAMPLE_PATH),
+                    }
+                )
 
     def test_execute_critique_pass_accepts_executor_override(self) -> None:
         expected_payload = {
@@ -226,79 +202,54 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertNotIn("current_stage_summary:", stdout)
         self.assertNotIn("next_system_action:", stdout)
 
-    def test_validate_workspace_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
+    def test_workspace_plain_text_prefers_human_facing_labels(self) -> None:
+        cases = (
+            (
                 "validate",
-                "--input",
-            str(EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("校验结果: True", stdout)
-        self.assertIn("错误数量: 0", stdout)
-        self.assertNotIn("grant_run_id:", stdout)
-        self.assertNotIn("workspace_id:", stdout)
-        self.assertNotIn("lifecycle_stage:", stdout)
-        self.assertNotIn("error_count:", stdout)
-
-    def test_summarize_workspace_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
+                EXAMPLE_PATH,
+                ("当前 grant run:", "当前 workspace:", "当前阶段: 批注审阅", "校验结果: True", "错误数量: 0"),
+                ("grant_run_id:", "workspace_id:", "lifecycle_stage:", "error_count:"),
+            ),
+            (
                 "summarize",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前模式:", stdout)
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("当前方向:", stdout)
-        self.assertIn("当前问题:", stdout)
-        self.assertIn("当前 fit 映射:", stdout)
-        self.assertIn("当前草稿:", stdout)
-        self.assertIn("当前批注结论:", stdout)
-        self.assertNotIn("selected_direction:", stdout)
-        self.assertNotIn("selected_question:", stdout)
-        self.assertNotIn("active_fit_mapping:", stdout)
-        self.assertNotIn("active_draft:", stdout)
-        self.assertNotIn("active_critique_verdict:", stdout)
-
-    def test_critique_summary_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
+                CRITIQUE_EXAMPLE_PATH,
+                (
+                    "当前 grant run:",
+                    "当前 workspace:",
+                    "当前模式:",
+                    "当前阶段: 批注审阅",
+                    "当前方向:",
+                    "当前问题:",
+                    "当前 fit 映射:",
+                    "当前草稿:",
+                    "当前批注结论:",
+                ),
+                ("selected_direction:", "selected_question:", "active_fit_mapping:", "active_draft:", "active_critique_verdict:"),
+            ),
+            (
                 "critique-summary",
-                "--input",
-            str(EXAMPLE_PATH),
-            "--format",
-            "text",
+                EXAMPLE_PATH,
+                ("当前 grant run:", "当前 workspace:", "当前批注编号:", "当前草稿编号:", "当前结论:", "整体诊断:", "建议下一阶段:"),
+                ("critique_id:", "draft_id:", "verdict:", "overall_diagnosis:", "recommended_next_stage:"),
+            ),
         )
+        for command, input_path, expected_fragments, forbidden_fragments in cases:
+            with self.subTest(command=command):
+                exit_code, stdout, stderr = self.run_cli(
+                    "workspace",
+                    command,
+                    "--input",
+                    str(input_path),
+                    "--format",
+                    "text",
+                )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前批注编号:", stdout)
-        self.assertIn("当前草稿编号:", stdout)
-        self.assertIn("当前结论:", stdout)
-        self.assertIn("整体诊断:", stdout)
-        self.assertIn("建议下一阶段:", stdout)
-        self.assertNotIn("critique_id:", stdout)
-        self.assertNotIn("draft_id:", stdout)
-        self.assertNotIn("verdict:", stdout)
-        self.assertNotIn("overall_diagnosis:", stdout)
-        self.assertNotIn("recommended_next_stage:", stdout)
+                self.assertEqual(exit_code, 0)
+                self.assertEqual(stderr, "")
+                for fragment in expected_fragments:
+                    self.assertIn(fragment, stdout)
+                for fragment in forbidden_fragments:
+                    self.assertNotIn(fragment, stdout)
 
     def test_mainline_phase_resolves_next_selector(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -353,38 +304,21 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             with self.subTest(example=example_path.name):
                 self.assert_next_step_case(example_path, current_stage, recommended_stage)
 
-    def test_next_step_routes_major_reframe_back_to_question_refinement(self) -> None:
-        payload = self.assert_next_step_case(
-            MAJOR_REFRAME_EXAMPLE_PATH,
-            "critique",
-            "question_refinement",
+    def test_next_step_routes_branch_cases(self) -> None:
+        cases = (
+            (MAJOR_REFRAME_EXAMPLE_PATH, "critique", "question_refinement", "重塑科学问题", None),
+            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "frozen", "ready_for_submission", None),
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "forced rollback", ("forced_rollback_stage", "argument_building")),
+            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "frozen", None, ("presubmission_frozen", True)),
         )
-        self.assertIn("重塑科学问题", payload["reason"])
-
-    def test_next_step_routes_ready_for_submission_to_frozen(self) -> None:
-        payload = self.assert_next_step_case(
-            READY_FOR_SUBMISSION_EXAMPLE_PATH,
-            "critique",
-            "frozen",
-        )
-        self.assertIn("ready_for_submission", payload["reason"])
-
-    def test_next_step_routes_forced_rollback_to_argument_building(self) -> None:
-        payload = self.assert_next_step_case(
-            FORCED_ROLLBACK_EXAMPLE_PATH,
-            "critique",
-            "argument_building",
-        )
-        self.assertEqual(payload["forced_rollback_stage"], "argument_building")
-        self.assertIn("forced rollback", payload["reason"])
-
-    def test_next_step_keeps_presubmission_frozen_workspace_at_frozen(self) -> None:
-        payload = self.assert_next_step_case(
-            PRESUBMISSION_FROZEN_EXAMPLE_PATH,
-            "frozen",
-            "frozen",
-        )
-        self.assertTrue(payload["presubmission_frozen"])
+        for example_path, current_stage, recommended_stage, reason_fragment, expected_field in cases:
+            with self.subTest(example=example_path.name):
+                payload = self.assert_next_step_case(example_path, current_stage, recommended_stage)
+                if reason_fragment is not None:
+                    self.assertIn(reason_fragment, payload["reason"])
+                if expected_field is not None:
+                    field, expected = expected_field
+                    self.assertEqual(payload[field], expected)
 
 
 if __name__ == "__main__":
