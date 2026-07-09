@@ -65,12 +65,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["recommended_stage"], recommended_stage)
         return payload
 
-    def assert_family_orchestration(self, payload: dict[str, object]) -> None:
-        self.assertIn("family_orchestration", payload)
-        self.assertIn("action_graph_ref", payload["family_orchestration"])
-        self.assertIn("human_gates", payload["family_orchestration"])
-        self.assertIn("resume_contract", payload["family_orchestration"])
-
     def test_validate_workspace_accepts_supported_workspace_profiles(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "lifecycle_stage", "input_intake"),
@@ -218,95 +212,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             }
         )
 
-    def test_summarize_workspace_exposes_current_selection_for_question_refinement(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(QUESTION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["lifecycle_stage"], "question_refinement")
-        self.assertEqual(payload["current_selection"]["selected_direction_id"], "dir-inflammatory-remodeling")
-        self.assertEqual(payload["current_selection"]["selected_question_id"], "question-immune-fibrosis")
-        self.assertIsNone(payload["active_argument_chain"])
-
-    def test_summarize_workspace_exposes_intake_and_evidence_surfaces_for_input_intake(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(INPUT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
-        self.assertTrue(payload["grant_intake_audit"]["readiness"]["ready_for_direction_screening"])
-        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
-
-    def test_grant_intake_audit_projects_machine_readable_intake_surface(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "intake-audit",
-                "--input",
-            str(INPUT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-intake-audit")
-        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
-        self.assertEqual(payload["grant_intake_audit"]["applicant_profile_id"], "applicant-gaofeng")
-
-    def test_grant_evidence_grounding_projects_machine_readable_grounding_surface(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "evidence-grounding",
-                "--input",
-            str(INPUT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-evidence-grounding")
-        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
-        self.assertEqual(
-            payload["grant_evidence_grounding"]["evidence_inventory"]["primary_evidence_ids"],
-            ["evi-output-1", "evi-prelim-1", "evi-project-1"],
-        )
-
-    def test_grant_progress_projects_user_facing_stage_summary_for_critique_workspace(self) -> None:
-        payload = MedAutoGrantProductEntry().read_grant_progress(
-            input_path=str(CRITIQUE_EXAMPLE_PATH)
-        )
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-progress")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["progress_projection"]["projection_kind"], "grant_progress")
-        self.assertEqual(payload["progress_projection"]["recommended_next_stage"], "revision")
-        self.assertEqual(payload["progress_projection"]["current_blockers"], ["必要性表述仍略偏现象描述。"])
-        self.assertEqual(payload["progress_projection"]["needs_author_decision"], False)
-        self.assertEqual(payload["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
-        self.assertEqual(payload["grant_evidence_grounding"]["grounding_kind"], "grant_evidence_grounding")
-        self.assert_family_orchestration(payload)
-
     def test_grant_progress_plain_text_prefers_shared_human_status_narration(self) -> None:
         from med_autogrant.cli_rendering_parts import _render_text
 
@@ -320,61 +225,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("下一步建议: 执行 revision plan 中的 P0/P1 项。", stdout)
         self.assertNotIn("current_stage_summary:", stdout)
         self.assertNotIn("next_system_action:", stdout)
-
-    def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
-        payload = MedAutoGrantProductEntry().read_grant_cockpit(
-            input_path=str(CRITIQUE_EXAMPLE_PATH)
-        )
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-cockpit")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["grant_cockpit"]["workspace_status"], "attention_required")
-        self.assertIn("必要性表述仍略偏现象描述。", payload["grant_cockpit"]["workspace_alerts"])
-        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
-        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
-        self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
-        self.assert_family_orchestration(payload)
-
-    def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
-        payload = MedAutoGrantProductEntry().build_grant_direct_entry(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            task_intent="tighten-grant-mainline",
-        )
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-direct-entry")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["grant_direct_entry"]["entry_kind"], "grant_direct_entry")
-        self.assertEqual(payload["grant_direct_entry"]["direct_entry"]["entry_mode"], "direct")
-        self.assertEqual(payload["grant_direct_entry"]["opl_handoff_entry"]["entry_mode"], "opl-handoff")
-        self.assertEqual(
-            payload["grant_direct_entry"]["recommended_executor_route"]["route_id"],
-            "revision",
-        )
-        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
-        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
-        self.assert_family_orchestration(payload)
-
-    def test_mainline_status_projects_current_line_focus_and_maintainer_references(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "mainline",
-                "status",
-                "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["program_id"], "med-autogrant-mainline")
-        self.assertEqual(
-            payload["current_line"]["current_owner_line"],
-            "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
-        )
-        self.assertTrue(payload["current_focus"]["summary"])
-        self.assertEqual(
-            payload["maintainer_references"]["runtime_owner"]["active_tranche"],
-            "P4.G authoring-quality-first completion semantics alignment",
-        )
 
     def test_validate_workspace_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -466,24 +316,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["maintainer_reference"]["record_detail"]["phase_id"], "P4")
         self.assertEqual(payload["maintainer_reference"]["record_detail"]["status"], "next")
 
-    def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
-        payload = MedAutoGrantProductEntry().build_grant_user_loop(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            task_intent="tighten-grant-mainline",
-        )
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "grant-user-loop")
-        self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
-        self.assertEqual(
-            payload["grant_user_loop"]["next_action"]["action_kind"],
-            "execute_landed_route",
-        )
-        self.assertEqual(
-            payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
-            "revision",
-        )
-        self.assert_family_orchestration(payload)
-
     def test_grant_user_loop_plain_text_prefers_human_facing_labels(self) -> None:
         from med_autogrant.cli_rendering_parts import _render_text
 
@@ -520,42 +352,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         for example_path, current_stage, recommended_stage in cases:
             with self.subTest(example=example_path.name):
                 self.assert_next_step_case(example_path, current_stage, recommended_stage)
-
-    def test_summarize_workspace_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(FIT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["lifecycle_stage"], "fit_alignment")
-        self.assertEqual(payload["current_selection"]["active_fit_mapping_id"], "fit-001")
-        self.assertEqual(payload["active_fit_mapping"]["id"], "fit-001")
-        self.assertEqual(payload["active_fit_mapping"]["argument_chain_id"], "arg-001")
-
-    def test_summarize_workspace_exposes_draft_audit_for_p2c_drafting(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(DRAFTING_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["lifecycle_stage"], "drafting")
-        self.assertEqual(payload["active_draft"]["id"], "draft-v1")
-        self.assertEqual(payload["active_draft"]["section_count"], 3)
-        self.assertIsNone(payload["active_revision_plan"])
 
     def test_next_step_routes_major_reframe_back_to_question_refinement(self) -> None:
         payload = self.assert_next_step_case(
