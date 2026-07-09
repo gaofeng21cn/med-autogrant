@@ -13,13 +13,6 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from support.cli import run_cli  # noqa: E402
-from support.workspaces import (  # noqa: E402
-    write_completed_revision_workspace,
-    write_empty_revision_items_workspace,
-    write_outline_only_critique_workspace,
-    write_revision_completed_without_revised_workspace,
-    write_revision_outline_workspace,
-)
 from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 
 
@@ -35,7 +28,6 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
-RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
 PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_input_intake.json"
@@ -52,181 +44,53 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(stderr, "")
         return json.loads(stdout)
 
-    def test_validate_workspace_accepts_p2a_input_intake_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
+    def run_workspace_json(self, command: str, input_path: Path) -> dict[str, object]:
+        return self.run_json_cli(
             "workspace",
-                "validate",
-                "--input",
-            str(INPUT_EXAMPLE_PATH),
+            command,
+            "--input",
+            str(input_path),
             "--format",
             "json",
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "input_intake")
+    def assert_next_step_case(
+        self,
+        example_path: Path,
+        current_stage: str,
+        recommended_stage: str,
+    ) -> dict[str, object]:
+        payload = self.run_workspace_json("next-step", example_path)
+        self.assertEqual(payload["current_stage"], current_stage)
+        self.assertEqual(payload["recommended_stage"], recommended_stage)
+        return payload
 
-    def test_validate_workspace_accepts_p2a_direction_screening_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(DIRECTION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
+    def assert_family_orchestration(self, payload: dict[str, object]) -> None:
+        self.assertIn("family_orchestration", payload)
+        self.assertIn("action_graph_ref", payload["family_orchestration"])
+        self.assertIn("human_gates", payload["family_orchestration"])
+        self.assertIn("resume_contract", payload["family_orchestration"])
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "direction_screening")
+    def test_validate_workspace_accepts_supported_workspace_profiles(self) -> None:
+        cases = [
+            (INPUT_EXAMPLE_PATH, "lifecycle_stage", "input_intake"),
+            (DIRECTION_EXAMPLE_PATH, "lifecycle_stage", "direction_screening"),
+            (ARGUMENT_EXAMPLE_PATH, "lifecycle_stage", "argument_building"),
+            (FIT_EXAMPLE_PATH, "lifecycle_stage", "fit_alignment"),
+            (OUTLINE_EXAMPLE_PATH, "lifecycle_stage", "outline"),
+            (DRAFTING_EXAMPLE_PATH, "lifecycle_stage", "drafting"),
+            (CRITIQUE_EXAMPLE_PATH, "lifecycle_stage", "critique"),
+            (REVISION_EXAMPLE_PATH, "lifecycle_stage", "revision"),
+            (MAJOR_REFRAME_EXAMPLE_PATH, "lifecycle_stage", "critique"),
+            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "lifecycle_stage", "critique"),
+            (NON_NSFC_INPUT_EXAMPLE_PATH, "workspace_id", "nih-r21-demo-001"),
+        ]
 
-    def test_validate_workspace_accepts_non_nsfc_profiled_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(NON_NSFC_INPUT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["workspace_id"], "nih-r21-demo-001")
-
-    def test_validate_workspace_accepts_p2b_argument_building_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(ARGUMENT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "argument_building")
-
-    def test_validate_workspace_accepts_p2b_fit_alignment_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(FIT_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "fit_alignment")
-
-    def test_validate_workspace_accepts_p2b_outline_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(OUTLINE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "outline")
-
-    def test_validate_workspace_accepts_p2c_drafting_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(DRAFTING_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "drafting")
-
-    def test_validate_workspace_accepts_p2c_critique_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-
-    def test_validate_workspace_accepts_p2c_revision_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(REVISION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "revision")
-
-    def test_validate_workspace_accepts_p3a_major_reframe_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(MAJOR_REFRAME_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-
-    def test_validate_workspace_accepts_p3a_ready_for_submission_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "validate",
-                "--input",
-            str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
+        for example_path, field, expected in cases:
+            with self.subTest(example=example_path.name):
+                payload = self.run_workspace_json("validate", example_path)
+                self.assertTrue(payload["ok"])
+                self.assertEqual(payload[field], expected)
 
     def test_grant_intake_audit_dispatches_workspace_surface(self) -> None:
         expected_payload = {
@@ -441,10 +305,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["progress_projection"]["needs_author_decision"], False)
         self.assertEqual(payload["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
         self.assertEqual(payload["grant_evidence_grounding"]["grounding_kind"], "grant_evidence_grounding")
-        self.assertIn("family_orchestration", payload)
-        self.assertIn("action_graph_ref", payload["family_orchestration"])
-        self.assertIn("human_gates", payload["family_orchestration"])
-        self.assertIn("resume_contract", payload["family_orchestration"])
+        self.assert_family_orchestration(payload)
 
     def test_grant_progress_plain_text_prefers_shared_human_status_narration(self) -> None:
         from med_autogrant.cli_rendering_parts import _render_text
@@ -472,10 +333,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
         self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
-        self.assertIn("family_orchestration", payload)
-        self.assertIn("action_graph_ref", payload["family_orchestration"])
-        self.assertIn("human_gates", payload["family_orchestration"])
-        self.assertIn("resume_contract", payload["family_orchestration"])
+        self.assert_family_orchestration(payload)
 
     def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
         payload = MedAutoGrantProductEntry().build_grant_direct_entry(
@@ -494,10 +352,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         )
         self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
         self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
-        self.assertIn("family_orchestration", payload)
-        self.assertIn("action_graph_ref", payload["family_orchestration"])
-        self.assertIn("human_gates", payload["family_orchestration"])
-        self.assertIn("resume_contract", payload["family_orchestration"])
+        self.assert_family_orchestration(payload)
 
     def test_mainline_status_projects_current_line_focus_and_maintainer_references(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -627,10 +482,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
             "revision",
         )
-        self.assertIn("family_orchestration", payload)
-        self.assertIn("action_graph_ref", payload["family_orchestration"])
-        self.assertIn("human_gates", payload["family_orchestration"])
-        self.assertIn("resume_contract", payload["family_orchestration"])
+        self.assert_family_orchestration(payload)
 
     def test_grant_user_loop_plain_text_prefers_human_facing_labels(self) -> None:
         from med_autogrant.cli_rendering_parts import _render_text
@@ -652,29 +504,22 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertNotIn("next_action:", stdout)
         self.assertNotIn("run_recommended_route:", stdout)
 
-    def test_next_step_routes_each_p2a_stage_forward(self) -> None:
+    def test_next_step_routes_stage_sequence_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),
             (DIRECTION_EXAMPLE_PATH, "direction_screening", "question_refinement"),
             (QUESTION_EXAMPLE_PATH, "question_refinement", "argument_building"),
+            (ARGUMENT_EXAMPLE_PATH, "argument_building", "fit_alignment"),
+            (FIT_EXAMPLE_PATH, "fit_alignment", "outline"),
+            (OUTLINE_EXAMPLE_PATH, "outline", "drafting"),
+            (DRAFTING_EXAMPLE_PATH, "drafting", "critique"),
+            (CRITIQUE_EXAMPLE_PATH, "critique", "revision"),
+            (REVISION_EXAMPLE_PATH, "revision", "critique"),
         ]
 
         for example_path, current_stage, recommended_stage in cases:
             with self.subTest(example=example_path.name):
-                exit_code, stdout, stderr = self.run_cli(
-                    "workspace",
-                "next-step",
-                "--input",
-                    str(example_path),
-                    "--format",
-                    "json",
-                )
-
-                self.assertEqual(exit_code, 0)
-                self.assertEqual(stderr, "")
-                payload = json.loads(stdout)
-                self.assertEqual(payload["current_stage"], current_stage)
-                self.assertEqual(payload["recommended_stage"], recommended_stage)
+                self.assert_next_step_case(example_path, current_stage, recommended_stage)
 
     def test_summarize_workspace_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -694,30 +539,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["active_fit_mapping"]["id"], "fit-001")
         self.assertEqual(payload["active_fit_mapping"]["argument_chain_id"], "arg-001")
 
-    def test_next_step_routes_each_p2b_stage_forward(self) -> None:
-        cases = [
-            (ARGUMENT_EXAMPLE_PATH, "argument_building", "fit_alignment"),
-            (FIT_EXAMPLE_PATH, "fit_alignment", "outline"),
-            (OUTLINE_EXAMPLE_PATH, "outline", "drafting"),
-        ]
-
-        for example_path, current_stage, recommended_stage in cases:
-            with self.subTest(example=example_path.name):
-                exit_code, stdout, stderr = self.run_cli(
-                    "workspace",
-                "next-step",
-                "--input",
-                    str(example_path),
-                    "--format",
-                    "json",
-                )
-
-                self.assertEqual(exit_code, 0)
-                self.assertEqual(stderr, "")
-                payload = json.loads(stdout)
-                self.assertEqual(payload["current_stage"], current_stage)
-                self.assertEqual(payload["recommended_stage"], recommended_stage)
-
     def test_summarize_workspace_exposes_draft_audit_for_p2c_drafting(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "workspace",
@@ -736,113 +557,38 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["active_draft"]["section_count"], 3)
         self.assertIsNone(payload["active_revision_plan"])
 
-    def test_next_step_routes_each_p2c_stage_forward(self) -> None:
-        cases = [
-            (DRAFTING_EXAMPLE_PATH, "drafting", "critique"),
-            (CRITIQUE_EXAMPLE_PATH, "critique", "revision"),
-            (REVISION_EXAMPLE_PATH, "revision", "critique"),
-        ]
-
-        for example_path, current_stage, recommended_stage in cases:
-            with self.subTest(example=example_path.name):
-                exit_code, stdout, stderr = self.run_cli(
-                    "workspace",
-                "next-step",
-                "--input",
-                    str(example_path),
-                    "--format",
-                    "json",
-                )
-
-                self.assertEqual(exit_code, 0)
-                self.assertEqual(stderr, "")
-                payload = json.loads(stdout)
-                self.assertEqual(payload["current_stage"], current_stage)
-                self.assertEqual(payload["recommended_stage"], recommended_stage)
-
     def test_next_step_routes_major_reframe_back_to_question_refinement(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(MAJOR_REFRAME_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = self.assert_next_step_case(
+            MAJOR_REFRAME_EXAMPLE_PATH,
+            "critique",
+            "question_refinement",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["current_stage"], "critique")
-        self.assertEqual(payload["recommended_stage"], "question_refinement")
         self.assertIn("重塑科学问题", payload["reason"])
 
     def test_next_step_routes_ready_for_submission_to_frozen(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = self.assert_next_step_case(
+            READY_FOR_SUBMISSION_EXAMPLE_PATH,
+            "critique",
+            "frozen",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["current_stage"], "critique")
-        self.assertEqual(payload["recommended_stage"], "frozen")
         self.assertIn("ready_for_submission", payload["reason"])
 
     def test_next_step_routes_forced_rollback_to_argument_building(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(FORCED_ROLLBACK_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = self.assert_next_step_case(
+            FORCED_ROLLBACK_EXAMPLE_PATH,
+            "critique",
+            "argument_building",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["current_stage"], "critique")
-        self.assertEqual(payload["recommended_stage"], "argument_building")
         self.assertEqual(payload["forced_rollback_stage"], "argument_building")
         self.assertIn("forced rollback", payload["reason"])
 
     def test_next_step_keeps_presubmission_frozen_workspace_at_frozen(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = self.assert_next_step_case(
+            PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+            "frozen",
+            "frozen",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertEqual(payload["current_stage"], "frozen")
-        self.assertEqual(payload["recommended_stage"], "frozen")
         self.assertTrue(payload["presubmission_frozen"])
-
-    def write_invalid_workspace(self) -> Path:
-        return write_empty_revision_items_workspace(EXAMPLE_PATH)
-
-    def write_outline_only_critique_workspace(self) -> Path:
-        return write_outline_only_critique_workspace(EXAMPLE_PATH)
-
-    def write_revision_outline_workspace(self) -> Path:
-        return write_revision_outline_workspace(EXAMPLE_PATH)
-
-    def write_revision_completed_without_revised_workspace(self) -> Path:
-        return write_revision_completed_without_revised_workspace(EXAMPLE_PATH)
-
-    def write_completed_revision_workspace(self) -> Path:
-        return write_completed_revision_workspace(EXAMPLE_PATH)
 
 
 if __name__ == "__main__":
