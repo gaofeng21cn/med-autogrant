@@ -18,6 +18,98 @@ DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
+def _critique_closeout_packet(*, owner: str) -> dict[str, object]:
+    return {
+        "mentor_critique": {
+            "metadata": {
+                "schema_version": "v1",
+                "created_at": "2026-04-13T12:00:00Z",
+                "updated_at": "2026-04-13T12:00:00Z",
+                "source_mode": "auto",
+                "owner": owner,
+            },
+            "critique_id": "critique-v1",
+            "draft_id": "should-be-overridden",
+            "overall_diagnosis": "草稿已经具备基本结构，但必要性链条仍需要收紧。",
+            "current_scientific_question": "should-be-overridden",
+            "suggested_question": "需要把关键科学问题改写得更聚焦机制级未知。",
+            "verdict": "major_revision",
+            "necessity_scientific_value": {
+                "weight": 1,
+                "score": 76,
+                "judgment": "必要性主线方向正确，但机制未知和理论损失还需要更锋利。",
+                "blocking_issues": [
+                    "尚未明确说明为什么现有现象学研究不能回答机制问题。"
+                ],
+            },
+            "applicant_fit": {
+                "weight": 1,
+                "score": 81,
+                "judgment": "申请人基础较好，但既有成果与当前问题映射还不够直接。",
+                "blocking_issues": [
+                    "需要让前期成果直接回指当前机制验证路径。"
+                ],
+            },
+            "feasibility": {
+                "weight": 1,
+                "score": 79,
+                "judgment": "总体可行，但关键实验闭环还需要更明确。",
+                "blocking_issues": [],
+            },
+            "logic_chain_repairs": [
+                "补出从现象相关到机制未知的关键过渡段。"
+            ],
+            "applicant_fit_repairs": [
+                "把申请人既有单细胞资源与关键验证节点逐点绑定。"
+            ],
+            "blocking_issues": [
+                "必要性表述仍偏现象描述。"
+            ],
+        },
+        "revision_plan": {
+            "metadata": {
+                "schema_version": "v1",
+                "created_at": "2026-04-13T12:05:00Z",
+                "updated_at": "2026-04-13T12:05:00Z",
+                "source_mode": "auto",
+                "owner": owner,
+            },
+            "revision_plan_id": "revision-v1",
+            "draft_id": "should-be-overridden",
+            "critique_id": "should-be-overridden",
+            "pre_revision_version_label": "should-be-overridden",
+            "post_revision_version_label": "v0.2",
+            "items": [
+                {
+                    "item_id": "rev-item-1",
+                    "priority": "p0",
+                    "action_type": "rebuild_argument",
+                    "target_ref": "section:basis",
+                    "action": "收紧立项依据中从现象到机制缺口的推导。",
+                    "done_criteria": "读者能清楚理解知识边界、未知机制与理论损失。",
+                    "required_input_ids": [
+                        "arg-001",
+                        "question-immune-fibrosis"
+                    ],
+                    "mutation_payload": {
+                        "operation": "replace_draft_section",
+                        "target_section_key": "basis",
+                        "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程。",
+                        "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
+                        "linked_object_ids": [
+                            "arg-001",
+                            "question-immune-fibrosis"
+                        ],
+                    },
+                }
+            ],
+            "next_review_focus": [
+                "必要性链条是否真正闭合"
+            ],
+        },
+    }
+
+
 class CritiqueExecutionDocumentTest(unittest.TestCase):
     def test_critique_executor_kind_vocabulary_rejects_retired_aliases(self) -> None:
         from med_autogrant.critique_executor import _resolve_critique_executor_kind
@@ -89,95 +181,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
         def fake_codex_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
             self.assertEqual(cwd, DRAFTING_EXAMPLE_PATH.resolve().parent)
-            return {
-                "mentor_critique": {
-                    "metadata": {
-                        "schema_version": "v1",
-                        "created_at": "2026-04-13T12:00:00Z",
-                        "updated_at": "2026-04-13T12:00:00Z",
-                        "source_mode": "auto",
-                        "owner": "Codex CLI critique executor",
-                    },
-                    "critique_id": "critique-v1",
-                    "draft_id": "should-be-overridden",
-                    "overall_diagnosis": "草稿已经具备基本结构，但必要性链条仍需要收紧。",
-                    "current_scientific_question": "should-be-overridden",
-                    "suggested_question": "需要把关键科学问题改写得更聚焦机制级未知。",
-                    "verdict": "major_revision",
-                    "necessity_scientific_value": {
-                        "weight": 1,
-                        "score": 76,
-                        "judgment": "必要性主线方向正确，但机制未知和理论损失还需要更锋利。",
-                        "blocking_issues": [
-                            "尚未明确说明为什么现有现象学研究不能回答机制问题。"
-                        ],
-                    },
-                    "applicant_fit": {
-                        "weight": 1,
-                        "score": 81,
-                        "judgment": "申请人基础较好，但既有成果与当前问题映射还不够直接。",
-                        "blocking_issues": [
-                            "需要让前期成果直接回指当前机制验证路径。"
-                        ],
-                    },
-                    "feasibility": {
-                        "weight": 1,
-                        "score": 79,
-                        "judgment": "总体可行，但关键实验闭环还需要更明确。",
-                        "blocking_issues": [],
-                    },
-                    "logic_chain_repairs": [
-                        "补出从现象相关到机制未知的关键过渡段。"
-                    ],
-                    "applicant_fit_repairs": [
-                        "把申请人既有单细胞资源与关键验证节点逐点绑定。"
-                    ],
-                    "blocking_issues": [
-                        "必要性表述仍偏现象描述。"
-                    ],
-                },
-                "revision_plan": {
-                    "metadata": {
-                        "schema_version": "v1",
-                        "created_at": "2026-04-13T12:05:00Z",
-                        "updated_at": "2026-04-13T12:05:00Z",
-                        "source_mode": "auto",
-                        "owner": "Codex CLI critique executor",
-                    },
-                    "revision_plan_id": "revision-v1",
-                    "draft_id": "should-be-overridden",
-                    "critique_id": "should-be-overridden",
-                    "pre_revision_version_label": "should-be-overridden",
-                    "post_revision_version_label": "v0.2",
-                    "items": [
-                        {
-                            "item_id": "rev-item-1",
-                            "priority": "p0",
-                            "action_type": "rebuild_argument",
-                            "target_ref": "section:basis",
-                            "action": "收紧立项依据中从现象到机制缺口的推导。",
-                            "done_criteria": "读者能清楚理解知识边界、未知机制与理论损失。",
-                            "required_input_ids": [
-                                "arg-001",
-                                "question-immune-fibrosis"
-                            ],
-                            "mutation_payload": {
-                                "operation": "replace_draft_section",
-                                "target_section_key": "basis",
-                                "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程。",
-                                "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
-                                "linked_object_ids": [
-                                    "arg-001",
-                                    "question-immune-fibrosis"
-                                ],
-                            },
-                        }
-                    ],
-                    "next_review_focus": [
-                        "必要性链条是否真正闭合"
-                    ],
-                },
-            }
+            return _critique_closeout_packet(owner="Codex CLI critique executor")
 
         payload = build_critique_execution_document(
             document=document,
@@ -380,93 +384,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 "exit_code": 0,
                 "closeout_packet": {
                     "surface_kind": "mag_critique_closeout_packet",
-                    "mentor_critique": {
-                        "metadata": {
-                            "schema_version": "v1",
-                            "created_at": "2026-04-13T12:00:00Z",
-                            "updated_at": "2026-04-13T12:00:00Z",
-                            "source_mode": "auto",
-                            "owner": "OPL executor adapter critique receipt owner",
-                        },
-                        "critique_id": "critique-v1",
-                        "draft_id": "should-be-overridden",
-                        "overall_diagnosis": "草稿已经具备基本结构，但必要性链条仍需要收紧。",
-                        "current_scientific_question": "should-be-overridden",
-                        "suggested_question": "需要把关键科学问题改写得更聚焦机制级未知。",
-                        "verdict": "major_revision",
-                        "necessity_scientific_value": {
-                            "weight": 1,
-                            "score": 76,
-                            "judgment": "必要性主线方向正确，但机制未知和理论损失还需要更锋利。",
-                            "blocking_issues": [
-                                "尚未明确说明为什么现有现象学研究不能回答机制问题。"
-                            ],
-                        },
-                        "applicant_fit": {
-                            "weight": 1,
-                            "score": 81,
-                            "judgment": "申请人基础较好，但既有成果与当前问题映射还不够直接。",
-                            "blocking_issues": [
-                                "需要让前期成果直接回指当前机制验证路径。"
-                            ],
-                        },
-                        "feasibility": {
-                            "weight": 1,
-                            "score": 79,
-                            "judgment": "总体可行，但关键实验闭环还需要更明确。",
-                            "blocking_issues": [],
-                        },
-                        "logic_chain_repairs": [
-                            "补出从现象相关到机制未知的关键过渡段。"
-                        ],
-                        "applicant_fit_repairs": [
-                            "把申请人既有单细胞资源与关键验证节点逐点绑定。"
-                        ],
-                        "blocking_issues": [
-                            "必要性表述仍偏现象描述。"
-                        ],
-                    },
-                    "revision_plan": {
-                        "metadata": {
-                            "schema_version": "v1",
-                            "created_at": "2026-04-13T12:05:00Z",
-                            "updated_at": "2026-04-13T12:05:00Z",
-                            "source_mode": "auto",
-                            "owner": "OPL executor adapter critique receipt owner",
-                        },
-                        "revision_plan_id": "revision-v1",
-                        "draft_id": "should-be-overridden",
-                        "critique_id": "should-be-overridden",
-                        "pre_revision_version_label": "should-be-overridden",
-                        "post_revision_version_label": "v0.2",
-                        "items": [
-                            {
-                                "item_id": "rev-item-1",
-                                "priority": "p0",
-                                "action_type": "rebuild_argument",
-                                "target_ref": "section:basis",
-                                "action": "收紧立项依据中从现象到机制缺口的推导。",
-                                "done_criteria": "读者能清楚理解知识边界、未知机制与理论损失。",
-                                "required_input_ids": [
-                                    "arg-001",
-                                    "question-immune-fibrosis"
-                                ],
-                                "mutation_payload": {
-                                    "operation": "replace_draft_section",
-                                    "target_section_key": "basis",
-                                    "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程。",
-                                    "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
-                                    "linked_object_ids": [
-                                        "arg-001",
-                                        "question-immune-fibrosis"
-                                    ],
-                                },
-                            }
-                        ],
-                        "next_review_focus": [
-                            "必要性链条是否真正闭合"
-                        ],
-                    },
+                    **_critique_closeout_packet(owner="OPL executor adapter critique receipt owner"),
                 },
                 "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
                 "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
