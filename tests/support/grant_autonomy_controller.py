@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import unittest
 from typing import Any
 
 
@@ -9,23 +8,6 @@ OPL_STAGE_ATTEMPT = {
     "executor_kind": "codex_cli",
     "attempt_lease_ref": "lease:opl/stage-run/mag/test/owner-chain-default-caller",
 }
-
-
-def assert_no_stage_transition_authority(
-    test_case: unittest.TestCase,
-    boundary: dict[str, Any],
-) -> None:
-    test_case.assertFalse(
-        any(
-            boundary[key]
-            for key in (
-                "mag_writes_stage_current_pointer",
-                "mag_writes_stage_terminal_state",
-                "mag_selects_next_opl_stage",
-            )
-        )
-    )
-    test_case.assertTrue(boundary["requires_opl_stage_transition_authority"])
 
 
 def selection_start_request() -> dict[str, Any]:

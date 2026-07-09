@@ -16,7 +16,6 @@ from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controlle
 from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
 from tests.support.grant_autonomy_controller import (  # noqa: E402
     OPL_STAGE_ATTEMPT,
-    assert_no_stage_transition_authority,
     closure_package,
     quality_result,
     selection_start_request,
