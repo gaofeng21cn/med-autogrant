@@ -25,6 +25,19 @@ from tests.support.grant_autonomy_controller import (  # noqa: E402
 
 
 class GrantAutonomyControllerTest(unittest.TestCase):
+    def assert_status(self, result: dict[str, Any], status: str, reason: str) -> None:
+        self.assertEqual(result["controller_status"], status)
+        self.assertEqual(result["termination_reason"], reason)
+
+    def assert_typed_blocker_return(self, result: dict[str, Any], ref: str | None = None) -> None:
+        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        if ref is not None:
+            self.assertEqual(result["authority_return"]["refs"]["typed_blocker_ref"], ref)
+
+    def assert_mag_does_not_own_attempt_ledger(self, boundary: dict[str, Any]) -> None:
+        self.assertFalse(boundary["mag_long_running_driver"])
+        self.assertFalse(boundary["mag_owns_attempt_ledger"])
+
     def test_spend_budget_step_records_action_trace_without_overrun(self) -> None:
         action_trace: list[dict[str, Any]] = []
 
@@ -127,8 +140,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=quality_evaluator,
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assert_status(result, "failed_closed", "opl_provider_attempt_required")
         self.assertEqual(result["controller_plan"]["current_tranche"], "quality_closure")
         self.assertEqual(
             result["controller_plan"]["tranche_objective"],
@@ -150,8 +162,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             result["controller_execution_boundary"]["execution_scope"],
             "bounded_single_opl_provider_attempt",
         )
-        self.assertFalse(result["controller_execution_boundary"]["mag_long_running_driver"])
-        self.assertFalse(result["controller_execution_boundary"]["mag_owns_attempt_ledger"])
+        self.assert_mag_does_not_own_attempt_ledger(result["controller_execution_boundary"])
         assert_no_stage_transition_authority(self, result["controller_execution_boundary"])
         self.assertEqual(result["controller_execution_boundary"]["controller_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
         self.assertEqual(
@@ -162,7 +173,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             result["authority_return"]["allowed_return_shapes"],
             ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
         )
-        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        self.assert_typed_blocker_return(result)
         self.assertEqual(result["authority_return"]["body_policy"], "refs_only_no_runtime_or_grant_body")
         assert_no_stage_transition_authority(self, result["authority_return"]["authority_boundary"])
 
@@ -200,8 +211,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "blockers_not_cleared")
+        self.assert_status(result, "failed_closed", "blockers_not_cleared")
         self.assertEqual(result["active_closure_package"]["closure_id"], "scientific-question")
         self.assertEqual(result["active_closure_package"]["action"], "rollback_upstream")
         self.assertEqual(
@@ -211,7 +221,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["controller_plan"]["active_closure_package_id"], "scientific-question")
         self.assertEqual(result["controller_plan"]["active_closure_package_action"], "rollback_upstream")
         self.assertEqual(result["controller_plan"]["active_closure_package_target_stage"], "question_refinement")
-        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        self.assert_typed_blocker_return(result)
         self.assertIn("typed_blocker_ref", result["authority_return"]["refs"])
 
     def test_family_governance_policy_shapes_default_controller_plan(self) -> None:
@@ -369,15 +379,14 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=quality_evaluator,
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assert_status(result, "failed_closed", "opl_provider_attempt_required")
         self.assertEqual(selector_calls["count"], 2)
         self.assertEqual(initializer_calls["count"], 2)
         self.assertEqual(quality_calls["count"], 1)
         self.assertEqual(result["reselection_decisions"][0]["action"], "reselect")
         self.assertTrue(result["reselection_decisions"][0]["accepted"])
         self.assertEqual(result["tranche_history"][0]["next_controller_action"], "reselect_project_profile")
-        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        self.assert_typed_blocker_return(result)
 
     def test_selection_input_path_yields_after_one_domain_attempt_for_opl_provider_residency(self) -> None:
         call_order: list[str] = []
@@ -439,19 +448,14 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=quality_evaluator,
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assert_status(result, "failed_closed", "opl_provider_attempt_required")
         self.assertEqual(result["completed_cycles"], 1)
         self.assertEqual(
             call_order,
             ["selector", "initializer", "quality_evaluator", "mainline_runner"],
         )
         self.assertEqual(result["controller_plan"]["next_controller_action"], "continue_mainline")
-        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
-        self.assertEqual(
-            result["authority_return"]["refs"]["typed_blocker_ref"],
-            "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required",
-        )
+        self.assert_typed_blocker_return(result, "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required")
         self.assertEqual(
             result["controller_execution_boundary"]["max_domain_cycles_per_invocation"],
             1,
@@ -493,16 +497,14 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=quality_evaluator,
         )
 
-        self.assertEqual(result["controller_status"], "near_submission_candidate")
-        self.assertEqual(result["termination_reason"], "goal_reached")
+        self.assert_status(result, "near_submission_candidate", "goal_reached")
         self.assertEqual(result["completed_cycles"], 1)
         self.assertEqual(selector_calls, [])
         self.assertEqual(
             result["controller_execution_boundary"]["execution_scope"],
             "bounded_single_opl_provider_attempt",
         )
-        self.assertFalse(result["controller_execution_boundary"]["mag_long_running_driver"])
-        self.assertFalse(result["controller_execution_boundary"]["mag_owns_attempt_ledger"])
+        self.assert_mag_does_not_own_attempt_ledger(result["controller_execution_boundary"])
         self.assertEqual(result["authority_return"]["result_shape"], "no_regression_evidence")
 
     def test_fail_closed_when_missing_required_input(self) -> None:
@@ -517,8 +519,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=lambda workspace: workspace,
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "missing_required_input")
+        self.assert_status(result, "failed_closed", "missing_required_input")
         self.assertEqual(result["action_trace"], [])
 
     def test_fail_closed_when_quality_result_is_unstructured(self) -> None:
@@ -530,8 +531,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=lambda _workspace: ["bad-payload"],
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "quality_evaluator_unstructured_result")
+        self.assert_status(result, "failed_closed", "quality_evaluator_unstructured_result")
 
     def test_fail_closed_when_budget_exhausted(self) -> None:
         request = selection_start_request()
@@ -550,8 +550,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "budget_exhausted")
+        self.assert_status(result, "failed_closed", "budget_exhausted")
 
     def test_fail_closed_when_blockers_not_cleared(self) -> None:
         result = run_grant_autonomy_controller(
@@ -567,8 +566,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "blockers_not_cleared")
+        self.assert_status(result, "failed_closed", "blockers_not_cleared")
 
     def test_reselection_decision_respected_when_policy_enabled(self) -> None:
         request = selection_start_request()
@@ -630,18 +628,13 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_evaluator=quality_evaluator,
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assert_status(result, "failed_closed", "opl_provider_attempt_required")
         self.assertEqual(selection_calls["count"], 2)
         self.assertEqual(len(result["reselection_decisions"]), 1)
         self.assertTrue(result["reselection_decisions"][0]["accepted"])
         self.assertEqual(result["tranche_history"][0]["next_controller_action"], "reselect_project_profile")
         self.assertEqual(result["tranche_history"][0]["decision_reason"], "方向与机会不匹配")
-        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
-        self.assertEqual(
-            result["authority_return"]["refs"]["typed_blocker_ref"],
-            "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required",
-        )
+        self.assert_typed_blocker_return(result, "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required")
 
     def test_fail_closed_when_rollback_policy_disallows_request(self) -> None:
         request = workspace_start_request()
@@ -671,8 +664,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(result["controller_status"], "failed_closed")
-        self.assertEqual(result["termination_reason"], "rollback_policy_disallowed")
+        self.assert_status(result, "failed_closed", "rollback_policy_disallowed")
         self.assertEqual(len(result["rollback_decisions"]), 1)
         self.assertFalse(result["rollback_decisions"][0]["accepted"])
         self.assertEqual(result["controller_plan"]["next_controller_action"], "fail_closed")
@@ -771,8 +763,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
 
         self.assertEqual(result["started_from_mode"], "controller_report")
-        self.assertEqual(result["controller_status"], "near_submission_candidate")
-        self.assertEqual(result["termination_reason"], "goal_reached")
+        self.assert_status(result, "near_submission_candidate", "goal_reached")
         self.assertEqual(result["completed_cycles"], 2)
         self.assertEqual(result["max_rounds_or_cycles"], 3)
         self.assertEqual(result["budget"]["max_total_steps"], 4)
