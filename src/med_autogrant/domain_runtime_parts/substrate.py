@@ -42,7 +42,7 @@ from med_autogrant.domain_entry_contract import (
     SERVICE_SAFE_ENTRY_SURFACE_KIND,
     build_domain_entry_contract,
 )
-from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
+from opl_harness_shared.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     build_grant_evidence_grounding,
     build_grant_intake_audit,

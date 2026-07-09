@@ -16,7 +16,7 @@ from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
 )
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.schema_subset_validator import SchemaSubsetValidator
+from opl_harness_shared.schema_validation import SchemaSubsetValidator
 from med_autogrant.runtime_defaults import (
     DEFAULT_EXECUTOR_OWNER,
     DEFAULT_RUNTIME_OWNER,

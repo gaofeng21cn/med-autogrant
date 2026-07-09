@@ -203,7 +203,7 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
         )
 
     def test_package_lifecycle_handoff_rejects_opl_export_ready_claim(self) -> None:
-        with self.assertRaisesRegex(WorkspaceStateError, "OPL.*export"):
+        with self.assertRaisesRegex(WorkspaceStateError, "cannot claim domain export"):
             _build_projection(
                 package_refs={**_package_refs(), "final_package_ref": "mag-package://final/p3c"},
                 gap_report=_gap_report(summary="bad claim"),

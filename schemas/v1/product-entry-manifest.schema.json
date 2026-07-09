@@ -1959,25 +1959,25 @@
       "additionalProperties": false,
       "required": [
         "helper_implementation_owner",
-        "mag_declares_helper_language_or_binary",
-        "mag_declares_backing_helper_ids",
-        "mag_can_write_domain_truth_from_helper",
-        "mag_quality_or_export_verdict_owner"
+        "domain_declares_helper_language_or_binary",
+        "domain_declares_backing_helper_ids",
+        "domain_can_write_domain_truth_from_helper",
+        "domain_quality_or_export_verdict_owner"
       ],
       "properties": {
         "helper_implementation_owner": {
           "const": "one-person-lab"
         },
-        "mag_declares_helper_language_or_binary": {
+        "domain_declares_helper_language_or_binary": {
           "const": false
         },
-        "mag_declares_backing_helper_ids": {
+        "domain_declares_backing_helper_ids": {
           "const": false
         },
-        "mag_can_write_domain_truth_from_helper": {
+        "domain_can_write_domain_truth_from_helper": {
           "const": false
         },
-        "mag_quality_or_export_verdict_owner": {
+        "domain_quality_or_export_verdict_owner": {
           "const": "med-autogrant"
         }
       }

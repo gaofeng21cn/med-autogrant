@@ -87,7 +87,7 @@ def build_standard_domain_agent_skeleton(
                 ],
                 "source_refs": [
                     "src/med_autogrant/product_entry_parts/domain_handler.py",
-                    "src/med_autogrant/product_entry_parts/runtime_registration.py",
+                    "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
                     "src/med_autogrant/product_entry_parts/manifest_builder.py",
                     "src/med_autogrant/product_entry_parts/manifest_runtime_task_surfaces.py",
                 ],

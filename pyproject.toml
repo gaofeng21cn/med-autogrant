@@ -13,7 +13,7 @@ authors = [
   { name = "Gao Feng" }
 ]
 dependencies = [
-    "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@ee3829f968c6e055b23cd83f67aac76bace059cb#subdirectory=python/opl-harness-shared",
+    "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@e1e734031ab3ea45596c6ce131f611f296ca9746#subdirectory=python/opl-harness-shared",
 ]
 
 [project.optional-dependencies]

@@ -20,6 +20,32 @@ from med_autogrant.product_entry_parts.typed_blocker_projection import (
     package_submission_ready_human_gate_authority_boundary,
 )
 from med_autogrant.workspace_types import WorkspaceStateError
+from opl_harness_shared.owner_evidence import (
+    build_owner_evidence_reconciliation_inventory,
+    build_owner_evidence_reconciliation_proof,
+)
+
+
+_RECEIPT_RECONCILIATION_PROOF_PROFILE = {
+    "surface_kind": RECEIPT_RECONCILIATION_PROOF_KIND,
+    "state": "probe_reconciled_not_live_soak_complete",
+    "domain_id": TARGET_DOMAIN_ID,
+    "probe_scope": "controlled_soak_deferred_blocker_receipt_reconciliation",
+    "source_refs": [
+        "/product_entry_manifest/controlled_soak_no_regression_attempt",
+        "/product_entry_manifest/controlled_stage_attempt_projection",
+        "/product_entry_manifest/owner_receipt_contract",
+        "domain handler-dispatch stage-attempt/closeout",
+        "product owner-receipt-evidence",
+    ],
+    "owner_receipt_field": "mag_owner_receipt",
+}
+_RECEIPT_RECONCILIATION_INVENTORY_PROFILE = {
+    "surface_kind": RECEIPT_RECONCILIATION_INVENTORY_KIND,
+    "state": "read_projection_only_not_live_soak_complete",
+    "domain_id": TARGET_DOMAIN_ID,
+    "owner_receipt_field": "mag_owner_receipt",
+}
 
 
 def build_controlled_soak_receipt_reconciliation_proof(
@@ -37,66 +63,37 @@ def build_controlled_soak_receipt_reconciliation_proof(
         choices=RECEIPT_SHAPES,
         field_name="receipt_shape",
     )
-    typed_blocker = _reconciled_typed_blocker(receipt, closeout_result)
-    evidence_refs = _reconciled_no_regression_evidence_refs(receipt, closeout_result)
-    authority_boundary = {
-        "mag_owner_receipt_authority": True,
-        "opl_ref_consumer_only": True,
-        "can_declare_fundability_ready": False,
-        "can_declare_authoring_quality_ready": False,
-        "can_declare_submission_ready_export": False,
-    }
-    authority_boundary.update(package_submission_ready_human_gate_authority_boundary(receipt))
-    payload = {
-        "surface_kind": RECEIPT_RECONCILIATION_PROOF_KIND,
-        "version": "v1",
-        "state": "probe_reconciled_not_live_soak_complete",
-        "target_domain_id": TARGET_DOMAIN_ID,
-        "owner": TARGET_DOMAIN_ID,
-        "probe_scope": "controlled_soak_deferred_blocker_receipt_reconciliation",
-        "claims_production_long_run_soak_complete": False,
-        "rebuilds_opl_runtime": False,
-        "source_refs": [
-            "/product_entry_manifest/controlled_soak_no_regression_attempt",
-            "/product_entry_manifest/controlled_stage_attempt_projection",
-            "/product_entry_manifest/owner_receipt_contract",
-            "domain handler-dispatch stage-attempt/closeout",
-            "product owner-receipt-evidence",
-        ],
-        "opl_ledger": {
-            "ledger_ref": resolved_ledger_ref,
-            "role": "external_ref_for_reconciliation_only",
-            "mag_writes_opl_ledger": False,
-            "opl_holds_grant_truth": False,
-        },
-        "mag_owner_receipt": {
-            "receipt_ref": receipt_ref,
-            "receipt_id": require_nonempty_string_from_receipt(receipt, "receipt_id"),
-            "receipt_shape": receipt_shape,
-            "stage_id": require_nonempty_string_from_receipt(receipt, "stage_id"),
-            "source_ref": require_nonempty_string_from_receipt(receipt, "source_ref"),
-            "owner_receipt_contract_ref": require_nonempty_string_from_receipt(
+    authority_boundary = _authority_boundary(receipt)
+    try:
+        payload = build_owner_evidence_reconciliation_proof(
+            profile=_RECEIPT_RECONCILIATION_PROOF_PROFILE,
+            owner_receipt_projection={
+                "receipt_ref": receipt_ref,
+                "receipt_id": require_nonempty_string_from_receipt(receipt, "receipt_id"),
+                "receipt_shape": receipt_shape,
+                "stage_id": require_nonempty_string_from_receipt(receipt, "stage_id"),
+                "source_ref": require_nonempty_string_from_receipt(receipt, "source_ref"),
+                "owner_receipt_contract_ref": require_nonempty_string_from_receipt(
+                    receipt,
+                    "owner_receipt_contract_ref",
+                ),
+            },
+            ledger_ref=resolved_ledger_ref,
+            typed_blocker=_reconciled_typed_blocker(receipt, closeout_result),
+            no_regression_evidence_refs=_reconciled_no_regression_evidence_refs(
                 receipt,
-                "owner_receipt_contract_ref",
+                closeout_result,
             ),
-        },
-        "typed_blocker": typed_blocker,
-        "no_regression_evidence": {
-            "evidence_refs": evidence_refs,
-            "present": bool(evidence_refs),
-            "repo_tracked_projection_only": True,
-        },
-        "reconciliation": {
-            "status": _reconciliation_status(receipt_shape, typed_blocker, evidence_refs),
-            "receipt_ref_matches_domain_handler": _receipt_ref_matches_domain_handler(receipt_ref, closeout_result),
-            "opl_ledger_ref_matches_receipt_source": (
-                resolved_ledger_ref == require_nonempty_string_from_receipt(receipt, "source_ref")
+            closeout_payload_consumed=bool(closeout_result),
+            receipt_ref_matches_closeout=_receipt_ref_matches_domain_handler(
+                receipt_ref,
+                closeout_result,
             ),
-            "closeout_payload_consumed": bool(closeout_result),
-        },
-        "authority_boundary": authority_boundary,
-        "forbidden_write_proof": dict(receipt["forbidden_write_proof"]),
-    }
+            authority_boundary=authority_boundary,
+            forbidden_write_proof=dict(receipt["forbidden_write_proof"]),
+        )
+    except ValueError as exc:
+        raise WorkspaceStateError(str(exc)) from exc
     return {
         "ok": True,
         "command": "controlled-soak-receipt-reconciliation-proof",
@@ -113,8 +110,10 @@ def build_controlled_soak_receipt_reconciliation_inventory(
     resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
     if not owner_receipt_evidence_items:
         raise WorkspaceStateError("owner_receipt_evidence_items 至少需要一条 receipt evidence。")
-    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(domain_handler_closeout_results or [])
-    items: list[dict[str, Any]] = []
+    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(
+        domain_handler_closeout_results or []
+    )
+    proofs: list[dict[str, Any]] = []
     for receipt_payload in owner_receipt_evidence_items:
         receipt = require_owner_receipt_evidence(receipt_payload)
         receipt_ref = require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
@@ -123,60 +122,36 @@ def build_controlled_soak_receipt_reconciliation_inventory(
             opl_ledger_ref=resolved_ledger_ref,
             domain_handler_closeout_result=closeout_by_receipt_ref.get(receipt_ref),
         )["receipt_reconciliation_proof"]
-        items.append(
-            {
-                "receipt_ref": receipt_ref,
-                "receipt_shape": proof["mag_owner_receipt"]["receipt_shape"],
-                "stage_id": proof["mag_owner_receipt"]["stage_id"],
-                "source_ref": proof["mag_owner_receipt"]["source_ref"],
-                "reconciliation_status": proof["reconciliation"]["status"],
-                "receipt_ref_matches_domain_handler": proof["reconciliation"]["receipt_ref_matches_domain_handler"],
-                "opl_ledger_ref_matches_receipt_source": proof["reconciliation"][
-                    "opl_ledger_ref_matches_receipt_source"
-                ],
-                "typed_blocker_present": proof["typed_blocker"] is not None,
-                "no_regression_evidence_refs": list(proof["no_regression_evidence"]["evidence_refs"]),
-                "authority_boundary": dict(proof["authority_boundary"]),
-            }
+        proofs.append(proof)
+    try:
+        payload = build_owner_evidence_reconciliation_inventory(
+            profile=_RECEIPT_RECONCILIATION_INVENTORY_PROFILE,
+            proofs=proofs,
+            ledger_ref=resolved_ledger_ref,
+            closeout_result_count=len(closeout_by_receipt_ref),
+            authority_boundary=_authority_boundary(),
+            forbidden_write_proof=forbidden_write_proof(),
         )
-    payload = {
-        "surface_kind": RECEIPT_RECONCILIATION_INVENTORY_KIND,
-        "version": "v1",
-        "state": "read_projection_only_not_live_soak_complete",
-        "target_domain_id": TARGET_DOMAIN_ID,
-        "owner": TARGET_DOMAIN_ID,
-        "opl_ledger": {
-            "ledger_ref": resolved_ledger_ref,
-            "role": "external_ref_for_inventory_reconciliation_only",
-            "mag_writes_opl_ledger": False,
-            "opl_holds_grant_truth": False,
-        },
-        "summary": {
-            "item_count": len(items),
-            "domain_handler_closeout_result_count": len(closeout_by_receipt_ref),
-            "by_receipt_shape": _count_by(items, "receipt_shape"),
-            "by_reconciliation_status": _count_by(items, "reconciliation_status"),
-            "typed_blocker_count": sum(1 for item in items if item["typed_blocker_present"]),
-            "no_regression_evidence_ref_count": sum(
-                len(item["no_regression_evidence_refs"]) for item in items
-            ),
-        },
-        "items": items,
-        "claims_production_long_run_soak_complete": False,
-        "authority_boundary": {
-            "mag_owner_receipt_authority": True,
-            "opl_ref_consumer_only": True,
-            "can_declare_fundability_ready": False,
-            "can_declare_authoring_quality_ready": False,
-            "can_declare_submission_ready_export": False,
-        },
-        "forbidden_write_proof": forbidden_write_proof(),
-    }
+    except ValueError as exc:
+        raise WorkspaceStateError(str(exc)) from exc
     return {
         "ok": True,
         "command": "controlled-soak-receipt-reconciliation-inventory",
         "receipt_reconciliation_inventory": payload,
     }
+
+
+def _authority_boundary(receipt: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    boundary = {
+        "mag_owner_receipt_authority": True,
+        "opl_ref_consumer_only": True,
+        "can_declare_fundability_ready": False,
+        "can_declare_authoring_quality_ready": False,
+        "can_declare_submission_ready_export": False,
+    }
+    if receipt is not None:
+        boundary.update(package_submission_ready_human_gate_authority_boundary(receipt))
+    return boundary
 
 
 def _index_closeout_results_by_receipt_ref(
@@ -193,15 +168,10 @@ def _index_closeout_results_by_receipt_ref(
     return indexed
 
 
-def _count_by(items: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
-    counts: dict[str, int] = {}
-    for item in items:
-        value = _require_nonempty_string(item.get(key), field_name=key)
-        counts[value] = counts.get(value, 0) + 1
-    return counts
-
-
-def _receipt_ref_matches_domain_handler(receipt_ref: str, closeout_result: Mapping[str, Any]) -> bool | None:
+def _receipt_ref_matches_domain_handler(
+    receipt_ref: str,
+    closeout_result: Mapping[str, Any],
+) -> bool | None:
     if not closeout_result:
         return None
     return closeout_result.get("receipt_ref") == receipt_ref
@@ -235,15 +205,3 @@ def _reconciled_no_regression_evidence_refs(
         if receipt_ref not in refs:
             refs.append(receipt_ref)
     return refs
-
-
-def _reconciliation_status(
-    receipt_shape: str,
-    typed_blocker: Mapping[str, Any] | None,
-    evidence_refs: list[str],
-) -> str:
-    if receipt_shape == "typed_blocker" and typed_blocker is not None:
-        return "typed_blocker_reconciled"
-    if receipt_shape == "no_regression_evidence" and evidence_refs:
-        return "no_regression_evidence_reconciled"
-    return "domain_owner_receipt_reconciled"

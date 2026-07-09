@@ -52,7 +52,7 @@
       "cannot_absorb_reason": "OPL can absorb the registry shell, but cannot absorb MAG's domain id, stage semantics, or safe action metadata.",
       "classification": "declarative_pack_surface",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/runtime_registration.py",
+        "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
         "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
         "src/med_autogrant/product_entry_parts/manifest_runtime_companions.py"
       ],
@@ -67,7 +67,7 @@
         "safe_action_refs"
       ],
       "mag_role": "domain_descriptor_pack_input",
-      "migration_action": "Express as declarative grant pack metadata; OPL generated registry surfaces consume refs without MAG owning generic runtime registration.",
+      "migration_action": "Keep only declarative MAG registration metadata; the OPL shared runtime-registration builder owns validation and envelope assembly.",
       "module_id": "runtime_registration",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -77,6 +77,9 @@
         "provider_backed_runtime_registration"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.runtime_registration.build_stage_runtime_registration"
+      ],
       "retention_reason": "MAG must expose its domain id, stage pack refs, and safe action refs so OPL can discover the grant agent without owning grant truth."
     },
     {
@@ -225,7 +228,7 @@
         "grant_task_lock"
       ],
       "mag_role": "funding_call_task_lock_pack_input",
-      "migration_action": "Represent funding-call/task-lock requirements as declarative pack inputs; OPL owns source transport, freshness, and repair shell.",
+      "migration_action": "Keep funding-call/task-lock rules as domain inputs; OPL shared workspace and schema primitives own path resolution, materialization, Git boundary, and schema traversal.",
       "module_id": "source_intake_shell",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -235,6 +238,11 @@
         "freshness_repair_projection"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.workspace_boundary",
+        "opl_harness_shared.schema_validation.SchemaSubsetValidator",
+        "opl_harness_shared.product_entry_program_companions.build_product_entry_preflight"
+      ],
       "retention_reason": "Funding-call interpretation, applicant profile fit, and grant task lock are domain authority decisions."
     }
   ],
@@ -597,7 +605,7 @@
         "no_regression_evidence"
       ],
       "mag_role": "receipt_authority_owner",
-      "migration_action": "OPL should own receipt transport/ledger projection; MAG retains receipt authority and no-regression meaning.",
+      "migration_action": "MAG retains receipt validation, signing, typed-blocker meaning, and no-regression meaning; the OPL owner-evidence primitive owns reconciliation proof/inventory assembly and counting.",
       "module_id": "owner_receipt_and_no_regression_evidence",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -605,6 +613,10 @@
         "receipt_transport_and_ledger_projection"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.owner_evidence.build_owner_evidence_reconciliation_proof",
+        "opl_harness_shared.owner_evidence.build_owner_evidence_reconciliation_inventory"
+      ],
       "retention_reason": "Owner receipt is the domain authorization boundary for grant mutations."
     },
     {
@@ -747,7 +759,7 @@
         "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
         "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
         "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-        "src/med_autogrant/product_entry_parts/runtime_registration.py"
+        "src/med_autogrant/product_entry_parts/runtime_registration_profile.py"
       ],
       "current_surface_refs": [
         "/product_entry_manifest/lifecycle_guarded_apply_proof",
@@ -759,7 +771,7 @@
         "package_authority"
       ],
       "mag_role": "guarded_receipt_refs_adapter",
-      "migration_action": "Keep only owner receipt/blocker refs for OPL lifecycle shell; do not expose MAG package body, memory body, or lifecycle state.",
+      "migration_action": "Keep only MAG owner receipt/blocker refs and domain approval; OPL shared owner-evidence/runtime-registration primitives own reconciliation and lifecycle envelope assembly.",
       "module_id": "lifecycle_adapter",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -769,6 +781,10 @@
         "lifecycle_receipt_transport"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.owner_evidence",
+        "opl_harness_shared.runtime_registration.build_stage_runtime_registration"
+      ],
       "retention_reason": "Cleanup, restore, and retention events that touch grant artifacts need MAG owner receipt and package authority refs."
     },
     {
@@ -839,7 +855,7 @@
         "verdict_refs"
       ],
       "mag_role": "refs_counts_blockers_provider",
-      "migration_action": "Expose refs, counts, blockers, and verdict refs only; OPL owns display, SLO, repair projection, and workbench shell.",
+      "migration_action": "MAG supplies receipt refs and authority flags to the OPL owner-evidence primitive; OPL owns validation, counts, operator summary, display, SLO, and repair projection.",
       "module_id": "observability",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -849,6 +865,9 @@
         "repair_projection"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.owner_evidence.build_owner_evidence_observability_summary"
+      ],
       "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
     },
     {
@@ -1010,7 +1029,7 @@
         "manual_portal_boundary"
       ],
       "mag_role": "package_authority_and_gap_refs_provider",
-      "migration_action": "Expose package refs, gap refs, and verdict refs only; OPL owns lifecycle shell, restore/retention ledger, and package refs index.",
+      "migration_action": "MAG normalizes its export verdict and supplies a declarative lifecycle profile; the OPL shared artifact-lifecycle primitive owns refs-only validation and envelope assembly.",
       "module_id": "package_lifecycle_shell",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
@@ -1020,6 +1039,9 @@
         "package_refs_index"
       ],
       "owner": "med-autogrant",
+      "shared_primitive_refs": [
+        "opl_harness_shared.artifact_lifecycle.build_refs_only_artifact_lifecycle_handoff"
+      ],
       "retention_reason": "Submission-ready export is a grant-domain authority surface, not a generic artifact lifecycle success flag."
     },
     {

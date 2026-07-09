@@ -704,7 +704,7 @@
           "owner": "med-autogrant",
           "mag_role": "domain_descriptor_pack_input",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/runtime_registration.py",
+            "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
             "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
             "src/med_autogrant/product_entry_parts/manifest_runtime_companions.py"
           ],
@@ -714,8 +714,11 @@
             "contracts/runtime-program/opl-family-contract-adoption.json"
           ],
           "active_caller_status": "active_declarative_pack_projection",
-          "migration_action": "Express as declarative grant pack metadata; OPL generated registry surfaces consume refs without MAG owning generic runtime registration.",
+          "migration_action": "Keep only declarative MAG registration metadata; the OPL shared runtime-registration builder owns validation and envelope assembly.",
           "retention_reason": "MAG must expose its domain id, stage pack refs, and safe action refs so OPL can discover the grant agent without owning grant truth.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.runtime_registration.build_stage_runtime_registration"
+          ],
           "cannot_absorb_reason": "OPL can absorb the registry shell, but cannot absorb MAG's domain id, stage semantics, or safe action metadata.",
           "current_surface_refs": [
             "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
@@ -862,7 +865,7 @@
           "code_paths": [
             "src/med_autogrant/workspace.py",
             "src/med_autogrant/workspace_index.py",
-            "src/med_autogrant/workspace_scaffold.py",
+            "src/med_autogrant/workspace_profile.py",
             "src/med_autogrant/workspace_validation.py",
             "src/med_autogrant/product_entry_parts/preflight.py"
           ],
@@ -872,8 +875,13 @@
             "product manifest workspace_locator"
           ],
           "active_caller_status": "active_declarative_source_requirements_pack_projection",
-          "migration_action": "Represent funding-call/task-lock requirements as declarative pack inputs; OPL owns source transport, freshness, and repair shell.",
+          "migration_action": "Keep funding-call/task-lock rules as domain inputs; OPL shared workspace and schema primitives own path resolution, materialization, Git boundary, and schema traversal.",
           "retention_reason": "Funding-call interpretation, applicant profile fit, and grant task lock are domain authority decisions.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.workspace_boundary",
+            "opl_harness_shared.schema_validation.SchemaSubsetValidator",
+            "opl_harness_shared.product_entry_program_companions.build_product_entry_preflight"
+          ],
           "cannot_absorb_reason": "OPL can absorb source transport and freshness shell; it cannot own funding call interpretation or grant task lock.",
           "current_surface_refs": [
             "/product_entry_manifest/workspace_locator",
@@ -947,7 +955,7 @@
             "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
             "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
             "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-            "src/med_autogrant/product_entry_parts/runtime_registration.py"
+            "src/med_autogrant/product_entry_parts/runtime_registration_profile.py"
           ],
           "active_callers": [
             "product lifecycle-receipt-evidence",
@@ -955,8 +963,12 @@
             "domain handler dispatch lifecycle/receipt"
           ],
           "active_caller_status": "active_refs_only_adapter_no_generic_lifecycle_owner",
-          "migration_action": "Keep only owner receipt/blocker refs for OPL lifecycle shell; do not expose MAG package body, memory body, or lifecycle state.",
+          "migration_action": "Keep only MAG owner receipt/blocker refs and domain approval; OPL shared owner-evidence/runtime-registration primitives own reconciliation and lifecycle envelope assembly.",
           "retention_reason": "Cleanup, restore, and retention events that touch grant artifacts need MAG owner receipt and package authority refs.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.owner_evidence",
+            "opl_harness_shared.runtime_registration.build_stage_runtime_registration"
+          ],
           "cannot_absorb_reason": "Generic lifecycle transport is absorbable; domain mutation approval and package authority cannot move out of MAG.",
           "current_surface_refs": [
             "/product_entry_manifest/lifecycle_guarded_apply_proof",
@@ -1033,8 +1045,11 @@
             "product continuous-receipt-reconciliation"
           ],
           "active_caller_status": "active_refs_only_observability_adapter_no_repair_execution",
-          "migration_action": "Expose refs, counts, blockers, and verdict refs only; OPL owns display, SLO, repair projection, and workbench shell.",
+          "migration_action": "MAG supplies receipt refs and authority flags to the OPL owner-evidence primitive; OPL owns validation, counts, operator summary, display, SLO, and repair projection.",
           "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.owner_evidence.build_owner_evidence_observability_summary"
+          ],
           "cannot_absorb_reason": "OPL can absorb display/SLO/repair shell; it cannot create grant verdicts or mutate receipt authority from observability data.",
           "current_surface_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
@@ -1204,8 +1219,11 @@
             "domain runtime package surface"
           ],
           "active_caller_status": "active_refs_only_package_authority_adapter",
-          "migration_action": "Expose package refs, gap refs, and verdict refs only; OPL owns lifecycle shell, restore/retention ledger, and package refs index.",
+          "migration_action": "MAG normalizes its export verdict and supplies a declarative lifecycle profile; the OPL shared artifact-lifecycle primitive owns refs-only validation and envelope assembly.",
           "retention_reason": "Submission-ready export is a grant-domain authority surface, not a generic artifact lifecycle success flag.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.artifact_lifecycle.build_refs_only_artifact_lifecycle_handoff"
+          ],
           "cannot_absorb_reason": "OPL can absorb artifact lifecycle transport and gallery shell; it cannot declare MAG package readiness or export verdict.",
           "current_surface_refs": [
             "/product_entry_manifest/artifact_locator_contract",
@@ -1671,8 +1689,12 @@
             "domain handler dispatch stage-attempt/closeout"
           ],
           "active_caller_status": "active_mag_receipt_authority_keep",
-          "migration_action": "OPL should own receipt transport/ledger projection; MAG retains receipt authority and no-regression meaning.",
+          "migration_action": "MAG retains receipt validation, signing, typed-blocker meaning, and no-regression meaning; the OPL owner-evidence primitive owns reconciliation proof/inventory assembly and counting.",
           "retention_reason": "Owner receipt is the domain authorization boundary for grant mutations.",
+          "shared_primitive_refs": [
+            "opl_harness_shared.owner_evidence.build_owner_evidence_reconciliation_proof",
+            "opl_harness_shared.owner_evidence.build_owner_evidence_reconciliation_inventory"
+          ],
           "cannot_absorb_reason": "OPL ledger can store refs, but cannot sign or reinterpret MAG owner receipt.",
           "current_surface_refs": [
             "/product_entry_manifest/owner_receipt_contract",

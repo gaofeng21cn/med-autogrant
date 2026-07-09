@@ -14,7 +14,6 @@ from opl_harness_shared.family_shared_release import (  # noqa: E402
 
 CONSUMER_REPO_ID = "medautogrant"
 OWNER_REPO = "one-person-lab"
-FAMILY_ACTION_CATALOG_OWNER_COMMIT = "2b08c7efd8acd80355e870087d4ce5be7b45d4d1"
 
 
 def _repo_root() -> Path:
@@ -28,18 +27,9 @@ def inspect_current_repo_family_shared_alignment(
     owner_repo: str = OWNER_REPO,
 ) -> dict[str, Any]:
     resolved_repo_root = Path(repo_root_override).expanduser().resolve() if repo_root_override else _repo_root()
-    inspection = _inspect_current_repo_family_shared_alignment(
+    return _inspect_current_repo_family_shared_alignment(
         repo_root=resolved_repo_root,
         consumer_repo_id=CONSUMER_REPO_ID,
         owner_repo_root=owner_repo_root,
         owner_repo=owner_repo,
     )
-    if all(
-        item.get("pins") == [FAMILY_ACTION_CATALOG_OWNER_COMMIT]
-        for item in inspection.get("findings", [])
-    ):
-        inspection["owner_commit"] = FAMILY_ACTION_CATALOG_OWNER_COMMIT
-        for item in inspection["findings"]:
-            item["status"] = "aligned"
-        inspection["status"] = "aligned"
-    return inspection

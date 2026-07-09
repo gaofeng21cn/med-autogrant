@@ -4,7 +4,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import PRODUCT_STATUS_KIND, TARGET_DOMAIN_ID
-from med_autogrant.product_entry_parts.runtime_registration import _build_opl_stage_runtime_registration
+from med_autogrant.product_entry_parts.runtime_registration_profile import (
+    MAG_STAGE_RUNTIME_REGISTRATION_PROFILE,
+)
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.action_catalog import ACTION_CATALOG_REF
 
@@ -12,6 +14,7 @@ from opl_harness_shared.skill_catalog import (
     build_skill_catalog as _build_shared_skill_catalog,
     build_skill_descriptor as _build_shared_skill_descriptor,
 )
+from opl_harness_shared.runtime_registration import build_stage_runtime_registration
 
 
 def build_product_entry_skill_catalog(
@@ -31,7 +34,8 @@ def build_product_entry_skill_catalog(
         "--format",
         "json",
     )
-    opl_stage_runtime_registration = _build_opl_stage_runtime_registration(
+    opl_stage_runtime_registration = build_stage_runtime_registration(
+        profile=MAG_STAGE_RUNTIME_REGISTRATION_PROFILE,
         runtime_summary=runtime_summary,
         runtime_continuity=runtime_continuity,
         shell_commands=shell_commands,

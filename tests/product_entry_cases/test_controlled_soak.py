@@ -6,6 +6,9 @@ import json
 import unittest
 from pathlib import Path
 import med_autogrant.product_entry_parts.owner_receipt_reconciliation as receipt_reconciliation
+from med_autogrant.product_entry_parts.receipt_observability import (
+    build_controlled_soak_receipt_observability_summary,
+)
 from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_owner_receipt_evidence,
 )
@@ -236,3 +239,11 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertFalse(inventory["authority_boundary"]["can_declare_submission_ready_export"])
         self.assertFalse(inventory["forbidden_write_proof"]["grant_truth_written"])
         self.assertFalse(inventory["forbidden_write_proof"]["grant_artifact_written"])
+
+        observability = build_controlled_soak_receipt_observability_summary(inventory)
+        self.assertEqual(observability["source_inventory_summary"]["item_count"], 2)
+        self.assertEqual(observability["operator_observability"]["typed_blocker_ref_count"], 1)
+        self.assertFalse(
+            observability["source_inventory_ref"]["domain_writes_opl_ledger"]
+        )
+        self.assertFalse(observability["source_inventory_ref"]["opl_holds_domain_truth"])

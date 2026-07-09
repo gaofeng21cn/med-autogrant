@@ -105,7 +105,7 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         "surface_id": "runtime_registration",
         "classification": "declarative_grant_handler",
         "source_refs": [
-            "src/med_autogrant/product_entry_parts/runtime_registration.py",
+            "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
             "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
         ],
         "allowed_role": "domain_descriptor_and_stage_pack_registration_refs",

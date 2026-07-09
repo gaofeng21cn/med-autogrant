@@ -180,9 +180,17 @@ def _validate_inventory_identity(inventory: Mapping[str, Any]) -> None:
             "receipt_reconciliation_inventory.target_domain_id 必须是 med-autogrant。"
         )
     opl_ledger = _require_mapping(inventory, "opl_ledger", context="receipt_reconciliation_inventory")
-    if bool(opl_ledger.get("mag_writes_opl_ledger")):
+    if _require_bool(
+        opl_ledger,
+        "domain_writes_opl_ledger",
+        context="receipt_reconciliation_inventory.opl_ledger",
+    ):
         raise WorkspaceStateError("continuous receipt snapshot 不能写 OPL ledger。")
-    if bool(opl_ledger.get("opl_holds_grant_truth")):
+    if _require_bool(
+        opl_ledger,
+        "opl_holds_domain_truth",
+        context="receipt_reconciliation_inventory.opl_ledger",
+    ):
         raise WorkspaceStateError("continuous receipt snapshot 不能声明 OPL 持有 grant truth。")
     authority = _require_mapping(
         inventory,

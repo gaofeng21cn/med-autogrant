@@ -27,10 +27,6 @@ from med_autogrant.domain_runtime_parts.shared import (
     GENERATED_SESSION_RESUME_SURFACE_REF,
     GENERATED_SESSION_SURFACE_REF,
 )
-from med_autogrant.product_entry_parts.runtime_registration import (
-    _build_opl_native_helper_indexing_proof,
-    _build_opl_stage_runtime_registration,
-)
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.temporal_stage_run_consumption import (
     TEMPORAL_STAGE_RUN_CONSUMPTION_POLICY_REF,

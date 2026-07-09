@@ -215,10 +215,13 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             self.assertEqual(index_ref["write_policy"], "opl_index_only")
         authority_boundary = native_helper_consumption["authority_boundary"]
         self.assertEqual(authority_boundary["helper_implementation_owner"], "one-person-lab")
-        self.assertFalse(authority_boundary["mag_declares_helper_language_or_binary"])
-        self.assertFalse(authority_boundary["mag_declares_backing_helper_ids"])
-        self.assertFalse(authority_boundary["mag_can_write_domain_truth_from_helper"])
-        self.assertEqual(authority_boundary["mag_quality_or_export_verdict_owner"], "med-autogrant")
+        self.assertFalse(authority_boundary["domain_declares_helper_language_or_binary"])
+        self.assertFalse(authority_boundary["domain_declares_backing_helper_ids"])
+        self.assertFalse(authority_boundary["domain_can_write_domain_truth_from_helper"])
+        self.assertEqual(
+            authority_boundary["domain_quality_or_export_verdict_owner"],
+            "med-autogrant",
+        )
         self.assertTrue(native_helper_consumption["source_of_truth_rule"].startswith("OPL-owned helpers may index MAG"))
         proof_surface = native_helper_consumption["proof_surface"]
         self.assertEqual(proof_surface["surface_kind"], "opl_native_helper_ref_consumption_proof")

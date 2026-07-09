@@ -3248,7 +3248,7 @@
         "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
         "src/med_autogrant/product_entry_parts/progress.py",
         "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
-        "src/med_autogrant/product_entry_parts/runtime_registration.py",
+        "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
         "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
         "src/med_autogrant/stage_control_plane.py"
       ],
@@ -3573,7 +3573,7 @@
           "target_owner_after_migration": "med-autogrant"
         },
         "source_refs": [
-          "src/med_autogrant/product_entry_parts/runtime_registration.py",
+          "src/med_autogrant/product_entry_parts/runtime_registration_profile.py",
           "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py"
         ],
         "surface_id": "runtime_registration",

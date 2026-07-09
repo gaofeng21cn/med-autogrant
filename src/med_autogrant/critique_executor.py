@@ -25,7 +25,7 @@ from med_autogrant.runtime_defaults import (
     OPL_EXECUTOR_ADAPTER_OWNER,
 )
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
+from opl_harness_shared.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
