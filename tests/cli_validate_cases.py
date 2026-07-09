@@ -54,6 +54,27 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIsInstance(payload, dict)
         return payload
 
+    def run_workspace_json(self, command: str, input_path: Path) -> dict[str, object]:
+        return self.run_json_cli(
+            "workspace",
+            command,
+            "--input",
+            str(input_path),
+            "--format",
+            "json",
+        )
+
+    def assert_next_step_case(
+        self,
+        example_path: Path,
+        current_stage: str,
+        recommended_stage: str,
+    ) -> dict[str, object]:
+        payload = self.run_workspace_json("next-step", example_path)
+        self.assertEqual(payload["current_stage"], current_stage)
+        self.assertEqual(payload["recommended_stage"], recommended_stage)
+        return payload
+
     def write_invalid_workspace(self) -> Path:
         return write_empty_revision_items_workspace(EXAMPLE_PATH)
 

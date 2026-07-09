@@ -5,8 +5,6 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
 
 
@@ -15,8 +13,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from support.cli import public_cli_argv  # noqa: E402
+from support.cli import run_cli as run_cli_helper  # noqa: E402
 from med_autogrant.route_report import build_stage_route_report  # noqa: E402
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
 
@@ -30,14 +27,7 @@ PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c
 
 class RevisionExecutorCliTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
+        return run_cli_helper(*args)
 
     def test_execute_revision_pass_requires_ai_backed_active_critique(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

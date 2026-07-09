@@ -1,70 +1,31 @@
 from __future__ import annotations
 
 import json
-import sys
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
-from support.cli import run_cli  # noqa: E402
+from cli_validate_cases import (  # noqa: E402
+    ARGUMENT_EXAMPLE_PATH,
+    CRITIQUE_EXAMPLE_PATH,
+    DIRECTION_EXAMPLE_PATH,
+    DRAFTING_EXAMPLE_PATH,
+    EXAMPLE_PATH,
+    FIT_EXAMPLE_PATH,
+    FORCED_ROLLBACK_EXAMPLE_PATH,
+    INPUT_EXAMPLE_PATH,
+    MAJOR_REFRAME_EXAMPLE_PATH,
+    NON_NSFC_INPUT_EXAMPLE_PATH,
+    OUTLINE_EXAMPLE_PATH,
+    PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+    QUESTION_EXAMPLE_PATH,
+    READY_FOR_SUBMISSION_EXAMPLE_PATH,
+    REVISION_EXAMPLE_PATH,
+    CliValidateWorkspaceTest,
+)
 from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 
 
-EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
-INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
-DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
-QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
-ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
-FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
-OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
-DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
-CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
-REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
-MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
-READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
-FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
-PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
-NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_input_intake.json"
-
-
-
-class CliValidateWorkspaceTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        return run_cli(*args, allow_system_exit=False)
-
-    def run_json_cli(self, *args: str) -> dict[str, object]:
-        exit_code, stdout, stderr = self.run_cli(*args)
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        return json.loads(stdout)
-
-    def run_workspace_json(self, command: str, input_path: Path) -> dict[str, object]:
-        return self.run_json_cli(
-            "workspace",
-            command,
-            "--input",
-            str(input_path),
-            "--format",
-            "json",
-        )
-
-    def assert_next_step_case(
-        self,
-        example_path: Path,
-        current_stage: str,
-        recommended_stage: str,
-    ) -> dict[str, object]:
-        payload = self.run_workspace_json("next-step", example_path)
-        self.assertEqual(payload["current_stage"], current_stage)
-        self.assertEqual(payload["recommended_stage"], recommended_stage)
-        return payload
-
+class CliValidateWorkspaceCoreTest(CliValidateWorkspaceTest):
     def test_validate_workspace_accepts_supported_workspace_profiles(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "lifecycle_stage", "input_intake"),

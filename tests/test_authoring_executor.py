@@ -2,17 +2,16 @@ from __future__ import annotations
 
 import copy
 import json
-import sys
 import unittest
 from pathlib import Path
 from typing import Any
 
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
+from cli_validate_cases import (  # noqa: E402
+    CRITIQUE_EXAMPLE_PATH,
+    INPUT_EXAMPLE_PATH,
+    QUESTION_EXAMPLE_PATH,
+    READY_FOR_SUBMISSION_EXAMPLE_PATH,
+)
 from med_autogrant.authoring_executor import (  # noqa: E402
     build_argument_building_execution_document,
     build_direction_screening_execution_document,
@@ -23,17 +22,6 @@ from med_autogrant.authoring_executor import (  # noqa: E402
     build_question_refinement_execution_document,
 )
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
-
-
-INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
-DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
-QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
-ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
-FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
-OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
-DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
-CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
-READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 
 
 class AuthoringExecutorTest(unittest.TestCase):

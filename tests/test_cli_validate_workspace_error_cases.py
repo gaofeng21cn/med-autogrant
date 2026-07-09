@@ -14,20 +14,40 @@ from cli_validate_cases import (
 
 
 class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
-    def test_validate_workspace_json_output(self) -> None:
+    def assert_workspace_json_error(
+        self,
+        command: str,
+        input_path: object,
+        *,
+        expected_command: str,
+        expected_lifecycle_stage: str,
+        expected_path: str,
+        expected_message: str,
+    ) -> dict[str, object]:
         exit_code, stdout, stderr = self.run_cli(
             "workspace",
-                "validate",
-                "--input",
-            str(EXAMPLE_PATH),
+            command,
+            "--input",
+            str(input_path),
             "--format",
             "json",
         )
 
-        self.assertEqual(exit_code, 0)
+        self.assertEqual(exit_code, 1)
         self.assertEqual(stderr, "")
-
         payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], expected_command)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], expected_lifecycle_stage)
+        self.assertEqual(payload["errors"][0]["path"], expected_path)
+        self.assertEqual(payload["errors"][0]["message"], expected_message)
+        self.assertIn(expected_message.split("。", maxsplit=1)[0], payload["error"])
+        return payload
+
+    def test_validate_workspace_json_output(self) -> None:
+        payload = self.run_workspace_json("validate", EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
@@ -36,19 +56,7 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["errors"], [])
 
     def test_critique_summary_json_output(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-
-        payload = json.loads(stdout)
+        payload = self.run_workspace_json("critique-summary", EXAMPLE_PATH)
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["critique_id"], "critique-v1")
         self.assertEqual(payload["draft_id"], "draft-v1")
@@ -88,19 +96,7 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["selected_question"]["id"], "question-immune-fibrosis")
 
     def test_stage_route_report_json_output(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-
-        payload = json.loads(stdout)
+        payload = self.run_workspace_json("route-report", EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
@@ -116,122 +112,62 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
     def test_summarize_workspace_returns_structured_json_error_for_invalid_workspace(self) -> None:
         invalid_path = self.write_invalid_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "summarize",
-                "--input",
-            str(invalid_path),
-            "--format",
-            "json",
+        self.assert_workspace_json_error(
+            "summarize",
+            invalid_path,
+            expected_command="summarize-workspace",
+            expected_lifecycle_stage="critique",
+            expected_path="revision_plans",
+            expected_message="critique 阶段必须存在非空 RevisionPlan。",
         )
-
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "summarize-workspace")
-        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
-        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
-        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
 
     def test_next_step_returns_structured_json_error_for_invalid_workspace(self) -> None:
         invalid_path = self.write_invalid_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(invalid_path),
-            "--format",
-            "json",
+        self.assert_workspace_json_error(
+            "next-step",
+            invalid_path,
+            expected_command="next-step",
+            expected_lifecycle_stage="critique",
+            expected_path="revision_plans",
+            expected_message="critique 阶段必须存在非空 RevisionPlan。",
         )
-
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "next-step")
-        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
-        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
-        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
 
     def test_critique_summary_returns_structured_json_error_for_invalid_workspace(self) -> None:
         invalid_path = self.write_invalid_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "critique-summary",
-                "--input",
-            str(invalid_path),
-            "--format",
-            "json",
+        self.assert_workspace_json_error(
+            "critique-summary",
+            invalid_path,
+            expected_command="critique-summary",
+            expected_lifecycle_stage="critique",
+            expected_path="revision_plans",
+            expected_message="critique 阶段必须存在非空 RevisionPlan。",
         )
-
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "critique-summary")
-        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
-        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
-        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
 
     def test_stage_route_report_returns_structured_json_error_for_outline_only_critique_draft(self) -> None:
         invalid_path = self.write_outline_only_critique_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(invalid_path),
-            "--format",
-            "json",
+        self.assert_workspace_json_error(
+            "route-report",
+            invalid_path,
+            expected_command="stage-route-report",
+            expected_lifecycle_stage="critique",
+            expected_path="application_drafts.status",
+            expected_message="critique 阶段的激活草稿 status 必须为 draft 或 revised。",
         )
-
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "stage-route-report")
-        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
-        self.assertEqual(payload["errors"][0]["message"], "critique 阶段的激活草稿 status 必须为 draft 或 revised。")
-        self.assertIn("critique 阶段的激活草稿 status 必须为 draft 或 revised", payload["error"])
 
     def test_next_step_returns_structured_json_error_for_revision_stage_with_outline_draft(self) -> None:
         invalid_path = self.write_revision_outline_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(invalid_path),
-            "--format",
-            "json",
+        self.assert_workspace_json_error(
+            "next-step",
+            invalid_path,
+            expected_command="next-step",
+            expected_lifecycle_stage="revision",
+            expected_path="application_drafts.status",
+            expected_message="revision 阶段的激活草稿 status 必须为 draft 或 revised。",
         )
-
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "next-step")
-        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(payload["lifecycle_stage"], "revision")
-        self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
-        self.assertEqual(payload["errors"][0]["message"], "revision 阶段的激活草稿 status 必须为 draft 或 revised。")
-        self.assertIn("revision 阶段的激活草稿 status 必须为 draft 或 revised", payload["error"])
 
     def test_validate_workspace_reports_revision_transition_error_when_completed_plan_does_not_switch_status(self) -> None:
         invalid_path = self.write_revision_completed_without_revised_workspace()
@@ -265,18 +201,7 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
     def test_next_step_routes_completed_revision_back_to_critique(self) -> None:
         valid_path = self.write_completed_revision_workspace()
 
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(valid_path),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
+        payload = self.run_workspace_json("next-step", valid_path)
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["current_stage"], "revision")
         self.assertEqual(payload["recommended_stage"], "critique")

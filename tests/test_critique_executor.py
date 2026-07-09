@@ -1,21 +1,11 @@
 from __future__ import annotations
 
-import sys
 import unittest
 from copy import deepcopy
 from pathlib import Path
 
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
+from cli_validate_cases import DRAFTING_EXAMPLE_PATH, REVISION_EXAMPLE_PATH  # noqa: E402
 from med_autogrant.workspace import load_workspace_document, validate_workspace_document  # noqa: E402
-
-
-DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
-REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
 def _codex_runner_with_packet(
