@@ -3,6 +3,7 @@
 ## Stage Prompt Boundary
 
 This is a stage operating prompt: it owns route, refs, handoff shape, and blocker enums. It is not the professional skill source. Use `mag-grant-workflow-specialist` for independent quality critique and reviewer-response repair planning.
+Do not split this top-level MAG stage for method or tool problems; repeated route failure should return a route-local typed subpacket, repair target, route-back ref, or typed blocker within this stage.
 
 ## Role
 
