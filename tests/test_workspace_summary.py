@@ -43,9 +43,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
     def summarize_example(self, path: Path) -> dict[str, object]:
         return summarize_workspace_document(self.load_example(path))
 
-    def assert_fields(self, actual: dict[str, object], expected: dict[str, object]) -> None:
-        self.assertEqual(expected, {key: actual[key] for key in expected})
-
     def assert_paths(self, actual: dict[str, object], expected: dict[object, object]) -> None:
         for path, value in expected.items():
             current: object = actual
@@ -63,160 +60,112 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertFalse(result.ok)
         self.assertIn(expected, {(item.path, item.message) for item in result.errors})
 
-    def test_summary_exposes_selected_objects(self) -> None:
-        summary = self.summarize_example(EXAMPLE_PATH)
-
-        self.assertEqual(summary["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(summary["workspace_id"], "nsfc-demo-001")
-        self.assertEqual(summary["mode"], "auto")
-        self.assertEqual(summary["lifecycle_stage"], "critique")
-        self.assertEqual(summary["selected_direction"]["id"], "dir-inflammatory-remodeling")
-        self.assertEqual(summary["selected_question"]["id"], "question-immune-fibrosis")
-        self.assertEqual(summary["active_fit_mapping"]["id"], "fit-001")
-        self.assertEqual(summary["active_draft"]["id"], "draft-v1")
-        self.assertEqual(summary["active_revision_plan"]["id"], "revision-v1")
-        self.assertEqual(summary["active_critique"]["id"], "critique-v1")
-
-    def test_validation_accepts_stage_fixture_workspaces(self) -> None:
+    def test_summary_exposes_key_fields(self) -> None:
         cases = (
-            ("input_intake", INPUT_EXAMPLE_PATH),
-            ("non_nsfc_input_intake", NON_NSFC_INPUT_EXAMPLE_PATH),
-            ("direction_screening", DIRECTION_EXAMPLE_PATH),
-            ("question_refinement", QUESTION_EXAMPLE_PATH),
-            ("argument_building", ARGUMENT_EXAMPLE_PATH),
-            ("fit_alignment", FIT_EXAMPLE_PATH),
-            ("outline", OUTLINE_EXAMPLE_PATH),
-            ("drafting", DRAFTING_EXAMPLE_PATH),
-            ("critique", CRITIQUE_EXAMPLE_PATH),
-            ("major_reframe", MAJOR_REFRAME_EXAMPLE_PATH),
-            ("ready_for_submission", READY_FOR_SUBMISSION_EXAMPLE_PATH),
-            ("revision", REVISION_EXAMPLE_PATH),
-            ("re_review", RE_REVIEW_EXAMPLE_PATH),
-            ("forced_rollback", FORCED_ROLLBACK_EXAMPLE_PATH),
-            ("presubmission_frozen", PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            (
+                "minimal",
+                EXAMPLE_PATH,
+                {
+                    "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                    "workspace_id": "nsfc-demo-001",
+                    "mode": "auto",
+                    "lifecycle_stage": "critique",
+                    "selected_direction.id": "dir-inflammatory-remodeling",
+                    "selected_question.id": "question-immune-fibrosis",
+                    "active_fit_mapping.id": "fit-001",
+                    "active_draft.id": "draft-v1",
+                    "active_revision_plan.id": "revision-v1",
+                    "active_critique.id": "critique-v1",
+                },
+            ),
+            (
+                "input_intake",
+                INPUT_EXAMPLE_PATH,
+                {
+                    "project_profile.profile_id": "profile-nsfc-general-medical",
+                    "project_profile.preset_id": "nsfc_general_medical_v1",
+                    "project_profile.template_id": "nsfc_general_grant_template_v1",
+                    "project_profile.collaboration_mode": "applicant_led_agent_copilot",
+                    "project_profile.critique_policy_id": "nsfc_mentor_critique_v1",
+                    "grant_intake_audit.audit_kind": "grant_intake_audit",
+                    "grant_intake_audit.surface_kind": "grant_intake_audit",
+                    "grant_intake_audit.applicant_profile_id": "applicant-gaofeng",
+                    "grant_intake_audit.project_profile_id": "profile-nsfc-general-medical",
+                    "grant_intake_audit.overall_readiness": "ready_for_direction_screening",
+                    "grant_intake_audit.blocking_gaps": [],
+                    "grant_intake_audit.trust_summary.trusted": 2,
+                    "grant_intake_audit.trust_summary.usable_with_verification": 1,
+                    "grant_intake_audit.project_profile_summary.critique_policy_id": "nsfc_mentor_critique_v1",
+                    "grant_intake_audit.readiness.ready_for_direction_screening": True,
+                    "grant_intake_audit.readiness.project_profile_ready": True,
+                    "grant_evidence_grounding.grounding_kind": "grant_evidence_grounding",
+                    "grant_evidence_grounding.surface_kind": "grant_evidence_grounding",
+                    "grant_evidence_grounding.grounding_status": "intake_grounded",
+                    "grant_evidence_grounding.evidence_gaps": [],
+                    "grant_evidence_grounding.ready_for_direction_screening": True,
+                    "grant_evidence_grounding.project_profile_summary.template_id": "nsfc_general_grant_template_v1",
+                    "grant_evidence_grounding.project_profile_summary.collaboration_mode": "applicant_led_agent_copilot",
+                    "grant_evidence_grounding.evidence_inventory.primary_evidence_ids": ["evi-output-1", "evi-prelim-1", "evi-project-1"],
+                    ("grant_evidence_grounding", "trust_ranked_evidence", 0, "supports"): ["applicant_fit", "scientific_question", "technical_route"],
+                },
+            ),
+            (
+                "non_nsfc_input_intake",
+                NON_NSFC_INPUT_EXAMPLE_PATH,
+                {
+                    "project_profile.preset_id": "nih_r21_translational_v1",
+                    "project_profile.funder": "NIH",
+                    "project_profile.program_family": "NHLBI R21",
+                    "project_profile.critique_policy_id": "nih_r21_significance_innovation_v1",
+                    "project_profile.grant_family_grammar.family_id": "nih_r21_translational_family_v1",
+                    "project_profile.grant_family_grammar.governance_entry_points": [
+                        "grant-quality-scorecard",
+                        "grant-quality-diff",
+                        "execute-grant-autonomy-controller",
+                    ],
+                    "project_profile.grant_family_grammar.governance_policy.default_tranche": "aims_significance_innovation_loop",
+                    "project_profile.grant_family_grammar.governance_policy.quality_bar.minimum_score": 78,
+                    "project_profile.grant_family_grammar.governance_policy.controller_defaults.target_status": "near_submission_candidate",
+                    "project_profile.family_grammar_trace.family_id": "nih_r21_translational_family_v1",
+                    "project_profile.family_grammar_trace.review_grammar.review_focus": "significance_and_innovation_weighted_review",
+                    "project_profile.family_grammar_trace.governance_policy.rollback_bias.default_rollback_stage": "fit_alignment",
+                },
+            ),
         )
-        for label, path in cases:
-            with self.subTest(stage=label):
-                self.assert_validation_ok(self.load_example(path))
+        for label, path, expected in cases:
+            with self.subTest(case=label):
+                self.assert_paths(self.summarize_example(path), expected)
 
-    def test_summary_exposes_intake_audit_and_evidence_grounding_for_input_intake(self) -> None:
-        summary = self.summarize_example(INPUT_EXAMPLE_PATH)
-        profile = summary["project_profile"]
-        intake_audit = summary["grant_intake_audit"]
-        evidence_grounding = summary["grant_evidence_grounding"]
-
-        self.assert_fields(
-            profile,
-            {
-                "profile_id": "profile-nsfc-general-medical",
-                "preset_id": "nsfc_general_medical_v1",
-                "template_id": "nsfc_general_grant_template_v1",
-                "collaboration_mode": "applicant_led_agent_copilot",
-                "critique_policy_id": "nsfc_mentor_critique_v1",
-            },
-        )
-        self.assert_fields(
-            intake_audit,
-            {
-                "audit_kind": "grant_intake_audit",
-                "surface_kind": "grant_intake_audit",
-                "applicant_profile_id": "applicant-gaofeng",
-                "project_profile_id": "profile-nsfc-general-medical",
-                "overall_readiness": "ready_for_direction_screening",
-                "blocking_gaps": [],
-            },
-        )
-        self.assertEqual(intake_audit["trust_summary"]["trusted"], 2)
-        self.assertEqual(intake_audit["trust_summary"]["usable_with_verification"], 1)
+        input_summary = self.summarize_example(INPUT_EXAMPLE_PATH)
         self.assertEqual(
-            [section["section_id"] for section in intake_audit["intake_sections"]],
-            [
-                "applicant_profile",
-                "project_profile",
-                "track_record",
-                "active_project_set",
-                "preliminary_evidence_pack",
-                "funding_opportunity_brief",
-            ],
+            [section["section_id"] for section in input_summary["grant_intake_audit"]["intake_sections"]],
+            ["applicant_profile", "project_profile", "track_record", "active_project_set", "preliminary_evidence_pack", "funding_opportunity_brief"],
         )
         self.assertEqual(
-            intake_audit["project_profile_summary"]["critique_policy_id"],
-            "nsfc_mentor_critique_v1",
-        )
-        self.assertTrue(intake_audit["readiness"]["ready_for_direction_screening"])
-        self.assertTrue(intake_audit["readiness"]["project_profile_ready"])
-
-        self.assert_fields(
-            evidence_grounding,
-            {
-                "grounding_kind": "grant_evidence_grounding",
-                "surface_kind": "grant_evidence_grounding",
-                "grounding_status": "intake_grounded",
-                "evidence_gaps": [],
-            },
-        )
-        self.assertTrue(evidence_grounding["ready_for_direction_screening"])
-        self.assertEqual(
-            evidence_grounding["project_profile_summary"]["template_id"],
-            "nsfc_general_grant_template_v1",
-        )
-        self.assertEqual(
-            evidence_grounding["project_profile_summary"]["collaboration_mode"],
-            "applicant_led_agent_copilot",
-        )
-        self.assertEqual(
-            evidence_grounding["evidence_inventory"]["primary_evidence_ids"],
-            ["evi-output-1", "evi-prelim-1", "evi-project-1"],
-        )
-        self.assertEqual(
-            [item["trust_level"] for item in evidence_grounding["trust_ranked_evidence"]],
+            [item["trust_level"] for item in input_summary["grant_evidence_grounding"]["trust_ranked_evidence"]],
             ["trusted", "trusted", "usable_with_verification"],
         )
-        self.assertEqual(
-            evidence_grounding["trust_ranked_evidence"][0]["supports"],
-            ["applicant_fit", "scientific_question", "technical_route"],
-        )
 
-    def test_summary_exposes_non_nsfc_project_profile(self) -> None:
-        summary = self.summarize_example(NON_NSFC_INPUT_EXAMPLE_PATH)
-        profile = summary["project_profile"]
-        grammar = profile["grant_family_grammar"]
-        governance = grammar["governance_policy"]
-        trace = profile["family_grammar_trace"]
-
-        self.assert_fields(
-            profile,
-            {
-                "preset_id": "nih_r21_translational_v1",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "critique_policy_id": "nih_r21_significance_innovation_v1",
-            },
-        )
-        self.assert_fields(
-            grammar,
-            {
-                "family_id": "nih_r21_translational_family_v1",
-                "governance_entry_points": [
-                    "grant-quality-scorecard",
-                    "grant-quality-diff",
-                    "execute-grant-autonomy-controller",
-                ],
-            },
-        )
-        self.assertEqual(governance["default_tranche"], "aims_significance_innovation_loop")
-        self.assertEqual(governance["quality_bar"]["minimum_score"], 78)
-        self.assertEqual(governance["controller_defaults"]["target_status"], "near_submission_candidate")
-        self.assertEqual(trace["family_id"], "nih_r21_translational_family_v1")
-        self.assertEqual(trace["review_grammar"]["review_focus"], "significance_and_innovation_weighted_review")
-        self.assertEqual(trace["governance_policy"]["rollback_bias"]["default_rollback_stage"], "fit_alignment")
+        non_nsfc_trace = self.summarize_example(NON_NSFC_INPUT_EXAMPLE_PATH)["project_profile"]["family_grammar_trace"]
         self.assertTrue(
             any(
                 item["rule_id"] == "rule.project_types"
                 and "exploratory_developmental" in item["allowed_values"]
-                for item in trace["family_compatibility_hooks"]
+                for item in non_nsfc_trace["family_compatibility_hooks"]
             )
         )
+
+    def test_validation_accepts_stage_fixture_workspaces(self) -> None:
+        paths = (
+            INPUT_EXAMPLE_PATH, NON_NSFC_INPUT_EXAMPLE_PATH, DIRECTION_EXAMPLE_PATH, QUESTION_EXAMPLE_PATH,
+            ARGUMENT_EXAMPLE_PATH, FIT_EXAMPLE_PATH, OUTLINE_EXAMPLE_PATH, DRAFTING_EXAMPLE_PATH,
+            CRITIQUE_EXAMPLE_PATH, MAJOR_REFRAME_EXAMPLE_PATH, READY_FOR_SUBMISSION_EXAMPLE_PATH,
+            REVISION_EXAMPLE_PATH, RE_REVIEW_EXAMPLE_PATH, FORCED_ROLLBACK_EXAMPLE_PATH,
+            PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+        )
+        for path in paths:
+            with self.subTest(path=path.name):
+                self.assert_validation_ok(self.load_example(path))
 
     def test_validation_rejects_stage_invariants(self) -> None:
         def remove_draft_question_links(document: dict[str, object]) -> None:
@@ -365,6 +314,54 @@ class WorkspaceSummaryTest(unittest.TestCase):
                 ),
                 ("revision_plans.execution_status", "激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。"),
             ),
+            (
+                "revision_major_reframe_verdict",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "revision"),
+                    document["mentor_critiques"][0].__setitem__("verdict", "major_reframe"),
+                ),
+                ("mentor_critiques.verdict", "revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。"),
+            ),
+            (
+                "revision_ready_for_submission_verdict",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "revision"),
+                    document["mentor_critiques"][0].__setitem__("verdict", "ready_for_submission"),
+                ),
+                ("mentor_critiques.verdict", "revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。"),
+            ),
+            (
+                "revision_outline_draft_status",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "revision"),
+                    document["application_drafts"][0].__setitem__("status", "outline"),
+                ),
+                ("application_drafts.status", "revision 阶段的激活草稿 status 必须为 draft 或 revised。"),
+            ),
+            (
+                "critique_outline_draft_status",
+                EXAMPLE_PATH,
+                lambda document: (
+                    document.__setitem__("lifecycle_stage", "critique"),
+                    document["application_drafts"][0].__setitem__("status", "outline"),
+                ),
+                ("application_drafts.status", "critique 阶段的激活草稿 status 必须为 draft 或 revised。"),
+            ),
+            (
+                "minor_revision_forced_rollback_stage",
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][1].__setitem__("verdict", "minor_revision"),
+                ("mentor_critiques.forced_rollback_stage", "minor_revision 不得携带 forced_rollback_stage。"),
+            ),
+            (
+                "ready_for_submission_forced_rollback_stage",
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                lambda document: document["mentor_critiques"][1].__setitem__("verdict", "ready_for_submission"),
+                ("mentor_critiques.forced_rollback_stage", "ready_for_submission 不得携带 forced_rollback_stage。"),
+            ),
         )
         for label, path, mutate, expected in cases:
             with self.subTest(case=label):
@@ -372,137 +369,52 @@ class WorkspaceSummaryTest(unittest.TestCase):
                 mutate(document)
                 self.assert_validation_error(document, expected)
 
-    def test_summary_exposes_stage_specific_fields(self) -> None:
+    def test_summary_exposes_stage_and_review_fields(self) -> None:
         cases = (
             (
                 "question_refinement",
                 QUESTION_EXAMPLE_PATH,
-                {
-                    "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-                    "lifecycle_stage": "question_refinement",
-                    "current_selection.selected_question_id": "question-immune-fibrosis",
-                    "selected_question.id": "question-immune-fibrosis",
-                    "active_draft": None,
-                },
+                {"grant_run_id": "grant-run-nsfc-demo-001-baseline-001", "lifecycle_stage": "question_refinement", "current_selection.selected_question_id": "question-immune-fibrosis", "selected_question.id": "question-immune-fibrosis", "active_draft": None},
             ),
             (
                 "fit_alignment",
                 FIT_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "fit_alignment",
-                    "current_selection.active_fit_mapping_id": "fit-001",
-                    "active_fit_mapping.id": "fit-001",
-                    "active_draft": None,
-                },
+                {"lifecycle_stage": "fit_alignment", "current_selection.active_fit_mapping_id": "fit-001", "active_fit_mapping.id": "fit-001", "active_draft": None},
             ),
             (
                 "drafting",
                 DRAFTING_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "drafting",
-                    "active_draft.status": "draft",
-                    "active_draft.section_count": 3,
-                },
+                {"lifecycle_stage": "drafting", "active_draft.status": "draft", "active_draft.section_count": 3},
             ),
-        )
-        for label, path, expected in cases:
-            with self.subTest(stage=label):
-                self.assert_paths(self.summarize_example(path), expected)
-
-    def test_validation_rejects_revision_stage_with_invalid_verdicts(self) -> None:
-        for verdict in ("major_reframe", "ready_for_submission"):
-            with self.subTest(verdict=verdict):
-                document = copy.deepcopy(self.load_example())
-                document["lifecycle_stage"] = "revision"
-                document["mentor_critiques"][0]["verdict"] = verdict
-
-                self.assert_validation_error(
-                    document,
-                    ("mentor_critiques.verdict", "revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。"),
-                )
-
-    def test_validation_rejects_outline_draft_status_for_active_review_stages(self) -> None:
-        cases = (
-            ("revision", "revision 阶段的激活草稿 status 必须为 draft 或 revised。"),
-            ("critique", "critique 阶段的激活草稿 status 必须为 draft 或 revised。"),
-        )
-        for stage, message in cases:
-            with self.subTest(stage=stage):
-                document = copy.deepcopy(self.load_example())
-                document["lifecycle_stage"] = stage
-                document["application_drafts"][0]["status"] = "outline"
-
-                self.assert_validation_error(document, ("application_drafts.status", message))
-
-    def test_validation_rejects_terminal_verdicts_with_forced_rollback_stage(self) -> None:
-        for verdict in ("minor_revision", "ready_for_submission"):
-            with self.subTest(verdict=verdict):
-                document = copy.deepcopy(self.load_example(FORCED_ROLLBACK_EXAMPLE_PATH))
-                document["mentor_critiques"][1]["verdict"] = verdict
-
-                self.assert_validation_error(
-                    document,
-                    ("mentor_critiques.forced_rollback_stage", f"{verdict} 不得携带 forced_rollback_stage。"),
-                )
-
-    def test_summary_exposes_review_outcome_fields(self) -> None:
-        cases = (
             (
                 "completed_revision",
                 REVISION_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "revision",
-                    "active_draft.status": "revised",
-                    "active_draft.version_label": "v0.4",
-                    "active_revision_plan.execution_status": "completed",
-                },
+                {"lifecycle_stage": "revision", "active_draft.status": "revised", "active_draft.version_label": "v0.4", "active_revision_plan.execution_status": "completed"},
             ),
             (
                 "major_reframe",
                 MAJOR_REFRAME_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "critique",
-                    "active_critique.verdict": "major_reframe",
-                },
+                {"lifecycle_stage": "critique", "active_critique.verdict": "major_reframe"},
             ),
             (
                 "ready_for_submission",
                 READY_FOR_SUBMISSION_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "critique",
-                    "active_critique.verdict": "ready_for_submission",
-                    "active_revision_plan.execution_status": "completed",
-                },
+                {"lifecycle_stage": "critique", "active_critique.verdict": "ready_for_submission", "active_revision_plan.execution_status": "completed"},
             ),
             (
                 "forced_rollback",
                 FORCED_ROLLBACK_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "critique",
-                    "gates.presubmission_frozen": False,
-                    "active_critique.forced_rollback_stage": "argument_building",
-                },
+                {"lifecycle_stage": "critique", "gates.presubmission_frozen": False, "active_critique.forced_rollback_stage": "argument_building"},
             ),
             (
                 "presubmission_frozen",
                 PRESUBMISSION_FROZEN_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "frozen",
-                    "gates.presubmission_frozen": True,
-                    "active_draft.status": "frozen",
-                    "active_critique.verdict": "ready_for_submission",
-                },
+                {"lifecycle_stage": "frozen", "gates.presubmission_frozen": True, "active_draft.status": "frozen", "active_critique.verdict": "ready_for_submission"},
             ),
             (
                 "re_review",
                 RE_REVIEW_EXAMPLE_PATH,
-                {
-                    "lifecycle_stage": "critique",
-                    "active_critique.verdict": "major_revision",
-                    "active_critique.reviewed_revision_plan_id": "revision-v1",
-                    "active_revision_plan.id": "revision-v2",
-                    "reviewed_revision_evidence.revision_plan_id": "revision-v1",
-                },
+                {"lifecycle_stage": "critique", "active_critique.verdict": "major_revision", "active_critique.reviewed_revision_plan_id": "revision-v1", "active_revision_plan.id": "revision-v2", "reviewed_revision_evidence.revision_plan_id": "revision-v1"},
             ),
         )
         for label, path, expected in cases:
