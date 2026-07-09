@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import os
 import sys
-import tempfile
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock
 
 import pytest
@@ -23,7 +22,6 @@ from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
-REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
@@ -165,8 +163,10 @@ class DomainEntryDispatchTest(unittest.TestCase):
                     "command": command,
                 }
 
-                payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-                    {"command": command, **request_args}
+                payload = _dispatch(
+                    MedAutoGrantDomainEntry(runtime=runtime),
+                    command,
+                    **request_args,
                 )
 
                 self.assertEqual(payload, {"ok": True, "command": command})
@@ -174,11 +174,10 @@ class DomainEntryDispatchTest(unittest.TestCase):
 
     def test_domain_entry_rejects_missing_required_field(self) -> None:
         with self.assertRaisesRegex(WorkspaceStateError, "缺少必填字段: output_path"):
-            MedAutoGrantDomainEntry(runtime=Mock()).dispatch(
-                {
-                    "command": "build-artifact-bundle",
-                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                }
+            _dispatch(
+                MedAutoGrantDomainEntry(runtime=Mock()),
+                "build-artifact-bundle",
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
             )
 
 
@@ -244,20 +243,19 @@ class DomainEntryFreshProofTest(unittest.TestCase):
 
     @pytest.mark.proof
     def test_service_safe_domain_entry_runs_fresh_cutover_walkthrough(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
+        with TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
-            revised_workspace_path = tmp_root / "revised.json"
-            frozen_bundle_path = tmp_root / "frozen-bundle.json"
-            final_package_path = tmp_root / "final-package.json"
-            hosted_contract_path = tmp_root / "hosted-contract.json"
+            revised_workspace_path, final_package_path, hosted_contract_path = (
+                tmp_root / file_name
+                for file_name in ("revised.json", "final-package.json", "hosted-contract.json")
+            )
 
             entry = MedAutoGrantDomainEntry()
 
-            critique_report = entry.dispatch(
-                {
-                    "command": "stage-route-report",
-                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                }
+            critique_report = _dispatch(
+                entry,
+                "stage-route-report",
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
             )
             self.assertTrue(critique_report["ok"])
             self.assertEqual(
@@ -265,46 +263,23 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                 "grant-run-nsfc-demo-001-baseline-001",
             )
 
-            revision_payload = entry.dispatch(
-                {
-                    "command": "execute-revision-pass",
-                    "input_path": str(RE_REVIEW_EXAMPLE_PATH),
-                    "output_path": str(revised_workspace_path),
-                }
+            revision_payload = _dispatch(
+                entry,
+                "execute-revision-pass",
+                input_path=str(RE_REVIEW_EXAMPLE_PATH),
+                output_path=str(revised_workspace_path),
             )
             self.assertTrue(revision_payload["ok"])
             self.assertEqual(revision_payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
 
-            bundle_payload = entry.dispatch(
-                {
-                    "command": "build-artifact-bundle",
-                    "input_path": str(FROZEN_EXAMPLE_PATH),
-                    "output_path": str(frozen_bundle_path),
-                }
-            )
-            self.assertTrue(bundle_payload["ok"])
-
-            final_package_payload = entry.dispatch(
-                {
-                    "command": "build-final-package",
-                    "input_path": str(FROZEN_EXAMPLE_PATH),
-                    "artifact_bundle_path": str(frozen_bundle_path),
-                    "output_path": str(final_package_path),
-                }
-            )
-            self.assertTrue(final_package_payload["ok"])
-
-            hosted_contract_payload = entry.dispatch(
-                {
-                    "command": "build-hosted-contract-bundle",
-                    "final_package_path": str(final_package_path),
-                    "output_path": str(hosted_contract_path),
-                }
+            hosted_contract = _build_hosted_bundle_for_external_caller(
+                tmp_root=tmp_root,
+                final_package_path=final_package_path,
+                hosted_contract_path=hosted_contract_path,
             )
 
-        self.assertTrue(hosted_contract_payload["ok"])
         self.assertEqual(
-            hosted_contract_payload["hosted_contract_bundle"]["execution_identity"],
+            hosted_contract["execution_identity"],
             {
                 "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
                 "workspace_id": "nsfc-demo-001",
@@ -316,7 +291,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
 
 class HostedCallerConsumptionProofTest(unittest.TestCase):
     def test_external_caller_can_consume_domain_entry_contract_without_repo_local_helper(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
+        with TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             critique_product_entry = MedAutoGrantProductEntry().build(
                 input_path=str(CRITIQUE_EXAMPLE_PATH),
@@ -349,35 +324,43 @@ class HostedCallerConsumptionProofTest(unittest.TestCase):
                 for route in hosted_contract["authoring_contract"]["author_side_route_catalog"]
             }
 
-            artifact_request = _build_request_from_contract(
-                hosted_entry_contract,
-                route_catalog["artifact_bundle"]["execution_surface"]["command"],
-                input_path=str(FROZEN_EXAMPLE_PATH),
-                output_path=str(artifact_bundle_path),
-            )
-            artifact_payload = MedAutoGrantDomainEntry().dispatch(artifact_request)
-            self.assertTrue(artifact_payload["ok"])
-
-            final_request = _build_request_from_contract(
-                hosted_entry_contract,
-                route_catalog["final_package"]["execution_surface"]["command"],
-                input_path=str(FROZEN_EXAMPLE_PATH),
-                artifact_bundle_path=str(artifact_bundle_path),
-                output_path=str(final_package_path),
-            )
-            final_payload = MedAutoGrantDomainEntry().dispatch(final_request)
-            self.assertTrue(final_payload["ok"])
-
-            hosted_request = _build_request_from_contract(
-                hosted_entry_contract,
-                route_catalog["hosted_contract_bundle"]["execution_surface"]["command"],
-                final_package_path=str(final_package_path),
-                output_path=str(hosted_contract_path),
-            )
-            hosted_payload = MedAutoGrantDomainEntry().dispatch(hosted_request)
-            self.assertTrue(hosted_payload["ok"])
+            payloads = {}
+            for route_id, context in (
+                (
+                    "artifact_bundle",
+                    {
+                        "input_path": str(FROZEN_EXAMPLE_PATH),
+                        "output_path": str(artifact_bundle_path),
+                    },
+                ),
+                (
+                    "final_package",
+                    {
+                        "input_path": str(FROZEN_EXAMPLE_PATH),
+                        "artifact_bundle_path": str(artifact_bundle_path),
+                        "output_path": str(final_package_path),
+                    },
+                ),
+                (
+                    "hosted_contract_bundle",
+                    {
+                        "final_package_path": str(final_package_path),
+                        "output_path": str(hosted_contract_path),
+                    },
+                ),
+            ):
+                payloads[route_id] = MedAutoGrantDomainEntry().dispatch(
+                    _build_request_from_contract(
+                        hosted_entry_contract,
+                        route_catalog[route_id]["execution_surface"]["command"],
+                        **context,
+                    )
+                )
+                self.assertTrue(payloads[route_id]["ok"])
             self.assertEqual(
-                hosted_payload["hosted_contract_bundle"]["domain_entry_contract"]["command_contracts"],
+                payloads["hosted_contract_bundle"]["hosted_contract_bundle"]["domain_entry_contract"][
+                    "command_contracts"
+                ],
                 hosted_entry_contract["command_contracts"],
             )
             submission_ready_request = _build_request_from_contract(
@@ -396,23 +379,35 @@ class HostedCallerConsumptionProofTest(unittest.TestCase):
             )
 
 
+def _dispatch(
+    entry: MedAutoGrantDomainEntry,
+    command: str,
+    **request_args: object,
+) -> dict[str, object]:
+    return entry.dispatch({"command": command, **request_args})
+
+
 def _build_request_from_contract(
     domain_entry_contract: dict[str, object],
     command: str,
     **context: str,
 ) -> dict[str, str]:
-    for item in domain_entry_contract["command_contracts"]:
-        if item["command"] == command:
-            request = {"command": command}
-            for field in item["required_fields"] + item["optional_fields"]:
-                value = context.get(field)
-                if value is not None:
-                    request[field] = value
-            missing_fields = [field for field in item["required_fields"] if field not in request]
-            if missing_fields:
-                raise AssertionError(f"external caller context 缺少字段: {missing_fields}")
-            return request
-    raise AssertionError(f"未找到 command contract: {command}")
+    item = next(
+        (item for item in domain_entry_contract["command_contracts"] if item["command"] == command),
+        None,
+    )
+    if item is None:
+        raise AssertionError(f"未找到 command contract: {command}")
+
+    fields = item["required_fields"] + item["optional_fields"]
+    request = {
+        "command": command,
+        **{field: context[field] for field in fields if field in context},
+    }
+    missing_fields = [field for field in item["required_fields"] if field not in request]
+    if missing_fields:
+        raise AssertionError(f"external caller context 缺少字段: {missing_fields}")
+    return request
 
 
 def _build_hosted_bundle_for_external_caller(
@@ -422,33 +417,31 @@ def _build_hosted_bundle_for_external_caller(
     hosted_contract_path: Path,
 ) -> dict[str, object]:
     artifact_bundle_path = tmp_root / "bundle-for-hosted-proof.json"
-    bundle_payload = MedAutoGrantDomainEntry().dispatch(
-        {
-            "command": "build-artifact-bundle",
-            "input_path": str(FROZEN_EXAMPLE_PATH),
-            "output_path": str(artifact_bundle_path),
-        }
+    entry = MedAutoGrantDomainEntry()
+    bundle_payload = _dispatch(
+        entry,
+        "build-artifact-bundle",
+        input_path=str(FROZEN_EXAMPLE_PATH),
+        output_path=str(artifact_bundle_path),
     )
     if bundle_payload["ok"] is not True:
         raise AssertionError("artifact bundle proof 构建失败")
 
-    final_payload = MedAutoGrantDomainEntry().dispatch(
-        {
-            "command": "build-final-package",
-            "input_path": str(FROZEN_EXAMPLE_PATH),
-            "artifact_bundle_path": str(artifact_bundle_path),
-            "output_path": str(final_package_path),
-        }
+    final_payload = _dispatch(
+        entry,
+        "build-final-package",
+        input_path=str(FROZEN_EXAMPLE_PATH),
+        artifact_bundle_path=str(artifact_bundle_path),
+        output_path=str(final_package_path),
     )
     if final_payload["ok"] is not True:
         raise AssertionError("final package proof 构建失败")
 
-    hosted_payload = MedAutoGrantDomainEntry().dispatch(
-        {
-            "command": "build-hosted-contract-bundle",
-            "final_package_path": str(final_package_path),
-            "output_path": str(hosted_contract_path),
-        }
+    hosted_payload = _dispatch(
+        entry,
+        "build-hosted-contract-bundle",
+        final_package_path=str(final_package_path),
+        output_path=str(hosted_contract_path),
     )
     if hosted_payload["ok"] is not True:
         raise AssertionError("hosted contract proof 构建失败")
