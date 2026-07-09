@@ -10,6 +10,27 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+from med_autogrant.grant_family_registry import (  # noqa: E402
+    get_project_profile_preset,
+    iter_project_profile_presets,
+    list_family_profile_placeholders,
+)
+from med_autogrant.project_profile_selector import (  # noqa: E402
+    build_initialized_intake_workspace,
+    select_project_profile,
+)
+
+
+NSFC_BRIEF = {"brief_id": "nsfc-2026-general", "funder": "NSFC", "program_family": "医学科学部", "project_types": ["general"]}
+NIH_R21_BRIEF = {
+    "brief_id": "nih-r21-2026-nhlbi",
+    "funder": "NIH",
+    "program_family": "NHLBI R21",
+    "project_types": ["exploratory_developmental"],
+}
+WELLCOME_BRIEF = {"brief_id": "wellcome-discovery-2026", "funder": "Wellcome", "program_family": "Discovery Award", "project_types": ["discovery"]}
+EU_HORIZON_BRIEF = {"brief_id": "eu-horizon-2026", "funder": "EU", "program_family": "Horizon", "project_types": ["collaborative"]}
+
 
 class ProjectProfileSelectorTest(unittest.TestCase):
     def _base_selection_input(self) -> dict:
@@ -22,19 +43,14 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "funding_opportunity_pool": [],
         }
 
-    def test_selector_picks_nsfc_profile_when_nsfc_pool_is_compatible(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
+    def _selection_input_with_brief(self, brief: dict[str, object], *, selection_input_id: str = "selection-001") -> dict:
         selection_input = self._base_selection_input()
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nsfc-2026-general",
-                "funder": "NSFC",
-                "program_family": "医学科学部",
-                "project_types": ["general"],
-            }
-        ]
+        selection_input["selection_input_id"] = selection_input_id
+        selection_input["funding_opportunity_pool"] = [dict(brief)]
+        return selection_input
 
+    def test_selector_picks_nsfc_profile_when_nsfc_pool_is_compatible(self) -> None:
+        selection_input = self._selection_input_with_brief(NSFC_BRIEF)
         result = select_project_profile(selection_input)
 
         self.assertEqual(result["recommended_project_profile"]["preset_id"], "nsfc_general_medical_v1")
@@ -43,18 +59,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         self.assertIn("rule.funder", result["selection_summary"]["reason_codes"])
 
     def test_selector_picks_nih_r21_profile_when_nih_r21_pool_is_compatible(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nih-r21-2026-nhlbi",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "project_types": ["exploratory_developmental"],
-            }
-        ]
-
+        selection_input = self._selection_input_with_brief(NIH_R21_BRIEF)
         result = select_project_profile(selection_input)
 
         self.assertEqual(result["recommended_project_profile"]["preset_id"], "nih_r21_translational_v1")
@@ -62,19 +67,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         self.assertEqual(result["selection_summary"]["selected_profile_preset_id"], "nih_r21_translational_v1")
 
     def test_selector_picks_wellcome_profile_when_wellcome_pool_is_compatible(self) -> None:
-        from med_autogrant.project_profile_selector import build_initialized_intake_workspace, select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["selection_input_id"] = "wellcome-proof-001"
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "wellcome-discovery-2026",
-                "funder": "Wellcome",
-                "program_family": "Discovery Award",
-                "project_types": ["discovery"],
-            }
-        ]
-
+        selection_input = self._selection_input_with_brief(WELLCOME_BRIEF, selection_input_id="wellcome-proof-001")
         result = select_project_profile(selection_input)
 
         self.assertEqual(result["recommended_project_profile"]["preset_id"], "wellcome_discovery_v1")
@@ -91,19 +84,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         )
 
     def test_selector_attaches_family_grammar_contract_to_nih_profile(self) -> None:
-        from med_autogrant.project_profile_selector import build_initialized_intake_workspace, select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["selection_input_id"] = "nih-r21-proof-001"
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nih-r21-2026-nhlbi",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "project_types": ["exploratory_developmental"],
-            }
-        ]
-
+        selection_input = self._selection_input_with_brief(NIH_R21_BRIEF, selection_input_id="nih-r21-proof-001")
         selection = select_project_profile(selection_input)
         profile = selection["recommended_project_profile"]
         grammar = profile["grant_family_grammar"]
@@ -148,28 +129,11 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         )
 
     def test_selector_fail_closed_when_no_compatible_preset_exists(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "eu-horizon-2026",
-                "funder": "EU",
-                "program_family": "Horizon",
-                "project_types": ["collaborative"],
-            }
-        ]
-
+        selection_input = self._selection_input_with_brief(EU_HORIZON_BRIEF)
         with self.assertRaisesRegex(ValueError, "未找到兼容的 project profile preset"):
             select_project_profile(selection_input)
 
     def test_registry_exposes_common_grammar_and_non_nsfc_placeholder_contract(self) -> None:
-        from med_autogrant.grant_family_registry import (
-            get_project_profile_preset,
-            iter_project_profile_presets,
-            list_family_profile_placeholders,
-        )
-
         preset_ids = {preset["preset_id"] for preset in iter_project_profile_presets()}
         self.assertEqual(
             preset_ids,
@@ -207,20 +171,8 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "wellcome_discovery_transformative_value_v1",
         )
 
-    def test_selector_profile_document_keeps_existing_values_from_common_grammar(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nih-r21-2026-nhlbi",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "project_types": ["exploratory_developmental"],
-            }
-        ]
-
-        result = select_project_profile(selection_input)
+    def test_nih_profile_document_keeps_common_values_and_family_trace(self) -> None:
+        result = select_project_profile(self._selection_input_with_brief(NIH_R21_BRIEF))
         profile = result["recommended_project_profile"]
         self.assertEqual(
             profile["template_profile"]["required_section_strategy"],
@@ -231,21 +183,6 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "significance_and_innovation_claims_require_direct_grounding",
         )
         self.assertEqual(profile["critique_policy"]["policy_id"], "nih_r21_significance_innovation_v1")
-
-    def test_selector_emits_nih_r21_family_grammar_trace_for_portability_proof(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
-        selection_input = self._base_selection_input()
-        selection_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nih-r21-2026-nhlbi",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "project_types": ["exploratory_developmental"],
-            }
-        ]
-
-        result = select_project_profile(selection_input)
         family_trace = result["recommended_project_profile"]["family_grammar_trace"]
 
         self.assertEqual(family_trace["family_id"], "nih_r21_translational_family_v1")
@@ -281,29 +218,8 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         )
 
     def test_selector_emits_distinct_family_governance_policy_for_nsfc_and_nih_r21(self) -> None:
-        from med_autogrant.project_profile_selector import select_project_profile
-
-        nsfc_input = self._base_selection_input()
-        nsfc_input["selection_input_id"] = "nsfc-governance-001"
-        nsfc_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nsfc-2026-general",
-                "funder": "NSFC",
-                "program_family": "医学科学部",
-                "project_types": ["general"],
-            }
-        ]
-        nih_input = self._base_selection_input()
-        nih_input["selection_input_id"] = "nih-governance-001"
-        nih_input["funding_opportunity_pool"] = [
-            {
-                "brief_id": "nih-r21-2026-nhlbi",
-                "funder": "NIH",
-                "program_family": "NHLBI R21",
-                "project_types": ["exploratory_developmental"],
-            }
-        ]
-
+        nsfc_input = self._selection_input_with_brief(NSFC_BRIEF, selection_input_id="nsfc-governance-001")
+        nih_input = self._selection_input_with_brief(NIH_R21_BRIEF, selection_input_id="nih-governance-001")
         nsfc_profile = select_project_profile(nsfc_input)["recommended_project_profile"]
         nih_profile = select_project_profile(nih_input)["recommended_project_profile"]
         nsfc_policy = nsfc_profile["grant_family_grammar"]["governance_policy"]

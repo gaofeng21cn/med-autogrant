@@ -74,6 +74,9 @@ def walk_refs(node: object) -> list[str]:
 
 
 class SchemaRegistryTest(unittest.TestCase):
+    def assert_required_fields(self, required: list[str], fields: str) -> None:
+        self.assertEqual(sorted(set(fields.split()) - set(required)), [])
+
     def test_expected_schema_files_exist(self) -> None:
         self.assertTrue(SCHEMA_ROOT.is_dir(), "schemas/v1 目录必须存在。")
         actual = {path.name for path in SCHEMA_ROOT.glob("*.json")}
@@ -142,31 +145,21 @@ class SchemaRegistryTest(unittest.TestCase):
             self.assertIn(ref, refs)
 
     def test_loop_report_schemas_require_quality_surfaces(self) -> None:
-        critique_schema = json.loads((SCHEMA_ROOT / "critique-loop-report.schema.json").read_text(encoding="utf-8"))
-        critique_required = critique_schema["required"]
-        self.assertIn("grant_quality_scorecard", critique_required)
-        self.assertIn("grant_quality_closure_dossier", critique_required)
-        self.assertEqual(
-            critique_schema["properties"]["grant_quality_scorecard"]["$ref"],
-            "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard",
-        )
-        self.assertEqual(
-            critique_schema["properties"]["grant_quality_closure_dossier"]["$ref"],
-            "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
-        )
-
-        mainline_schema = json.loads((SCHEMA_ROOT / "authoring-mainline-loop-report.schema.json").read_text(encoding="utf-8"))
-        mainline_required = mainline_schema["required"]
-        self.assertIn("grant_quality_scorecard", mainline_required)
-        self.assertIn("grant_quality_closure_dossier", mainline_required)
-        self.assertEqual(
-            mainline_schema["properties"]["grant_quality_scorecard"]["$ref"],
-            "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard",
-        )
-        self.assertEqual(
-            mainline_schema["properties"]["grant_quality_closure_dossier"]["$ref"],
-            "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
-        )
+        for schema_name in ("critique-loop-report.schema.json", "authoring-mainline-loop-report.schema.json"):
+            with self.subTest(schema=schema_name):
+                schema = json.loads((SCHEMA_ROOT / schema_name).read_text(encoding="utf-8"))
+                self.assert_required_fields(
+                    schema["required"],
+                    "grant_quality_scorecard grant_quality_closure_dossier",
+                )
+                self.assertEqual(
+                    schema["properties"]["grant_quality_scorecard"]["$ref"],
+                    "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard",
+                )
+                self.assertEqual(
+                    schema["properties"]["grant_quality_closure_dossier"]["$ref"],
+                    "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
+                )
 
     def test_autonomy_controller_schemas_require_tranche_planning_surface(self) -> None:
         input_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-input.schema.json").read_text(encoding="utf-8"))
@@ -177,13 +170,11 @@ class SchemaRegistryTest(unittest.TestCase):
         )
 
         report_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-report.schema.json").read_text(encoding="utf-8"))
-        report_required = report_schema["required"]
-        self.assertIn("controller_checkpoint", report_required)
-        self.assertIn("controller_plan", report_required)
-        self.assertIn("tranche_history", report_required)
-        self.assertIn("latest_quality_closure_dossier", report_required)
-        self.assertIn("closure_package_queue", report_required)
-        self.assertIn("active_closure_package", report_required)
+        self.assert_required_fields(
+            report_schema["required"],
+            "controller_checkpoint controller_plan tranche_history latest_quality_closure_dossier "
+            "closure_package_queue active_closure_package",
+        )
         self.assertEqual(
             report_schema["$defs"]["controllerPlan"]["required"],
             [
@@ -199,18 +190,12 @@ class SchemaRegistryTest(unittest.TestCase):
                 "decision_basis",
             ],
         )
-        decision_basis_required = report_schema["$defs"]["controllerDecisionBasis"]["required"]
-        self.assertIn("quality_summary", decision_basis_required)
-        self.assertIn("closure_package_queue_ids", decision_basis_required)
-        self.assertIn("active_closure_package_id", decision_basis_required)
-        self.assertIn("active_closure_package_action", decision_basis_required)
-        self.assertIn("active_closure_package_target_stage", decision_basis_required)
-        tranche_history_required = report_schema["$defs"]["trancheHistoryEntry"]["required"]
-        self.assertIn("quality_summary", tranche_history_required)
-        self.assertIn("closure_package_queue_ids", tranche_history_required)
-        self.assertIn("active_closure_package_id", tranche_history_required)
-        self.assertIn("active_closure_package_action", tranche_history_required)
-        self.assertIn("active_closure_package_target_stage", tranche_history_required)
+        planning_fields = (
+            "quality_summary closure_package_queue_ids active_closure_package_id "
+            "active_closure_package_action active_closure_package_target_stage"
+        )
+        self.assert_required_fields(report_schema["$defs"]["controllerDecisionBasis"]["required"], planning_fields)
+        self.assert_required_fields(report_schema["$defs"]["trancheHistoryEntry"]["required"], planning_fields)
         self.assertEqual(
             report_schema["$defs"]["trancheHistoryEntry"]["properties"]["next_controller_action"]["$ref"],
             "#/$defs/controllerAction",
@@ -269,73 +254,50 @@ class SchemaRegistryTest(unittest.TestCase):
 
     def test_grant_quality_schemas_require_issue_closure_contract(self) -> None:
         scorecard_schema = json.loads((SCHEMA_ROOT / "grant-quality-scorecard.schema.json").read_text(encoding="utf-8"))
-        tracked_issue_required = scorecard_schema["$defs"]["trackedIssue"]["required"]
-        self.assertIn("lineage_id", tracked_issue_required)
-        self.assertIn("lineage_basis", tracked_issue_required)
-        self.assertIn("closure_status", tracked_issue_required)
-        self.assertIn("blocking_reason", tracked_issue_required)
-        self.assertIn("evidence_obligations", tracked_issue_required)
-        self.assertIn("recommended_closure_action", tracked_issue_required)
-        scorecard_required = scorecard_schema["$defs"]["grantQualityScorecard"]["required"]
-        self.assertIn("assessment_owner", scorecard_required)
-        self.assertIn("ai_reviewer_required", scorecard_required)
-        self.assertIn("review_artifact_ref", scorecard_required)
-        self.assertIn("evidence_supply_queue", scorecard_required)
-        supply_item_required = scorecard_schema["$defs"]["evidenceSupplyQueueItem"]["required"]
-        self.assertIn("gap_id", supply_item_required)
-        self.assertIn("gap_kind", supply_item_required)
-        self.assertIn("controller_action_hint", supply_item_required)
-        self.assertIn("required_input_ids", supply_item_required)
-        self.assertIn("linked_issue_ids", supply_item_required)
+        scorecard_required_fields = (
+            ("trackedIssue", "lineage_id lineage_basis closure_status blocking_reason evidence_obligations recommended_closure_action"),
+            ("grantQualityScorecard", "assessment_owner ai_reviewer_required review_artifact_ref evidence_supply_queue"),
+            ("evidenceSupplyQueueItem", "gap_id gap_kind controller_action_hint required_input_ids linked_issue_ids"),
+        )
+        for def_name, fields in scorecard_required_fields:
+            with self.subTest(schema="scorecard", def_name=def_name):
+                self.assert_required_fields(scorecard_schema["$defs"][def_name]["required"], fields)
 
         diff_schema = json.loads((SCHEMA_ROOT / "grant-quality-diff.schema.json").read_text(encoding="utf-8"))
-        issue_progress_required = diff_schema["$defs"]["issueProgress"]["required"]
-        self.assertIn("issue_closure_progress", issue_progress_required)
-        issue_closure_required = diff_schema["$defs"]["issueClosureProgress"]["required"]
-        self.assertIn("lineage_id", issue_closure_required)
-        self.assertIn("lineage_basis", issue_closure_required)
-        self.assertIn("previous_issue_id", issue_closure_required)
-        self.assertIn("current_issue_id", issue_closure_required)
-        self.assertIn("previous_summary", issue_closure_required)
-        self.assertIn("current_summary", issue_closure_required)
-        self.assertIn("previous_closure_status", issue_closure_required)
-        self.assertIn("current_closure_status", issue_closure_required)
-        self.assertIn("closure_delta", issue_closure_required)
-        diff_required = diff_schema["$defs"]["grantQualityDiff"]["required"]
-        self.assertIn("evidence_supply_progress", diff_required)
-        supply_progress_required = diff_schema["$defs"]["evidenceSupplyProgress"]["required"]
-        self.assertIn("closed_gaps", supply_progress_required)
-        self.assertIn("remaining_open_gaps", supply_progress_required)
-        self.assertIn("newly_opened_gaps", supply_progress_required)
-        self.assertIn("gap_progress", supply_progress_required)
-        gap_progress_item_required = diff_schema["$defs"]["evidenceSupplyGapProgress"]["required"]
-        self.assertIn("gap_id", gap_progress_item_required)
-        self.assertIn("transition", gap_progress_item_required)
-        self.assertIn("supply_delta", gap_progress_item_required)
-        self.assertIn("action", diff_schema["$defs"]["controllerActionHint"]["required"])
+        diff_required_fields = (
+            ("issueProgress", "issue_closure_progress"),
+            (
+                "issueClosureProgress",
+                "lineage_id lineage_basis previous_issue_id current_issue_id previous_summary current_summary "
+                "previous_closure_status current_closure_status closure_delta",
+            ),
+            ("grantQualityDiff", "evidence_supply_progress"),
+            ("evidenceSupplyProgress", "closed_gaps remaining_open_gaps newly_opened_gaps gap_progress"),
+            ("evidenceSupplyGapProgress", "gap_id transition supply_delta"),
+            ("controllerActionHint", "action"),
+        )
+        for def_name, fields in diff_required_fields:
+            with self.subTest(schema="diff", def_name=def_name):
+                self.assert_required_fields(diff_schema["$defs"][def_name]["required"], fields)
 
         dossier_schema = json.loads(
             (SCHEMA_ROOT / "grant-quality-closure-dossier.schema.json").read_text(encoding="utf-8")
         )
-        dossier_required = dossier_schema["$defs"]["grantQualityClosureDossier"]["required"]
-        self.assertIn("quality_summary", dossier_required)
-        self.assertIn("unclosed_hard_issues", dossier_required)
-        self.assertIn("evidence_supply_queue_summary", dossier_required)
-        self.assertIn("closure_packages", dossier_required)
-        quality_summary_required = dossier_schema["$defs"]["qualitySummary"]["required"]
-        self.assertIn("assessment_owner", quality_summary_required)
-        self.assertIn("ai_reviewer_required", quality_summary_required)
-        self.assertIn("review_artifact_ref", quality_summary_required)
-        closure_package_required = dossier_schema["$defs"]["closurePackage"]["required"]
-        self.assertIn("closure_id", closure_package_required)
-        self.assertIn("severity", closure_package_required)
-        self.assertIn("target_stage", closure_package_required)
-        self.assertIn("action", closure_package_required)
-        self.assertIn("required_input_ids", closure_package_required)
-        self.assertIn("linked_issue_ids", closure_package_required)
-        self.assertIn("blocking_reasons", closure_package_required)
-        self.assertIn("evidence_obligations", closure_package_required)
-        self.assertIn("acceptance_signals", closure_package_required)
+        dossier_required_fields = (
+            (
+                "grantQualityClosureDossier",
+                "quality_summary unclosed_hard_issues evidence_supply_queue_summary closure_packages",
+            ),
+            ("qualitySummary", "assessment_owner ai_reviewer_required review_artifact_ref"),
+            (
+                "closurePackage",
+                "closure_id severity target_stage action required_input_ids linked_issue_ids "
+                "blocking_reasons evidence_obligations acceptance_signals",
+            ),
+        )
+        for def_name, fields in dossier_required_fields:
+            with self.subTest(schema="dossier", def_name=def_name):
+                self.assert_required_fields(dossier_schema["$defs"][def_name]["required"], fields)
 
 if __name__ == "__main__":
     unittest.main()
