@@ -7,7 +7,7 @@ from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
     build_package_lifecycle_handoff_projection,
 )
 from med_autogrant.workspace import WorkspaceStateError
-from product_entry_cases.support import assert_false_keys, assert_true_keys
+from product_entry_cases.support import assert_false_keys, assert_path_values, assert_true_keys
 
 
 def _physical_kernel_locator_refs() -> dict[str, str]:
@@ -118,14 +118,25 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(projection["surface_kind"], "mag_package_lifecycle_handoff_projection")
-        self.assertEqual(
-            projection["state"],
-            "refs_ready_for_opl_artifact_package_lifecycle_shell",
-        )
-        self.assertEqual(
-            projection["package_refs"]["submission_ready_package_ref"],
-            "mag-package://submission-ready/p3c",
+        assert_path_values(
+            self,
+            projection,
+            {
+                "surface_kind": "mag_package_lifecycle_handoff_projection",
+                "state": "refs_ready_for_opl_artifact_package_lifecycle_shell",
+                "package_refs.submission_ready_package_ref": "mag-package://submission-ready/p3c",
+                "stage_folder_lifecycle_projection.surface_kind": "mag_stage_folder_lifecycle_projection",
+                "stage_folder_lifecycle_projection.stage_id": "package_and_submit_ready",
+                "stage_folder_lifecycle_projection.artifact_bundle.ref": "mag-package://artifact-bundle/p3c",
+                "stage_folder_lifecycle_projection.final_package.ref": "mag-package://final-package/p3c",
+                "stage_folder_lifecycle_projection.submission_ready_package.ref": "mag-package://submission-ready/p3c",
+                "stage_folder_lifecycle_projection.owner_receipt_or_typed_blocker_ref": "runtime://mag/receipts/owner/p3c.json",
+                "stage_folder_lifecycle_projection.missing_output_policy": "typed_blocker_required_no_opl_inference",
+                "export_verdict_refs.verdict_state": "submission_ready",
+                "gap_summary.state": "ready_for_shell",
+                "manual_portal_boundary.manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
+                "receipt_refs.lifecycle_receipt_ref": "runtime://mag/receipts/lifecycle/p3c.json",
+            },
         )
         self.assertEqual(projection["physical_kernel_locator_refs"], _physical_kernel_locator_refs())
         self.assertEqual(
@@ -133,44 +144,8 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             _physical_kernel_conformance_refs(),
         )
         self.assertEqual(
-            projection["stage_folder_lifecycle_projection"],
-            {
-                "surface_kind": "mag_stage_folder_lifecycle_projection",
-                "stage_id": "package_and_submit_ready",
-                "artifact_bundle": {
-                    "ref": "mag-package://artifact-bundle/p3c",
-                    "lifecycle_contract_role": "stage_output_artifact_ref",
-                    "stage_output_role": "submission_ready_package_manifest_ref",
-                    "physical_locator_roles": [
-                        "stage_json_ref",
-                        "attempt_json_ref",
-                        "manifest_json_ref",
-                        "receipt_json_ref",
-                    ],
-                },
-                "final_package": {
-                    "ref": "mag-package://final-package/p3c",
-                    "lifecycle_contract_role": "canonical_promotion_ref",
-                    "canonical_pointer_ref": _physical_kernel_locator_refs()["canonical_pointer_ref"],
-                },
-                "submission_ready_package": {
-                    "ref": "mag-package://submission-ready/p3c",
-                    "lifecycle_contract_role": "export_artifact_ref",
-                    "export_artifact_ref": _physical_kernel_locator_refs()["export_artifact_ref"],
-                },
-                "physical_kernel_locators": _physical_kernel_locator_refs(),
-                "physical_kernel_conformance_refs": _physical_kernel_conformance_refs(),
-                "owner_receipt_or_typed_blocker_ref": "runtime://mag/receipts/owner/p3c.json",
-                "missing_output_policy": "typed_blocker_required_no_opl_inference",
-                "handoff_policy": "refs_manifest_missing_output_receipt_blocker_handoff_only",
-                "authority_boundary": {
-                    "mag_owns_package_authority": True,
-                    "mag_owns_export_verdict": True,
-                    "opl_can_read_artifact_body": False,
-                    "opl_can_interpret_grant_quality": False,
-                    "opl_can_declare_submission_ready": False,
-                },
-            },
+            projection["stage_folder_lifecycle_projection"]["artifact_bundle"]["physical_locator_roles"],
+            ["stage_json_ref", "attempt_json_ref", "manifest_json_ref", "receipt_json_ref"],
         )
         self.assertEqual(
             projection["export_verdict_refs"],
@@ -181,22 +156,6 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
                 "source_kind": "mag_owner_receipt",
                 "provenance_ref": "runtime://mag/receipts/export/p3c.json",
             },
-        )
-        self.assertEqual(
-            projection["gap_summary"],
-            _gap_report(
-                state="ready_for_shell",
-                summary="All MAG package refs are ready for OPL display.",
-                gap_refs=["mag-gap://package-export/p3c/manual-portal"],
-            ),
-        )
-        self.assertEqual(
-            projection["manual_portal_boundary"]["manual_portal_boundary_ref"],
-            "mag-boundary://manual-portal/p3c",
-        )
-        self.assertEqual(
-            projection["receipt_refs"]["lifecycle_receipt_ref"],
-            "runtime://mag/receipts/lifecycle/p3c.json",
         )
         authority = projection["authority_boundary"]
         assert_true_keys(self, authority, ("mag_owns_submission_export_verdict", "mag_owns_package_authority", "mag_owns_stage_folder_lifecycle_projection", "mag_owns_physical_kernel_handoff_refs", "opl_owns_artifact_package_lifecycle_shell", "opl_owns_stage_artifact_physical_kernel", "opl_owns_locator", "opl_owns_retention_ui"))

@@ -110,6 +110,64 @@ def _critique_closeout_packet(*, owner: str) -> dict[str, object]:
     }
 
 
+def _rereview_closeout_packet() -> dict[str, object]:
+    packet = _critique_closeout_packet(owner="Codex CLI critique executor")
+    critique = packet["mentor_critique"]
+    critique.update(
+        {
+            "critique_id": "critique-v2",
+            "draft_id": "ignored",
+            "reviewed_revision_plan_id": "ignored",
+            "overall_diagnosis": "上一轮修订改善明显，但研究基础与验证路线还需继续收紧。",
+            "current_scientific_question": "ignored",
+            "suggested_question": "保持核心科学问题不变，继续收紧研究基础与验证路线的闭环。",
+            "necessity_scientific_value": {
+                **critique["necessity_scientific_value"],
+                "score": 81,
+                "judgment": "必要性链条改善明显，但仍存在机制跳步。",
+                "blocking_issues": ["需要继续压缩修订后机制跳步。"],
+            },
+            "applicant_fit": {
+                **critique["applicant_fit"],
+                "score": 85,
+                "judgment": "申请人适配度较强，但仍需更直接回指关键验证节点。",
+                "blocking_issues": [],
+            },
+            "feasibility": {**critique["feasibility"], "score": 82, "judgment": "整体可行。"},
+            "blocking_issues": ["re-review 必须保留上一轮 completed revision evidence。"],
+        }
+    )
+    revision_plan = packet["revision_plan"]
+    revision_plan.update(
+        {
+            "revision_plan_id": "revision-v2",
+            "draft_id": "ignored",
+            "critique_id": "ignored",
+            "pre_revision_version_label": "ignored",
+            "post_revision_version_label": "v0.5",
+            "items": [
+                {
+                    "item_id": "rev2-item-1",
+                    "priority": "p0",
+                    "action_type": "rewrite_section",
+                    "target_ref": "section:foundation",
+                    "action": "让研究基础直接回指当前方案关键验证节点。",
+                    "done_criteria": "研究基础段落能直接解释为什么该团队能完成当前机制验证。",
+                    "required_input_ids": ["output-1", "project-1"],
+                    "mutation_payload": {
+                        "operation": "replace_draft_section",
+                        "target_section_key": "foundation",
+                        "replacement_text": "申请人的单细胞时序资源、动物模型和既有验证路径可以直接承接当前机制验证假设，从而把研究基础与关键实验闭环为同一条执行链。",
+                        "replacement_core_claim": "研究基础能够直接支撑当前机制验证闭环。",
+                        "linked_object_ids": ["output-1", "project-1"],
+                    },
+                }
+            ],
+        }
+    )
+    return packet
+
+
 class CritiqueExecutionDocumentTest(unittest.TestCase):
     def test_critique_executor_kind_vocabulary_rejects_retired_aliases(self) -> None:
         from med_autogrant.critique_executor import _resolve_critique_executor_kind
@@ -232,83 +290,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
         def fake_codex_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
             self.assertEqual(cwd, REVISION_EXAMPLE_PATH.resolve().parent)
-            return {
-                "mentor_critique": {
-                    "metadata": {
-                        "schema_version": "v1",
-                        "created_at": "2026-04-13T13:00:00Z",
-                        "updated_at": "2026-04-13T13:00:00Z",
-                        "source_mode": "auto",
-                    },
-                    "critique_id": "critique-v2",
-                    "draft_id": "ignored",
-                    "reviewed_revision_plan_id": "ignored",
-                    "overall_diagnosis": "上一轮修订改善明显，但研究基础与验证路线还需继续收紧。",
-                    "current_scientific_question": "ignored",
-                    "suggested_question": "保持核心科学问题不变，继续收紧研究基础与验证路线的闭环。",
-                    "verdict": "major_revision",
-                    "necessity_scientific_value": {
-                        "weight": 0,
-                        "score": 81,
-                        "judgment": "必要性链条改善明显，但仍存在机制跳步。",
-                        "blocking_issues": [
-                            "需要继续压缩修订后机制跳步。"
-                        ],
-                    },
-                    "applicant_fit": {
-                        "weight": 0,
-                        "score": 85,
-                        "judgment": "申请人适配度较强，但仍需更直接回指关键验证节点。",
-                        "blocking_issues": [],
-                    },
-                    "feasibility": {
-                        "weight": 0,
-                        "score": 82,
-                        "judgment": "整体可行。",
-                        "blocking_issues": [],
-                    },
-                    "blocking_issues": [
-                        "re-review 必须保留上一轮 completed revision evidence。"
-                    ],
-                },
-                "revision_plan": {
-                    "metadata": {
-                        "schema_version": "v1",
-                        "created_at": "2026-04-13T13:05:00Z",
-                        "updated_at": "2026-04-13T13:05:00Z",
-                        "source_mode": "auto",
-                    },
-                    "revision_plan_id": "revision-v2",
-                    "draft_id": "ignored",
-                    "critique_id": "ignored",
-                    "pre_revision_version_label": "ignored",
-                    "post_revision_version_label": "v0.5",
-                    "items": [
-                        {
-                            "item_id": "rev2-item-1",
-                            "priority": "p0",
-                            "action_type": "rewrite_section",
-                            "target_ref": "section:foundation",
-                            "action": "让研究基础直接回指当前方案关键验证节点。",
-                            "done_criteria": "研究基础段落能直接解释为什么该团队能完成当前机制验证。",
-                            "required_input_ids": [
-                                "output-1",
-                                "project-1"
-                            ],
-                            "mutation_payload": {
-                                "operation": "replace_draft_section",
-                                "target_section_key": "foundation",
-                                "replacement_text": "申请人的单细胞时序资源、动物模型和既有验证路径可以直接承接当前机制验证假设，从而把研究基础与关键实验闭环为同一条执行链。",
-                                "replacement_core_claim": "研究基础能够直接支撑当前机制验证闭环。",
-                                "linked_object_ids": [
-                                    "output-1",
-                                    "project-1"
-                                ],
-                            },
-                        }
-                    ],
-                },
-            }
+            return _rereview_closeout_packet()
 
         payload = build_critique_execution_document(
             document=document,
@@ -486,7 +468,3 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 executor_kind="hermes_agent",
                 opl_executor_runner=fake_opl_executor_runner,
             )
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from copy import deepcopy
 import json
 import sys
 import unittest
@@ -8,7 +7,6 @@ from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
 from typing import Any, Mapping
-from unittest.mock import Mock, patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -80,6 +78,106 @@ def assert_path_values(
         for part in path if isinstance(path, tuple) else path.split("."):
             current = current[part]
         test_case.assertEqual(current, expected, path)
+
+
+def codex_execution_attempt(*, include_stage_pack_ref: bool = False) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "attempt_id": "attempt-critique-001",
+        "executor": "codex_cli",
+        "invocation_ref": "codex://invocations/critique-001",
+        "task_record_ref": "runtime://opl/stage-attempts/critique-001.json",
+        "receipt_ref": "runtime://mag/receipts/stage/critique-001.json",
+        "output_artifact_ref": "runtime://mag/artifacts/critique-001.json",
+    }
+    if include_stage_pack_ref:
+        payload["stage_pack_ref"] = "agent/prompts/review_and_rebuttal.md"
+    return payload
+
+
+def codex_review_attempt() -> dict[str, object]:
+    return {
+        "review_attempt_id": "review-critique-001",
+        "reviewer_executor": "codex_cli",
+        "review_invocation_ref": "codex://invocations/review-critique-001",
+        "review_task_record_ref": "runtime://opl/stage-attempts/review-critique-001.json",
+        "review_receipt_ref": "runtime://mag/receipts/review/review-critique-001.json",
+        "review_artifact_ref": "runtime://mag/artifacts/review-critique-001.json",
+        "review_target_attempt_id": "attempt-critique-001",
+        "independent_context": True,
+        "shared_context_with_execution": False,
+    }
+
+
+def production_acceptance_evidence(
+    *,
+    include_owner_refs: bool = False,
+    include_patch_loop_refs: bool = False,
+) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "surface_kind": "mag_production_acceptance_evidence.v1",
+        "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
+        "closure_evidence": {
+            "accepted_return_shape": "domain_owner_receipt_ref",
+            "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+        },
+    }
+    if include_owner_refs:
+        payload["refs"] = {
+            "grant_owner_receipt_refs": [
+                "contracts/owner_receipt_contract.json",
+                "receipt:mag/grant-stage-controlled-attempt/body-free-closeout/2026-05-20",
+            ],
+            "owner_receipt_refs": [
+                "receipt:mag/production-live-acceptance/2026-05-20",
+                "/product_entry_manifest/production_live_acceptance_receipt",
+            ],
+        }
+    if include_patch_loop_refs:
+        payload["patch_loop_refs"] = {
+            "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
+            "developer_patch_work_order_ref": "developer-work-order:oma/mag/ai-first-mag-patch-smoke",
+            "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ai-first-mag-patch-smoke",
+            "target_repo_verification_refs": [
+                "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_executor_first_closeout_bundle.py -q",
+                "rtk ./scripts/verify.sh",
+                "rtk git diff --check",
+            ],
+            "target_runtime_read_model_consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
+            "workspace_environment_proof_ref": "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke",
+            "no_forbidden_write_proof_ref": "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only",
+            "target_owner_receipt_or_typed_blocker_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+            "patch_absorption_ref": "git-commit:pending/codex/ai-first-mag-patch-smoke",
+            "worktree_cleanup_ref": "worktree-cleanup:pending/ai-first-mag-patch-smoke",
+            "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation",
+        }
+    return payload
+
+
+def receipt_readiness_projection(
+    *,
+    missing: list[str] | None = None,
+    total_ref_count: int = 3,
+    include_receipt_refs: bool = False,
+) -> dict[str, object]:
+    missing_categories = list(missing or [])
+    payload: dict[str, object] = {
+        "surface_kind": "mag_receipt_readiness_projection",
+        "state": "receipt_refs_ready_not_quality_ready" if not missing_categories else "partial_receipt_coverage",
+        "missing_categories": missing_categories,
+        "summary": {
+            "covered_category_count": 4 - len(missing_categories),
+            "missing_category_count": len(missing_categories),
+            "total_receipt_ref_count": total_ref_count,
+        },
+    }
+    if include_receipt_refs:
+        payload["receipt_refs"] = {
+            "owner_receipt": ["runtime://mag/receipts/owner/package-closeout.json"],
+            "memory_accept_reject": ["runtime://mag/receipts/memory/accepted-risk.json"],
+            "package_export_lifecycle": ["runtime://mag/receipts/package/lifecycle.json"],
+            "cleanup_restore_retention_lifecycle": ["runtime://mag/receipts/lifecycle/cleanup.json"],
+        }
+    return payload
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:

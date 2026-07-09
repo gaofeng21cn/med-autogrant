@@ -2,31 +2,13 @@ from __future__ import annotations
 
 import unittest
 from med_autogrant.workspace import WorkspaceStateError
-
-
-def _execution_attempt() -> dict[str, object]:
-    return {
-        "attempt_id": "attempt-critique-001",
-        "executor": "codex_cli",
-        "invocation_ref": "codex://invocations/critique-001",
-        "task_record_ref": "runtime://opl/stage-attempts/critique-001.json",
-        "receipt_ref": "runtime://mag/receipts/stage/critique-001.json",
-        "output_artifact_ref": "runtime://mag/artifacts/critique-001.json",
-    }
-
-
-def _review_attempt() -> dict[str, object]:
-    return {
-        "review_attempt_id": "review-critique-001",
-        "reviewer_executor": "codex_cli",
-        "review_invocation_ref": "codex://invocations/review-critique-001",
-        "review_task_record_ref": "runtime://opl/stage-attempts/review-critique-001.json",
-        "review_receipt_ref": "runtime://mag/receipts/review/review-critique-001.json",
-        "review_artifact_ref": "runtime://mag/artifacts/review-critique-001.json",
-        "review_target_attempt_id": "attempt-critique-001",
-        "independent_context": True,
-        "shared_context_with_execution": False,
-    }
+from product_entry_cases.support import (
+    assert_false_keys,
+    codex_execution_attempt,
+    codex_review_attempt,
+    production_acceptance_evidence,
+    receipt_readiness_projection,
+)
 
 
 def _codex_receipt_bundle(*, reviewed: bool = True) -> dict[str, object]:
@@ -36,45 +18,9 @@ def _codex_receipt_bundle(*, reviewed: bool = True) -> dict[str, object]:
 
     return build_codex_stage_execution_receipt_bundle(
         stage_id="review_and_rebuttal",
-        execution_attempts=[_execution_attempt()],
-        review_attempts=[_review_attempt()] if reviewed else [],
+        execution_attempts=[codex_execution_attempt()],
+        review_attempts=[codex_review_attempt()] if reviewed else [],
     )
-
-
-def _production_acceptance() -> dict[str, object]:
-    return {
-        "surface_kind": "mag_production_acceptance_evidence.v1",
-        "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
-        "closure_evidence": {
-            "accepted_return_shape": "domain_owner_receipt_ref",
-            "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
-        },
-        "patch_loop_refs": {
-            "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
-            "developer_patch_work_order_ref": "developer-work-order:oma/mag/ai-first-mag-patch-smoke",
-            "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ai-first-mag-patch-smoke",
-            "target_repo_verification_refs": [
-                "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_executor_first_closeout_bundle.py -q",
-                "rtk ./scripts/verify.sh",
-                "rtk git diff --check",
-            ],
-            "target_runtime_read_model_consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
-            "workspace_environment_proof_ref": (
-                "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke"
-            ),
-            "no_forbidden_write_proof_ref": (
-                "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
-            ),
-            "target_owner_receipt_or_typed_blocker_ref": (
-                "receipt:mag/production-live-acceptance/2026-05-20"
-            ),
-            "patch_absorption_ref": "git-commit:pending/codex/ai-first-mag-patch-smoke",
-            "worktree_cleanup_ref": "worktree-cleanup:pending/ai-first-mag-patch-smoke",
-            "agent_lab_re_evaluation_ref": (
-                "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation"
-            ),
-        },
-    }
 
 
 def _operator_evidence_ledger(*, real_gap: bool = False) -> dict[str, object]:
@@ -94,33 +40,15 @@ def _operator_evidence_ledger(*, real_gap: bool = False) -> dict[str, object]:
     }
 
 
-def _receipt_readiness(*, missing: list[str] | None = None) -> dict[str, object]:
-    missing_categories = missing if missing is not None else []
-    return {
-        "surface_kind": "mag_receipt_readiness_projection",
-        "state": (
-            "receipt_refs_ready_not_quality_ready"
-            if not missing_categories
-            else "partial_receipt_coverage"
-        ),
-        "missing_categories": missing_categories,
-        "summary": {
-            "covered_category_count": 4 - len(missing_categories),
-            "missing_category_count": len(missing_categories),
-            "total_receipt_ref_count": 8,
-        },
-    }
-
-
 def _operator_closeout(*, real_gap: bool = False) -> dict[str, object]:
     from med_autogrant.product_entry_parts.operator_closeout import (
         build_operator_closeout_readiness_projection,
     )
 
     return build_operator_closeout_readiness_projection(
-        production_acceptance=_production_acceptance(),
+        production_acceptance=production_acceptance_evidence(include_patch_loop_refs=True),
         external_evidence_receipt_ledger=_operator_evidence_ledger(real_gap=real_gap),
-        receipt_readiness_projection=_receipt_readiness(),
+        receipt_readiness_projection=receipt_readiness_projection(total_ref_count=8),
     )
 
 
@@ -194,41 +122,49 @@ def _external_consumption_ledger(*, complete: bool = True) -> dict[str, object]:
     }
 
 
+def _build_bundle(**overrides: object) -> dict[str, object]:
+    from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
+        build_executor_first_closeout_bundle,
+    )
+
+    args: dict[str, object] = {
+        "codex_stage_execution_receipt_bundle": _codex_receipt_bundle(),
+        "operator_closeout_readiness_projection": _operator_closeout(),
+        "physical_morphology_guard_projection": _physical_guard(),
+        "external_evidence_consumption_ledger": _external_consumption_ledger(),
+        "receipt_readiness_projection": receipt_readiness_projection(total_ref_count=8),
+    }
+    args.update(overrides)
+    return build_executor_first_closeout_bundle(**args)  # type: ignore[arg-type]
+
+
 class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
     def test_refs_ready_bundle_still_cannot_declare_grant_readiness(self) -> None:
-        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
-            build_executor_first_closeout_bundle,
-        )
-
-        bundle = build_executor_first_closeout_bundle(
-            codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
-            operator_closeout_readiness_projection=_operator_closeout(),
-            physical_morphology_guard_projection=_physical_guard(),
-            external_evidence_consumption_ledger=_external_consumption_ledger(),
-            receipt_readiness_projection=_receipt_readiness(),
-        )
+        bundle = _build_bundle()
 
         self.assertEqual(bundle["surface_kind"], "mag_executor_first_closeout_bundle")
         self.assertEqual(bundle["state"], "refs_ready_not_quality_ready")
         self.assertTrue(bundle["refs_closeout"]["refs_ready"])
-        self.assertFalse(bundle["refs_closeout"]["quality_ready"])
-        self.assertFalse(bundle["can_declare_fundability_ready"])
-        self.assertFalse(bundle["can_declare_quality_ready"])
-        self.assertFalse(bundle["can_declare_export_ready"])
-        self.assertFalse(bundle["can_declare_submission_ready"])
-        self.assertFalse(bundle["bundle_ready_equals_grant_ready"])
-        self.assertFalse(bundle["authority_boundary"]["can_declare_fundability_ready"])
-        self.assertFalse(bundle["authority_boundary"]["bundle_ready_equals_grant_ready"])
-
-    def test_missing_codex_review_receipt_blocks_executor_first_bundle(self) -> None:
-        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
-            build_executor_first_closeout_bundle,
+        assert_false_keys(
+            self,
+            bundle,
+            (
+                "can_declare_fundability_ready",
+                "can_declare_quality_ready",
+                "can_declare_export_ready",
+                "can_declare_submission_ready",
+                "bundle_ready_equals_grant_ready",
+            ),
+        )
+        assert_false_keys(
+            self,
+            bundle["authority_boundary"],
+            ("can_declare_fundability_ready", "bundle_ready_equals_grant_ready"),
         )
 
-        bundle = build_executor_first_closeout_bundle(
+    def test_missing_codex_review_receipt_blocks_executor_first_bundle(self) -> None:
+        bundle = _build_bundle(
             codex_stage_execution_receipt_bundle=_codex_receipt_bundle(reviewed=False),
-            operator_closeout_readiness_projection=_operator_closeout(),
-            physical_morphology_guard_projection=_physical_guard(),
         )
 
         self.assertEqual(bundle["state"], "missing_codex_review_receipt")
@@ -237,14 +173,8 @@ class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
         self.assertFalse(bundle["authority_boundary"]["can_declare_submission_ready"])
 
     def test_operator_real_evidence_gap_blocks_bundle(self) -> None:
-        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
-            build_executor_first_closeout_bundle,
-        )
-
-        bundle = build_executor_first_closeout_bundle(
-            codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
+        bundle = _build_bundle(
             operator_closeout_readiness_projection=_operator_closeout(real_gap=True),
-            physical_morphology_guard_projection=_physical_guard(),
             external_evidence_consumption_ledger=_external_consumption_ledger(complete=False),
         )
 
@@ -257,18 +187,10 @@ class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
         self.assertFalse(bundle["refs_closeout"]["refs_ready"])
 
     def test_physical_morphology_blocked_and_evidence_gated_are_distinct(self) -> None:
-        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
-            build_executor_first_closeout_bundle,
-        )
-
-        blocked = build_executor_first_closeout_bundle(
-            codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
-            operator_closeout_readiness_projection=_operator_closeout(),
+        blocked = _build_bundle(
             physical_morphology_guard_projection=_physical_guard(blocked=True),
         )
-        evidence_gated = build_executor_first_closeout_bundle(
-            codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
-            operator_closeout_readiness_projection=_operator_closeout(),
+        evidence_gated = _build_bundle(
             physical_morphology_guard_projection=_physical_guard(evidence_gated=True),
         )
 
@@ -277,34 +199,23 @@ class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
         self.assertNotEqual(blocked["state"], evidence_gated["state"])
 
     def test_bundle_rejects_wrong_surface_body_and_true_ready_claims(self) -> None:
-        from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
-            build_executor_first_closeout_bundle,
-        )
-
         wrong_kind = _codex_receipt_bundle()
         wrong_kind["surface_kind"] = "wrong"
         with self.assertRaises(WorkspaceStateError):
-            build_executor_first_closeout_bundle(
+            _build_bundle(
                 codex_stage_execution_receipt_bundle=wrong_kind,
-                operator_closeout_readiness_projection=_operator_closeout(),
-                physical_morphology_guard_projection=_physical_guard(),
             )
 
         body_input = _operator_closeout()
         body_input["grant_artifact_body"] = "PRIVATE_BODY_TOKEN"
         with self.assertRaises(WorkspaceStateError):
-            build_executor_first_closeout_bundle(
-                codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
+            _build_bundle(
                 operator_closeout_readiness_projection=body_input,
-                physical_morphology_guard_projection=_physical_guard(),
             )
 
-        ready_claim = _receipt_readiness()
+        ready_claim = receipt_readiness_projection(total_ref_count=8)
         ready_claim["can_declare_quality_ready"] = True
         with self.assertRaises(WorkspaceStateError):
-            build_executor_first_closeout_bundle(
-                codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
-                operator_closeout_readiness_projection=_operator_closeout(),
-                physical_morphology_guard_projection=_physical_guard(),
+            _build_bundle(
                 receipt_readiness_projection=ready_claim,
             )

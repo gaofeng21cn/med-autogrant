@@ -2,32 +2,7 @@ from __future__ import annotations
 
 import unittest
 from med_autogrant.workspace import WorkspaceStateError
-
-
-def _execution_attempt() -> dict[str, object]:
-    return {
-        "attempt_id": "attempt-critique-001",
-        "executor": "codex_cli",
-        "invocation_ref": "codex://invocations/critique-001",
-        "task_record_ref": "runtime://opl/stage-attempts/critique-001.json",
-        "receipt_ref": "runtime://mag/receipts/stage/critique-001.json",
-        "stage_pack_ref": "agent/prompts/review_and_rebuttal.md",
-        "output_artifact_ref": "runtime://mag/artifacts/critique-001.json",
-    }
-
-
-def _review_attempt() -> dict[str, object]:
-    return {
-        "review_attempt_id": "review-critique-001",
-        "reviewer_executor": "codex_cli",
-        "review_invocation_ref": "codex://invocations/review-critique-001",
-        "review_task_record_ref": "runtime://opl/stage-attempts/review-critique-001.json",
-        "review_receipt_ref": "runtime://mag/receipts/review/review-critique-001.json",
-        "review_artifact_ref": "runtime://mag/artifacts/review-critique-001.json",
-        "review_target_attempt_id": "attempt-critique-001",
-        "independent_context": True,
-        "shared_context_with_execution": False,
-    }
+from product_entry_cases.support import codex_execution_attempt, codex_review_attempt
 
 
 class ProductEntryCodexStageReceiptTest(unittest.TestCase):
@@ -38,8 +13,8 @@ class ProductEntryCodexStageReceiptTest(unittest.TestCase):
 
         projection = build_codex_stage_execution_receipt_bundle(
             stage_id="review_and_rebuttal",
-            execution_attempts=[_execution_attempt()],
-            review_attempts=[_review_attempt()],
+            execution_attempts=[codex_execution_attempt(include_stage_pack_ref=True)],
+            review_attempts=[codex_review_attempt()],
         )
 
         self.assertEqual(projection["surface_kind"], "mag_codex_stage_execution_receipt_bundle")
@@ -74,7 +49,7 @@ class ProductEntryCodexStageReceiptTest(unittest.TestCase):
 
         projection = build_codex_stage_execution_receipt_bundle(
             stage_id="review_and_rebuttal",
-            execution_attempts=[_execution_attempt()],
+            execution_attempts=[codex_execution_attempt(include_stage_pack_ref=True)],
             review_attempts=[],
         )
 
@@ -89,30 +64,30 @@ class ProductEntryCodexStageReceiptTest(unittest.TestCase):
             build_codex_stage_execution_receipt_bundle,
         )
 
-        shared_invocation = _review_attempt()
-        shared_invocation["review_invocation_ref"] = _execution_attempt()["invocation_ref"]
+        shared_invocation = codex_review_attempt()
+        shared_invocation["review_invocation_ref"] = codex_execution_attempt()["invocation_ref"]
         with self.assertRaises(WorkspaceStateError):
             build_codex_stage_execution_receipt_bundle(
                 stage_id="review_and_rebuttal",
-                execution_attempts=[_execution_attempt()],
+                execution_attempts=[codex_execution_attempt()],
                 review_attempts=[shared_invocation],
             )
 
-        shared_task = _review_attempt()
-        shared_task["review_task_record_ref"] = _execution_attempt()["task_record_ref"]
+        shared_task = codex_review_attempt()
+        shared_task["review_task_record_ref"] = codex_execution_attempt()["task_record_ref"]
         with self.assertRaises(WorkspaceStateError):
             build_codex_stage_execution_receipt_bundle(
                 stage_id="review_and_rebuttal",
-                execution_attempts=[_execution_attempt()],
+                execution_attempts=[codex_execution_attempt()],
                 review_attempts=[shared_task],
             )
 
-        shared_context = _review_attempt()
+        shared_context = codex_review_attempt()
         shared_context["independent_context"] = False
         with self.assertRaises(WorkspaceStateError):
             build_codex_stage_execution_receipt_bundle(
                 stage_id="review_and_rebuttal",
-                execution_attempts=[_execution_attempt()],
+                execution_attempts=[codex_execution_attempt()],
                 review_attempts=[shared_context],
             )
 
@@ -121,20 +96,20 @@ class ProductEntryCodexStageReceiptTest(unittest.TestCase):
             build_codex_stage_execution_receipt_bundle,
         )
 
-        attempt_with_body = _execution_attempt()
+        attempt_with_body = codex_execution_attempt()
         attempt_with_body["proposal_text_body"] = "PRIVATE_BODY_TOKEN"
         with self.assertRaises(WorkspaceStateError):
             build_codex_stage_execution_receipt_bundle(
                 stage_id="review_and_rebuttal",
                 execution_attempts=[attempt_with_body],
-                review_attempts=[_review_attempt()],
+                review_attempts=[codex_review_attempt()],
             )
 
-        review_with_ready_claim = _review_attempt()
+        review_with_ready_claim = codex_review_attempt()
         review_with_ready_claim["claims_quality_ready"] = True
         with self.assertRaises(WorkspaceStateError):
             build_codex_stage_execution_receipt_bundle(
                 stage_id="review_and_rebuttal",
-                execution_attempts=[_execution_attempt()],
+                execution_attempts=[codex_execution_attempt()],
                 review_attempts=[review_with_ready_claim],
             )

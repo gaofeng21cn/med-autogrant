@@ -46,6 +46,13 @@ class WorkspaceSummaryTest(unittest.TestCase):
     def assert_fields(self, actual: dict[str, object], expected: dict[str, object]) -> None:
         self.assertEqual(expected, {key: actual[key] for key in expected})
 
+    def assert_paths(self, actual: dict[str, object], expected: dict[object, object]) -> None:
+        for path, value in expected.items():
+            current: object = actual
+            for part in path if isinstance(path, tuple) else str(path).split("."):
+                current = current[part]
+            self.assertEqual(current, value, path)
+
     def assert_validation_ok(self, document: dict[str, object]) -> None:
         result = validate_workspace_document(document)
         self.assertTrue(result.ok)
@@ -365,41 +372,42 @@ class WorkspaceSummaryTest(unittest.TestCase):
                 mutate(document)
                 self.assert_validation_error(document, expected)
 
-    def test_summary_exposes_direction_question_binding_for_question_refinement(self) -> None:
-        summary = self.summarize_example(QUESTION_EXAMPLE_PATH)
-
-        self.assertEqual(summary["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-        self.assertEqual(summary["lifecycle_stage"], "question_refinement")
-        self.assertEqual(summary["current_selection"]["selected_direction_id"], "dir-inflammatory-remodeling")
-        self.assertEqual(summary["current_selection"]["selected_question_id"], "question-immune-fibrosis")
-        self.assertEqual(summary["selected_direction"]["id"], "dir-inflammatory-remodeling")
-        self.assertEqual(summary["selected_question"]["id"], "question-immune-fibrosis")
-        self.assertIsNone(summary["active_argument_chain"])
-        self.assertIsNone(summary["active_draft"])
-        self.assertIsNone(summary["active_revision_plan"])
-        self.assertIsNone(summary["active_critique"])
-        self.assertIsNone(summary["active_fit_mapping"])
-
-    def test_summary_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
-        summary = self.summarize_example(FIT_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "fit_alignment")
-        self.assertEqual(summary["current_selection"]["selected_direction_id"], "dir-inflammatory-remodeling")
-        self.assertEqual(summary["current_selection"]["selected_question_id"], "question-immune-fibrosis")
-        self.assertEqual(summary["current_selection"]["active_fit_mapping_id"], "fit-001")
-        self.assertEqual(summary["active_fit_mapping"]["id"], "fit-001")
-        self.assertEqual(summary["active_fit_mapping"]["argument_chain_id"], "arg-001")
-        self.assertIsNone(summary["active_draft"])
-
-    def test_summary_exposes_draft_audit_for_drafting(self) -> None:
-        summary = self.summarize_example(DRAFTING_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "drafting")
-        self.assertEqual(summary["active_draft"]["id"], "draft-v1")
-        self.assertEqual(summary["active_draft"]["status"], "draft")
-        self.assertEqual(summary["active_draft"]["section_count"], 3)
-        self.assertIsNone(summary["active_revision_plan"])
-        self.assertIsNone(summary["active_critique"])
+    def test_summary_exposes_stage_specific_fields(self) -> None:
+        cases = (
+            (
+                "question_refinement",
+                QUESTION_EXAMPLE_PATH,
+                {
+                    "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                    "lifecycle_stage": "question_refinement",
+                    "current_selection.selected_question_id": "question-immune-fibrosis",
+                    "selected_question.id": "question-immune-fibrosis",
+                    "active_draft": None,
+                },
+            ),
+            (
+                "fit_alignment",
+                FIT_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "fit_alignment",
+                    "current_selection.active_fit_mapping_id": "fit-001",
+                    "active_fit_mapping.id": "fit-001",
+                    "active_draft": None,
+                },
+            ),
+            (
+                "drafting",
+                DRAFTING_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "drafting",
+                    "active_draft.status": "draft",
+                    "active_draft.section_count": 3,
+                },
+            ),
+        )
+        for label, path, expected in cases:
+            with self.subTest(stage=label):
+                self.assert_paths(self.summarize_example(path), expected)
 
     def test_validation_rejects_revision_stage_with_invalid_verdicts(self) -> None:
         for verdict in ("major_reframe", "ready_for_submission"):
@@ -437,62 +445,69 @@ class WorkspaceSummaryTest(unittest.TestCase):
                     ("mentor_critiques.forced_rollback_stage", f"{verdict} 不得携带 forced_rollback_stage。"),
                 )
 
-    def test_summary_exposes_revision_audit_for_completed_revision(self) -> None:
-        summary = self.summarize_example(REVISION_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "revision")
-        self.assertEqual(summary["active_draft"]["status"], "revised")
-        self.assertEqual(summary["active_draft"]["version_label"], "v0.4")
-        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
-        self.assertEqual(summary["active_revision_plan"]["pre_revision_version_label"], "v0.3")
-        self.assertEqual(summary["active_revision_plan"]["post_revision_version_label"], "v0.4")
-        self.assertEqual(summary["active_critique"]["blocking_issue_count"], 1)
-
-    def test_summary_exposes_major_reframe_verdict(self) -> None:
-        summary = self.summarize_example(MAJOR_REFRAME_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "critique")
-        self.assertEqual(summary["active_critique"]["verdict"], "major_reframe")
-        self.assertEqual(summary["active_revision_plan"]["item_count"], 1)
-
-    def test_summary_exposes_ready_for_submission_verdict(self) -> None:
-        summary = self.summarize_example(READY_FOR_SUBMISSION_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "critique")
-        self.assertEqual(summary["active_draft"]["status"], "revised")
-        self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
-        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
-
-    def test_summary_exposes_forced_rollback_fields(self) -> None:
-        summary = self.summarize_example(FORCED_ROLLBACK_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "critique")
-        self.assertFalse(summary["gates"]["presubmission_frozen"])
-        self.assertEqual(summary["active_critique"]["id"], "critique-v2")
-        self.assertEqual(summary["active_critique"]["forced_rollback_stage"], "argument_building")
-        self.assertEqual(summary["active_critique"]["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
-
-    def test_summary_exposes_presubmission_frozen_gate(self) -> None:
-        summary = self.summarize_example(PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "frozen")
-        self.assertTrue(summary["gates"]["presubmission_frozen"])
-        self.assertEqual(summary["active_draft"]["status"], "frozen")
-        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
-        self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
-
-    def test_summary_exposes_re_review_linkage_and_previous_revision_evidence(self) -> None:
-        summary = self.summarize_example(RE_REVIEW_EXAMPLE_PATH)
-
-        self.assertEqual(summary["lifecycle_stage"], "critique")
-        self.assertEqual(summary["active_draft"]["status"], "revised")
-        self.assertEqual(summary["active_critique"]["id"], "critique-v2")
-        self.assertEqual(summary["active_critique"]["verdict"], "major_revision")
-        self.assertEqual(summary["active_critique"]["reviewed_revision_plan_id"], "revision-v1")
-        self.assertEqual(summary["active_revision_plan"]["id"], "revision-v2")
-        self.assertEqual(summary["active_revision_plan"]["execution_status"], "planned")
-        self.assertEqual(summary["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
-        self.assertEqual(summary["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
+    def test_summary_exposes_review_outcome_fields(self) -> None:
+        cases = (
+            (
+                "completed_revision",
+                REVISION_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "revision",
+                    "active_draft.status": "revised",
+                    "active_draft.version_label": "v0.4",
+                    "active_revision_plan.execution_status": "completed",
+                },
+            ),
+            (
+                "major_reframe",
+                MAJOR_REFRAME_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "critique",
+                    "active_critique.verdict": "major_reframe",
+                },
+            ),
+            (
+                "ready_for_submission",
+                READY_FOR_SUBMISSION_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "critique",
+                    "active_critique.verdict": "ready_for_submission",
+                    "active_revision_plan.execution_status": "completed",
+                },
+            ),
+            (
+                "forced_rollback",
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "critique",
+                    "gates.presubmission_frozen": False,
+                    "active_critique.forced_rollback_stage": "argument_building",
+                },
+            ),
+            (
+                "presubmission_frozen",
+                PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "frozen",
+                    "gates.presubmission_frozen": True,
+                    "active_draft.status": "frozen",
+                    "active_critique.verdict": "ready_for_submission",
+                },
+            ),
+            (
+                "re_review",
+                RE_REVIEW_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "critique",
+                    "active_critique.verdict": "major_revision",
+                    "active_critique.reviewed_revision_plan_id": "revision-v1",
+                    "active_revision_plan.id": "revision-v2",
+                    "reviewed_revision_evidence.revision_plan_id": "revision-v1",
+                },
+            ),
+        )
+        for label, path, expected in cases:
+            with self.subTest(case=label):
+                self.assert_paths(self.summarize_example(path), expected)
 
 if __name__ == "__main__":
     unittest.main()

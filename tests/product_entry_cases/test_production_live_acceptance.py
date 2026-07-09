@@ -20,7 +20,7 @@ from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_owner_receipt_evidence,
 )
 from med_autogrant.workspace import WorkspaceStateError
-from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
+from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH, assert_false_keys
 
 
 def _agent_lab_suite_result() -> dict[str, object]:
@@ -125,6 +125,19 @@ def _owner_receipt(
     )["owner_receipt_evidence"]
 
 
+def _projection_for_receipt(
+    receipt: dict[str, object],
+    *,
+    agent_lab_suite_result: dict[str, object] | None = None,
+    meta_agent_coordination_result: dict[str, object] | None = None,
+) -> dict[str, object]:
+    return build_production_live_acceptance_receipt_projection(
+        owner_receipt_evidence=receipt,
+        agent_lab_suite_result=agent_lab_suite_result or _agent_lab_suite_result(),
+        meta_agent_coordination_result=meta_agent_coordination_result or _meta_agent_coordination_result(),
+    )
+
+
 class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
     def test_manifest_exposes_mag_live_acceptance_receipt_surface(self) -> None:
         payload = MedAutoGrantProductEntry().build_product_entry_manifest(
@@ -175,11 +188,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                     "meta_agent_coordination_ref": "meta-agent:mag/live-acceptance",
                 },
             )
-            payload = build_production_live_acceptance_receipt_projection(
-                owner_receipt_evidence=receipt,
-                agent_lab_suite_result=_agent_lab_suite_result(),
-                meta_agent_coordination_result=_meta_agent_coordination_result(),
-            )
+            payload = _projection_for_receipt(receipt)
 
         projection = payload["production_live_acceptance_receipt"]
         self.assertEqual(
@@ -207,11 +216,16 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             projection["production_acceptance"]["closed_typed_blocker_kind"],
             "domain_owner_live_acceptance_receipt_scaleout_required",
         )
-        self.assertFalse(projection["authority_boundary"]["agent_lab_pass_equals_fundability_ready"])
-        self.assertFalse(projection["authority_boundary"]["meta_agent_pass_equals_fundability_ready"])
-        self.assertFalse(projection["authority_boundary"]["can_declare_submission_ready_export"])
-        self.assertFalse(projection["forbidden_write_proof"]["grant_truth_written"])
-        self.assertFalse(projection["forbidden_write_proof"]["fundability_verdict_written"])
+        assert_false_keys(
+            self,
+            projection["authority_boundary"],
+            (
+                "agent_lab_pass_equals_fundability_ready",
+                "meta_agent_pass_equals_fundability_ready",
+                "can_declare_submission_ready_export",
+            ),
+        )
+        assert_false_keys(self, projection["forbidden_write_proof"], ("grant_truth_written", "fundability_verdict_written"))
 
     def test_live_acceptance_receipt_projection_accepts_typed_blocker_patch_smoke_refs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -222,9 +236,8 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 closeout_summary="MAG owner still blocked.",
                 receipt_id="production-live-acceptance-blocked",
             )
-            payload = build_production_live_acceptance_receipt_projection(
-                owner_receipt_evidence=receipt,
-                agent_lab_suite_result=_agent_lab_suite_result(),
+            payload = _projection_for_receipt(
+                receipt,
                 meta_agent_coordination_result=_meta_agent_patch_work_order_result(),
             )
 
@@ -239,10 +252,12 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             projection["production_acceptance"]["closed_typed_blocker_kind"],
             "domain_owner_live_acceptance_receipt_scaleout_required",
         )
-        self.assertFalse(projection["authority_boundary"]["can_declare_fundability_ready"])
-        self.assertFalse(projection["authority_boundary"]["can_declare_submission_ready_export"])
-        self.assertFalse(projection["forbidden_write_proof"]["grant_truth_written"])
-        self.assertFalse(projection["forbidden_write_proof"]["memory_body_written"])
+        assert_false_keys(
+            self,
+            projection["authority_boundary"],
+            ("can_declare_fundability_ready", "can_declare_submission_ready_export"),
+        )
+        assert_false_keys(self, projection["forbidden_write_proof"], ("grant_truth_written", "memory_body_written"))
 
     def test_live_acceptance_receipt_projection_rejects_non_mag_owner_receipt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -258,11 +273,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             receipt["target_domain_id"] = "other-agent"
 
             with self.assertRaises(WorkspaceStateError):
-                build_production_live_acceptance_receipt_projection(
-                    owner_receipt_evidence=receipt,
-                    agent_lab_suite_result=_agent_lab_suite_result(),
-                    meta_agent_coordination_result=_meta_agent_coordination_result(),
-                )
+                _projection_for_receipt(receipt)
 
     def test_live_acceptance_receipt_projection_binds_meta_agent_to_same_agent_lab_result(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -279,9 +290,8 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             ] = "different-result-id"
 
             with self.assertRaises(WorkspaceStateError):
-                build_production_live_acceptance_receipt_projection(
-                    owner_receipt_evidence=receipt,
-                    agent_lab_suite_result=_agent_lab_suite_result(),
+                _projection_for_receipt(
+                    receipt,
                     meta_agent_coordination_result=meta_result,
                 )
 
@@ -298,8 +308,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             suite_result["summary"].pop("forbidden_authority_flag_count")
 
             with self.assertRaises(WorkspaceStateError):
-                build_production_live_acceptance_receipt_projection(
-                    owner_receipt_evidence=receipt,
+                _projection_for_receipt(
+                    receipt,
                     agent_lab_suite_result=suite_result,
-                    meta_agent_coordination_result=_meta_agent_coordination_result(),
                 )

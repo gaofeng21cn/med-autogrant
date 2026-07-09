@@ -5,7 +5,7 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
-from product_entry_cases.support import run_public_cli
+from product_entry_cases.support import assert_false_keys, assert_path_values, run_public_cli
 
 
 def _owner_payload_response(*, full: bool = False) -> dict[str, object]:
@@ -103,38 +103,31 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         response = json.loads(stdout)
-        self.assertEqual(
-            response["surface_kind"],
-            "mag_manifest_sustained_consumption_payload_response",
+        assert_path_values(
+            self,
+            response,
+            {
+                "surface_kind": "mag_manifest_sustained_consumption_payload_response",
+                "status": "sustained_consumption_payload_refs_ready",
+                "recommended_payload_path": "sustained_consumption_refs_path",
+                "record_payload.long_soak_or_typed_blocker_refs": [provider_long_soak_typed_blocker_ref],
+                "provider_long_soak_followthrough.status": "blocked_by_provider_long_soak_typed_blocker",
+                "provider_long_soak_followthrough.typed_blocker_refs": [provider_long_soak_typed_blocker_ref],
+                "provider_long_soak_followthrough.long_soak_evidence_refs": [],
+                "operator_payload_attempt_summary.attempt_count": 1,
+            },
         )
-        self.assertEqual(response["status"], "sustained_consumption_payload_refs_ready")
-        self.assertEqual(response["recommended_payload_path"], "sustained_consumption_refs_path")
-        self.assertEqual(
-            response["record_payload"]["long_soak_or_typed_blocker_refs"],
-            [provider_long_soak_typed_blocker_ref],
+        assert_false_keys(
+            self,
+            response["provider_long_soak_followthrough"],
+            ("claims_provider_long_soak_complete", "closes_provider_long_soak"),
         )
-        self.assertEqual(
-            response["provider_long_soak_followthrough"]["status"],
-            "blocked_by_provider_long_soak_typed_blocker",
+        assert_false_keys(
+            self,
+            response,
+            ("claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete"),
         )
-        self.assertEqual(
-            response["provider_long_soak_followthrough"]["typed_blocker_refs"],
-            [provider_long_soak_typed_blocker_ref],
-        )
-        self.assertEqual(response["provider_long_soak_followthrough"]["long_soak_evidence_refs"], [])
-        self.assertFalse(
-            response["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
-        )
-        self.assertFalse(response["provider_long_soak_followthrough"]["closes_provider_long_soak"])
         self.assertFalse(response["authority_boundary"]["can_satisfy_provider_long_soak"])
-        self.assertFalse(response["claims_sustained_app_consumption_complete"])
-        self.assertFalse(response["claims_provider_long_soak_complete"])
-        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
-        self.assertFalse(
-            response["operator_payload_attempt_summary"][
-                "attempt_records_are_app_sustained_consumption_closeout"
-            ]
-        )
 
         encoded_payload = json.dumps(
             {
@@ -195,24 +188,31 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         response = json.loads(stdout)
-        self.assertEqual(response["recommended_payload_path"], "operator_payload_attempts_path")
+        assert_path_values(
+            self,
+            response,
+            {
+                "recommended_payload_path": "operator_payload_attempts_path",
+                "operator_payload_attempt_summary.attempt_count": 2,
+            },
+        )
         self.assertEqual(len(response["operator_payload_attempt_records"]), 2)
-        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 2)
         self.assertTrue(
             response["operator_payload_attempt_summary"]["repeated_attempt_evidence_observed"]
         )
-        self.assertFalse(
-            response["operator_payload_attempt_summary"][
-                "attempt_records_are_app_sustained_consumption_closeout"
-            ]
+        assert_false_keys(
+            self,
+            response["operator_payload_attempt_summary"],
+            (
+                "attempt_records_are_app_sustained_consumption_closeout",
+                "attempt_records_are_provider_long_soak_closeout",
+            ),
         )
-        self.assertFalse(
-            response["operator_payload_attempt_summary"][
-                "attempt_records_are_provider_long_soak_closeout"
-            ]
+        assert_false_keys(
+            self,
+            response,
+            ("claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete"),
         )
-        self.assertFalse(response["claims_sustained_app_consumption_complete"])
-        self.assertFalse(response["claims_provider_long_soak_complete"])
 
     def test_manifest_consumption_payload_cli_rejects_unknown_operator_field(self) -> None:
         owner_payload_response = _owner_payload_response()
