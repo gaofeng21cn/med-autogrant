@@ -210,7 +210,7 @@
       "code_paths": [
         "src/med_autogrant/workspace.py",
         "src/med_autogrant/workspace_index.py",
-        "src/med_autogrant/workspace_scaffold.py",
+        "src/med_autogrant/workspace_profile.py",
         "src/med_autogrant/workspace_validation.py",
         "src/med_autogrant/product_entry_parts/preflight.py"
       ],

@@ -7,6 +7,19 @@ from cli_validate_cases import (
 
 
 class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
+    def test_product_preflight_only_supplies_mag_owned_domain_checks(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_preflight(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        preflight = payload["product_entry_preflight"]
+        self.assertEqual(
+            [check["check_id"] for check in preflight["checks"]],
+            ["workspace_document_valid", "submission_ready_export_gate"],
+        )
+
     def test_product_entry_manifest_keeps_domain_handler_contract_for_generated_caller(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 

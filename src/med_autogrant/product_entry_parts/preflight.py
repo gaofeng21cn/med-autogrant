@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.product_entry_parts.primitives import (
     REVIEW_CONTEXT_STAGES,
     _require_mapping,
@@ -12,15 +11,11 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_optional_string,
 )
 from med_autogrant.public_cli import public_cli_command
-from med_autogrant.runtime_defaults import (
-    DEFAULT_EXECUTOR_OWNER,
-    DEFAULT_RUNTIME_OWNER,
-    DEFAULT_RUNTIME_SUBSTRATE,
-)
 from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_validation import validate_workspace_document
 
 from opl_harness_shared.product_entry_program_companions import (
+    build_program_check,
     build_product_entry_preflight as _build_shared_product_entry_preflight,
 )
 
@@ -37,67 +32,36 @@ class ProductEntryPreflightMixin:
         validation = validate_workspace_document(document)
         current_selection = document.get("current_selection") if isinstance(document.get("current_selection"), Mapping) else {}
         draft_id = _require_optional_string(current_selection.get("active_draft_id"), field_name="draft_id")
-        mainline_payload = read_mainline_status()
-        current_line = _require_mapping(
-            mainline_payload,
-            "current_line",
-            context="mainline_status",
-        )
-        _require_nonempty_string_from_mapping(
-            current_line,
-            "current_owner_line",
-            context="mainline_status.current_line",
-        )
         validate_command = public_cli_command(
             "validate-workspace", "--input", str(resolved_input_path), "--format", "json"
         )
         start_command = public_cli_command(
             "product-status", "--input", str(resolved_input_path), "--format", "json"
         )
-        mainline_command = public_cli_command("mainline-status", "--format", "json")
         checks = [
-            {
-                "check_id": "workspace_document_valid",
-                "title": "Workspace Document Valid",
-                "status": "pass" if validation.ok else "fail",
-                "blocking": True,
-                "summary": (
+            build_program_check(
+                check_id="workspace_document_valid",
+                title="Workspace Document Valid",
+                status="pass" if validation.ok else "fail",
+                blocking=True,
+                summary=(
                     "workspace document schema 与 runtime constraints 均通过。"
                     if validation.ok
                     else "workspace document 仍有 schema 或 runtime constraint 问题。"
                 ),
-                "command": validate_command,
-            },
-            {
-                "check_id": "default_runtime_owner_line",
-                "title": "Default Runtime Owner Line",
-                "status": "pass",
-                "blocking": True,
-                "summary": (
-                    f"默认 product-entry runtime owner 固定为 {DEFAULT_RUNTIME_OWNER}/{DEFAULT_RUNTIME_SUBSTRATE}；"
-                    f"{DEFAULT_EXECUTOR_OWNER} 是默认 stage executor，Hermes 仅作为显式 proof lane。"
-                ),
-                "command": mainline_command,
-            },
-            {
-                "check_id": "direct_product entry surface_contract_landed",
-                "title": "Direct Product Entry Surface Contract Landed",
-                "status": "pass",
-                "blocking": True,
-                "summary": "direct product entry surface contract 已 landed，可由 product-status / manifest 直接消费。",
-                "command": start_command,
-            },
-            {
-                "check_id": "submission_ready_export_gate",
-                "title": "Submission Ready Export Gate",
-                "status": "pass" if document.get("lifecycle_stage") == "frozen" else "warn",
-                "blocking": False,
-                "summary": (
+                command=validate_command,
+            ),
+            build_program_check(
+                check_id="submission_ready_export_gate",
+                title="Submission Ready Export Gate",
+                status="pass" if document.get("lifecycle_stage") == "frozen" else "warn",
+                blocking=False,
+                summary=(
                     "当前 stage 已接近或进入 submission-ready export gate。"
                     if document.get("lifecycle_stage") == "frozen"
                     else "当前 stage 还未到 submission-ready export gate；这不阻止进入 product entry surface，但后续仍需继续主线推进。"
                 ),
-                "command": public_cli_command(
+                command=public_cli_command(
                     "build-submission-ready-package",
                     "--input",
                     str(resolved_input_path),
@@ -106,17 +70,11 @@ class ProductEntryPreflightMixin:
                     "--format",
                     "json",
                 ),
-            },
+            ),
         ]
-        blocking_check_ids = [
-            check["check_id"]
-            for check in checks
-            if check["blocking"] and check["status"] != "pass"
-        ]
-        ready_to_try_now = not blocking_check_ids
         summary = (
             "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 OPL/App generated status target 或 domain-handler export。"
-            if ready_to_try_now
+            if validation.ok
             else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或默认 runtime owner line，再进入 OPL/App generated status target 或 domain-handler export。"
         )
         product_entry_preflight = _build_shared_product_entry_preflight(

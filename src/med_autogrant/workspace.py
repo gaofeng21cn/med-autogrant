@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 from med_autogrant.workspace_projection_parts import (
     _build_workspace_state,
     _serialize_argument_chain,
@@ -25,12 +26,21 @@ from med_autogrant.workspace_types import (
     WorkspaceFileError,
     WorkspaceStateError,
 )
-from med_autogrant.workspace_scaffold import resolve_mag_workspace_document_path
 from med_autogrant.workspace_validation import validate_workspace_document
+
+_editable_shared_bootstrap.ensure_editable_dependency_paths()
+
+from opl_harness_shared.workspace_boundary import (  # noqa: E402
+    DEFAULT_WORKSPACE_DOCUMENT,
+    resolve_workspace_document_path,
+)
 
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
-    workspace_path = resolve_mag_workspace_document_path(path)
+    workspace_path = resolve_workspace_document_path(
+        path,
+        default_filename=DEFAULT_WORKSPACE_DOCUMENT,
+    )
     try:
         payload = json.loads(workspace_path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:

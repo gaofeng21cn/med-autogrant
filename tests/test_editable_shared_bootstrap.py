@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 import types
+from pathlib import Path
 
 import med_autogrant.editable_shared_bootstrap as module
 
@@ -105,7 +106,10 @@ def test_shared_dependency_entrypoints_are_resolvable_from_current_checkout() ->
 def test_cli_and_contract_entrypoints_still_parse() -> None:
     from med_autogrant import cli
     from med_autogrant.domain_entry_contract import build_domain_entry_contract
-    from med_autogrant.workspace_scaffold import resolve_mag_directory_workspace_document_path
+    from opl_harness_shared.workspace_boundary import (
+        DEFAULT_WORKSPACE_DOCUMENT,
+        resolve_workspace_document_path,
+    )
 
     parser = cli.build_parser()
     parsed = parser.parse_args(["foundry", "status"])
@@ -113,4 +117,8 @@ def test_cli_and_contract_entrypoints_still_parse() -> None:
 
     assert parsed.command == "foundry-status"
     assert contract["product_entry_kind"] == "med_auto_grant_product_entry"
-    assert resolve_mag_directory_workspace_document_path("workspace-root").name == "workspace.json"
+    workspace_path = resolve_workspace_document_path(
+        Path.cwd(),
+        default_filename=DEFAULT_WORKSPACE_DOCUMENT,
+    )
+    assert workspace_path.name == "workspace.json"

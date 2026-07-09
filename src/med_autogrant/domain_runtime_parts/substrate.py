@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_current_program_contract as _read_current_program_contract_from_contract,
@@ -51,9 +52,10 @@ from med_autogrant.workspace import (
     summarize_workspace_document,
 )
 from med_autogrant.workspace_projection_parts import _require_workspace_context
-from med_autogrant.workspace_scaffold import (
-    materialize_mag_directory_workspace,
-    resolve_mag_directory_workspace_document_path,
+from med_autogrant.workspace_profile import (
+    MAG_WORKSPACE_GITIGNORE_ENTRIES,
+    MAG_WORKSPACE_DIRECTORIES,
+    render_mag_workspace_readme,
 )
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
@@ -70,6 +72,14 @@ from med_autogrant.domain_runtime_parts.shared import (
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
 from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
+
+_editable_shared_bootstrap.ensure_editable_dependency_paths()
+
+from opl_harness_shared.workspace_boundary import (  # noqa: E402
+    DEFAULT_WORKSPACE_DOCUMENT,
+    WorkspaceScaffoldFile,
+    materialize_directory_workspace,
+)
 
 
 class MagDomainRuntime(
@@ -311,15 +321,22 @@ class MagDomainRuntime(
 
         if workspace_root is not None:
             resolved_workspace_root = Path(workspace_root).expanduser().resolve()
-            resolved_output_path = resolve_mag_directory_workspace_document_path(resolved_workspace_root)
+            resolved_output_path = resolved_workspace_root / DEFAULT_WORKSPACE_DOCUMENT
             _guard_workspace_output_identity(
                 resolved_output_path,
                 workspace_document=workspace,
                 draft_id=None,
             )
-            scaffold = materialize_mag_directory_workspace(
+            scaffold = materialize_directory_workspace(
                 workspace_root=resolved_workspace_root,
-                workspace_document=workspace,
+                directories=MAG_WORKSPACE_DIRECTORIES,
+                files=(
+                    WorkspaceScaffoldFile(
+                        "README.md",
+                        render_mag_workspace_readme(workspace),
+                    ),
+                ),
+                gitignore_entries=MAG_WORKSPACE_GITIGNORE_ENTRIES,
                 initialize_git=initialize_git,
             )
             _write_revised_workspace_output(resolved_output_path, workspace)
