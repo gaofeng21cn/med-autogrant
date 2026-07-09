@@ -110,11 +110,19 @@ class ProductDomainHandlerTest(unittest.TestCase):
 
         proposal = proposal_payload["domain_handler_dispatch"]["result"]["proposal"]
         self.assertEqual(proposal["surface_kind"], "mag_domain_memory_writeback_proposal")
+        self.assertEqual(proposal["stage_id"], "review_and_rebuttal")
+        self.assertEqual(proposal["write_policy"], "runtime_store_only_no_repo_write")
         self.assertFalse(proposal["forbidden_content_scan"]["contains_canonical_grant_artifact_content"])
         decision = decision_payload["domain_handler_dispatch"]["result"]["decision"]
         self.assertEqual(decision["surface_kind"], "mag_domain_memory_writeback_decision")
-        self.assertFalse(decision["operator_receipt_projection"]["contains_memory_body"])
+        self.assertEqual(decision["decision"], "accepted")
+        self.assertEqual(decision["write_policy"], "runtime_store_only_no_repo_write")
+        receipt_projection = decision["operator_receipt_projection"]
+        self.assertTrue(receipt_projection["opl_consumes_receipt_ref_only"])
+        self.assertFalse(receipt_projection["contains_memory_body"])
+        self.assertFalse(receipt_projection["contains_quality_or_export_verdict"])
         self.assertEqual(receipt_evidence["surface_kind"], "mag_domain_memory_runtime_receipt_evidence")
+        self.assertEqual(receipt_evidence["state"], "runtime_receipt_instance_written")
         self.assertFalse(receipt_evidence["repo_tracked"])
         self.assertFalse(receipt_evidence["contains_memory_body"])
         self.assertTrue(receipt_exists)
@@ -153,11 +161,32 @@ class ProductDomainHandlerTest(unittest.TestCase):
 
         dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "stage-attempt/closeout")
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         self.assertEqual(dispatch["result"]["return_shape"], "no_regression_evidence")
         self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
+        self.assertEqual(
+            dispatch["result"]["receipt_refs"]["owner_receipt_ref"],
+            receipt["receipt_instance_ref"],
+        )
+        self.assertEqual(
+            dispatch["result"]["consumed_memory_refs"],
+            ["mag-memory:accepted:review-risk-framing"],
+        )
+        self.assertEqual(
+            dispatch["result"]["writeback_receipt_refs"],
+            [
+                "mag-memory-writeback:accepted:review-risk-framing",
+                "mag-memory-writeback:rejected:review-style",
+            ],
+        )
         self.assertTrue(dispatch["result"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
+        self.assertIn(
+            "/product_entry_manifest/owner_receipt_contract",
+            dispatch["result"]["source_refs"],
+        )
         self.assertIsNone(dispatch["result"]["typed_blocker"])
         self.assertEqual(receipt["surface_kind"], "mag_owner_receipt_evidence")
+        self.assertEqual(receipt["receipt_shape"], "no_regression_evidence")
         self.assertFalse(receipt["forbidden_write_proof"]["grant_truth_written"])
         self.assertFalse(receipt["forbidden_write_proof"]["memory_body_written"])
         self.assertTrue(receipt_exists)
@@ -189,14 +218,21 @@ class ProductDomainHandlerTest(unittest.TestCase):
 
         dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "lifecycle/receipt")
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         self.assertEqual(dispatch["result"]["return_shape"], "typed_blocker")
         self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
+        self.assertEqual(
+            dispatch["result"]["receipt_refs"]["lifecycle_receipt_ref"],
+            receipt["receipt_instance_ref"],
+        )
         self.assertEqual(
             dispatch["result"]["typed_blocker"]["blocker_kind"],
             "mag_lifecycle_owner_receipt_required",
         )
         self.assertTrue(dispatch["result"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
         self.assertEqual(receipt["surface_kind"], "mag_lifecycle_receipt_evidence")
+        self.assertEqual(receipt["operation"], "cleanup")
+        self.assertEqual(receipt["artifact_mutation"], "none")
         self.assertFalse(receipt["forbidden_write_proof"]["grant_artifact_written"])
         self.assertTrue(receipt_exists)
 
