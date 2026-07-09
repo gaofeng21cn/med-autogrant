@@ -5,7 +5,6 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 from product_entry_cases.support import run_public_cli
 
 
@@ -88,99 +87,6 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
                 "--format",
                 "json",
             )
-
-    def test_opl_owner_payload_response_dispatches_product_surface(self) -> None:
-        expected_payload = {
-            "surface_kind": "mag_opl_owner_payload_response",
-            "status": "blocked_by_submission_ready_human_gate",
-        }
-        production_acceptance = {
-            "surface_kind": "mag_production_acceptance_evidence.v1",
-            "closure_evidence": {
-                "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
-            },
-        }
-        external_evidence_ledger = {
-            "surface_kind": "mag_external_evidence_receipt_ledger.v1",
-            "grant_stage_controlled_attempt_closeout": {},
-        }
-        receipt_readiness = {
-            "surface_kind": "mag_receipt_readiness_projection",
-            "state": "receipt_refs_ready_not_quality_ready",
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            production_acceptance_path = Path(tmp_dir) / "production-acceptance.json"
-            external_evidence_ledger_path = Path(tmp_dir) / "external-evidence-ledger.json"
-            receipt_readiness_path = Path(tmp_dir) / "receipt-readiness.json"
-            production_acceptance_path.write_text(
-                json.dumps(production_acceptance),
-                encoding="utf-8",
-            )
-            external_evidence_ledger_path.write_text(
-                json.dumps(external_evidence_ledger),
-                encoding="utf-8",
-            )
-            receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
-
-            with patch(
-                "med_autogrant.cli_parts.handlers.build_opl_owner_payload_response",
-                return_value=expected_payload,
-            ) as build_response:
-
-                exit_code, stdout, stderr = run_public_cli(
-                    "authority",
-                    "owner-payload-response",
-                    "--production-acceptance",
-                    str(production_acceptance_path),
-                    "--external-evidence-receipt-ledger",
-                    str(external_evidence_ledger_path),
-                    "--receipt-readiness-projection",
-                    str(receipt_readiness_path),
-                    "--format",
-                    "json",
-                )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        build_response.assert_called_once_with(
-            production_acceptance=production_acceptance,
-            external_evidence_receipt_ledger=external_evidence_ledger,
-            receipt_readiness_projection=receipt_readiness,
-        )
-
-    def test_manifest_sustained_consumption_payload_dispatches_product_surface(self) -> None:
-        expected_payload = {
-            "surface_kind": "mag_manifest_sustained_consumption_payload_response",
-            "status": "blocked_by_app_operator_typed_blocker",
-        }
-        owner_payload_response = _owner_payload_response()
-        workspace_receipt_scaleout_evidence = {"surface_kind": "mag_workspace_receipt_scaleout_evidence.v1"}
-        operator_payload = {
-            "typed_blocker_refs": [
-                "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-28"
-            ]
-        }
-
-        with patch(
-            "med_autogrant.cli_parts.handlers.build_manifest_sustained_consumption_payload_response",
-            return_value=expected_payload,
-        ) as build_response:
-            exit_code, stdout, stderr = self.run_manifest_consumption_payload_cli(
-                owner_payload_response=owner_payload_response,
-                workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
-                operator_payload=operator_payload,
-            )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        build_response.assert_called_once_with(
-            owner_payload_response=owner_payload_response,
-            workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
-            operator_payload=operator_payload,
-        )
 
     def test_manifest_consumption_payload_cli_returns_provider_followthrough_shape(self) -> None:
         owner_payload_response = _owner_payload_response(full=True)

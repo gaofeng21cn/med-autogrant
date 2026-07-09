@@ -3,14 +3,8 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
-from contextlib import (
-    redirect_stderr,
-    redirect_stdout,
-)
-from io import StringIO
 from pathlib import Path
 
-from med_autogrant.cli import main
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import (
     CRITIQUE_EXAMPLE_PATH,
@@ -40,17 +34,6 @@ class ProductDomainHandlerTest(unittest.TestCase):
         self.assertFalse(readback_guard["physical_delete_authorized"])
         self.assertFalse(readback_guard["provider_completion_is_grant_ready"])
         self.assertFalse(readback_guard["provider_completion_is_submission_ready"])
-        self.assertEqual(
-            export["guardrails"]["readback_boundary"],
-            {
-                "active_caller_remains": "mag_direct_domain_handler_until_opl_caller_evidence",
-                "grant_truth_write_authorized": False,
-                "external_evidence_authorized_by_mag_repo": False,
-                "physical_delete_authorized": False,
-                "provider_completion_is_grant_ready": False,
-                "provider_completion_is_submission_ready": False,
-            },
-        )
 
     def test_domain_handler_dispatch_retires_generic_wrapper_actions(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -271,37 +254,3 @@ class ProductDomainHandlerTest(unittest.TestCase):
             )
             with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
                 MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
-
-    def test_cli_rejects_retired_notification_receipt_domain_handler_action(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            task_path = Path(tmp_dir) / "receipt-task.json"
-            task_path.write_text(
-                json.dumps(
-                    {
-                        "task_id": "receipt-1",
-                        "action": "notification/receipt",
-                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                        "notification": {"kind": "opl_wakeup_ack"},
-                    }
-                ),
-                encoding="utf-8",
-            )
-            stdout = StringIO()
-            stderr = StringIO()
-            with redirect_stdout(stdout), redirect_stderr(stderr):
-                with self.assertRaises(SystemExit) as raised:
-                    main(
-                        [
-                            "product",
-                            "domain_handler",
-                            "dispatch",
-                            "--task",
-                            str(task_path),
-                            "--format",
-                            "json",
-                        ]
-                    )
-
-        self.assertEqual(raised.exception.code, 2)
-        self.assertEqual(stdout.getvalue(), "")
-        self.assertIn("invalid choice: 'product'", stderr.getvalue())

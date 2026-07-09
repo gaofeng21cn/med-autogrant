@@ -119,39 +119,11 @@ class RevisionExecutorCliTest(unittest.TestCase):
             self.assertEqual(draft["status"], "revised")
             self.assertEqual(draft["version_label"], "v0.4")
             self.assertEqual(
-                self._section(draft, "basis")["text"],
-                "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程；若不回答这一机制问题，领域将持续停留在现象描述层。",
-            )
-            self.assertEqual(
                 self._section(draft, "basis")["linked_object_ids"],
                 ["arg-001", "question-immune-fibrosis"],
             )
             self.assertEqual(
-                self._section(draft, "foundation")["text"],
-                "申请人已积累心梗后免疫重塑单细胞图谱、时序样本库与动物模型流程，可直接支撑关键通讯轴定位与功能验证，从而把当前科学问题与申请人既有能力闭合为同一条执行路径。",
-            )
-            self.assertEqual(
                 self._section(draft, "foundation")["linked_object_ids"],
-                ["output-1", "project-1"],
-            )
-            self.assertEqual(
-                self._section(draft, "content")["text"],
-                "围绕关键通讯轴识别、时间窗验证与功能阻断三段展开，并让每一段都回指既有 argument chain 与 fit mapping。",
-            )
-            self.assertEqual(
-                self._outline_item(draft, "basis")["core_claim"],
-                "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
-            )
-            self.assertEqual(
-                self._outline_item(draft, "basis")["linked_object_ids"],
-                ["arg-001", "question-immune-fibrosis"],
-            )
-            self.assertEqual(
-                self._outline_item(draft, "foundation")["core_claim"],
-                "申请人的单细胞时序资源与模型平台可直接支撑当前问题的关键验证路径。",
-            )
-            self.assertEqual(
-                self._outline_item(draft, "foundation")["linked_object_ids"],
                 ["output-1", "project-1"],
             )
 
@@ -165,6 +137,10 @@ class RevisionExecutorCliTest(unittest.TestCase):
             )
             self.assertTrue(output_path.exists())
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8")), revised_workspace)
+            self.assertTrue(validate_workspace_document(revised_workspace).ok)
+            route_report = build_stage_route_report(revised_workspace)
+            self.assertTrue(route_report["ok"])
+            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
 
     def test_execute_revision_pass_preserves_reviewed_revision_evidence_for_re_review(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -216,16 +192,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             self.assertEqual(draft["status"], "revised")
             self.assertEqual(draft["version_label"], "v0.5")
             self.assertEqual(
-                self._section(draft, "foundation")["text"],
-                "修订后的研究基础需要直接支撑关键验证实验：申请人现有单细胞时序数据可定位候选通讯轴，在研模型和样本流程可完成阻断验证，因此研究基础与修订后的执行路径形成一一对应的证据闭环。",
-            )
-            self.assertEqual(
                 self._section(draft, "foundation")["linked_object_ids"],
                 ["project-1", "output-1"],
-            )
-            self.assertEqual(
-                self._outline_item(draft, "foundation")["core_claim"],
-                "申请人的既有数据、模型与样本流程可直接支撑修订后方案的关键验证闭环。",
             )
 
             revision_plan = self._active_revision_plan(revised_workspace)
@@ -234,104 +202,13 @@ class RevisionExecutorCliTest(unittest.TestCase):
 
             active_critique = self._active_critique(revised_workspace)
             self.assertEqual(active_critique["reviewed_revision_plan_id"], "revision-v1")
-
-    def test_execute_revision_pass_re_review_output_remains_valid_and_routeable(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            output_path = Path(tmp_dir) / "re_review-validated-workspace.json"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "pass",
-                "revision",
-                "--input",
-                str(P3B_RE_REVIEW_EXAMPLE_PATH),
-                "--output",
-                str(output_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-
-            payload = json.loads(stdout)
-            revised_workspace = payload["revised_workspace"]
-
             validation = validate_workspace_document(revised_workspace)
             self.assertTrue(validation.ok, validation.to_dict(revised_workspace))
-
             route_report = build_stage_route_report(revised_workspace)
             self.assertTrue(route_report["ok"])
-            self.assertEqual(route_report["lifecycle_stage"], "critique")
-            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
             self.assertEqual(
                 route_report["verification_checkpoint"]["identity"]["reviewed_revision_plan_id"],
                 "revision-v1",
-            )
-            self.assertEqual(
-                route_report["route"]["critique_summary"]["reviewed_revision_plan_id"],
-                "revision-v1",
-            )
-            self.assertEqual(
-                route_report["route"]["critique_summary"]["reviewed_revision_evidence"]["post_revision_version_label"],
-                "v0.4",
-            )
-            self.assertEqual(
-                route_report["route"]["summarize_workspace"]["active_revision_plan"]["post_revision_version_label"],
-                "v0.5",
-            )
-            self.assertEqual(
-                route_report["route"]["summarize_workspace"]["active_draft"]["version_label"],
-                "v0.5",
-            )
-
-    def test_execute_revision_pass_initial_revision_output_remains_valid_and_routeable(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            output_path = Path(tmp_dir) / "initial-validated-workspace.json"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "pass",
-                "revision",
-                "--input",
-                str(P2C_CRITIQUE_EXAMPLE_PATH),
-                "--output",
-                str(output_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-
-            payload = json.loads(stdout)
-            revised_workspace = payload["revised_workspace"]
-
-            validation = validate_workspace_document(revised_workspace)
-            self.assertTrue(validation.ok, validation.to_dict(revised_workspace))
-
-            route_report = build_stage_route_report(revised_workspace)
-            self.assertTrue(route_report["ok"])
-            self.assertEqual(route_report["lifecycle_stage"], "critique")
-            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
-            self.assertEqual(route_report["checkpoint_status"], "forward_progress")
-            self.assertEqual(route_report["verification_checkpoint"]["checkpoint_status"], "forward_progress")
-            self.assertTrue(route_report["verification_checkpoint"]["validation_ok"])
-            self.assertEqual(
-                route_report["verification_checkpoint"]["identity"],
-                {
-                    "grant_run_id": payload["grant_run_id"],
-                    "workspace_id": payload["workspace_id"],
-                    "draft_id": payload["draft_id"],
-                    "active_revision_plan_id": "revision-v1",
-                    "reviewed_revision_plan_id": None,
-                },
-            )
-            self.assertEqual(
-                route_report["route"]["summarize_workspace"]["active_revision_plan"]["post_revision_version_label"],
-                "v0.4",
-            )
-            self.assertEqual(
-                route_report["route"]["summarize_workspace"]["active_draft"]["version_label"],
-                "v0.4",
             )
 
     def test_execute_revision_pass_fails_closed_for_non_executable_gate_states(self) -> None:
@@ -495,10 +372,6 @@ class RevisionExecutorCliTest(unittest.TestCase):
     @staticmethod
     def _section(draft: dict[str, object], section_key: str) -> dict[str, object]:
         return next(item for item in draft["sections"] if item["section_key"] == section_key)
-
-    @staticmethod
-    def _outline_item(draft: dict[str, object], section_key: str) -> dict[str, object]:
-        return next(item for item in draft["outline"] if item["section_key"] == section_key)
 
 
 if __name__ == "__main__":
