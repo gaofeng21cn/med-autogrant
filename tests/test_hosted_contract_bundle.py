@@ -4,8 +4,6 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,49 +13,27 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.domain_runtime_parts.contracts import build_operator_contract  # noqa: E402
-from med_autogrant.public_cli import public_command_label  # noqa: E402
-from support.cli import public_cli_argv  # noqa: E402
-from support.hosted_contract_bundle import assert_hosted_contract_bundle_contract  # noqa: E402
-from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
+from support.hosted_contract_bundle import (  # noqa: E402
+    assert_hosted_contract_bundle_cli_failure,
+    assert_hosted_contract_bundle_contract,
+    build_final_package,
+    current_runtime_owner,
+    run_hosted_contract_bundle_cli,
+)
 
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "current-program.json"
 
-PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
-CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
-
-
 
 class HostedContractBundleCliTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            try:
-                exit_code = main(public_cli_argv(args))
-            except SystemExit as exc:
-                exit_code = int(exc.code)
-        return exit_code, stdout.getvalue(), stderr.getvalue()
-
     def test_build_hosted_contract_bundle_writes_expected_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
             hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                str(final_package_path),
-                "--output",
-                str(hosted_contract_path),
-                "--format",
-                "json",
-            )
+            exit_code, stdout, stderr = run_hosted_contract_bundle_cli(final_package_path, hosted_contract_path)
 
             self.assertEqual(exit_code, 0)
             self.assertEqual(stderr, "")
@@ -73,7 +49,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             assert_hosted_contract_bundle_contract(
                 self,
                 contract_bundle,
-                current_runtime_owner=self._current_runtime_owner(),
+                current_runtime_owner=current_runtime_owner(CURRENT_PROGRAM_CONTRACT),
             )
             self.assertEqual(json.loads(hosted_contract_path.read_text(encoding="utf-8")), contract_bundle)
 
@@ -85,7 +61,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
             hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
 
             with patch(
                 "med_autogrant.domain_runtime_parts.package_surface.build_hosted_contract_bundle_document",
@@ -118,22 +94,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                str(final_package_path),
-                "--output",
-                str(hosted_contract_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("final package kind 非法", payload["error"])
+            result = run_hosted_contract_bundle_cli(final_package_path, hosted_contract_path)
+            assert_hosted_contract_bundle_cli_failure(self, result, hosted_contract_path, "final package kind 非法")
 
     def test_build_hosted_contract_bundle_fails_closed_when_final_package_freeze_manifest_missing_required_fields(self) -> None:
         required_fields = (
@@ -149,7 +111,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     final_package_path = Path(tmp_dir) / f"missing-freeze-manifest-{field}.json"
                     hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
                     final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
                     final_package["freeze_manifest"].pop(field)
                     final_package_path.write_text(
@@ -157,24 +119,14 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         encoding="utf-8",
                     )
 
-                    exit_code, stdout, stderr = self.run_cli(
-                        "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                        str(final_package_path),
-                        "--output",
-                        str(hosted_contract_path),
-                        "--format",
-                        "json",
+                    result = run_hosted_contract_bundle_cli(final_package_path, hosted_contract_path)
+                    assert_hosted_contract_bundle_cli_failure(
+                        self,
+                        result,
+                        hosted_contract_path,
+                        "final package freeze_manifest 缺少字段",
+                        field,
                     )
-
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
-                    self.assertFalse(payload["ok"])
-                    self.assertIn("final package freeze_manifest 缺少字段", payload["error"])
-                    self.assertIn(field, payload["error"])
-                    self.assertFalse(hosted_contract_path.exists())
 
     def test_build_hosted_contract_bundle_fails_closed_when_final_package_lineage_values_are_not_nonempty_strings(self) -> None:
         cases = (
@@ -190,7 +142,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     final_package_path = Path(tmp_dir) / f"bad-lineage-value-{field}.json"
                     hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
                     final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
                     final_package["lineage"][field] = bad_value
                     final_package_path.write_text(
@@ -198,29 +150,19 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         encoding="utf-8",
                     )
 
-                    exit_code, stdout, stderr = self.run_cli(
-                        "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                        str(final_package_path),
-                        "--output",
-                        str(hosted_contract_path),
-                        "--format",
-                        "json",
+                    result = run_hosted_contract_bundle_cli(final_package_path, hosted_contract_path)
+                    assert_hosted_contract_bundle_cli_failure(
+                        self,
+                        result,
+                        hosted_contract_path,
+                        f"final package lineage.{field} 非法",
                     )
-
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
-                    self.assertFalse(payload["ok"])
-                    self.assertIn(f"final package lineage.{field} 非法", payload["error"])
-                    self.assertFalse(hosted_contract_path.exists())
 
     def test_build_hosted_contract_bundle_fails_closed_when_existing_output_identity_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
             hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
             hosted_contract_path.write_text(
                 json.dumps(
                     {
@@ -234,16 +176,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                str(final_package_path),
-                "--output",
-                str(hosted_contract_path),
-                "--format",
-                "json",
-            )
+            exit_code, stdout, stderr = run_hosted_contract_bundle_cli(final_package_path, hosted_contract_path)
 
             self.assertEqual(exit_code, 1)
             self.assertEqual(stderr, "")
@@ -255,32 +188,20 @@ class HostedContractBundleCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
             hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
-            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            build_final_package(self, FROZEN_EXAMPLE_PATH, final_package_path)
 
-            first_exit, first_stdout, first_stderr = self.run_cli(
-                "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                str(final_package_path),
-                "--output",
-                str(hosted_contract_path),
-                "--format",
-                "json",
+            first_exit, first_stdout, first_stderr = run_hosted_contract_bundle_cli(
+                final_package_path,
+                hosted_contract_path,
             )
             self.assertEqual(first_exit, 0)
             self.assertEqual(first_stderr, "")
             first_payload = json.loads(first_stdout)
             self.assertTrue(first_payload["ok"])
 
-            second_exit, second_stdout, second_stderr = self.run_cli(
-                "package",
-                "hosted-contract-bundle",
-                "--final-package",
-                str(final_package_path),
-                "--output",
-                str(hosted_contract_path),
-                "--format",
-                "json",
+            second_exit, second_stdout, second_stderr = run_hosted_contract_bundle_cli(
+                final_package_path,
+                hosted_contract_path,
             )
 
             self.assertEqual(second_exit, 0)
@@ -291,41 +212,6 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 json.loads(hosted_contract_path.read_text(encoding="utf-8")),
                 second_payload["hosted_contract_bundle"],
             )
-
-    def _build_final_package(self, input_path: Path, final_package_path: Path) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            bundle_path = Path(tmp_dir) / "bundle.json"
-            build_bundle_exit, _, build_bundle_stderr = self.run_cli(
-                "package",
-                "artifact-bundle",
-                "--input",
-                str(input_path),
-                "--output",
-                str(bundle_path),
-                "--format",
-                "json",
-            )
-            self.assertEqual(build_bundle_exit, 0)
-            self.assertEqual(build_bundle_stderr, "")
-
-            build_package_exit, _, build_package_stderr = self.run_cli(
-                "package",
-                "final-package",
-                "--input",
-                str(input_path),
-                "--artifact-bundle",
-                str(bundle_path),
-                "--output",
-                str(final_package_path),
-                "--format",
-                "json",
-            )
-            self.assertEqual(build_package_exit, 0)
-            self.assertEqual(build_package_stderr, "")
-
-    def _current_runtime_owner(self) -> dict[str, str]:
-        contract = json.loads(CURRENT_PROGRAM_CONTRACT.read_text(encoding="utf-8"))
-        return contract["runtime_owner"]
 
 
 if __name__ == "__main__":

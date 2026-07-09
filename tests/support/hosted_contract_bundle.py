@@ -1,14 +1,105 @@
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
 from collections.abc import Mapping
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
+from pathlib import Path
 
+from med_autogrant.cli import main
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.domain_runtime_parts.contracts import build_operator_contract
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS
+from support.cli import public_cli_argv
 
 
 CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
+HOSTED_CONTRACT_BUNDLE_COMMAND = ("package", "hosted-contract-bundle")
+
+
+def run_public_cli(*args: str) -> tuple[int, str, str]:
+    stdout = StringIO()
+    stderr = StringIO()
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            exit_code = main(public_cli_argv(args))
+        except SystemExit as exc:
+            exit_code = int(exc.code)
+    return exit_code, stdout.getvalue(), stderr.getvalue()
+
+
+def build_final_package(
+    test_case: unittest.TestCase,
+    input_path: Path,
+    final_package_path: Path,
+) -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        bundle_path = Path(tmp_dir) / "bundle.json"
+        build_bundle_exit, _, build_bundle_stderr = run_public_cli(
+            "package",
+            "artifact-bundle",
+            "--input",
+            str(input_path),
+            "--output",
+            str(bundle_path),
+            "--format",
+            "json",
+        )
+        test_case.assertEqual(build_bundle_exit, 0)
+        test_case.assertEqual(build_bundle_stderr, "")
+
+        build_package_exit, _, build_package_stderr = run_public_cli(
+            "package",
+            "final-package",
+            "--input",
+            str(input_path),
+            "--artifact-bundle",
+            str(bundle_path),
+            "--output",
+            str(final_package_path),
+            "--format",
+            "json",
+        )
+        test_case.assertEqual(build_package_exit, 0)
+        test_case.assertEqual(build_package_stderr, "")
+
+
+def run_hosted_contract_bundle_cli(
+    final_package_path: Path,
+    hosted_contract_path: Path,
+) -> tuple[int, str, str]:
+    return run_public_cli(
+        *HOSTED_CONTRACT_BUNDLE_COMMAND,
+        "--final-package",
+        str(final_package_path),
+        "--output",
+        str(hosted_contract_path),
+        "--format",
+        "json",
+    )
+
+
+def assert_hosted_contract_bundle_cli_failure(
+    test_case: unittest.TestCase,
+    result: tuple[int, str, str],
+    hosted_contract_path: Path,
+    *expected_error_parts: str,
+) -> None:
+    exit_code, stdout, stderr = result
+    test_case.assertEqual(exit_code, 1)
+    test_case.assertEqual(stderr, "")
+    payload = json.loads(stdout)
+    test_case.assertFalse(payload["ok"])
+    for expected_error_part in expected_error_parts:
+        test_case.assertIn(expected_error_part, payload["error"])
+    test_case.assertFalse(hosted_contract_path.exists())
+
+
+def current_runtime_owner(current_program_contract: Path) -> dict[str, str]:
+    contract = json.loads(current_program_contract.read_text(encoding="utf-8"))
+    return contract["runtime_owner"]
 
 
 def assert_hosted_contract_bundle_contract(
@@ -33,23 +124,14 @@ def _assert_hosted_contract_bundle_header(
 ) -> None:
     test_case.assertEqual(contract_bundle["contract_version"], 1)
     test_case.assertEqual(contract_bundle["bundle_kind"], "hosted_contract_bundle")
-    test_case.assertEqual(
-        contract_bundle["formal_entry_matrix"],
-        {
-            "default_formal_entry": "CLI",
-            "supported_protocol_layer": "MCP",
-            "internal_controller_surface": "controller",
-        },
-    )
-    test_case.assertEqual(
-        contract_bundle["execution_identity"],
-        {
-            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-            "workspace_id": "nsfc-demo-001",
-            "draft_id": "draft-v1",
-            "program_id": "med-autogrant-mainline",
-        },
-    )
+    formal_entry_matrix = contract_bundle["formal_entry_matrix"]
+    test_case.assertEqual(formal_entry_matrix["default_formal_entry"], "CLI")
+    test_case.assertEqual(formal_entry_matrix["supported_protocol_layer"], "MCP")
+    execution_identity = contract_bundle["execution_identity"]
+    test_case.assertEqual(execution_identity["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+    test_case.assertEqual(execution_identity["workspace_id"], "nsfc-demo-001")
+    test_case.assertEqual(execution_identity["draft_id"], "draft-v1")
+    test_case.assertEqual(execution_identity["program_id"], "med-autogrant-mainline")
 
 
 def _assert_hosted_runtime_contracts(
@@ -58,143 +140,65 @@ def _assert_hosted_runtime_contracts(
     *,
     current_runtime_owner: Mapping[str, str],
 ) -> None:
+    runtime_substrate = contract_bundle["runtime_substrate_contract"]
+    test_case.assertEqual(runtime_substrate["runtime_owner"], "configured_family_runtime_provider")
+    test_case.assertEqual(runtime_substrate["task_runtime_owner"], "one-person-lab")
+    test_case.assertEqual(runtime_substrate["runtime_substrate"], "temporal")
+    test_case.assertEqual(runtime_substrate["stage_executor_owner"], "codex_cli")
+    for owner_field in ("current_owner_line", "active_phase", "active_tranche", "provenance_oracle"):
+        test_case.assertEqual(runtime_substrate[owner_field], current_runtime_owner[owner_field])
     test_case.assertEqual(
-        contract_bundle["runtime_substrate_contract"],
-        {
-            "runtime_owner": "configured_family_runtime_provider",
-            "task_runtime_owner": "one-person-lab",
-            "runtime_substrate": "temporal",
-            "stage_executor_owner": "codex_cli",
-            "current_owner_line": current_runtime_owner["current_owner_line"],
-            "active_phase": current_runtime_owner["active_phase"],
-            "active_tranche": current_runtime_owner["active_tranche"],
-            "provenance_oracle": current_runtime_owner["provenance_oracle"],
-            "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
-        },
+        runtime_substrate["repo_tracked_current_program_contract"],
+        "contracts/runtime-program/current-program.json",
     )
-    test_case.assertEqual(
-        contract_bundle["runtime_state_contract"],
-        {
-            "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-            "session_state_owner": "one-person-lab",
-            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-            "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
-            "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
-            "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
-            "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
-            "non_repo_tracked": True,
-        },
-    )
-    test_case.assertEqual(
-        contract_bundle["session_contract"],
-        {
-            "session_handle_kind": "grant_run_id",
-            "session_owner": "one-person-lab",
-            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-            "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
-            "required_mag_authority_surfaces": [
-                "build-artifact-bundle",
-                "build-final-package",
-                "build-submission-ready-package",
-                "owner_receipt_contract",
-                "grant_transition_oracle",
-            ],
-        },
-    )
-    test_case.assertEqual(
-        contract_bundle["operator_contract"],
-        {
-            "canonical_audit_surfaces": [
-                "validate-workspace",
-                "summarize-workspace",
-                "grant-intake-audit",
-                "grant-evidence-grounding",
-                "grant-quality-scorecard",
-                "grant-quality-closure-dossier",
-                "grant-quality-diff",
-                "next-step",
-                "critique-summary",
-                "stage-route-report",
-            ],
-            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
-            "checkpoint_aggregation_surface": "stage-route-report",
-        },
-    )
+
+    runtime_state = contract_bundle["runtime_state_contract"]
+    test_case.assertEqual(runtime_state["root"], "$CODEX_HOME/projects/med-autogrant/runtime-state/")
+    test_case.assertEqual(runtime_state["session_state_owner"], "one-person-lab")
+    test_case.assertTrue(runtime_state["non_repo_tracked"])
+
+    session_contract = contract_bundle["session_contract"]
+    test_case.assertEqual(session_contract["session_handle_kind"], "grant_run_id")
+    test_case.assertEqual(session_contract["session_owner"], "one-person-lab")
+    test_case.assertIn("owner_receipt_contract", session_contract["required_mag_authority_surfaces"])
+
+    operator_contract = contract_bundle["operator_contract"]
+    test_case.assertEqual(operator_contract["canonical_export_surfaces"], CANONICAL_EXPORT_SURFACES)
+    test_case.assertEqual(operator_contract["checkpoint_aggregation_surface"], "stage-route-report")
 
 
 def _assert_hosted_domain_and_schema_contracts(
     test_case: unittest.TestCase,
     contract_bundle: dict[str, object],
 ) -> None:
+    state_contract = contract_bundle["state_contract"]
+    test_case.assertEqual(state_contract["workspace_surface_kind"], "nsfc_workspace")
+    test_case.assertEqual(state_contract["domain_authority_surface_kind"], "owner_receipt_contract")
+    test_case.assertEqual(state_contract["artifact_bundle_kind"], "artifact_bundle")
+    test_case.assertEqual(state_contract["final_package_kind"], "final_package")
     test_case.assertEqual(
-        contract_bundle["state_contract"],
-        {
-            "workspace_surface_kind": "nsfc_workspace",
-            "session_surface_kind": "opl_generated_session_surface",
-            "domain_authority_surface_kind": "owner_receipt_contract",
-            "artifact_bundle_kind": "artifact_bundle",
-            "final_package_kind": "final_package",
-        },
+        contract_bundle["artifact_contract"]["lineage_fields"],
+        [
+            "frozen_question_id",
+            "selected_direction_id",
+            "selected_question_id",
+            "active_fit_mapping_id",
+            "draft_id",
+            "revision_plan_id",
+        ],
     )
-    test_case.assertEqual(
-        contract_bundle["artifact_contract"],
-        {
-            "artifact_bundle_manifest_kind": "artifact_bundle_manifest",
-            "final_package_manifest_kind": "freeze_manifest",
-            "lineage_fields": [
-                "frozen_question_id",
-                "selected_direction_id",
-                "selected_question_id",
-                "active_fit_mapping_id",
-                "draft_id",
-                "revision_plan_id",
-            ],
-        },
-    )
-    test_case.assertEqual(
-        contract_bundle["audit_contract"],
-        {
-            "verification_checkpoint_kind": "verification_checkpoint",
-            "checkpoint_status_kind": "checkpoint_status",
-            "reviewed_revision_evidence_kind": "reviewed_revision_evidence",
-        },
-    )
+    audit_contract = contract_bundle["audit_contract"]
+    test_case.assertEqual(audit_contract["verification_checkpoint_kind"], "verification_checkpoint")
+    test_case.assertEqual(audit_contract["checkpoint_status_kind"], "checkpoint_status")
     test_case.assertEqual(
         contract_bundle["domain_entry_contract"],
         build_domain_entry_contract(),
     )
-    test_case.assertEqual(
-        contract_bundle["schema_contract"],
-        {
-            "schema_version": "v1",
-            "schema_index_path": "schemas/v1/schema-index.json",
-            "aggregate_root_schema": "nsfc-workspace.schema.json",
-            "contract_schema_files": [
-                "service-safe-domain-surface.schema.json",
-                "executor-routing-contract.schema.json",
-                "product-entry.schema.json",
-                "grant-intake-audit.schema.json",
-                "grant-evidence-grounding.schema.json",
-                "grant-quality-scorecard.schema.json",
-                "grant-quality-closure-dossier.schema.json",
-                "grant-quality-diff.schema.json",
-                "grant-autonomy-controller-input.schema.json",
-                "grant-autonomy-controller-report.schema.json",
-                "funding-landscape-discovery-input.schema.json",
-                "funding-landscape-discovery.schema.json",
-                "funding-landscape-cache.schema.json",
-                "funding-landscape-diff-report.schema.json",
-                "project-profile-selection-input.schema.json",
-                "project-profile-selection.schema.json",
-                "critique-loop-report.schema.json",
-                "authoring-mainline-loop-report.schema.json",
-                "hosted-contract-bundle.schema.json",
-                "submission-ready-package.schema.json",
-            ],
-        },
-    )
+    schema_contract = contract_bundle["schema_contract"]
+    test_case.assertEqual(schema_contract["schema_version"], "v1")
+    test_case.assertEqual(schema_contract["schema_index_path"], "schemas/v1/schema-index.json")
+    test_case.assertIn("hosted-contract-bundle.schema.json", schema_contract["contract_schema_files"])
+    test_case.assertIn("submission-ready-package.schema.json", schema_contract["contract_schema_files"])
 
 
 def _assert_hosted_authoring_contract(

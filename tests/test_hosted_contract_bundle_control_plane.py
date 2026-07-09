@@ -4,10 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
-from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -15,20 +12,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
-from med_autogrant.domain_runtime_parts.contracts import build_operator_contract  # noqa: E402
-from med_autogrant.public_cli import public_command_label  # noqa: E402
-from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
-
-
-FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
-CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "current-program.json"
-
-PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
-CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
-
 
 
 class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
