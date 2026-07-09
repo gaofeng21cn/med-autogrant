@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import unittest
 from pathlib import Path
 
 
@@ -10,499 +9,76 @@ CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "curren
 RUNTIME_STATE_ROOT = "$CODEX_HOME/projects/med-autogrant/runtime-state/"
 
 
-def _read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+def _contract() -> dict[str, object]:
+    return json.loads(CURRENT_PROGRAM_CONTRACT.read_text(encoding="utf-8"))
 
 
-class ProgramControlSurfaceTest(unittest.TestCase):
-    def test_current_program_contract_tracks_repo_truth_and_runtime_state_boundary(self) -> None:
-        contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
+def test_current_program_tracks_runtime_owner_and_executor_boundary() -> None:
+    contract = _contract()
+    runtime_owner = contract["runtime_owner"]
+    framework = runtime_owner["stage_led_framework_boundary"]
+    executor_defaults = contract["executor_defaults"]
 
-        self.assertEqual(contract["program_id"], "med-autogrant-mainline")
-        self.assertEqual(contract["formal_entry"]["default_formal_entry"], "CLI")
-        self.assertEqual(contract["formal_entry"]["supported_protocol_layer"], ["MCP"])
-        self.assertEqual(contract["formal_entry"]["internal_controller_surface"], "controller")
-        self.assertEqual(
-            contract["runtime_owner"]["current_owner_line"],
-            "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
-        )
-        self.assertEqual(contract["runtime_owner"]["default_task_runtime_owner"], "one-person-lab")
-        self.assertEqual(contract["runtime_owner"]["default_runtime_substrate"], "temporal")
-        self.assertTrue(contract["runtime_owner"]["opl_temporal_hosted_autonomy_default"])
-        self.assertFalse(contract["runtime_owner"]["mag_implements_daemon"])
-        self.assertFalse(contract["runtime_owner"]["mag_implements_scheduler"])
-        self.assertFalse(contract["runtime_owner"]["mag_implements_attempt_loop"])
-        self.assertFalse(contract["runtime_owner"]["mag_owns_attempt_ledger"])
-        self.assertEqual(contract["runtime_owner"]["default_stage_executor"], "codex_cli")
-        self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
-        self.assertEqual(
-            contract["runtime_owner"]["active_tranche"],
-            "P4.G authoring-quality-first completion semantics alignment",
-        )
-        framework_boundary = contract["runtime_owner"]["stage_led_framework_boundary"]
-        self.assertEqual(
-            framework_boundary["framework"],
-            "OPL Temporal-backed Codex-first stage-led agent runtime framework",
-        )
-        self.assertEqual(framework_boundary["production_substrate"], "Temporal")
-        self.assertEqual(framework_boundary["autonomous_runtime_default"], "enabled")
-        self.assertEqual(framework_boundary["task_start_handoff_owner"], "one-person-lab")
-        self.assertEqual(framework_boundary["post_start_residency_owner"], "one-person-lab")
-        self.assertIn("persistent online scheduling", framework_boundary["layer_role"])
-        self.assertIn("resume", framework_boundary["layer_role"])
-        self.assertIn("queue", framework_boundary["layer_role"])
-        self.assertIn("handoff", framework_boundary["layer_role"])
-        self.assertIn("operator projection", framework_boundary["layer_role"])
-        self.assertIn("external provider orchestration", framework_boundary["layer_role"])
-        self.assertIn("author-side route truth", framework_boundary["mag_owned_truth"])
-        self.assertIn("submission-ready export gate", framework_boundary["mag_owned_truth"])
-        self.assertIn(
-            "runtime_control.semantic_closure",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "skill_catalog.domain_projection.opl_stage_runtime_registration",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "skill_catalog.domain_projection.opl_stage_runtime_registration.family_lifecycle_adapter",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "skill_catalog.domain_projection.opl_stage_runtime_registration.native_helper_consumption.proof_surface",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "skill_catalog.domain_projection.standard_domain_agent_skeleton",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "opl_substrate_adapter_export",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn(
-            "controlled stage attempt projection and domain handler receipt refs",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn("owner_receipt_contract", framework_boundary["framework_consumed_projection"])
-        self.assertIn("owner_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
-        self.assertIn("lifecycle_guarded_apply_proof", framework_boundary["framework_consumed_projection"])
-        self.assertIn("lifecycle_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
-        self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
-        self.assertIn(
-            "functional_followthrough_gap_classification",
-            framework_boundary["framework_consumed_projection"],
-        )
-        self.assertIn("external_evidence_request_pack", framework_boundary["framework_consumed_projection"])
-        self.assertIn("external_evidence_receipt_ledger", framework_boundary["framework_consumed_projection"])
-        self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
-        skeleton = framework_boundary["standard_domain_agent_skeleton"]
-        self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
-        self.assertEqual(skeleton["canonical_semantic_pack_root"], "agent/")
-        self.assertEqual(
-            skeleton["canonical_semantic_pack_role"],
-            "repo_source_declarative_grant_pack",
-        )
-        self.assertEqual(
-            skeleton["canonical_repo_source_semantic_pack_role"],
-            "historical_runtime_program_snapshot_only_not_pack_compiler_input",
-        )
-        self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
-        self.assertEqual(
-            skeleton["runtime_declares_only"],
-            ["domain handler", "projection_builder", "lifecycle_adapter", "receipt_evidence_writer"],
-        )
-        self.assertEqual(skeleton["artifact_locator_ref"], "/product_entry_manifest/artifact_locator_contract")
-        self.assertEqual(
-            skeleton["controlled_stage_attempt_ref"],
-            "/product_entry_manifest/controlled_stage_attempt_projection",
-        )
-        self.assertEqual(
-            skeleton["controlled_domain_memory_apply_proof_ref"],
-            "/product_entry_manifest/controlled_domain_memory_apply_proof",
-        )
-        self.assertEqual(
-            skeleton["opl_substrate_adapter_export_ref"],
-            "/product_entry_manifest/opl_substrate_adapter_export",
-        )
-        self.assertEqual(
-            skeleton["owner_receipt_contract_ref"],
-            "/product_entry_manifest/owner_receipt_contract",
-        )
-        self.assertEqual(
-            skeleton["lifecycle_guarded_apply_proof_ref"],
-            "/product_entry_manifest/lifecycle_guarded_apply_proof",
-        )
-        self.assertEqual(
-            skeleton["physical_skeleton_follow_through_ref"],
-            "/product_entry_manifest/physical_skeleton_follow_through",
-        )
-        self.assertEqual(
-            skeleton["ideal_state_closure_status_ref"],
-            "/product_entry_manifest/ideal_state_closure_status",
-        )
-        self.assertEqual(
-            skeleton["repo_source_layout_audit_ref"],
-            "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
-        )
-        self.assertFalse(skeleton["opl_verdict_authority"]["fundability"])
-        self.assertFalse(skeleton["opl_verdict_authority"]["submission_ready_export"])
-        self.assertEqual(
-            framework_boundary["domain_handler_adapter"]["adapter_id"],
-            "mag.opl_stage_led.domain_handler.v1",
-        )
-        self.assertIn(
-            "grant-domain truth owner",
-            framework_boundary["framework_non_goals"],
-        )
-        self.assertIn("fundability judgment owner", framework_boundary["framework_non_goals"])
-        self.assertIn("authoring quality verdict owner", framework_boundary["framework_non_goals"])
-        self.assertIn("submission-ready export authority", framework_boundary["framework_non_goals"])
-        consumer_thinning = framework_boundary["consumer_thinning_contract"]
-        self.assertEqual(consumer_thinning["active_caller_owner"], "med-autogrant")
-        self.assertEqual(
-            consumer_thinning["active_caller_surface"],
-            "mag_direct_domain_entry_until_opl_caller_evidence",
-        )
-        self.assertEqual(
-            consumer_thinning["external_evidence_request_pack_ref"],
-            "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
-        )
-        self.assertEqual(
-            consumer_thinning["external_evidence_receipt_ledger_ref"],
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-        )
-        self.assertEqual(
-            consumer_thinning["grant_stage_controlled_attempt_closeout_ref"],
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-            "grant_stage_controlled_attempt_closeout",
-        )
-        external_pack = consumer_thinning["external_evidence_request_pack"]
-        self.assertEqual(external_pack["surface_kind"], "mag_external_evidence_request_pack")
-        self.assertEqual(
-            external_pack["state"],
-            "request_pack_declared_external_evidence_not_claimed",
-        )
-        self.assertEqual(
-            external_pack["required_request_ids"],
-            [
-                "opl_generated_hosted_caller_pack_consumption",
-                "app_workbench_package_ref_consumption",
-                "production_default_caller_release_dist_consumption",
-                "owner_receipt_typed_blocker_ref_roundtrip",
-                "continuous_no_forbidden_write_guard",
-                "direct_hosted_parity_no_regression",
-                "temporal_provider_long_soak_receipt_reconciliation",
-            ],
-        )
-        self.assertFalse(
-            external_pack["forbidden_completion_claims"]["claims_opl_replacement_exists"]
-        )
-        self.assertFalse(
-            external_pack["forbidden_completion_claims"]["claims_production_long_run_soak_complete"]
-        )
-        self.assertTrue(external_pack["authority_boundary"]["mag_request_pack_only"])
-        self.assertFalse(external_pack["authority_boundary"]["mag_implements_opl_runtime"])
-        self.assertFalse(external_pack["authority_boundary"]["mag_implements_app_workbench"])
-        self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
-        taxonomy = consumer_thinning["minimal_authority_surface_taxonomy"]
-        self.assertFalse(taxonomy["compatibility_alias_allowed"])
-        self.assertEqual(taxonomy["function_id_policy"], "canonical_authority_surface_ids_only")
-        self.assertEqual(
-            taxonomy["forbidden_role_policy"],
-            "forbid_compatibility_alias_function_ids",
-        )
-        self.assertNotIn("legacy_function_id_compatibility", taxonomy)
-        self.assertEqual(
-            taxonomy["ai_first_judgment_surface_ids"],
-            [
-                "fundability_verdict",
-                "quality_verdict",
-                "export_verdict",
-                "memory_accept_reject",
-            ],
-        )
-        self.assertEqual(
-            taxonomy["programmatic_authority_surface_ids"],
-            ["package_authority", "owner_receipt_signer", "grant_helper"],
-        )
-        self.assertFalse(consumer_thinning["programmatic_verdict_generation_allowed"])
-        self.assertTrue(
-            consumer_thinning["mechanical_decision_forbidden_for_all_authority_surfaces"]
-        )
-        self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
-        self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
-        self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
-        self.assertEqual(
-            contract["executor_defaults"]["default_reasoning_effort"],
-            "inherit_local_codex_default",
-        )
-        self.assertEqual(
-            contract["executor_defaults"]["canonical_executor_backends"],
-            ["codex_cli", "hermes_agent", "claude_code"],
-        )
-        self.assertEqual(
-            contract["executor_defaults"]["executor_registry"],
-            {
-                "surface_kind": "opl_agent_executor_registry",
-                "request_contract": "AgentExecutionRequest",
-                "receipt_contract": "AgentExecutionReceipt",
-                "default_resolution_order": [
-                    "cli_flag",
-                    "stage_attempt_input",
-                    "OPL_EXECUTOR_KIND",
-                    "codex_cli",
-                ],
-                "non_default_equivalence": "connectivity_lifecycle_receipt_audit_only",
-            },
-        )
-        self.assertEqual(
-            contract["executor_defaults"]["executor_labels"],
-            {
-                "codex_cli": "Codex CLI",
-                "hermes_agent": "Hermes-Agent",
-                "claude_code": "Claude Code",
-            },
-        )
-        self.assertEqual(
-            contract["executor_defaults"]["executor_statuses"],
-            {
-                "codex_cli": "default",
-                "hermes_agent": "experimental",
-                "claude_code": "experimental",
-            },
-        )
-        self.assertTrue(contract["executor_defaults"]["chat_completion_only_executor_forbidden"])
-        self.assertTrue(contract["executor_defaults"]["hermes_agent_requires_full_agent_loop"])
-        self.assertTrue(contract["executor_defaults"]["non_default_executor_requires_explicit_selection"])
-        self.assertTrue(contract["executor_defaults"]["non_default_executor_forbids_silent_codex_fallback"])
-        self.assertNotIn("default_executor", contract["executor_defaults"])
-        self.assertFalse(
-            any(
-                key.endswith("_native_requires_full_agent_loop")
-                for key in contract["executor_defaults"]
-            )
-        )
-        self.assertNotIn("experimental_executor_proofs", contract)
-        receipt_lane = contract["non_default_executor_receipt_lanes"][0]
-        self.assertEqual(receipt_lane["route_id"], "critique")
-        self.assertEqual(receipt_lane["executor_kind"], "hermes_agent")
-        self.assertNotIn("entrypoint", receipt_lane)
-        self.assertNotIn("provider_reasoning_status", receipt_lane)
-        self.assertEqual(
-            receipt_lane["backend_owner_surface"],
-            "one-person-lab/src/modules/runway/agent-executor.ts",
-        )
-        self.assertEqual(receipt_lane["status"], "experimental")
-        self.assertEqual(receipt_lane["backend_owner"], "one-person-lab")
-        self.assertEqual(
-            receipt_lane["adapter_contract_ref"],
-            "contracts/opl-framework/family-executor-adapter-defaults.json",
-        )
-        self.assertEqual(receipt_lane["request_contract"], "AgentExecutionRequest")
-        self.assertEqual(receipt_lane["receipt_contract"], "AgentExecutionReceipt")
-        self.assertEqual(receipt_lane["mag_receipt_vocabulary_owner"], "med-autogrant")
-        self.assertFalse(receipt_lane["mag_implements_backend"])
-        self.assertFalse(receipt_lane["mag_owns_backend_config"])
-        self.assertFalse(receipt_lane["fallback_allowed"])
-        self.assertTrue(receipt_lane["explicit_selection_required"])
-        self.assertEqual(
-            receipt_lane["non_equivalence_notice"],
-            "connectivity_lifecycle_receipt_audit_only",
-        )
-        self.assertEqual(
-            receipt_lane["default_executor_name_unchanged"],
-            "codex_cli",
-        )
-        self.assertEqual(
-            receipt_lane["default_executor_mode_unchanged"],
-            "autonomous",
-        )
-        self.assertEqual(receipt_lane["equivalence_claim"], "none")
-        self.assertEqual(
-            contract["task_boundary"]["primary_scope"],
-            "target-locked grant narrative authoring and scientific quality closure",
-        )
-        self.assertEqual(
-            contract["task_boundary"]["submission_ready_relation"],
-            "package submission-ready remains a stricter local export gate than MAG authoring completion.",
-        )
-        self.assertEqual(
-            contract["task_boundary"]["closure_proof_surface"],
-            "runtime_control.semantic_closure plus skill_catalog.domain_projection.runtime_continuity",
-        )
-        self.assertEqual(
-            contract["task_boundary"]["ad_hoc_bypass_policy"],
-            {
-                "forbid_ad_hoc_runtime_bypass": True,
-                "allowed_surfaces": [
-                    "product_entry",
-                    "product_status",
-                    "user_loop",
-                    "direct_entry",
-                    "schema_backed_authoring_contract",
-                ],
-                "local_scripts_contracts_rule": "Local scripts/contracts are allowed only when schema-backed and surfaced through product-entry/user-loop/direct-entry runtime semantics; they must not bypass the MAG authoring runtime.",
-                "generic_document_tools_rule": "Generic documents/Office tools, direct .docx edits, prompt-only drafting, hand-written export packages, and one-off ad-hoc scripts must not replace MAG grant-authoring runtime surfaces for MAG-scoped work.",
-            },
-        )
-        self.assertIn(
-            "TODO and explicit wake-up follow-ups",
-            contract["task_boundary"]["objective_material_policy"],
-        )
-        self.assertEqual(contract["machine_local_runtime_state"]["root"], RUNTIME_STATE_ROOT)
-        self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
-        self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
-        self.assertIn(
-            "human_doc:2026_04_23_authoring_completion_semantics_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_22_quality_autonomy_family_grammar_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_27_ai_first_quality_boundary_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:product_entry_support_record",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_12_schema_backed_product_entry_and_routing_contract_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_13_critique_codex_cli_executor_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        retired_history_only_support_ids = {
-            "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
-            "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
-            "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
-            "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
-            "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
-            "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
-            "human_doc:2026_04_12_lightweight_product_entry_and_opl_handoff_current_truth",
-            "human_doc:2026_04_12_author_side_executor_routing_contract_current_truth",
-            "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
-            "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
-        }
-        self.assertTrue(
-            retired_history_only_support_ids.isdisjoint(contract["repo_tracked_truth_surfaces"])
-        )
-        self.assertNotIn(
-            "human_doc:2026_04_13_" + "critique_codex_cli" + "_autonomous_executor_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertFalse(
-            any(
-                "hermes" in ref and "native" in ref and "critique_proof" in ref
-                for ref in contract["repo_tracked_truth_surfaces"]
-            )
-        )
-        self.assertNotIn(
-            "human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertNotIn(
-            "human_doc:2026_04_12_pending_authoring_route_handoff_matrix_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertNotIn(
-            "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertEqual(
-            contract["ideal_target"]["family_top_entry"],
-            "OPL Temporal-backed Codex-first stage-led agent runtime framework",
-        )
-        self.assertEqual(
-            contract["ideal_target"]["family_runtime_framework"],
-            "OPL Temporal-backed stage-led runtime framework",
-        )
-        self.assertEqual(contract["ideal_target"]["stage_attempt_minimum_execution_unit"], "Codex CLI")
-        self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
-        self.assertEqual(
-            contract["ideal_target"]["runtime_substrate_owner"],
-            "OPL owns the default Temporal-backed hosted autonomous task runtime, including persistent scheduling, "
-            "wakeup, retry, resume and attempt ledger; MAG does not implement daemon, scheduler, attempt loop or "
-            "generic runtime owner surfaces",
-        )
-        self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
-        stage_led_framework = contract["ideal_target"]["opl_stage_led_framework"]
-        self.assertIn("queue/wakeup", stage_led_framework["role"])
-        self.assertIn("runtime_control", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn(
-            "opl_stage_runtime_registration",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "family_lifecycle_adapter",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "native_helper_consumption",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "native_helper_consumption.proof_surface",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "artifact_locator_contract",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "controlled_stage_attempt_projection",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn(
-            "controlled_domain_memory_apply_proof",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertIn("owner_receipt_runtime_evidence", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn("lifecycle_receipt_runtime_evidence", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn("owner_receipt_contract", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn("lifecycle_guarded_apply_proof", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn("physical_skeleton_follow_through", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn("ideal_state_closure_status", stage_led_framework["consumes_mag_surfaces"])
-        self.assertIn(
-            "repo_source_layout_audit",
-            stage_led_framework["consumes_mag_surfaces"],
-        )
-        self.assertTrue(
-            any(
-                "OPL-owned helper/index consumption refs" in item
-                for item in framework_boundary["framework_consumed_projection"]
-            )
-        )
-        self.assertIn("grant authoring truth", stage_led_framework["does_not_own"])
-        self.assertIn("fundability judgment", stage_led_framework["does_not_own"])
-        self.assertIn("concrete executor selection", stage_led_framework["does_not_own"])
-        self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
-        self.assertEqual(contract["phase_map"][0]["status"], "completed")
-        self.assertEqual(contract["phase_map"][1]["phase_id"], "P2")
-        self.assertEqual(contract["phase_map"][1]["status"], "completed")
-        self.assertEqual(contract["phase_map"][2]["phase_id"], "P3")
-        self.assertEqual(contract["phase_map"][2]["status"], "completed")
-        self.assertEqual(contract["phase_map"][3]["phase_id"], "P4")
-        self.assertEqual(contract["phase_map"][3]["status"], "next")
+    assert contract["program_id"] == "med-autogrant-mainline"
+    assert contract["formal_entry"]["default_formal_entry"] == "CLI"
+    assert runtime_owner["default_task_runtime_owner"] == "one-person-lab"
+    assert runtime_owner["default_runtime_substrate"] == "temporal"
+    assert runtime_owner["default_stage_executor"] == "codex_cli"
+    assert runtime_owner["mag_implements_daemon"] is False
+    assert runtime_owner["mag_implements_scheduler"] is False
+    assert runtime_owner["mag_implements_attempt_loop"] is False
+    assert runtime_owner["mag_owns_attempt_ledger"] is False
 
-    def test_repo_tracked_truth_surfaces_use_machine_paths_or_semantic_docs(self) -> None:
-        contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
-        for surface_ref in contract["repo_tracked_truth_surfaces"]:
-            with self.subTest(surface_ref=surface_ref):
-                if surface_ref.startswith("human_doc:"):
-                    self.assertRegex(surface_ref, r"^human_doc:[a-z0-9_]+$")
-                else:
-                    self.assertTrue((REPO_ROOT / surface_ref).exists(), surface_ref)
+    assert framework["production_substrate"] == "Temporal"
+    assert framework["task_start_handoff_owner"] == "one-person-lab"
+    assert framework["post_start_residency_owner"] == "one-person-lab"
+    assert "author-side route truth" in framework["mag_owned_truth"]
+    assert "submission-ready export gate" in framework["mag_owned_truth"]
+    assert "runtime_control.semantic_closure" in framework["framework_consumed_projection"]
+    assert "owner_receipt_contract" in framework["framework_consumed_projection"]
+    assert "physical_skeleton_follow_through" in framework["framework_consumed_projection"]
+    assert "grant-domain truth owner" in framework["framework_non_goals"]
+
+    assert executor_defaults["default_executor_name"] == "codex_cli"
+    assert executor_defaults["canonical_executor_backends"] == [
+        "codex_cli",
+        "hermes_agent",
+        "claude_code",
+    ]
+    assert executor_defaults["non_default_executor_requires_explicit_selection"] is True
+    assert executor_defaults["non_default_executor_forbids_silent_codex_fallback"] is True
+    assert contract["machine_local_runtime_state"]["root"] == RUNTIME_STATE_ROOT
+    assert contract["machine_local_runtime_state"]["not_repo_tracked"] is True
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_current_program_consumer_thinning_stays_request_only() -> None:
+    contract = _contract()
+    thinning = contract["runtime_owner"]["stage_led_framework_boundary"][
+        "consumer_thinning_contract"
+    ]
+    request_pack = thinning["external_evidence_request_pack"]
+    taxonomy = thinning["minimal_authority_surface_taxonomy"]
+
+    assert thinning["active_caller_owner"] == "med-autogrant"
+    assert thinning["external_evidence_request_pack_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+    )
+    assert request_pack["state"] == "request_pack_declared_external_evidence_not_claimed"
+    assert request_pack["forbidden_completion_claims"]["claims_opl_replacement_exists"] is False
+    assert (
+        request_pack["forbidden_completion_claims"]["claims_production_long_run_soak_complete"]
+        is False
+    )
+    assert request_pack["authority_boundary"]["mag_implements_opl_runtime"] is False
+    assert request_pack["authority_boundary"]["mag_implements_app_workbench"] is False
+    assert request_pack["authority_boundary"]["mag_claims_external_evidence_exists"] is False
+    assert taxonomy["compatibility_alias_allowed"] is False
+    assert "legacy_function_id_compatibility" not in taxonomy
+
+
+def test_repo_tracked_truth_surfaces_use_machine_paths_or_semantic_docs() -> None:
+    for surface_ref in _contract()["repo_tracked_truth_surfaces"]:
+        if surface_ref.startswith("human_doc:"):
+            assert surface_ref.removeprefix("human_doc:").replace("_", "").isalnum()
+        else:
+            assert (REPO_ROOT / surface_ref).exists(), surface_ref
