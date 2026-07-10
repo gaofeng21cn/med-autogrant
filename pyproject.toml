@@ -16,11 +16,6 @@ dependencies = [
     "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@e1e734031ab3ea45596c6ce131f611f296ca9746#subdirectory=python/opl-harness-shared",
 ]
 
-[project.optional-dependencies]
-proof = [
-    "hermes-agent[acp]",
-]
-
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"
 mag = "med_autogrant.cli:entrypoint"
@@ -30,15 +25,12 @@ testpaths = ["tests"]
 cache_dir = "/tmp/med-autogrant-pytest-cache"
 markers = [
   "meta: repo-tracked program control and repository hygiene checks",
-  "smoke: minimal default CLI/product entry health checks that do not require optional proof dependencies",
+  "smoke: minimal default CLI/product entry health checks",
   "integration: cross-surface integration checks that are broader than unit contracts",
   "regression: heavier matrix, provenance oracle, runtime/export, and product regression checks",
-  "proof: explicit optional hosted/Hermes proof lane that may require optional dependencies",
+  "proof: explicit optional hosted/executor proof lane",
   "structure: repository structure and architecture governance checks",
 ]
-
-[tool.uv.sources]
-hermes-agent = { git = "https://github.com/NousResearch/hermes-agent.git", rev = "96051955755a83f22afed5e3501d447462fbe9c8" }
 
 [tool.setuptools.package-data]
 med_autogrant = ["product_entry_parts/consumer_thinning_audit/*.json"]

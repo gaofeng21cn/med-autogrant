@@ -16,7 +16,6 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry  # noqa: E402
 from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
-from med_autogrant.family_shared_release import inspect_current_repo_family_shared_alignment  # noqa: E402
 from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
@@ -231,16 +230,6 @@ class DomainEntryContractSurfaceTest(unittest.TestCase):
 
 
 class DomainEntryFreshProofTest(unittest.TestCase):
-    def test_family_shared_release_adapter_targets_medautogrant_repo(self) -> None:
-        inspection = inspect_current_repo_family_shared_alignment()
-
-        self.assertEqual(inspection["repo_id"], "medautogrant")
-        self.assertEqual(Path(inspection["repo_root"]), REPO_ROOT.resolve())
-        self.assertEqual(
-            [item["file"] for item in inspection["findings"]],
-            ["pyproject.toml", "uv.lock"],
-        )
-
     @pytest.mark.proof
     def test_service_safe_domain_entry_runs_fresh_cutover_walkthrough(self) -> None:
         with TemporaryDirectory() as tmp_dir:

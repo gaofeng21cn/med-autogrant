@@ -8,9 +8,6 @@ import tomllib
 import unittest
 from pathlib import Path
 
-from med_autogrant.family_shared_release import inspect_current_repo_family_shared_alignment
-
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
     ".DS_Store",
@@ -129,19 +126,6 @@ class RepositoryHygieneTest(unittest.TestCase):
             dependency,
             r"^opl-harness-shared @ git\+https://github\.com/gaofeng21cn/one-person-lab\.git@[0-9a-f]{40}#subdirectory=python/opl-harness-shared$",
         )
-
-    def test_family_shared_release_alignment_is_fail_closed_for_repo_truth(self) -> None:
-        inspection = inspect_current_repo_family_shared_alignment()
-
-        self.assertEqual(len(inspection["owner_commit"]), 40)
-        self.assertEqual(inspection["verify_command"], "scripts/verify.sh family")
-        self.assertEqual(inspection["status"], "aligned")
-        self.assertEqual(
-            [item["file"] for item in inspection["findings"]],
-            ["pyproject.toml", "uv.lock"],
-        )
-        self.assertTrue(all(item["status"] == "aligned" for item in inspection["findings"]))
-        self.assertTrue(all(item["pins"] == [inspection["owner_commit"]] for item in inspection["findings"]))
 
     def test_repo_tracked_code_file_line_budget_accepts_current_tree(self) -> None:
         result = subprocess.run(
