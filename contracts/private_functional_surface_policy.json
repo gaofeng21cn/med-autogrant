@@ -60,6 +60,122 @@
     "src/med_autogrant/product_entry_parts/stage_attempt_observability.py",
     "src/med_autogrant/family_shared_release.py"
   ],
+  "physical_source_morphology_policy": {
+    "policy_id": "mag.physical-source-morphology.v1",
+    "state": "classified_without_generic_runtime_ownership",
+    "required_surface_ids": [
+      "domain_runtime",
+      "product_entry",
+      "status",
+      "user_loop",
+      "domain_handler",
+      "runtime_registration",
+      "control_plane",
+      "lifecycle",
+      "memory",
+      "package",
+      "autonomy_controller",
+      "legacy_runtime_residue"
+    ],
+    "surface_classifications": [
+      {
+        "surface_id": "domain_runtime",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "runtime/authority_functions/"
+        ]
+      },
+      {
+        "surface_id": "product_entry",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/generated_surface_handoff.json"
+        ]
+      },
+      {
+        "surface_id": "status",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/action_catalog.json"
+        ]
+      },
+      {
+        "surface_id": "user_loop",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/action_catalog.json"
+        ]
+      },
+      {
+        "surface_id": "domain_handler",
+        "classification": "domain_handler_target",
+        "source_refs": [
+          "src/med_autogrant/product_entry_parts/domain_handler.py"
+        ]
+      },
+      {
+        "surface_id": "runtime_registration",
+        "classification": "declarative_domain_pack",
+        "source_refs": [
+          "contracts/domain_descriptor.json"
+        ]
+      },
+      {
+        "surface_id": "control_plane",
+        "classification": "declarative_domain_pack",
+        "source_refs": [
+          "contracts/stage_control_plane.json"
+        ]
+      },
+      {
+        "surface_id": "lifecycle",
+        "classification": "provenance_or_retired",
+        "source_refs": [
+          "docs/decisions.md"
+        ]
+      },
+      {
+        "surface_id": "memory",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
+        ]
+      },
+      {
+        "surface_id": "package",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "src/med_autogrant/final_package.py"
+        ]
+      },
+      {
+        "surface_id": "autonomy_controller",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "src/med_autogrant/grant_autonomy_controller.py"
+        ]
+      },
+      {
+        "surface_id": "legacy_runtime_residue",
+        "classification": "provenance_or_fixture",
+        "source_refs": [
+          "docs/history/"
+        ]
+      }
+    ],
+    "forbidden_residue_classes": [
+      "legacy_local_persistence_surface",
+      "legacy_attempt_record_surface",
+      "legacy_repo_cadence_owner",
+      "legacy_executor_runtime_probe",
+      "legacy_compat_alias_surface"
+    ],
+    "authority_boundary": {
+      "mag_can_own_generic_runtime": false,
+      "mag_can_own_generated_wrapper": false,
+      "mag_can_restore_legacy_compat_alias": false
+    }
+  },
   "authority_boundary": {
     "policy_can_sign_owner_receipt": false,
     "policy_can_create_typed_blocker": false,

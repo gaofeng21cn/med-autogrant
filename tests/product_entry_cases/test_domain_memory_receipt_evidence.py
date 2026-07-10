@@ -21,10 +21,7 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
         proposal_path.write_text(json.dumps(proposal_payload, ensure_ascii=False, indent=2), encoding="utf-8")
         return proposal_path
 
-    def test_product_entry_writes_accepted_runtime_receipt_instance_without_memory_body(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        product_entry = MedAutoGrantProductEntry()
+    def test_writes_accepted_runtime_receipt_instance_without_memory_body(self) -> None:
         proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             stage_id="review_and_rebuttal",
@@ -63,10 +60,7 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             self.assertEqual(receipt_instance, receipt)
             self.assertNotIn("lesson_summary", receipt_instance)
 
-    def test_product_entry_writes_rejected_runtime_receipt_instance_without_memory_body(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        product_entry = MedAutoGrantProductEntry()
+    def test_writes_rejected_runtime_receipt_instance_without_memory_body(self) -> None:
         proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             stage_id="review_and_rebuttal",

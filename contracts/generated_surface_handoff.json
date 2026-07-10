@@ -17,6 +17,56 @@
     "user_loop",
     "workbench"
   ],
+  "handoff_surfaces": [
+    {
+      "surface_id": "cli",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_generated_surface"
+    },
+    {
+      "surface_id": "mcp",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_generated_surface"
+    },
+    {
+      "surface_id": "skill",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_generated_surface"
+    },
+    {
+      "surface_id": "product_entry_manifest",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_generated_surface"
+    },
+    {
+      "surface_id": "domain_handler",
+      "owner": "med-autogrant",
+      "status": "domain_handler_target_available",
+      "target_role": "domain_handler_target"
+    },
+    {
+      "surface_id": "status_read_model",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_generated_surface"
+    },
+    {
+      "surface_id": "workbench_drilldown",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_hosted_surface"
+    },
+    {
+      "surface_id": "functional_harness_cases",
+      "owner": "one-person-lab",
+      "status": "descriptor_source_available",
+      "target_role": "opl_hosted_surface"
+    }
+  ],
   "domain_handler_targets": {
     "formal_entry": "MedAutoGrantDomainEntry",
     "cli": "medautogrant",

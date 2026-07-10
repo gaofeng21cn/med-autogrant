@@ -3,13 +3,17 @@
   "schema_version": 1,
   "target_domain_id": "med-autogrant",
   "owner": "med-autogrant",
-  "state": "canonical_domain_pack_and_authority_only",
+  "state": "canonical_domain_pack_and_eight_authority_functions",
   "modules": [
     {
       "module_id": "mag_declarative_grant_pack",
       "classification": "declarative_pack",
-      "code_paths": ["agent/"],
-      "active_callers": ["one-person-lab domain pack compiler"],
+      "code_paths": [
+        "agent/"
+      ],
+      "active_callers": [
+        "one-person-lab domain pack compiler"
+      ],
       "active_caller_status": "opl_consumes_repo_contract_descriptors",
       "migration_action": "retain_as_standard_domain_pack",
       "retention_reason": "Contains MAG stage, prompt, skill, knowledge, tool, and quality-gate semantics.",
@@ -17,22 +21,135 @@
       "owner": "med-autogrant"
     },
     {
-      "module_id": "mag_minimal_grant_authority",
+      "module_id": "fundability_verdict",
+      "classification": "domain_authority",
+      "code_paths": [
+        "src/med_autogrant/grant_quality.py"
+      ],
+      "active_callers": [
+        "MedAutoGrantDomainEntry"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_fundability_verdict_authority",
+      "retention_reason": "MAG owns fundability judgment.",
+      "cannot_absorb_reason": "OPL cannot issue a MAG fundability verdict.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "quality_verdict",
+      "classification": "domain_authority",
+      "code_paths": [
+        "src/med_autogrant/grant_quality.py"
+      ],
+      "active_callers": [
+        "MedAutoGrantDomainEntry"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_authoring_quality_verdict_authority",
+      "retention_reason": "MAG owns authoring quality judgment.",
+      "cannot_absorb_reason": "OPL cannot issue a MAG authoring quality verdict.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "export_verdict",
+      "classification": "domain_authority",
+      "code_paths": [
+        "src/med_autogrant/submission_ready.py"
+      ],
+      "active_callers": [
+        "MedAutoGrantDomainEntry"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_submission_ready_export_verdict_authority",
+      "retention_reason": "MAG owns submission-ready export judgment.",
+      "cannot_absorb_reason": "OPL cannot issue a MAG export verdict.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "package_authority",
+      "classification": "domain_authority",
+      "code_paths": [
+        "src/med_autogrant/final_package.py",
+        "src/med_autogrant/final_package_validation.py"
+      ],
+      "active_callers": [
+        "MedAutoGrantDomainEntry"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_final_package_authority",
+      "retention_reason": "MAG owns final grant package validation and materialization.",
+      "cannot_absorb_reason": "OPL may carry package refs but cannot own the grant package body.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "memory_accept_reject",
       "classification": "minimal_authority_function",
       "code_paths": [
-        "runtime/authority_functions/",
-        "src/med_autogrant/grant_quality.py",
-        "src/med_autogrant/final_package.py",
-        "src/med_autogrant/submission_ready.py",
-        "src/med_autogrant/stage_control_plane_parts/transition_oracle.py",
-        "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
-        "src/med_autogrant/product_entry_parts/owner_receipt_writers.py"
+        "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
       ],
-      "active_callers": ["MedAutoGrantDomainEntry", "medautogrant CLI", "OPL generated handlers"],
+      "active_callers": [
+        "domain-handler dispatch",
+        "medautogrant CLI"
+      ],
       "active_caller_status": "domain_authority_target",
-      "migration_action": "retain_minimal_authority_only",
-      "retention_reason": "Owns grant verdicts, package authority, memory decisions, transition semantics, and owner receipts.",
-      "cannot_absorb_reason": "OPL cannot issue MAG grant verdicts or owner receipts.",
+      "migration_action": "retain_grant_strategy_memory_decision_authority",
+      "retention_reason": "MAG accepts or rejects grant strategy memory proposals.",
+      "cannot_absorb_reason": "OPL transports refs but cannot decide MAG memory acceptance.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "owner_receipt_signer",
+      "classification": "minimal_authority_function",
+      "code_paths": [
+        "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
+        "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+        "src/med_autogrant/product_entry_parts/typed_blocker_projection.py"
+      ],
+      "active_callers": [
+        "domain-handler stage closeout",
+        "medautogrant CLI"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_owner_receipt_and_typed_blocker_authority",
+      "retention_reason": "MAG signs owner receipts and returns typed blockers over grant-owned closeout semantics.",
+      "cannot_absorb_reason": "OPL may consume refs but cannot sign MAG owner receipts.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "grant_transition_oracle",
+      "classification": "domain_authority",
+      "code_paths": [
+        "src/med_autogrant/stage_control_plane_parts/transition_oracle.py"
+      ],
+      "active_callers": [
+        "declarative MAG stage control plane"
+      ],
+      "active_caller_status": "domain_authority_target",
+      "migration_action": "retain_grant_transition_semantics",
+      "retention_reason": "MAG owns grant-stage transition guards and route-back semantics.",
+      "cannot_absorb_reason": "OPL executes transitions but cannot invent grant transition policy.",
+      "owner": "med-autogrant"
+    },
+    {
+      "module_id": "grant_native_helper",
+      "classification": "refs_only_domain_adapter",
+      "code_paths": [
+        "src/med_autogrant/codex_cli.py",
+        "src/med_autogrant/grant_autonomy_controller.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
+        "src/med_autogrant/product_entry_parts/domain_handler_contract.py",
+        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
+        "src/med_autogrant/product_entry_parts/primitives.py"
+      ],
+      "active_callers": [
+        "MedAutoGrantDomainEntry",
+        "medautogrant CLI",
+        "OPL generated handlers"
+      ],
+      "active_caller_status": "domain_handler_and_first_class_codex_adapter_targets",
+      "migration_action": "retain_only_direct_domain_adapter_helpers",
+      "retention_reason": "Keeps the formal direct handler target, validation primitives, thin grant route policy, and current first-class Codex domain executor adapter.",
+      "cannot_absorb_reason": "OPL owns hosting and generic runtime; MAG still supplies domain prompts, accepted answer shapes, and guarded authority targets.",
       "owner": "med-autogrant"
     }
   ],

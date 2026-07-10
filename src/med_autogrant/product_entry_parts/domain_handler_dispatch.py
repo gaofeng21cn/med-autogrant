@@ -28,7 +28,6 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 
 
 def dispatch_domain_handler_task(
-    product_entry: Any,
     *,
     task_path: str | Path,
 ) -> dict[str, Any]:

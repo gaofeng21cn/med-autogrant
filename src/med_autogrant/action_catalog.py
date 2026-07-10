@@ -16,6 +16,28 @@ from opl_harness_shared.family_action_catalog import (
 CATALOG_ID = "med_autogrant_action_catalog"
 ACTION_CATALOG_REF = "/product_entry_manifest/family_action_catalog"
 REPO_ROOT = Path(__file__).resolve().parents[2]
+FORBIDDEN_GENERIC_OWNER_ROLES = [
+    "generic_scheduler_owner",
+    "generic_daemon_owner",
+    "generic_lifecycle_owner",
+    "generic_queue_owner",
+    "generic_attempt_ledger_owner",
+    "generic_state_machine_runner_owner",
+    "generic_cli_mcp_product_wrapper_owner",
+    "generic_sidecar_owner",
+    "generic_session_store_owner",
+    "generic_status_workbench_owner",
+    "generic_workspace_source_intake_owner",
+    "generic_memory_transport_owner",
+    "generic_artifact_gallery_owner",
+    "generic_operator_workbench_owner",
+    "generic_observability_slo_owner",
+    "generic_persistence_engine_owner",
+    "generic_sqlite_lifecycle_owner",
+    "generic_native_helper_envelope_owner",
+    "generic_review_repair_transport_owner",
+    "generated_surface_owner_in_domain_repo",
+]
 
 
 def build_mag_family_action_catalog(
@@ -91,6 +113,7 @@ def build_mag_family_action_catalog(
             "OPL consumes schema/helper/validator/discovery projections and does not own MAG grant truth.",
         ],
     )
+    catalog["forbidden_generic_owner_roles"] = FORBIDDEN_GENERIC_OWNER_ROLES
     parity = validate_family_action_catalog_parity(catalog)
     if parity["status"] != "aligned":
         raise ValueError(f"MAG family action catalog parity failed: {parity['issues']}")

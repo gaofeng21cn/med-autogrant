@@ -15,6 +15,62 @@ STAGE_MANIFEST_PATH = REPO_ROOT / "agent" / "stages" / "manifest.json"
 STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane.json"
 SKILL_REF = "agent/skills/grant_authoring.md"
 TOOL_REF = "agent/tools/domain_affordances.md"
+STANDARD_STAGE_CONTRACT_FIELDS = {
+    "user_stage_log_contract": {
+        "surface_kind": "opl_standard_agent_user_stage_log_contract",
+        "standard_agent_requirement": (
+            "domain_stage_closeout_must_return_user_readable_stage_semantics_or_typed_blocker"
+        ),
+        "required_domain_semantic_fields": [
+            "problem_summary",
+            "stage_work_done",
+            "changed_stage_surfaces",
+            "remaining_blockers",
+        ],
+        "required_observability_fields": ["duration", "token_usage"],
+    },
+    "stage_completion_policy": {
+        "surface_kind": "domain_stage_completion_policy",
+        "completion_judgment_owner": "domain_stage",
+        "closeout_packet_required": True,
+        "provider_completion_is_domain_completion": False,
+        "opl_content_judgment_allowed": False,
+        "next_stage_transition_owner": "opl_runtime",
+        "required_closeout_outcomes": [
+            "completed_and_continue",
+            "route_back",
+            "blocked",
+        ],
+        "accepted_closeout_ref_fields": [
+            "owner_receipt_ref",
+            "typed_blocker_ref",
+            "route_back_ref",
+        ],
+        "authority_boundary": {
+            "opl_can_decide_domain_completion": False,
+            "provider_completion_counts_as_stage_complete": False,
+            "suite_pass_counts_as_stage_complete": False,
+        },
+    },
+    "progress_delta_policy": {
+        "surface_kind": "opl_stage_progress_delta_policy",
+        "required_fields": [
+            "progress_delta_classification",
+            "deliverable_progress_delta",
+            "platform_repair_delta",
+            "next_forced_delta",
+        ],
+    },
+    "typed_blocker_lineage_policy": {
+        "surface_kind": "family-stall-lineage.v1",
+        "required_fields": [
+            "blocker_family",
+            "repeat_count",
+            "next_forced_delta",
+            "escalation_owner",
+        ],
+    },
+}
 
 
 def build_mag_family_stage_control_plane(
@@ -105,7 +161,7 @@ def _stage_descriptor(stage: Mapping[str, Any]) -> dict[str, Any]:
         "owner": TARGET_DOMAIN_ID,
         "selected_executor": {
             "executor_kind": "codex_cli",
-            "default_executor": True,
+            "default_executor": stage_id == "call_and_candidate_intake",
             "runtime_owner": "one-person-lab",
         },
         "domain_stage_refs": [],
@@ -128,6 +184,7 @@ def _stage_descriptor(stage: Mapping[str, Any]) -> dict[str, Any]:
             "refresh_policy": "reload_agent_stage_manifest",
         },
         "stage_contract": {
+            **STANDARD_STAGE_CONTRACT_FIELDS,
             "requires": _string_list(stage, "requires"),
             "ensures": _string_list(stage, "ensures"),
             "boundary_assumptions": [

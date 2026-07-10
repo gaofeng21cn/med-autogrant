@@ -16,9 +16,8 @@ from med_autogrant.foundry_series_cli import (
     build_foundry_series_validate,
 )
 from med_autogrant.mainline_status import read_mainline_phase_status, read_mainline_status
-from med_autogrant.product_entry_parts.codex_stage_receipts import (
-    build_codex_stage_execution_receipt_bundle,
-)
+from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
+from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
@@ -35,7 +34,6 @@ class DirectCommandSpec:
     help_text: str
     required_fields: tuple[str, ...] = ()
     optional_fields: tuple[str, ...] = ()
-    product_entry_method: bool = False
 
 
 DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
@@ -69,13 +67,11 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
         "build_domain_handler_export",
         "导出 OPL standard domain handler refs surface。",
         ("input_path",),
-        product_entry_method=True,
     ),
     "domain-handler-dispatch": DirectCommandSpec(
         "dispatch_domain_handler_task",
         "执行 OPL standard domain handler guarded action。",
         ("task_path",),
-        product_entry_method=True,
     ),
     "product-domain-memory-proposal": DirectCommandSpec(
         "build_domain_memory_writeback_proposal",
@@ -101,19 +97,7 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
         ("input_path", "receipt_shape", "stage_id", "source_ref", "closeout_summary"),
         ("runtime_root", "receipt_id"),
     ),
-    "codex-stage-receipts": DirectCommandSpec(
-        "build_codex_stage_execution_receipt_bundle",
-        "把 Codex executor attempt 与独立 review attempt refs 聚合成 stage receipt bundle。",
-        ("stage_id", "execution_attempts"),
-        ("review_attempts",),
-    ),
 }
-
-_JSON_OBJECT_LIST_FIELDS = {
-    "execution_attempts",
-    "review_attempts",
-}
-
 
 def handle_domain_command(args: argparse.Namespace) -> dict[str, Any]:
     spec = SERVICE_SAFE_DOMAIN_COMMANDS[args.command]
@@ -132,36 +116,20 @@ def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
     target = _resolve_direct_target(spec)
     return target(
         **{
-            field: _load_field(field, getattr(args, field))
+            field: getattr(args, field)
             for field in spec.required_fields + spec.optional_fields
         }
     )
 
 
 def _resolve_direct_target(spec: DirectCommandSpec) -> Callable[..., dict[str, Any]]:
-    if spec.product_entry_method:
-        return getattr(_product_entry(), spec.target)
     return globals()[spec.target]
-
-
-def _load_field(field: str, value: Any) -> Any:
-    if value is None:
-        return None
-    if field in _JSON_OBJECT_LIST_FIELDS:
-        return [_read_json_object(path) for path in value]
-    return value
 
 
 def _domain_entry() -> Any:
     from med_autogrant import domain_entry
 
     return domain_entry.MedAutoGrantDomainEntry()
-
-
-def _product_entry() -> Any:
-    from med_autogrant import product_entry
-
-    return product_entry.MedAutoGrantProductEntry()
 
 
 def _read_json_object(path: str) -> dict[str, Any]:

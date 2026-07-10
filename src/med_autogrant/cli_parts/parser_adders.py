@@ -37,8 +37,6 @@ FIELD_ARGUMENTS: dict[str, tuple[tuple[str, ...], dict[str, Any]]] = {
     ),
     "closeout_summary": (("--closeout-summary",), {}),
     "receipt_id": (("--receipt-id",), {}),
-    "execution_attempts": (("--execution-attempt",), {"action": "append"}),
-    "review_attempts": (("--review-attempt",), {"action": "append", "default": []}),
 }
 
 
