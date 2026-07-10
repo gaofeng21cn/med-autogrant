@@ -255,6 +255,11 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         _write_json_output(report_path, report, label="grant autonomy controller report")
 
         final_workspace = report.get("final_workspace") if isinstance(report.get("final_workspace"), dict) else {}
+        workspace_identity = (
+            report.get("workspace_identity")
+            if isinstance(report.get("workspace_identity"), dict)
+            else {}
+        )
         final_workspace_path: Path | None = None
         if _looks_like_workspace(final_workspace):
             final_workspace_path = resolved_output_dir / "grant-autonomy-final-workspace.json"
@@ -268,10 +273,10 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         return {
             "ok": True,
             "command": "execute-grant-autonomy-controller",
-            "grant_run_id": final_workspace.get("grant_run_id") if final_workspace else None,
-            "workspace_id": final_workspace.get("workspace_id") if final_workspace else None,
-            "draft_id": _read_active_draft_id(final_workspace) if final_workspace else None,
-            "lifecycle_stage": final_workspace.get("lifecycle_stage") if final_workspace else None,
+            "grant_run_id": workspace_identity.get("grant_run_id"),
+            "workspace_id": workspace_identity.get("workspace_id"),
+            "draft_id": workspace_identity.get("draft_id"),
+            "lifecycle_stage": workspace_identity.get("lifecycle_stage"),
             "controller_status": report["controller_status"],
             "termination_reason": report["termination_reason"],
             "output_dir": str(resolved_output_dir),

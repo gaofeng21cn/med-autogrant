@@ -12,6 +12,7 @@
     "termination_reason",
     "started_from_mode",
     "goal",
+    "workspace_identity",
     "completed_cycles",
     "unresolved_blockers",
     "evidence_gaps",
@@ -29,6 +30,18 @@
     },
     "started_from_mode": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
     "goal": {"type": "object"},
+    "workspace_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grant_run_id", "workspace_id", "draft_id", "lifecycle_stage", "program_id"],
+      "properties": {
+        "grant_run_id": {"type": ["string", "null"]},
+        "workspace_id": {"type": ["string", "null"]},
+        "draft_id": {"type": ["string", "null"]},
+        "lifecycle_stage": {"type": ["string", "null"]},
+        "program_id": {"type": ["string", "null"]}
+      }
+    },
     "completed_cycles": {"const": 0},
     "unresolved_blockers": {"$ref": "common.schema.json#/$defs/stringList"},
     "evidence_gaps": {"$ref": "common.schema.json#/$defs/stringList"},

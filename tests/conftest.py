@@ -14,9 +14,7 @@ META_FILES = {
 
 REGRESSION_FILES = {
     "tests/test_artifact_bundle.py",
-    "tests/test_cli_validate_workspace.py",
     "tests/test_cli_validate_workspace_error_cases.py",
-    "tests/test_cli_validate_workspace_product_entry_cases.py",
     "tests/test_cli_validate_workspace_revision_cases.py",
     "tests/test_final_package.py",
     "tests/test_grant_autonomy_controller.py",
@@ -33,7 +31,6 @@ PROOF_FILES: set[str] = set()
 
 STRUCTURE_FILES = {
     "tests/test_line_budget.py",
-    "tests/test_runtime_cli_structural_helpers.py",
     "tests/test_sentrux_governance.py",
 }
 
