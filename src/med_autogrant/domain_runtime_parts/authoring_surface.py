@@ -34,13 +34,6 @@ from med_autogrant.grant_quality import (
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.funding_landscape_discovery import discover_funding_landscape
-from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
-from med_autogrant.funding_landscape_discovery import build_funding_landscape_diff_report
-from med_autogrant.project_profile_selector import (
-    build_initialized_intake_workspace,
-    select_project_profile,
-)
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
 from med_autogrant.workspace import (
@@ -48,7 +41,6 @@ from med_autogrant.workspace import (
 )
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
-from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant.domain_runtime_parts.shared import (
     CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
     GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
@@ -64,14 +56,7 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_revised_workspace_output,
 )
 from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
-from med_autogrant.domain_runtime_parts.io import (
-    _build_selection_input_from_discovery,
-    _load_funding_landscape_cache_if_needed,
-)
-from med_autogrant.domain_runtime_parts.runtime_ops import (
-    _build_autonomy_quality_evaluator_output,
-    _looks_like_workspace,
-)
+from med_autogrant.domain_runtime_parts.runtime_ops import _looks_like_workspace
 from med_autogrant.domain_runtime_parts.authoring_mainline import build_authoring_mainline_payload
 
 
@@ -256,69 +241,8 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         resolved_output_dir = Path(output_dir).expanduser().resolve()
         resolved_output_dir.mkdir(parents=True, exist_ok=True)
 
-        def _discoverer(discovery_input: dict[str, Any]) -> dict[str, Any]:
-            discovery = discover_funding_landscape(
-                discovery_input,
-                cached_snapshot=_load_funding_landscape_cache_if_needed(discovery_input),
-            )
-            selection_input = _build_selection_input_from_discovery(
-                discovery_input=discovery_input,
-                funding_opportunity_pool=discovery["funding_opportunity_pool"],
-            )
-            return {
-                "selection_input": selection_input,
-                "funding_landscape_discovery": discovery,
-            }
-
-        def _selector(selection_input: dict[str, Any]) -> dict[str, Any]:
-            return select_project_profile(selection_input)
-
-        def _initializer(selection_input: dict[str, Any], _selection: dict[str, Any]) -> dict[str, Any]:
-            workspace, selection = build_initialized_intake_workspace(selection_input)
-            validation = validate_workspace_document(workspace)
-            if not validation.ok:
-                first_issue = validation.errors[0]
-                raise WorkspaceStateError(
-                    f"{first_issue.path}: {first_issue.message}",
-                    errors=validation.errors,
-                    grant_run_id=workspace.get("grant_run_id"),
-                    workspace_id=workspace.get("workspace_id"),
-                    lifecycle_stage=workspace.get("lifecycle_stage"),
-                )
-            return {
-                "workspace": workspace,
-                "project_profile_selection": selection,
-            }
-
-        def _mainline_runner(payload: dict[str, Any]) -> dict[str, Any]:
-            workspace = payload.get("workspace")
-            if not isinstance(workspace, dict):
-                raise WorkspaceStateError("grant autonomy mainline runner 缺少 workspace。")
-            cycle = payload.get("cycle")
-            cycle_index = cycle if isinstance(cycle, int) and cycle > 0 else 0
-            cycle_output_dir = resolved_output_dir / f"controller-cycle-{cycle_index:02d}-mainline"
-            cycle_input_path = cycle_output_dir / "mainline-input-workspace.json"
-            _write_revised_workspace_output(cycle_input_path, workspace)
-            mainline_payload = self.execute_authoring_mainline_loop(
-                input_path=cycle_input_path,
-                output_dir=cycle_output_dir,
-                max_cycles=1,
-                executor_kind=executor_kind,
-                opl_stage_attempt=opl_stage_attempt,
-            )
-            return {
-                "workspace": mainline_payload["final_workspace"],
-                "final_workspace": mainline_payload["final_workspace"],
-                "mainline_loop_report": mainline_payload["mainline_loop_report"],
-            }
-
         report = run_grant_autonomy_controller(
             request=request,
-            selector=_selector,
-            initializer=_initializer,
-            mainline_runner=_mainline_runner,
-            quality_evaluator=_build_autonomy_quality_evaluator_output,
-            discoverer=_discoverer,
             opl_stage_attempt=opl_stage_attempt,
         )
         _validate_schema_payload(

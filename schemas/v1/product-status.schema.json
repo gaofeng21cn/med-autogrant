@@ -1,236 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.med-autogrant.local/v1/product-status.schema.json",
-  "title": "Med Auto Grant Product Status",
+  "title": "Med Auto Grant Direct Status Handler",
   "type": "object",
-  "$defs": {
-    "nullableString": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "entrySurfaces": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "status",
-        "grant_progress",
-        "grant_cockpit",
-        "grant_direct_entry",
-        "grant_user_loop",
-        "direct_entry_builder",
-        "opl_handoff_builder"
-      ],
-      "properties": {
-        "status": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
-        },
-        "grant_progress": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
-        },
-        "grant_cockpit": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
-        },
-        "grant_direct_entry": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
-        },
-        "grant_user_loop": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
-        },
-        "direct_entry_builder": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/sharedHandoffBuilder"
-        },
-        "opl_handoff_builder": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/sharedHandoffBuilder"
-        }
-      }
-    },
-    "summarySurface": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "product_entry_command",
-        "recommended_command",
-        "operator_loop_command"
-      ],
-      "properties": {
-        "product_entry_command": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
-        },
-        "recommended_command": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
-        },
-        "operator_loop_command": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
-        }
-      }
-    },
-    "callerOwnerContract": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "active_caller_owner",
-        "active_caller_surface",
-        "target_caller_owner",
-        "target_caller_surface",
-        "domain_handler_target",
-        "domain_handler_owner",
-        "mag_role",
-        "claims_fully_cleaned",
-        "mag_handler_boundary_ready",
-        "external_opl_generated_or_hosted_caller_evidence_required"
-      ],
-      "properties": {
-        "active_caller_owner": {
-          "const": "med-autogrant"
-        },
-        "active_caller_surface": {
-          "const": "mag_product_status_handler_until_opl_caller_evidence"
-        },
-        "target_caller_owner": {
-          "const": "one-person-lab"
-        },
-        "target_caller_surface": {
-          "const": "opl_generated_or_hosted_status_read_model"
-        },
-        "domain_handler_target": {
-          "const": "med-autogrant"
-        },
-        "domain_handler_owner": {
-          "const": "med-autogrant"
-        },
-        "mag_role": {
-          "const": "status_handler_target_and_grant_authority_refs_only"
-        },
-        "claims_fully_cleaned": {
-          "const": false
-        },
-        "mag_handler_boundary_ready": {
-          "const": true
-        },
-        "external_opl_generated_or_hosted_caller_evidence_required": {
-          "const": true
-        }
-      }
-    },
-    "productStatus": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "surface_kind",
-        "recommended_action",
-        "target_domain_id",
-        "workspace_locator",
-        "runtime",
-        "product_entry_status",
-        "product_entry_surface",
-        "operator_loop_surface",
-        "operator_loop_actions",
-        "product_entry_start",
-        "product_entry_overview",
-        "product_entry_preflight",
-        "product_entry_readiness",
-        "grant_authoring_readiness",
-        "product_entry_quickstart",
-        "session_continuity",
-        "progress_projection",
-        "artifact_inventory",
-        "runtime_control",
-        "temporal_stage_run_consumption_policy",
-        "caller_owner_contract",
-        "generated_hosted_default_caller_proof",
-        "family_orchestration",
-        "product_entry_manifest",
-        "product_entry_surfaces",
-        "summary",
-        "notes"
-      ],
-      "properties": {
-        "surface_kind": {
-          "const": "product_status"
-        },
-        "recommended_action": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
-        },
-        "target_domain_id": {
-          "const": "med-autogrant"
-        },
-        "workspace_locator": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/workspaceLocator"
-        },
-        "runtime": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeSummary"
-        },
-        "product_entry_status": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryStatus"
-        },
-        "product_entry_surface": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/shellSurface"
-        },
-        "operator_loop_surface": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/shellSurface"
-        },
-        "operator_loop_actions": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/operatorLoopActions"
-        },
-        "product_entry_start": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryStart"
-        },
-        "product_entry_overview": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryOverview"
-        },
-        "product_entry_preflight": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryPreflight"
-        },
-        "product_entry_readiness": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryReadiness"
-        },
-        "grant_authoring_readiness": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/grantAuthoringReadiness"
-        },
-        "product_entry_quickstart": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryQuickstart"
-        },
-        "session_continuity": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
-        },
-        "progress_projection": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
-        },
-        "artifact_inventory": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
-        },
-        "runtime_control": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
-        },
-        "temporal_stage_run_consumption_policy": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/temporalStageRunConsumptionPolicy"
-        },
-        "caller_owner_contract": {
-          "$ref": "#/$defs/callerOwnerContract"
-        },
-        "generated_hosted_default_caller_proof": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/magConsumerThinningContract/properties/generated_hosted_default_caller_proof"
-        },
-        "family_orchestration": {
-          "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
-        },
-        "product_entry_manifest": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryManifest"
-        },
-        "product_entry_surfaces": {
-          "$ref": "#/$defs/entrySurfaces"
-        },
-        "summary": {
-          "$ref": "#/$defs/summarySurface"
-        },
-        "notes": {
-          "$ref": "common.schema.json#/$defs/stringList"
-        }
-      }
-    }
-  },
   "additionalProperties": false,
   "required": [
     "ok",
@@ -243,29 +15,44 @@
     "product_status"
   ],
   "properties": {
-    "ok": {
-      "const": true
-    },
-    "command": {
-      "const": "product-status"
-    },
-    "grant_run_id": {
-      "$ref": "common.schema.json#/$defs/nonEmptyString"
-    },
-    "workspace_id": {
-      "$ref": "common.schema.json#/$defs/nonEmptyString"
-    },
-    "draft_id": {
-      "$ref": "#/$defs/nullableString"
-    },
-    "lifecycle_stage": {
-      "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
-    },
-    "input_path": {
-      "$ref": "common.schema.json#/$defs/nonEmptyString"
-    },
+    "ok": {"const": true},
+    "command": {"const": "product-status"},
+    "grant_run_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+    "workspace_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+    "draft_id": {"type": ["string", "null"]},
+    "lifecycle_stage": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+    "input_path": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
     "product_status": {
-      "$ref": "#/$defs/productStatus"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "target_domain_id",
+        "product_entry_status",
+        "summary",
+        "product_entry_surfaces",
+        "progress_projection",
+        "stage_descriptor_ref",
+        "owner_receipt_contract",
+        "authority_boundary",
+        "notes"
+      ],
+      "properties": {
+        "surface_kind": {"const": "product_status"},
+        "target_domain_id": {"const": "med-autogrant"},
+        "product_entry_status": {"type": "object"},
+        "summary": {
+          "type": "object",
+          "required": ["product_entry_command", "recommended_command", "operator_loop_command"],
+          "additionalProperties": {"$ref": "common.schema.json#/$defs/nonEmptyString"}
+        },
+        "product_entry_surfaces": {"type": "object"},
+        "progress_projection": {"type": "object"},
+        "stage_descriptor_ref": {"const": "contracts/stage_control_plane.json"},
+        "owner_receipt_contract": {"type": "object"},
+        "authority_boundary": {"type": "object"},
+        "notes": {"$ref": "common.schema.json#/$defs/stringList"}
+      }
     }
   }
 }

@@ -576,13 +576,8 @@ def _validate_product_entry_manifest_contract(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    _validate_shared_family_product_entry_manifest(
-        payload["product_entry_manifest"],
-        require_contract_bundle=True,
-        require_runtime_companions=True,
-    )
     _validate_contract_schema(
-        _schema_payload_without_contract_bundle(payload, surface_key="product_entry_manifest"),
+        payload,
         schema_file=PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
         context="product_entry_manifest",
         grant_run_id=grant_run_id,
@@ -597,36 +592,11 @@ def _validate_product_status_contract(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    shared_status_payload = dict(payload["product_status"])
-    shared_status_payload["entry_surfaces"] = shared_status_payload.get("product_entry_surfaces")
-    _validate_shared_family_product_entry_surface(
-        shared_status_payload,
-        require_contract_bundle=True,
-        require_runtime_companions=True,
-    )
     _validate_contract_schema(
-        _schema_payload_without_contract_bundle(payload, surface_key="product_status"),
+        payload,
         schema_file=PRODUCT_STATUS_SCHEMA_FILE,
         context="product_status",
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
     )
-    product_status = _require_mapping(
-        payload,
-        "product_status",
-        context="product_status",
-    )
-    manifest = _require_mapping(
-        product_status,
-        "product_entry_manifest",
-        context="product_status.product_entry_manifest",
-    )
-    for surface_key in ("session_continuity", "progress_projection", "artifact_inventory", "runtime_control"):
-        if product_status.get(surface_key) != manifest.get(surface_key):
-            raise WorkspaceStateError(
-                f"product_status.{surface_key} 与 product_entry_manifest.{surface_key} 不一致。",
-                grant_run_id=grant_run_id,
-                workspace_id=workspace_id,
-                lifecycle_stage=lifecycle_stage,
-            )

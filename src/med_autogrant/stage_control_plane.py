@@ -1,744 +1,34 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
-from med_autogrant.stage_control_plane_parts.artifact_contracts import (
-    build_stage_native_artifact_contract,
-)
-from med_autogrant.stage_control_plane_parts.cognitive_kernel import (
-    plane_cognitive_kernel_refs,
-    stage_descriptor_cognitive_kernel_fields,
-)
 from med_autogrant.stage_control_plane_parts.transition_oracle import (
     build_mag_grant_transition_oracle,
 )
-from med_autogrant.runtime_defaults import DEFAULT_EXECUTOR_OWNER
-from med_autogrant.temporal_stage_run_consumption import (
-    build_grant_ready_completion_audit,
-)
-
-USER_STAGE_LOG_REQUIRED_FIELDS = [
-    "stage_name",
-    "problem_summary",
-    "stage_goal",
-    "stage_work_done",
-    "changed_stage_surfaces",
-    "outcome",
-    "remaining_blockers",
-    "evidence_refs",
-]
-
-USER_STAGE_LOG_CONTRACT = {
-    "surface_kind": "opl_standard_agent_user_stage_log_contract",
-    "version": "standard-user-stage-log.v1",
-    "owner": "one-person-lab",
-    "standard_agent_requirement": "domain_stage_closeout_must_return_user_readable_stage_semantics_or_typed_blocker",
-    "opl_projection_surface": "stage_progress_log.user_stage_log",
-    "domain_semantic_sources": [
-        "typed_closeout_packet.user_stage_log",
-        "typed_closeout_packet.stage_log_summary",
-        "route_impact.user_stage_log",
-        "route_impact.stage_log_summary",
-    ],
-    "required_domain_semantic_fields": USER_STAGE_LOG_REQUIRED_FIELDS,
-    "required_observability_fields": ["duration", "token_usage", "cost"],
-    "missing_semantics_policy": "typed_blocker_or_missing_domain_semantic_summary_no_opl_inference",
-    "token_policy": "observed_or_explicit_missing_null_no_zero_fill",
-    "authority_boundary": {
-        "opl_can_infer_domain_semantics": False,
-        "opl_can_read_artifact_body": False,
-        "opl_can_write_domain_truth": False,
-        "opl_can_authorize_quality_or_export": False,
-        "provider_completion_can_claim_stage_semantics_complete": False,
-    },
-}
-
-PROGRESS_DELTA_POLICY = {
-    "surface_kind": "opl_stage_progress_delta_policy",
-    "version": "progress-delta-policy.v1",
-    "owner": "one-person-lab",
-    "standard_agent_requirement": (
-        "stage_closeout_must_classify_deliverable_progress_vs_platform_repair_or_return_typed_blocker"
-    ),
-    "projection_surface": "stage_progress_log.user_stage_log",
-    "required_fields": [
-        "progress_delta_classification",
-        "deliverable_progress_delta",
-        "platform_repair_delta",
-        "next_forced_delta",
-    ],
-    "classification_values": [
-        "deliverable_progress",
-        "platform_repair",
-        "mixed",
-        "typed_blocker",
-        "human_gate",
-        "stop_loss",
-    ],
-    "deliverable_delta_aliases": {
-        "grant_work_progress": "deliverable_progress_delta",
-    },
-    "platform_delta_aliases": {
-        "platform_evidence_progress": "platform_repair_delta",
-    },
-    "platform_only_is_not_deliverable_progress": True,
-    "missing_delta_policy": "emit_zero_deliverable_delta_and_next_forced_delta_without_inventing_grant_work",
-    "authority_boundary": {
-        "opl_can_infer_domain_work": False,
-        "opl_can_read_artifact_body": False,
-        "opl_can_write_domain_truth": False,
-        "opl_can_authorize_quality_or_export": False,
-    },
-}
-
-TYPED_BLOCKER_LINEAGE_POLICY = {
-    "surface_kind": "family-stall-lineage.v1",
-    "version": "family-stall-lineage.v1",
-    "owner": "one-person-lab",
-    "standard_agent_requirement": (
-        "typed_blockers_must_include_repeat_budget_lineage_next_forced_delta_and_escalation_owner"
-    ),
-    "required_fields": [
-        "blocker_family",
-        "study_id_or_domain_identity",
-        "work_unit_id",
-        "eval_id_or_review_ref",
-        "source_fingerprint",
-        "repeat_count",
-        "first_seen",
-        "last_seen",
-        "last_deliverable_delta",
-        "next_forced_delta",
-        "escalation_owner",
-        "terminal",
-    ],
-    "repeat_budget": {
-        "mechanism_repair_after_repeat_count": 2,
-        "human_gate_or_stop_loss_after_repeat_count": 3,
-    },
-    "platform_only_delta_policy": "does_not_reset_deliverable_stall_budget",
-    "authority_boundary": {
-        "opl_can_generate_domain_blocker": False,
-        "opl_can_escalate_without_domain_or_human_gate_ref": False,
-        "opl_can_claim_deliverable_progress_from_platform_repair": False,
-    },
-}
-
-STAGE_COMPLETION_POLICY: dict[str, Any] = {
-    "surface_kind": "domain_stage_completion_policy",
-    "version": "domain-stage-completion-policy.v1",
-    "owner": "one-person-lab",
-    "standard_agent_requirement": (
-        "domain_stage_owns_completion_judgment_and_emits_standard_closeout_packet"
-    ),
-    "completion_judgment_owner": "domain_stage",
-    "closeout_packet_required": True,
-    "provider_completion_is_domain_completion": False,
-    "opl_content_judgment_allowed": False,
-    "next_stage_transition_owner": "opl_runtime",
-    "required_closeout_outcomes": [
-        "completed_and_continue",
-        "completed_and_wait_owner",
-        "route_back",
-        "blocked",
-        "rejected",
-    ],
-    "accepted_closeout_ref_fields": [
-        "owner_receipt_ref",
-        "typed_blocker_ref",
-        "human_gate_ref",
-        "route_back_ref",
-    ],
-    "authority_boundary": {
-        "opl_can_decide_domain_completion": False,
-        "provider_completion_counts_as_stage_complete": False,
-        "file_presence_counts_as_stage_complete": False,
-        "suite_pass_counts_as_stage_complete": False,
-        "conformance_pass_counts_as_stage_complete": False,
-    },
-}
-
-STAGE_OUTPUT_ROLE_BY_STAGE_ID: dict[str, str] = {
-    "call_and_candidate_intake": "call_candidate_intake_manifest_ref",
-    "fundability_strategy": "fundability_strategy_owner_receipt_ref",
-    "specific_aims_and_structure": "specific_aims_structure_manifest_ref",
-    "proposal_authoring": "reviewable_grant_artifact_bundle_ref",
-    "review_and_rebuttal": "review_quality_closure_receipt_ref",
-    "package_and_submit_ready": "submission_ready_package_manifest_ref",
-}
-
-DEFAULT_GOLDEN_PATH_STAGE_ID = "call_and_candidate_intake"
 
 
-STAGE_PACK: tuple[dict[str, Any], ...] = (
-    {
-        "stage_id": "call_and_candidate_intake",
-        "stage_kind": "intake",
-        "title": "Call and candidate intake",
-        "goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
-        "domain_stage_refs": [
-            "discover-funding-opportunities",
-            "select-project-profile",
-            "initialize-intake-workspace",
-            "input_intake",
-        ],
-        "allowed_action_refs": ["inspect_progress", "inspect_cockpit"],
-        "requires": ["grant_request_received"],
-        "ensures": ["call_candidate_intake_ready"],
-        "next_stage_refs": ["fundability_strategy"],
-        "trust_lane": "domain_agent",
-    },
-    {
-        "stage_id": "fundability_strategy",
-        "stage_kind": "planning",
-        "title": "Fundability strategy",
-        "goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
-        "domain_stage_refs": [
-            "direction_screening",
-            "fit_alignment",
-            "grant_quality_scorecard",
-            "fundability gate",
-        ],
-        "allowed_action_refs": ["open_grant_user_loop", "inspect_progress"],
-        "requires": ["call_candidate_intake_ready"],
-        "ensures": ["fundability_strategy_gate_recorded"],
-        "next_stage_refs": ["specific_aims_and_structure"],
-        "trust_lane": "ai_decision",
-        "independent_gate_receipt_required": True,
-    },
-    {
-        "stage_id": "specific_aims_and_structure",
-        "stage_kind": "planning",
-        "title": "Specific aims and structure",
-        "goal": "Shape research question, aims, technical route, innovation, and argument structure.",
-        "domain_stage_refs": ["question_refinement", "argument_building", "outline"],
-        "allowed_action_refs": ["open_grant_user_loop", "inspect_progress"],
-        "requires": ["fundability_strategy_gate_recorded"],
-        "ensures": ["specific_aims_structure_accepted"],
-        "next_stage_refs": ["proposal_authoring"],
-        "trust_lane": "ai_decision",
-        "independent_gate_receipt_required": True,
-    },
-    {
-        "stage_id": "proposal_authoring",
-        "stage_kind": "creation",
-        "title": "Proposal authoring",
-        "goal": "Draft and revise the proposal body within the locked funding-call context.",
-        "domain_stage_refs": ["drafting", "revision", "grant-progress", "grant-user-loop"],
-        "allowed_action_refs": ["open_grant_user_loop", "build_direct_entry"],
-        "requires": ["specific_aims_structure_accepted"],
-        "ensures": ["proposal_draft_reviewable"],
-        "next_stage_refs": ["review_and_rebuttal"],
-        "trust_lane": "codex_executor",
-    },
-    {
-        "stage_id": "review_and_rebuttal",
-        "stage_kind": "review",
-        "title": "Review and rebuttal",
-        "goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
-        "domain_stage_refs": ["critique", "review", "grant_quality_closure_dossier", "quality-diff"],
-        "allowed_action_refs": ["open_grant_user_loop", "inspect_progress"],
-        "requires": ["proposal_draft_reviewable"],
-        "ensures": ["grant_review_gate_receipt_recorded"],
-        "next_stage_refs": ["package_and_submit_ready"],
-        "trust_lane": "ai_decision",
-        "independent_gate_receipt_required": True,
-    },
-    {
-        "stage_id": "package_and_submit_ready",
-        "stage_kind": "packaging",
-        "title": "Package and submit-ready",
-        "goal": "Freeze final local delivery package and run submission-ready export checks.",
-        "domain_stage_refs": ["freeze", "frozen", "package submission-ready", "submission-ready export gate"],
-        "allowed_action_refs": ["build_submission_ready_package", "inspect_progress"],
-        "requires": ["grant_review_gate_receipt_recorded"],
-        "ensures": ["submission_ready_package_receipt_recorded"],
-        "next_stage_refs": [],
-        "trust_lane": "domain_agent",
-        "independent_gate_receipt_required": True,
-    },
-)
-
-STAGE_KNOWLEDGE_REFS: dict[str, tuple[str, ...]] = {
-    "call_and_candidate_intake": (
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-    "fundability_strategy": (
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-    "specific_aims_and_structure": (
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-    "proposal_authoring": (
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/package_authority.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-    "review_and_rebuttal": (
-        "agent/knowledge/grant_strategy_memory.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-    "package_and_submit_ready": (
-        "agent/knowledge/package_authority.md",
-        "agent/knowledge/owner_receipt_boundary.md",
-    ),
-}
-
-STAGE_QUALITY_GATE_REFS: dict[str, tuple[str, ...]] = {
-    "call_and_candidate_intake": (
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-    "fundability_strategy": (
-        "agent/quality_gates/fundability.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-    "specific_aims_and_structure": (
-        "agent/quality_gates/fundability.md",
-        "agent/quality_gates/quality.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-    "proposal_authoring": (
-        "agent/quality_gates/quality.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-    "review_and_rebuttal": (
-        "agent/quality_gates/quality.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-    "package_and_submit_ready": (
-        "agent/quality_gates/export_and_package.md",
-        "agent/quality_gates/memory_and_receipts.md",
-        "agent/quality_gates/authority_boundaries.md",
-    ),
-}
-
-
-def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
-    runtime_event_refs = _runtime_event_refs(stage)
-    cohort_loop_refs = _stage_cohort_loop_refs(stage)
-    stage_id = str(stage["stage_id"])
-    expected_receipt_refs = _stage_expected_receipt_refs(stage_id, runtime_event_refs)
-    monitor_freshness_refs = _stage_monitor_freshness_refs(stage_id)
-    replay_evidence_refs = _stage_replay_evidence_refs(
-        stage_id,
-        runtime_event_refs,
-        expected_receipt_refs,
-    )
-    production_evidence_closeout = _stage_production_evidence_closeout(
-        stage_id=stage_id,
-        expected_receipt_refs=expected_receipt_refs,
-        monitor_freshness_refs=monitor_freshness_refs,
-    )
-    stage_native_artifact_contract = build_stage_native_artifact_contract(
-        stage=stage,
-        expected_receipt_refs=expected_receipt_refs,
-        output_role=STAGE_OUTPUT_ROLE_BY_STAGE_ID[stage_id],
-    )
-    return {
-        **stage,
-        "owner": TARGET_DOMAIN_ID,
-        "stage_goal": stage["goal"],
-        "summary": f"{stage['title']} projected from MAG-owned grant authoring surfaces for OPL discovery.",
-        "selected_executor": {
-            "executor_kind": DEFAULT_EXECUTOR_OWNER,
-            "default_executor": stage_id == DEFAULT_GOLDEN_PATH_STAGE_ID,
-            "executor_binding_ref": "default_codex_cli",
-            "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
-            "required_capabilities": [
-                "repo_context_reading",
-                "domain_skill_invocation",
-                "tool_affordance_boundary_compliance",
-                "receipt_or_typed_blocker_return",
-                "no_forbidden_write_guard",
-            ],
-        },
-        "inputs": [
-            {"ref_kind": "json_pointer", "ref": "/family_action_catalog", "role": "allowed_action_catalog"},
-            {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "grant_progress_read_model"},
-            {"ref_kind": "json_pointer", "ref": "/runtime_control", "role": "runtime_control_projection"},
-        ],
-        "skills": [
-            {"ref_kind": "repo_path", "ref": "agent/skills/grant_authoring.md", "role": "domain_skill_declaration"},
-            {"ref_kind": "skill_id", "ref": "med-autogrant", "role": "domain_skill"},
-            {"ref_kind": "skill_id", "ref": "officecli-docx", "role": "optional_document_helper"},
-        ],
-        "prompt_refs": [
-            {
-                "ref_kind": "repo_path",
-                "ref": f"agent/prompts/{stage['stage_id']}.md",
-                "role": "stage_prompt",
-            }
-        ],
-        "knowledge_refs": [
-            {"ref_kind": "repo_path", "ref": ref, "role": "stage_knowledge"}
-            for ref in STAGE_KNOWLEDGE_REFS[stage_id]
-        ],
-        "outputs": [
-            {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "stage_status"},
-            {"ref_kind": "json_pointer", "ref": "/artifact_inventory", "role": "artifact_inventory"},
-            {
-                "ref_kind": "stage_output_role",
-                "ref": stage_native_artifact_contract["required_output_roles"][0],
-                "role": "stage_native_artifact_output_role",
-            },
-        ],
-        "evaluation": [
-            {"ref_kind": "repo_path", "ref": ref, "role": "stage_quality_gate"}
-            for ref in STAGE_QUALITY_GATE_REFS[stage_id]
-        ] + [
-            {
-                "ref_kind": "repo_path",
-                "ref": "agent/quality_gates/authority_boundaries.md",
-                "role": "owner_receipt_gate",
-            }
-        ],
-        **stage_descriptor_cognitive_kernel_fields(
-            stage_id=stage_id,
-            gate_ref=STAGE_QUALITY_GATE_REFS[stage_id][0],
-        ),
-        "handoff": {
-            "next_owner": TARGET_DOMAIN_ID,
-            "next_stage_refs": list(stage.get("next_stage_refs", [])),
-            "provides": list(stage.get("ensures", [])),
-            "resume_surface_ref": "/operator_loop_surface",
-            "progress_surface_ref": "/progress_projection",
-            "shared_handoff_ref": "/shared_handoff",
-        },
-        "stage_contract": {
-            "requires": list(stage.get("requires", [])),
-            "ensures": list(stage.get("ensures", [])),
-            "runtime_event_refs": runtime_event_refs,
-            **cohort_loop_refs,
-            "expected_receipt_refs": expected_receipt_refs,
-            "monitor_freshness_refs": monitor_freshness_refs,
-            "replay_evidence_refs": replay_evidence_refs,
-            "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
-            "stage_admission_packet": _stage_admission_packet(stage),
-            "stage_native_artifact_contract": stage_native_artifact_contract,
-            "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
-            "progress_delta_policy": PROGRESS_DELTA_POLICY,
-            "typed_blocker_lineage_policy": TYPED_BLOCKER_LINEAGE_POLICY,
-            "stage_completion_policy": STAGE_COMPLETION_POLICY,
-            "boundary_assumptions": [
-                "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
-                "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
-            ],
-        },
-        "stage_production_evidence_closeout": production_evidence_closeout,
-        "trust_boundary": {
-            "lane": stage.get("trust_lane", "domain_agent"),
-            "static_check_eligible": False,
-            "effect_boundary": stage.get("trust_lane") == "ai_decision",
-            "records_runtime_events": True,
-            "runtime_event_refs": runtime_event_refs,
-            "owner_receipt_required": True,
-            "human_gate_required": False,
-            "runtime_guard_required": True,
-        },
-        "source_refs": [
-            {"ref_kind": "json_pointer", "ref": "/family_action_catalog", "role": "action_authority"},
-            {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "stage_progress"},
-            {"ref_kind": "json_pointer", "ref": "/task_lifecycle", "role": "checkpoint_status"},
-            {"ref_kind": "json_pointer", "ref": "/runtime_control", "role": "runtime_boundary"},
-            {"ref_kind": "json_pointer", "ref": "/grant_authoring_readiness", "role": "authoring_gate"},
-            {
-                "ref_kind": "repo_path",
-                "ref": "docs/references/integration/opl-family-contract-adoption.md",
-                "role": "stage_pack_reference",
-            },
-        ],
-        "freshness": {
-            "freshness_kind": "product_entry_manifest_projection",
-            "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
-            "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
-            "stale_if_source_refs_missing": True,
-        },
-        "authority_boundary": {
-            "domain_truth_owner": TARGET_DOMAIN_ID,
-            "fundability_judgment_owner": TARGET_DOMAIN_ID,
-            "submission_ready_export_gate_owner": TARGET_DOMAIN_ID,
-            "opl_role": "projection_consumer_only",
-            "maps_existing_surfaces_only": True,
-            "independent_gate_receipt_required": bool(stage.get("independent_gate_receipt_required", False)),
-            "can_write_grant_truth": False,
-            "can_override_fundability_judgment": False,
-            "can_bypass_submission_ready_gate": False,
-        },
-    }
-
-
-def _stage_admission_packet(stage: Mapping[str, Any]) -> dict[str, Any]:
-    stage_id = str(stage["stage_id"])
-    return {
-        "surface_kind": "mag_stage_admission_packet",
-        "version": "mag-stage-admission-packet.v1",
-        "stage_id": stage_id,
-        "expected_grant_delta": {
-            "owner": TARGET_DOMAIN_ID,
-            "delta_kind": "grant_work_progress",
-            "domain_stage_refs": list(stage.get("domain_stage_refs", [])),
-            "expected_outputs": list(stage.get("ensures", [])),
-            "maps_to": "opl_deliverable_delta",
-        },
-        "closeout_target": {
-            "owner": TARGET_DOMAIN_ID,
-            "accepted_return_shapes": [
-                "domain_owner_receipt_ref",
-                "typed_blocker_ref",
-                "no_regression_evidence_ref",
-            ],
-            "target_ref": f"receipt:mag/grant-stage-controlled-attempt/{stage_id}/owner-receipt-or-typed-blocker",
-            "body_free_payload_required": True,
-        },
-        "human_gate": {
-            "gate_id": "submission_ready_export_gate",
-            "owner": TARGET_DOMAIN_ID,
-            "required": stage_id == "package_and_submit_ready",
-            "opl_can_bypass": False,
-        },
-        "blocker_budget": {
-            "repeat_budget": 2,
-            "budget_scope": "same_stage_same_blocker_kind",
-            "escalation_owner": TARGET_DOMAIN_ID,
-            "escalation_route": "mag_owner_surface",
-        },
-        "authority_boundary": {
-            "opl_role": "stage_admission_consumer_only",
-            "can_write_grant_truth": False,
-            "can_declare_fundability_ready": False,
-            "can_declare_export_ready": False,
-        },
-}
-
-
-def _stage_expected_receipt_refs(stage_id: str, runtime_event_refs: list[str]) -> list[dict[str, Any]]:
-    return [
-        {
-            "ref_kind": "receipt_ref_template",
-            "ref": f"receipt:mag/grant-stage-controlled-attempt/{stage_id}/owner-receipt-or-typed-blocker",
-            "role": "mag_owner_receipt_or_typed_blocker_expected",
-            "required_return_shapes": [
-                "domain_owner_receipt_ref",
-                "typed_blocker_ref",
-                "no_regression_evidence_ref",
-            ],
-            "owner": TARGET_DOMAIN_ID,
-            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-            "runtime_event_refs": list(runtime_event_refs),
-            "body_free_payload_required": True,
-        }
-    ]
-
-
-def _stage_monitor_freshness_refs(stage_id: str) -> list[dict[str, str]]:
-    return [
-        {
-            "ref_kind": "json_pointer",
-            "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/freshness",
-            "role": "stage_descriptor_freshness_metric",
-        },
-        {
-            "ref_kind": "json_pointer",
-            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
-            "role": "task_lifecycle_monitor_freshness",
-        },
-        {
-            "ref_kind": "json_pointer",
-            "ref": "/product_entry_manifest/progress_projection",
-            "role": "grant_progress_monitor_freshness",
-        },
-    ]
-
-
-def _stage_replay_evidence_refs(
-    stage_id: str,
-    runtime_event_refs: list[str],
-    expected_receipt_refs: list[dict[str, Any]],
-) -> list[dict[str, str]]:
-    return [
-        {
-            "ref_kind": "runtime_event_ref",
-            "ref": runtime_event_ref,
-            "role": "recorded_runtime_event_ref",
-        }
-        for runtime_event_ref in runtime_event_refs
-    ] + [
-        {
-            "ref_kind": "closeout_receipt_ref",
-            "ref": str(expected_receipt_ref["ref"]),
-            "role": "stage_closeout_receipt_ref",
-        }
-        for expected_receipt_ref in expected_receipt_refs
-    ]
-
-
-def _stage_production_evidence_closeout(
-    *,
-    stage_id: str,
-    expected_receipt_refs: list[dict[str, Any]],
-    monitor_freshness_refs: list[dict[str, str]],
-) -> dict[str, Any]:
-    grant_ready_completion_audit = build_grant_ready_completion_audit()
-    return {
-        "surface_kind": "mag_stage_production_evidence_closeout_refs",
-        "state": "body_free_refs_ready_for_opl_record_preflight",
-        "stage_id": stage_id,
-        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
-        "opl_record_route_ref": f"opl://stage-production-evidence/med-autogrant/{stage_id}/record",
-        "opl_verify_route_ref": f"opl://stage-production-evidence/med-autogrant/{stage_id}/verify",
-        "expected_receipt_refs": expected_receipt_refs,
-        "monitor_freshness_refs": monitor_freshness_refs,
-        "evidence_refs": [
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
-            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
-        ],
-        "preflight_refs": [
-            "/product_entry_manifest/controlled_stage_attempt_projection",
-            "/product_entry_manifest/owner_receipt_contract",
-            "/product_entry_manifest/temporal_stage_run_consumption_policy/grant_ready_completion_audit",
-            f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/stage_contract",
-        ],
-        "grant_ready_completion_audit_ref": (
-            "/product_entry_manifest/temporal_stage_run_consumption_policy/"
-            "grant_ready_completion_audit"
-        ),
-        "grant_ready_completion_audit": grant_ready_completion_audit,
-        "authority_boundary": {
-            "domain_truth_owner": TARGET_DOMAIN_ID,
-            "fundability_judgment_owner": TARGET_DOMAIN_ID,
-            "submission_ready_export_gate_owner": TARGET_DOMAIN_ID,
-            "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
-            "opl_can_sign_owner_receipt": False,
-            "opl_can_write_grant_truth": False,
-            "opl_can_write_memory_body": False,
-            "opl_can_declare_export_ready": False,
-            "provider_completion_counts_as_grant_ready": False,
-            "schema_completeness_counts_as_grant_ready": False,
-            "generated_surface_ready_counts_as_grant_ready": False,
-            "focused_tests_count_as_grant_ready": False,
-        },
-    }
-
-
-def _stage_cohort_loop_refs(stage: Mapping[str, Any]) -> dict[str, list[dict[str, Any]]]:
-    stage_id = str(stage["stage_id"])
-    return {
-        "source_scope_refs": [
-            {
-                "ref_kind": "route_stage_refs",
-                "ref": list(stage["domain_stage_refs"]),
-                "role": "mag_grant_stage_source_scope",
-            },
-            {
-                "ref_kind": "json_pointer",
-                "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/source_refs",
-                "role": "stage_source_ref_projection",
-            },
-        ],
-        "cohort_query_refs": [
-            {
-                "ref_kind": "json_pointer",
-                "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
-                "role": "auditable_grant_stage_cohort_query",
-            },
-        ],
-        "trigger_refs": [
-            {
-                "ref_kind": "queue_ref",
-                "ref": f"opl://family-stage-queue/med-autogrant/{stage_id}",
-                "role": "opl_provider_stage_launch_trigger",
-            },
-            {
-                "ref_kind": "action_ref",
-                "ref": list(stage["allowed_action_refs"]),
-                "role": "mag_guarded_action_trigger_candidates",
-            },
-        ],
-        "monitor_refs": [
-            {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "grant_progress_monitor"},
-            {"ref_kind": "json_pointer", "ref": "/task_lifecycle", "role": "checkpoint_monitor"},
-            {
-                "ref_kind": "json_pointer",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout"
-                ),
-                "role": "stage_replay_monitor",
-            },
-            {
-                "ref_kind": "json_pointer",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff"
-                ),
-                "role": "stage_owner_receipt_handoff_monitor",
-            },
-            {
-                "ref_kind": "json_pointer",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet"
-                ),
-                "role": "live_stage_attempt_monitor",
-            },
-            {
-                "ref_kind": "json_pointer",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout/external_evidence_refs/"
-                    "no_forbidden_write_guard_ref"
-                ),
-                "role": "no_forbidden_write_guard_monitor",
-            },
-            {
-                "ref_kind": "json_pointer",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout/external_evidence_refs/"
-                    "direct_hosted_parity_no_regression_ref"
-                ),
-                "role": "direct_hosted_parity_no_regression_monitor",
-            },
-        ],
-        "dashboard_metric_refs": [
-            {
-                "ref_kind": "json_pointer",
-                "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/freshness",
-                "role": "operator_stage_freshness_metric",
-            },
-        ],
-    }
-
-
-def _runtime_event_refs(stage: Mapping[str, Any]) -> list[str]:
-    stage_id = str(stage["stage_id"])
-    if stage.get("trust_lane") == "ai_decision":
-        return [f"runtime_event:{stage_id}.ai_decision_gate_recorded"]
-    return [f"runtime_event:{stage_id}.owner_receipt_recorded"]
+REPO_ROOT = Path(__file__).resolve().parents[2]
+STAGE_MANIFEST_PATH = REPO_ROOT / "agent" / "stages" / "manifest.json"
+STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane.json"
+SKILL_REF = "agent/skills/grant_authoring.md"
+TOOL_REF = "agent/tools/domain_affordances.md"
 
 
 def build_mag_family_stage_control_plane(
     *,
     family_action_catalog: Mapping[str, Any],
 ) -> dict[str, Any]:
+    manifest = _load_stage_manifest()
     action_ids = {
         str(action["action_id"])
-        for action in family_action_catalog["actions"]
-        if isinstance(action, Mapping)
+        for action in family_action_catalog.get("actions", [])
+        if isinstance(action, Mapping) and action.get("action_id")
     }
-    stages = [_stage_descriptor(stage) for stage in STAGE_PACK]
-    missing_refs = sorted(
+    stages = [_stage_descriptor(stage) for stage in manifest["stages"]]
+    missing_actions = sorted(
         {
             action_ref
             for stage in stages
@@ -746,92 +36,154 @@ def build_mag_family_stage_control_plane(
             if action_ref not in action_ids
         }
     )
-    if missing_refs:
-        raise ValueError(f"MAG stage control plane allowed_action_refs missing from family_action_catalog: {missing_refs}")
-
+    if missing_actions:
+        raise ValueError(
+            "MAG declarative stages reference missing family actions: "
+            f"{missing_actions}"
+        )
     return {
         "surface_kind": "family_stage_control_plane",
         "version": "family-stage-control-plane.v1",
         "plane_id": "med_autogrant_stage_control_plane",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
-        **plane_cognitive_kernel_refs(),
-        "replay_evidence_refs": [
-            {
-                "ref_kind": "append_only_event_log_ref",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout"
-                ),
-                "role": "append_only_event_log_ref",
-            },
-            {
-                "ref_kind": "attempt_ledger_ref",
-                "ref": (
-                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                    "grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet"
-                ),
-                "role": "attempt_ledger_ref",
-            },
+        "authority_boundary": dict(manifest["authority_boundary"]),
+        "stages": stages,
+        "notes": [
+            "Compiled from agent/stages/manifest.json; OPL owns runtime and transition transport.",
+            "Descriptor validity cannot authorize a MAG fundability, quality, package, or export verdict.",
         ],
-        "discovery_smoke": {
-            "surface_kind": "family_stage_control_plane_discovery_smoke",
-            "status": "ready",
-            "consumer": "opl_family_manifest_discovery_smoke",
-            "required_stage_fields": [
-                "stage_id",
-                "stage_goal",
-                "owner",
-                "skills",
-                "prompt_refs",
-                "knowledge_refs",
-                "evaluation",
-                "allowed_action_refs",
-                "handoff",
-                "source_refs",
-                "freshness",
-                "authority_boundary",
-                "stage_contract",
-                "trust_boundary",
-                "selected_executor",
-                "stage_production_evidence_closeout",
-                "stage_contract.user_stage_log_contract",
-                "stage_contract.stage_native_artifact_contract",
-                "stage_contract.stage_completion_policy",
-            ],
-            "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
+    }
+
+
+def sync_stage_control_plane(*, output_path: Path = STAGE_CONTROL_PLANE_PATH) -> Path:
+    action_catalog = json.loads(
+        (REPO_ROOT / "contracts" / "action_catalog.json").read_text(encoding="utf-8")
+    )
+    payload = build_mag_family_stage_control_plane(
+        family_action_catalog=action_catalog
+    )
+    output_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
+def _load_stage_manifest() -> dict[str, Any]:
+    payload = json.loads(STAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("agent/stages/manifest.json must be a JSON object")
+    if payload.get("target_domain_id") != TARGET_DOMAIN_ID:
+        raise ValueError("agent/stages/manifest.json has the wrong target_domain_id")
+    stages = payload.get("stages")
+    if not isinstance(stages, list) or not stages:
+        raise ValueError("agent/stages/manifest.json must declare stages")
+    stage_ids = [str(stage.get("stage_id", "")) for stage in stages if isinstance(stage, Mapping)]
+    if len(stage_ids) != len(stages) or len(stage_ids) != len(set(stage_ids)) or "" in stage_ids:
+        raise ValueError("agent/stages/manifest.json stage_id values must be unique and non-empty")
+    if not isinstance(payload.get("authority_boundary"), Mapping):
+        raise ValueError("agent/stages/manifest.json must declare authority_boundary")
+    return payload
+
+
+def _stage_descriptor(stage: Mapping[str, Any]) -> dict[str, Any]:
+    stage_id = _required_string(stage, "stage_id")
+    policy_ref = _required_repo_ref(stage, "policy_ref")
+    prompt_ref = _required_repo_ref(stage, "prompt_ref")
+    knowledge_refs = [_repo_ref(ref, "stage_knowledge") for ref in _string_list(stage, "knowledge_refs")]
+    quality_gate_refs = [
+        _repo_ref(ref, "stage_quality_gate") for ref in _string_list(stage, "quality_gate_refs")
+    ]
+    next_stage_refs = _string_list(stage, "next_stage_refs")
+    return {
+        "stage_id": stage_id,
+        "stage_kind": _required_string(stage, "stage_kind"),
+        "title": _required_string(stage, "title"),
+        "summary": _required_string(stage, "summary"),
+        "goal": _required_string(stage, "goal"),
+        "owner": TARGET_DOMAIN_ID,
+        "selected_executor": {
+            "executor_kind": "codex_cli",
+            "default_executor": True,
+            "runtime_owner": "one-person-lab",
         },
-        "source_refs": [
-            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/family_action_catalog", "role": "action_catalog"},
-            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/progress_projection", "role": "progress_read_model"},
-            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/task_lifecycle", "role": "checkpoint_read_model"},
-            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/runtime_control", "role": "authority_boundary"},
-            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/shared_handoff", "role": "handoff_contract"},
-        ],
+        "domain_stage_refs": [],
+        "inputs": [],
+        "knowledge_refs": knowledge_refs,
+        "skills": [_repo_ref(SKILL_REF, "domain_skill_declaration")],
+        "prompt_refs": [_repo_ref(prompt_ref, "stage_prompt")],
+        "tool_refs": [_repo_ref(TOOL_REF, "stage_tool_affordance_catalog")],
+        "allowed_action_refs": _string_list(stage, "allowed_action_refs"),
+        "outputs": [],
+        "evaluation": quality_gate_refs,
+        "handoff": {
+            "next_owner": "one-person-lab" if next_stage_refs else TARGET_DOMAIN_ID,
+            "next_stage_refs": next_stage_refs,
+            "closeout_ref_policy": "mag_owner_receipt_typed_blocker_human_gate_or_route_back",
+        },
+        "source_refs": [_repo_ref(policy_ref, "declarative_stage_policy")],
         "freshness": {
-            "freshness_kind": "product_entry_manifest_projection",
-            "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
-            "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
-            "stale_if_source_refs_missing": True,
+            "source_ref": policy_ref,
+            "refresh_policy": "reload_agent_stage_manifest",
+        },
+        "stage_contract": {
+            "requires": _string_list(stage, "requires"),
+            "ensures": _string_list(stage, "ensures"),
+            "boundary_assumptions": [
+                "OPL owns runtime transport; MAG owns grant judgment and owner closeout."
+            ],
+            "properties": [],
+            "runtime_assumptions": [],
+            "monitor_refs": [],
+            "source_scope_refs": [_repo_ref(policy_ref, "stage_policy_source")],
+            "artifact_scope_refs": [],
+            "workspace_scope_refs": [],
+        },
+        "trust_boundary": {
+            "lane": _required_string(stage, "trust_lane"),
+            "owner_receipt_required": True,
+            "human_gate_required": stage_id == "package_and_submit_ready",
         },
         "authority_boundary": {
             "domain_truth_owner": TARGET_DOMAIN_ID,
-            "fundability_judgment_owner": TARGET_DOMAIN_ID,
-            "submission_ready_export_gate_owner": TARGET_DOMAIN_ID,
-            "opl_role": "projection_consumer_only",
-            "write_policy": "no_grant_truth_writes",
-            "can_write_grant_truth": False,
-            "can_override_fundability_judgment": False,
-            "can_bypass_submission_ready_gate": False,
+            "opl_can_write_grant_truth": False,
+            "opl_can_authorize_quality_or_export": False,
+            "provider_completion_counts_as_domain_completion": False,
         },
-        "parity": {
-            "status": "aligned",
-            "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
-            "checked_action_count": len(action_ids),
-        },
-        "stages": stages,
-        "notes": [
-            "Descriptor-only projection over existing MAG grant authoring surfaces.",
-            "OPL discovery must not own grant truth, fundability judgment, or submission-ready export authority.",
-        ],
     }
+
+
+def _repo_ref(ref: str, role: str) -> dict[str, str]:
+    _ensure_repo_ref_exists(ref)
+    return {"ref": ref, "ref_kind": "repo_path", "role": role}
+
+
+def _required_repo_ref(stage: Mapping[str, Any], field: str) -> str:
+    ref = _required_string(stage, field)
+    _ensure_repo_ref_exists(ref)
+    return ref
+
+
+def _ensure_repo_ref_exists(ref: str) -> None:
+    path = Path(ref)
+    if path.is_absolute() or ".." in path.parts or not (REPO_ROOT / path).is_file():
+        raise ValueError(f"declarative stage ref does not resolve to a repo file: {ref}")
+
+
+def _required_string(payload: Mapping[str, Any], field: str) -> str:
+    value = payload.get(field)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"declarative stage field must be a non-empty string: {field}")
+    return value.strip()
+
+
+def _string_list(payload: Mapping[str, Any], field: str) -> list[str]:
+    value = payload.get(field)
+    if not isinstance(value, list) or any(not isinstance(item, str) or not item.strip() for item in value):
+        raise ValueError(f"declarative stage field must be a string list: {field}")
+    return [item.strip() for item in value]
+
+
+if __name__ == "__main__":
+    print(sync_stage_control_plane())

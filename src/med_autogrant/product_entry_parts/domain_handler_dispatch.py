@@ -14,12 +14,6 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
-from med_autogrant.product_entry_parts.domain_handler_closeout import (
-    _dispatch_codex_stage_receipts,
-    _dispatch_executor_first_bundle,
-    _dispatch_operator_readiness,
-    _dispatch_physical_morphology_guard,
-)
 from med_autogrant.product_entry_parts.domain_handler_contract import (
     ALLOWED_ACTIONS,
     DOMAIN_HANDLER_ADAPTER_ID,
@@ -29,10 +23,7 @@ from med_autogrant.product_entry_parts.domain_handler_contract import (
 from med_autogrant.product_entry_parts.typed_blocker_projection import (
     build_typed_blocker_projection,
 )
-from med_autogrant.product_entry_parts.owner_receipt_writers import (
-    write_lifecycle_receipt_evidence,
-    write_owner_receipt_evidence,
-)
+from med_autogrant.product_entry_parts.owner_receipt_writers import write_owner_receipt_evidence
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
@@ -53,40 +44,6 @@ def dispatch_domain_handler_task(
         return _dispatch_domain_memory_decision(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "stage-attempt/closeout":
         return _dispatch_stage_attempt_closeout(task=task, input_path=input_path, task_path=resolved_task_path)
-    if action == "lifecycle/receipt":
-        return _dispatch_lifecycle_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
-    if action == "closeout/codex-stage-receipts":
-        return _dispatch_codex_stage_receipts(
-            product_entry,
-            task=task,
-            input_path=input_path,
-            task_path=resolved_task_path,
-            dispatch_payload=_dispatch_payload,
-        )
-    if action == "closeout/operator-readiness":
-        return _dispatch_operator_readiness(
-            product_entry,
-            task=task,
-            input_path=input_path,
-            task_path=resolved_task_path,
-            dispatch_payload=_dispatch_payload,
-        )
-    if action == "closeout/physical-morphology-guard":
-        return _dispatch_physical_morphology_guard(
-            product_entry,
-            task=task,
-            input_path=input_path,
-            task_path=resolved_task_path,
-            dispatch_payload=_dispatch_payload,
-        )
-    if action == "closeout/executor-first-bundle":
-        return _dispatch_executor_first_bundle(
-            product_entry,
-            task=task,
-            input_path=input_path,
-            task_path=resolved_task_path,
-            dispatch_payload=_dispatch_payload,
-        )
     raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
 
 
@@ -195,51 +152,6 @@ def _dispatch_stage_attempt_closeout(
     )
 
 
-def _dispatch_lifecycle_receipt(
-    *,
-    task: Mapping[str, Any],
-    input_path: str,
-    task_path: Path,
-) -> dict[str, Any]:
-    receipt_evidence = write_lifecycle_receipt_evidence(
-        input_path=input_path,
-        operation=_require_nonempty_string_from_mapping(task, "operation", context="domain_handler_task"),
-        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),
-        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
-        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="domain_handler_task"),
-        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
-        receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
-    )
-    receipt = receipt_evidence["lifecycle_receipt_evidence"]
-    return _dispatch_payload(
-        action="lifecycle/receipt",
-        task=task,
-        task_path=task_path,
-        input_path=input_path,
-        status="completed",
-        result={
-            "surface_kind": "domain_handler_lifecycle_receipt_result",
-            "return_shape": receipt["receipt_shape"],
-            "receipt_ref": receipt["receipt_instance_ref"],
-            "receipt_refs": {
-                "lifecycle_receipt_ref": receipt["receipt_instance_ref"],
-                "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
-                "lifecycle_guarded_apply_proof_ref": receipt["lifecycle_guarded_apply_proof_ref"],
-                "source_ref": receipt["source_ref"],
-                "opl_consumes_receipt_ref_only": True,
-            },
-            "source_refs": list(receipt["source_refs"]),
-            "lifecycle_receipt_evidence": receipt,
-            "write_policy": "runtime_receipt_instance_only_no_repo_write",
-            "typed_blocker": _typed_blocker_for_receipt(
-                receipt,
-                blocker_kind="mag_lifecycle_owner_receipt_required",
-            ),
-        },
-        executed_command=None,
-    )
-
-
 def _dispatch_payload(
     *,
     action: str,
@@ -261,31 +173,14 @@ def _dispatch_payload(
             "action": action,
             "status": status,
             "target_domain_id": TARGET_DOMAIN_ID,
-            "caller_owner_contract": {
-                "active_caller_owner": TARGET_DOMAIN_ID,
-                "active_caller_surface": "mag_domain_handler_dispatch_handler_until_opl_caller_evidence",
-                "target_caller_owner": "one-person-lab",
-                "target_caller_surface": "opl_generated_or_hosted_domain_handler_dispatch",
-                "domain_handler_target": TARGET_DOMAIN_ID,
-                "domain_handler_owner": TARGET_DOMAIN_ID,
-                "mag_role": "guarded_domain_handler_target_only",
-                "claims_fully_cleaned": False,
-                "mag_handler_boundary_ready": True,
-                "external_opl_generated_or_hosted_caller_evidence_required": True,
+            "caller_boundary": {
+                "direct_handler_owner": TARGET_DOMAIN_ID,
+                "generated_caller_owner": "one-person-lab",
+                "mag_role": "grant_authority_action_target",
             },
             "input_path": str(Path(input_path).expanduser().resolve()),
             "task_path": str(task_path),
-            "executed_by_domain_handler": action
-            in {
-                "domain-memory/propose",
-                "domain-memory/decide",
-                "stage-attempt/closeout",
-                "lifecycle/receipt",
-                "closeout/codex-stage-receipts",
-                "closeout/operator-readiness",
-                "closeout/physical-morphology-guard",
-                "closeout/executor-first-bundle",
-            },
+            "executed_by_domain_handler": action in ALLOWED_ACTIONS,
             "executed_command": executed_command,
             "result": dict(result),
             "receipt_refs": _receipt_refs_for_task(
@@ -296,9 +191,7 @@ def _dispatch_payload(
             "guardrails": {
                 "allowed_actions": sorted(ALLOWED_ACTIONS),
                 "domain_truth_owner": TARGET_DOMAIN_ID,
-                "opl_role": "generated_hosted_caller_and_typed_family_queue_control_plane",
-                "hermes_role": "explicit_diagnostic_or_executor_proof_carrier_only",
-                "hermes_proof_executor_default": False,
+                "opl_role": "generated_hosted_caller_runtime_and_lifecycle_owner",
             },
         },
     }
@@ -312,9 +205,6 @@ def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
     refs: dict[str, Any] = {
         "grant_transition_oracle_ref": _optional_nonempty_string(task.get("grant_transition_oracle_ref"))
         or "/product_entry_manifest/grant_transition_oracle",
-        "controlled_soak_no_regression_attempt_ref": (
-            "/product_entry_manifest/controlled_soak_no_regression_attempt"
-        ),
         "domain_handler_stage_attempt_closeout_action": "stage-attempt/closeout",
     }
     transition_id = _optional_nonempty_string(task.get("transition_id"))

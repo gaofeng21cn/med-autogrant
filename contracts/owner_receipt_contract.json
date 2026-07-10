@@ -1,18 +1,20 @@
 {
+  "surface_kind": "owner_receipt_contract",
+  "schema_version": 2,
+  "domain_id": "med-autogrant",
   "allowed_receipt_classes": [
     "owner_receipt",
     "typed_blocker",
     "no_regression_evidence",
     "memory_writeback_receipt",
-    "artifact_lifecycle_receipt"
+    "package_authority_receipt"
   ],
-  "domain_id": "med-autogrant",
+  "receipt_instance_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
   "forbidden_claims": [
     "opl_authorized_domain_ready",
     "opl_authorized_quality_or_export_verdict",
     "opl_wrote_domain_truth",
-    "opl_wrote_memory_body"
-  ],
-  "schema_version": 1,
-  "surface_kind": "owner_receipt_contract"
+    "opl_wrote_memory_body",
+    "provider_completion_is_domain_completion"
+  ]
 }

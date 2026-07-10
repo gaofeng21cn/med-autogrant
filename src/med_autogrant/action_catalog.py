@@ -1,12 +1,10 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
-from med_autogrant.temporal_stage_run_consumption import (
-    build_temporal_stage_run_consumption_policy,
-)
-
 from opl_harness_shared.family_action_catalog import (
     build_family_action,
     build_family_action_catalog,
@@ -17,6 +15,7 @@ from opl_harness_shared.family_action_catalog import (
 
 CATALOG_ID = "med_autogrant_action_catalog"
 ACTION_CATALOG_REF = "/product_entry_manifest/family_action_catalog"
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def build_mag_family_action_catalog(
@@ -92,7 +91,6 @@ def build_mag_family_action_catalog(
             "OPL consumes schema/helper/validator/discovery projections and does not own MAG grant truth.",
         ],
     )
-    catalog["temporal_stage_run_consumption_policy"] = build_temporal_stage_run_consumption_policy()
     parity = validate_family_action_catalog_parity(catalog)
     if parity["status"] != "aligned":
         raise ValueError(f"MAG family action catalog parity failed: {parity['issues']}")
@@ -174,3 +172,42 @@ def _build_action(
             "descriptor_only": True,
         },
     )
+
+
+def sync_action_catalog(
+    *,
+    output_path: Path = REPO_ROOT / "contracts" / "action_catalog.json",
+) -> Path:
+    payload = build_mag_family_action_catalog(
+        action_commands={
+            "open_loop": {
+                "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
+                "surface_kind": "grant_user_loop",
+            },
+            "inspect_progress": {
+                "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
+                "surface_kind": "grant_progress",
+            },
+            "inspect_cockpit": {
+                "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
+                "surface_kind": "grant_cockpit",
+            },
+            "build_direct_entry": {
+                "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
+                "surface_kind": "grant_direct_entry",
+            },
+            "build_submission_ready_package": {
+                "command": "opl://generated-surfaces/mag/build-submission-ready-package --input <input_path> --output-dir <output_dir> --format json",
+                "surface_kind": "submission_ready_package",
+            },
+        }
+    )
+    output_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
+if __name__ == "__main__":
+    print(sync_action_catalog())

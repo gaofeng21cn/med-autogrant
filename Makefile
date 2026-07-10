@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-generated-aggregate-sources test-family test-meta test-cli-smoke test-smoke test-regression test-proof test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-descriptor-contracts test-family test-meta test-cli-smoke test-smoke test-regression test-proof test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -21,8 +21,8 @@ test-source-purity-strict:
 
 test-source-purity: test-source-purity-strict
 
-test-generated-aggregate-sources:
-	$(PYTHON_CLEAN) scripts/check_generated_aggregate_sources.py
+test-descriptor-contracts:
+	$(PYTHON_CLEAN) scripts/check_descriptor_contracts.py
 
 test-family:
 	$(MAKE) test-line-budget
@@ -31,7 +31,7 @@ test-family:
 test-meta:
 	./scripts/repo-hygiene.sh --fix
 	./scripts/repo-hygiene.sh
-	$(MAKE) test-generated-aggregate-sources
+	$(MAKE) test-descriptor-contracts
 	$(MAKE) test-source-purity-strict
 	$(PYTEST_CLEAN) -q -m meta
 
@@ -46,17 +46,17 @@ test-regression:
 	$(PYTEST_CLEAN) -q -m "regression and not proof"
 
 test-proof:
-	MAG_CLEAN_RUNNER_UV_EXTRA=proof $(PYTEST_CLEAN) -q -m proof
+	$(PYTEST_CLEAN) -q -m proof
 
 test-structure:
 	$(MAKE) test-line-budget
-	$(MAKE) test-generated-aggregate-sources
+	$(MAKE) test-descriptor-contracts
 	$(MAKE) test-source-purity-strict
 
 test-structure-strict:
 	$(MAKE) test-line-budget-strict
 	$(MAKE) test-source-purity-strict
-	$(MAKE) test-generated-aggregate-sources
+	$(MAKE) test-descriptor-contracts
 
 test-full:
 	$(PYTEST_CLEAN) -q -m "not proof"

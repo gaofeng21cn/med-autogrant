@@ -9,9 +9,4 @@ ALLOWED_ACTIONS = {
     "domain-memory/propose",
     "domain-memory/decide",
     "stage-attempt/closeout",
-    "lifecycle/receipt",
-    "closeout/codex-stage-receipts",
-    "closeout/operator-readiness",
-    "closeout/physical-morphology-guard",
-    "closeout/executor-first-bundle",
 }

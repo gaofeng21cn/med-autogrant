@@ -28,10 +28,6 @@ from med_autogrant.domain_runtime_parts.shared import (
     GENERATED_SESSION_SURFACE_REF,
 )
 from med_autogrant.public_cli import public_cli_command
-from med_autogrant.temporal_stage_run_consumption import (
-    TEMPORAL_STAGE_RUN_CONSUMPTION_POLICY_REF,
-    build_temporal_stage_run_consumption_policy,
-)
 from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.workspace_types import WorkspaceStateError
 
@@ -390,8 +386,6 @@ def _build_runtime_control_surface(
             "ref": "/product_entry_manifest/product_entry_shell/grant_direct_entry",
             "summary": "直接导出当前 grant direct-entry command 与 locator。",
         },
-        "temporal_stage_run_consumption_policy_ref": TEMPORAL_STAGE_RUN_CONSUMPTION_POLICY_REF,
-        "temporal_stage_run_consumption_policy": build_temporal_stage_run_consumption_policy(),
     }
 
 def _build_progress_projection_surface(
