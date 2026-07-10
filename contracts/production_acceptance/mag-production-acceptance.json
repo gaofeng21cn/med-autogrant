@@ -1,198 +1,50 @@
 {
   "surface_kind": "mag_production_acceptance_evidence.v1",
-  "surface_id": "mag.production_acceptance.2026-05-19",
+  "surface_id": "mag.production_acceptance.provenance",
   "domain_id": "med-autogrant",
   "acceptance_owner": "med-autogrant",
-  "state": "domain_owned_production_acceptance_recorded",
-  "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
-  "conformance_status": {
-    "structural_conformance": "passed",
-    "physical_conformance": "passed",
-    "conformance_can_claim_domain_ready": false,
-    "conformance_can_claim_fundability_ready": false
+  "state": "provenance_only_not_live_progress_or_readiness",
+  "refs": {
+    "current_program_ref": "contracts/runtime-program/current-program.json",
+    "live_stage_run_progress_ref": "contracts/live_stage_run_progress_evidence.json",
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+  },
+  "closure_evidence": {
+    "state": "typed_blocker_open",
+    "domain_owned_closing_ref": null,
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15",
+    "counts_as_live_progress": false,
+    "counts_as_readiness": false
   },
   "grant_receipt_chain": {
-    "production_like_grant_receipt_chain_present": true,
-    "chain_status": "closed_by_mag_domain_owner_live_acceptance_receipt_scaleout",
-    "accepted_shapes": [
+    "accepted_return_shapes": [
       "domain_owner_receipt_ref",
       "typed_blocker_ref",
       "no_regression_evidence_ref"
     ],
-    "authority": "MAG owner receipt or typed blocker is required for grant production acceptance."
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "provider_completion_counts_as_domain_completion": false
   },
-  "domain_readiness_policy": {
-    "domain_readiness_owner": "med-autogrant",
-    "fundability_readiness_owner": "med-autogrant",
-    "review_gate_owner": "med-autogrant",
-    "package_proposal_lifecycle_owner": "med-autogrant",
-    "provider_completion_role": "runtime_completion_signal_only"
+  "live_stage_run_progress_tail_policy": {
+    "role": "provenance_only_not_live_owner_closing_ref",
+    "live_progress_source_ref": "contracts/live_stage_run_progress_evidence.json",
+    "domain_owned_closing_ref": null
   },
   "authority_boundary": {
     "opl_can_authorize_grant_domain_ready": false,
     "opl_can_authorize_fundability_ready": false,
     "opl_can_authorize_review_ready": false,
     "opl_can_authorize_submission_ready": false,
-    "provider_completion_equals_fundability_ready": false,
     "provider_completion_equals_domain_ready": false,
-    "provider_completion_equals_submission_ready": false,
-    "structural_conformance_equals_domain_ready": false,
-    "structural_conformance_equals_fundability_ready": false
+    "structural_conformance_equals_domain_ready": false
   },
-  "closure_evidence": {
-    "closure_kind": "domain_owned_acceptance_tail",
-    "required_return_shapes": [
-      "domain_owner_receipt_ref",
-      "typed_blocker_ref",
-      "no_regression_evidence_ref"
-    ],
-    "accepted_return_shape": "domain_owner_receipt_ref",
-    "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
-    "typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
-    "typed_blocker_reason": "Closed by MAG-owned domain_owner_receipt refs after standard OPL Agent Lab target-agent production evidence suite result and opl-meta-agent coordination result were consumed as refs-only evidence. MAG provides standard refs/receipt/handoff interfaces and retains owner receipt, quality/export, and package authority; Agent Lab/OMA do not provide a MAG-specific suite or command. The closed blocker kind records what was closed; it does not authorize OPL/provider/meta-agent to claim fundability-ready, grant-ready, or submission-ready.",
-    "next_verification_ref": "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker"
-  },
-  "external_evidence_receipt_ledger": {
-    "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-    "surface_kind": "mag_external_evidence_receipt_ledger.v1",
-    "state": "first_live_production_evidence_consumed_refs_only",
-    "closed_request_count": 7,
-    "domain_owned_typed_blocker_count": 0,
-    "remaining_open_request_count": 0,
-    "claims_direct_hosted_parity_passed": true,
-    "claims_temporal_provider_long_soak_complete": false,
-    "temporal_provider_reconciliation_ref_recorded": true,
-    "claims_grant_or_fundability_ready": false,
-    "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout"
-  },
-  "live_stage_run_progress_tail_policy": {
-    "surface_kind": "mag_live_stage_run_progress_tail_policy.v1",
-    "owner": "med-autogrant",
-    "w7_owner_evidence_tail_role": "provenance_input_not_domain_owned_closing_ref",
-    "live_stage_run_progress_source_of_truth": "contracts/live_stage_run_progress_evidence.json",
-    "production_acceptance_tail_counts_as_live_owner_closing_ref": false,
-    "domain_owned_closing_ref": null,
-    "required_live_closing_shapes": [
-      "real_submission_ready_human_gate_receipt_ref",
-      "real_quality_or_export_receipt_ref",
-      "temporal_provider_long_soak_window_evidence_ref",
-      "owner_acceptance_or_success_rate_evidence_ref"
-    ],
-    "current_blocked_gate_categories": [
-      "human_gate",
-      "quality_or_export",
-      "long_soak",
-      "owner_acceptance"
-    ],
-    "forbidden_claims": {
-      "claims_live_owner_evidence_tail_closed": false,
-      "claims_grant_ready": false,
-      "claims_quality_ready": false,
-      "claims_export_ready": false,
-      "claims_submission_ready": false,
-      "claims_production_ready": false
-    }
-  },
-  "patch_loop_refs": {
-    "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
-    "developer_patch_work_order_ref": "developer-work-order:oma/mag/ai-first-mag-patch-smoke",
-    "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ai-first-mag-patch-smoke",
-    "target_repo_verification_refs": [
-      "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_production_live_acceptance.py tests/test_production_acceptance.py tests/test_opl_standard_pack.py -q",
-      "rtk ./scripts/verify.sh",
-      "rtk git diff --check"
-    ],
-    "target_runtime_read_model_consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
-    "workspace_environment_proof_ref": "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke",
-    "no_forbidden_write_proof_ref": "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only",
-    "target_owner_receipt_or_typed_blocker_ref": "receipt:mag/production-live-acceptance/2026-05-20",
-    "patch_absorption_ref": "git-commit:pending/codex/ai-first-mag-patch-smoke",
-    "worktree_cleanup_ref": "worktree-cleanup:pending/ai-first-mag-patch-smoke",
-    "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation"
-  },
-  "refs_only_policy": {
-    "repo_tracks_receipt_instance_body": false,
-    "repo_tracks_grant_artifact_body": false,
-    "repo_tracks_proposal_text_body": false,
-    "accepted_payload_policy": "refs_receipts_typed_blockers_and_command_refs_only",
-    "forbidden_payload_classes": [
-      "grant_artifact_body",
-      "memory_body",
-      "opl_runtime_state_body",
-      "fundability_verdict_body",
-      "proposal_text_body",
-      "review_artifact_body",
-      "package_archive_body"
-    ]
-  },
-  "refs": {
-    "conformance_refs": [
-      "contracts/domain_descriptor.json",
-      "contracts/pack_compiler_input.json",
-      "contracts/stage_control_plane.json",
-      "contracts/functional_privatization_audit.json",
-      "tests/test_opl_standard_pack.py::test_opl_standard_pack_root_contracts_match_mag_canonical_metadata"
-    ],
-    "grant_owner_receipt_refs": [
-      "contracts/owner_receipt_contract.json",
-      "/product_entry_manifest/owner_receipt_contract",
-      "/product_entry_manifest/controlled_soak_no_regression_attempt",
-      "/product_entry_manifest/production_live_acceptance_receipt",
-      "receipt:mag/production-live-acceptance/2026-05-20",
-      "receipt:mag/grant-stage-controlled-attempt/body-free-closeout/2026-05-20",
-      "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
-      "tests/product_entry_cases/test_production_live_acceptance.py::ProductEntryProductionLiveAcceptanceTest::test_live_acceptance_receipt_projection_closes_domain_owner_blocker_refs_only",
-      "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_links_mag_receipt_and_opl_ledger_ref"
-    ],
-    "fundability_review_gate_refs": [
-      "agent/quality_gates/fundability.md",
-      "agent/quality_gates/review_and_rebuttal.md",
-      "contracts/pack_compiler_input.json",
-      "contracts/stage_control_plane.json",
-      "tests/test_opl_standard_pack.py::test_stage_semantic_refs_resolve_to_agent_pack_files"
-    ],
-    "package_proposal_lifecycle_refs": [
-      "agent/stages/package_and_submit_ready.json",
-      "agent/quality_gates/package_and_submit_ready.md",
-      "contracts/artifact_locator_contract.json",
-      "/product_entry_manifest/package_lifecycle_handoff",
-      "/product_entry_manifest/lifecycle_guarded_apply_proof",
-      "tests/product_entry_cases/test_package_lifecycle_handoff.py"
-    ],
-    "typed_blocker_refs": [
-      "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-      "contracts/external_evidence/mag-evidence-receipt-ledger.json#/domain_owned_typed_blocker_request_ids",
-      "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/required_return_shapes/1",
-      "/product_entry_manifest/controlled_soak_no_regression_attempt/deferred_blocker",
-      "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/owner_receipt_typed_blocker_ref_roundtrip",
-      "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_keeps_typed_blocker_as_blocker"
-    ],
-    "owner_receipt_refs": [
-      "receipt:mag/production-live-acceptance/2026-05-20",
-      "/product_entry_manifest/production_live_acceptance_receipt"
-    ],
-    "acceptance_receipt_refs": [
-      "receipt-projection:mag/production-live-acceptance-owner-receipt"
-    ],
-    "doc_refs": [
-      "docs/status.md#production-acceptance"
-    ],
-    "next_verification_command_refs": [
-      "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker",
-      "tests/test_production_acceptance.py::test_opl_provider_completion_cannot_authorize_mag_grant_readiness",
-      "tests/product_entry_cases/test_production_live_acceptance.py",
-      "rtk jq empty contracts/external_evidence/mag-evidence-receipt-ledger.json",
-      "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py -q",
-      "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_production_live_acceptance.py -q",
-      "rtk ./scripts/verify.sh",
-      "rtk git diff --check"
-    ]
-  },
-  "forbidden_claims": {
-    "claims_opl_provider_completion_is_grant_ready": false,
-    "claims_opl_provider_completion_is_fundability_ready": false,
-    "claims_conformance_is_domain_ready": false,
-    "claims_package_existence_is_submission_ready": false,
-    "claims_quality_scorecard_is_fundability_ready": false
-  }
+  "forbidden_claims": [
+    "grant_ready",
+    "fundability_ready",
+    "quality_ready",
+    "export_ready",
+    "submission_ready",
+    "production_ready"
+  ]
 }

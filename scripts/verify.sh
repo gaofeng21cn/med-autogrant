@@ -13,7 +13,6 @@ scripts/repo-hygiene.sh
 
 case "$lane" in
   cli-smoke) lane="smoke" ;;
-  source-purity:strict) lane="source-purity-strict" ;;
 esac
 
 exec make "test-${lane}"

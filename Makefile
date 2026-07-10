@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-descriptor-contracts test-family test-meta test-cli-smoke test-smoke test-regression test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-descriptor-contracts test-family test-meta test-cli-smoke test-smoke test-regression test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -16,11 +16,6 @@ test-line-budget:
 test-line-budget-strict:
 	$(MAKE) test-line-budget
 
-test-source-purity-strict:
-	$(PYTHON_CLEAN) scripts/check_source_purity_guard.py --format json >/tmp/med-autogrant-source-purity-guard.json
-
-test-source-purity: test-source-purity-strict
-
 test-descriptor-contracts:
 	$(PYTHON_CLEAN) scripts/check_descriptor_contracts.py
 
@@ -32,7 +27,6 @@ test-meta:
 	./scripts/repo-hygiene.sh --fix
 	./scripts/repo-hygiene.sh
 	$(MAKE) test-descriptor-contracts
-	$(MAKE) test-source-purity-strict
 	$(PYTEST_CLEAN) -q -m meta
 
 test-cli-smoke:
@@ -48,11 +42,9 @@ test-regression:
 test-structure:
 	$(MAKE) test-line-budget
 	$(MAKE) test-descriptor-contracts
-	$(MAKE) test-source-purity-strict
 
 test-structure-strict:
 	$(MAKE) test-line-budget-strict
-	$(MAKE) test-source-purity-strict
 	$(MAKE) test-descriptor-contracts
 
 test-full:

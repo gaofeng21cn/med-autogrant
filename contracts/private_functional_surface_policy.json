@@ -1,6 +1,6 @@
 {
   "surface_kind": "opl_domain_private_functional_surface_admission_policy",
-  "schema_version": 2,
+  "schema_version": 3,
   "domain_id": "med-autogrant",
   "default_posture": "deny_generic_platform_ownership",
   "allowed_private_surface_classes": [
@@ -30,39 +30,17 @@
     "generic_lifecycle_owner",
     "temporal_worker_owner"
   ],
-  "forbidden_source_paths": [
-    "src/med_autogrant/opl_standard_pack.py",
-    "src/med_autogrant/opl_standard_pack_constants.py",
-    "src/med_autogrant/opl_standard_pack_handoff_refs.py",
-    "src/med_autogrant/opl_standard_pack_private_policy.py",
-    "src/med_autogrant/opl_standard_pack_profiles.py",
-    "src/med_autogrant/opl_standard_pack_source_policy.py",
-    "src/med_autogrant/opl_standard_pack_source_policy_parts",
-    "src/med_autogrant/product_entry_parts/consumer_thinning.py",
-    "src/med_autogrant/product_entry_parts/consumer_thinning_pack.py",
-    "src/med_autogrant/product_entry_parts/consumer_thinning_shell.py",
-    "src/med_autogrant/product_entry_parts/consumer_thinning_audit",
-    "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-    "src/med_autogrant/product_entry_parts/executor_first_closeout_bundle.py",
-    "src/med_autogrant/product_entry_parts/external_evidence_ledger.py",
-    "src/med_autogrant/product_entry_parts/functional_closure.py",
-    "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py",
-    "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
-    "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-    "src/med_autogrant/product_entry_parts/manifest_sustained_consumption_payload.py",
-    "src/med_autogrant/product_entry_parts/memory_receipt_projection.py",
-    "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
-    "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
-    "src/med_autogrant/product_entry_parts/physical_morphology_guard.py",
-    "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
-    "src/med_autogrant/product_entry_parts/receipt_observability.py",
-    "src/med_autogrant/product_entry_parts/source_purity_guard_readback.py",
-    "src/med_autogrant/product_entry_parts/stage_attempt_observability.py",
-    "src/med_autogrant/family_shared_release.py"
-  ],
+  "canonical_source_behavior_gate": {
+    "owner": "one-person-lab",
+    "command": "opl agents conformance --agent mag=<repo> --json",
+    "audit_ref": "contracts/functional_privatization_audit.json",
+    "required_status": "passed",
+    "required_matched_source_behavior_count": 0,
+    "required_blocker_count": 0,
+    "allowed_match_policy": "exact_file_coverage_only_no_blanket_path_coverage"
+  },
   "physical_source_morphology_policy": {
-    "policy_id": "mag.physical-source-morphology.v1",
-    "state": "classified_without_generic_runtime_ownership",
+    "policy_id": "mag.physical-source-morphology.v2",
     "required_surface_ids": [
       "domain_runtime",
       "product_entry",
@@ -81,86 +59,62 @@
       {
         "surface_id": "domain_runtime",
         "classification": "minimal_authority_function",
-        "source_refs": [
-          "runtime/authority_functions/"
-        ]
+        "source_refs": ["runtime/authority_functions/"]
       },
       {
         "surface_id": "product_entry",
         "classification": "opl_generated_surface_descriptor",
-        "source_refs": [
-          "contracts/generated_surface_handoff.json"
-        ]
+        "source_refs": ["contracts/generated_surface_handoff.json"]
       },
       {
         "surface_id": "status",
         "classification": "opl_generated_surface_descriptor",
-        "source_refs": [
-          "contracts/action_catalog.json"
-        ]
+        "source_refs": ["contracts/action_catalog.json"]
       },
       {
         "surface_id": "user_loop",
         "classification": "opl_generated_surface_descriptor",
-        "source_refs": [
-          "contracts/action_catalog.json"
-        ]
+        "source_refs": ["contracts/action_catalog.json"]
       },
       {
         "surface_id": "domain_handler",
         "classification": "domain_handler_target",
-        "source_refs": [
-          "src/med_autogrant/product_entry_parts/domain_handler.py"
-        ]
+        "source_refs": ["src/med_autogrant/product_entry_parts/domain_handler.py"]
       },
       {
         "surface_id": "runtime_registration",
         "classification": "declarative_domain_pack",
-        "source_refs": [
-          "contracts/domain_descriptor.json"
-        ]
+        "source_refs": ["contracts/domain_descriptor.json"]
       },
       {
         "surface_id": "control_plane",
         "classification": "declarative_domain_pack",
-        "source_refs": [
-          "contracts/stage_control_plane.json"
-        ]
+        "source_refs": ["contracts/stage_control_plane.json"]
       },
       {
         "surface_id": "lifecycle",
         "classification": "provenance_or_retired",
-        "source_refs": [
-          "docs/decisions.md"
-        ]
+        "source_refs": ["docs/decisions.md"]
       },
       {
         "surface_id": "memory",
         "classification": "minimal_authority_function",
-        "source_refs": [
-          "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
-        ]
+        "source_refs": ["src/med_autogrant/product_entry_parts/domain_memory_runtime.py"]
       },
       {
         "surface_id": "package",
         "classification": "minimal_authority_function",
-        "source_refs": [
-          "src/med_autogrant/final_package.py"
-        ]
+        "source_refs": ["src/med_autogrant/final_package.py"]
       },
       {
         "surface_id": "autonomy_controller",
         "classification": "minimal_authority_function",
-        "source_refs": [
-          "src/med_autogrant/grant_autonomy_controller.py"
-        ]
+        "source_refs": ["src/med_autogrant/grant_autonomy_controller.py"]
       },
       {
         "surface_id": "legacy_runtime_residue",
         "classification": "provenance_or_fixture",
-        "source_refs": [
-          "docs/history/"
-        ]
+        "source_refs": ["docs/history/"]
       }
     ],
     "forbidden_residue_classes": [

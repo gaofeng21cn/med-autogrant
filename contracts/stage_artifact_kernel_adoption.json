@@ -87,8 +87,8 @@
     "accepted_source_refs": [
       "contracts/stage_control_plane.json",
       "contracts/foundry_agent_series.json",
-      "src/med_autogrant/stage_control_plane_parts/artifact_contracts.py",
-      "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py"
+      "contracts/artifact_locator_contract.json",
+      "contracts/owner_receipt_contract.json"
     ],
     "domain_output_roles_are_interface": true,
     "file_name_is_not_interface": true,
