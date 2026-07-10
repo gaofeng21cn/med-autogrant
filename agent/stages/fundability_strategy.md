@@ -16,12 +16,14 @@
 
 - `fundability_strategy_gate_recorded` exists with an AI-backed fundability verdict ref; or
 - A typed blocker records insufficient evidence, rejected call fit, fatal reviewer risk, memory conflict, or mechanical-ready attempt; or
+- A human-only funder-fit or applicant decision returns `completed_and_wait_owner` with `human_gate_ref`, not a typed blocker; or
 - A MAG owner receipt signs a proceed/repair/stop state.
 
 ## Handoff
 
 - Handoff target: `specific_aims_and_structure`.
 - Handoff must include verdict ref, call-fit rationale, top reviewer risks, mitigation requirements, accepted strategy, and memory refs used/rejected.
+- A human decision gate uses the OPL standard `human_gate_ref`; a repair route uses `route_back_ref`.
 - Proceed handoff must be strong enough for independent critique.
 
 ## Independent Review And Gate Expectation

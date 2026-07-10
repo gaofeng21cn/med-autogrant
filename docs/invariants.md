@@ -18,6 +18,9 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - OPL/provider completion、schema completeness、generated surface、测试或 package 文件存在都不能替代 MAG verdict、receipt 或 human gate。
 - Owner receipt class 固定为 `domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
 - Domain handler dispatch 只允许三项 action；新增 action 必须先证明属于 MAG authority，而非 generic platform shell。
+- `agent/stages/manifest.json` 的 `next_stage_refs` 是正常前进边真相；grant transition oracle 必须覆盖每条正常边，可额外声明显式 route-back 或 self-loop，但不能用它们替代正常边。
+- Stage Pack v2 action 的 `stage_route` 必须精确覆盖 manifest 中声明该 action 的 Stage；required route 按 `next_stage_refs` 排序，optional 只允许可达替代读面。
+- Human gate closeout 使用 OPL 标准 `completed_and_wait_owner` + `human_gate_ref`；`typed_blocker_ref` 只用于真实语义或 authority 缺口，不能包装等待人类决定或 portal 操作。
 
 ## OPL 边界
 

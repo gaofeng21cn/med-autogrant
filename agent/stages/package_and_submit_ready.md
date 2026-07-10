@@ -10,18 +10,20 @@
 
 - Verify local submission-ready package refs, required sections, attachments, provenance, quality closure, export constraints, and manual portal boundary.
 - Materialize package refs only through MAG owner authority.
-- Return exact blockers for missing artifacts, unresolved quality issues, provenance gaps, or human portal actions.
+- Return exact blockers for real artifact, quality, provenance, or authority gaps; use `human_gate_ref` for human portal actions.
 
 ## Exit Conditions
 
 - `submission_ready_package_receipt_recorded` exists with export verdict ref and package refs; or
-- A typed blocker records unclosed quality gate, missing required artifact, missing provenance, manual portal action, or mechanical export-ready attempt; or
+- `completed_and_wait_owner` records a required human portal action with `human_gate_ref`; or
+- A typed blocker records an unclosed quality gate, missing required artifact, missing provenance, or authority gap; or
 - A MAG owner receipt signs terminal package/export state.
 
 ## Handoff
 
 - Handoff target: terminal stage or human portal handoff.
 - Handoff must include package refs, export verdict ref or blocker, manual portal boundary, provenance refs, and owner authority evidence.
+- Human portal handoff uses `completed_and_wait_owner` plus `human_gate_ref`; it must not be encoded as `blocked` plus `typed_blocker_ref`.
 - Terminal handoff means local package readiness, not external portal submission completion.
 
 ## Independent Review And Gate Expectation

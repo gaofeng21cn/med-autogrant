@@ -41,6 +41,50 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
     assert not (REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py").exists()
 
 
+def test_action_stage_routes_match_manifest_action_coverage() -> None:
+    manifest = _read_json("agent/stages/manifest.json")
+    action_catalog = _read_json("contracts/action_catalog.json")
+    next_stages = {
+        stage["stage_id"]: set(stage["next_stage_refs"])
+        for stage in manifest["stages"]
+    }
+
+    def reachable(source_stage_id: str, target_stage_id: str) -> bool:
+        pending = [source_stage_id]
+        visited: set[str] = set()
+        while pending:
+            stage_id = pending.pop()
+            if stage_id == target_stage_id:
+                return True
+            if stage_id not in visited:
+                visited.add(stage_id)
+                pending.extend(next_stages[stage_id] - visited)
+        return False
+
+    expected_stages_by_action = {
+        action["action_id"]: {
+            stage["stage_id"]
+            for stage in manifest["stages"]
+            if action["action_id"] in stage["allowed_action_refs"]
+        }
+        for action in action_catalog["actions"]
+    }
+
+    for action in action_catalog["actions"]:
+        route = action["stage_route"]
+        required = route["required_stage_refs"]
+        optional = route["optional_stage_refs"]
+        routed_stages = required + optional
+
+        assert route["route_policy"] == "ordered_stage_attempts_no_skip"
+        assert required and route["entry_stage_ref"] == required[0]
+        assert len(routed_stages) == len(set(routed_stages))
+        assert set(routed_stages) == expected_stages_by_action[action["action_id"]]
+        assert set(route["terminal_stage_refs"]) <= set(routed_stages)
+        assert all(target in next_stages[source] for source, target in zip(required, required[1:]))
+        assert all(reachable(required[0], stage_id) for stage_id in optional)
+
+
 def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> None:
     isolated_repo = tmp_path / "repo"
     shutil.copytree(REPO_ROOT / "agent", isolated_repo / "agent")
