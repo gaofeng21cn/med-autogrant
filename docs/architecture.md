@@ -55,6 +55,11 @@ MAG 不再内置私有 standard-pack compiler、source scanner、generated produ
 
 这八项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。
 
+`grant_transition_oracle` 返回的 `runner_contract_ref` 指向 OPL-owned
+`contracts/opl-framework/family-transition-runner-contract.json`。这是跨仓 owner locator，
+不是 MAG 应复制或本地解析的 contract；MAG 只生成 grant-native transition recommendation，
+OPL StageRun 持有 cycle、rollback、dispatch、replay 与 output orchestration。
+
 ## OPL-owned Surfaces
 
 - Temporal/provider runtime 与 stage attempt lifecycle

@@ -40,3 +40,7 @@ OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarat
 ## D9 Dependency pin
 
 MAG 继续消费 release cohort 指定的 `opl-harness-shared` commit。OPL conformance 使用当前 OPL main 运行，但不得把 consumer dependency pin追到 OPL dev HEAD。
+
+## D10 Transition runner locator
+
+Transition oracle 中的 `runner_contract_ref` 是 OPL-owned external locator，不要求 MAG 仓内存在同路径文件。MAG 不复制 runner contract，也不重新实现 cycle、rollback、dispatch、replay 或 output orchestration；这些行为由 OPL StageRun owner验证。
