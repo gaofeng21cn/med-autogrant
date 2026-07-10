@@ -45,8 +45,12 @@ def main() -> int:
             errors.append(
                 "agent/stages/manifest.json: surface_kind must be mag_declarative_stage_manifest"
             )
+        if stage_manifest.get("version") != "mag-declarative-stage-manifest.v1":
+            errors.append("agent/stages/manifest.json: version is missing or invalid")
         if stage_manifest.get("target_domain_id") != "med-autogrant":
             errors.append("agent/stages/manifest.json: target_domain_id must be med-autogrant")
+        if stage_manifest.get("owner") != stage_manifest.get("target_domain_id"):
+            errors.append("agent/stages/manifest.json: owner must match target_domain_id")
         authority = stage_manifest.get("authority_boundary")
         required_authority = {
             "domain_truth_owner": "med-autogrant",

@@ -53,6 +53,8 @@ def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> No
 
     manifest_path = isolated_repo / "agent" / "stages" / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    del manifest["version"]
+    manifest["owner"] = "wrong-owner"
     manifest["stages"][1]["stage_id"] = manifest["stages"][0]["stage_id"]
     manifest["stages"][0]["policy_ref"] = "agent/stages/missing.md"
     manifest["stages"][0]["allowed_action_refs"].append("unknown_action")
@@ -66,6 +68,8 @@ def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> No
     )
 
     assert result.returncode == 1
+    assert "version is missing or invalid" in result.stdout
+    assert "owner must match target_domain_id" in result.stdout
     assert "duplicate stage_id" in result.stdout
     assert "missing repo ref" in result.stdout
     assert "unknown allowed_action_ref" in result.stdout
