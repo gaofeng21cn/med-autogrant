@@ -50,6 +50,9 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 - Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`。
 - Allowed matches只覆盖 grant-native Codex adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 unclassified generic behavior或 active private generic residue。
 - Shared consumer dependency继续固定 release cohort `e1e734031ab3ea45596c6ce131f611f296ca9746`，不追 OPL dev main。
+- MAG production base为 `3fd7cd3dc5bd3102ac8bf95b33a90a439b82e7fc`；tests-only consolidation `c755594d7a005176fab1e687de58f42a49ab0ece` 已线性吸收，严格只改 `tests/**`，净删 `1695` 行。
+- Final tests boundary：`sys.path.insert` 为0，6个 retired owner tests未复活；fresh focused、smoke、fast、meta与full均为零失败，independent review `ACCEPT`。
+- Tests replay与三个 superseded tests clones已完成 absorption audit并清理；无关 `stage-size-mag` lane继续保留。
 
 ## 仍开放的 Evidence Gate
 

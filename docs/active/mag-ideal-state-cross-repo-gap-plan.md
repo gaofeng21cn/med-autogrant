@@ -56,7 +56,7 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 - OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。
 - OPL full residual：唯一 `system-seed-manifest` 失败在 candidate/base均为相同 `10/11` 与 `2 != 0`，不属于 MAG/Runway候选回归；其余 focused、MAG integration、smoke与静态门通过。
 - Shared consumer dependency pin保持 `e1e734031ab3ea45596c6ce131f611f296ca9746`。
-- MAG production closeout candidate：descriptor contract通过；CLI smoke `8 passed`；fast `124 passed + 60 subtests`；meta `36 passed`；full `235 passed + 177 subtests`。
+- MAG production canonical：`3fd7cd3dc5bd3102ac8bf95b33a90a439b82e7fc`；descriptor contract通过；CLI smoke `8 passed`；fast `124 passed + 60 subtests`；meta `36 passed`；full `235 passed + 177 subtests`。
 
 Allowed matches：
 
@@ -73,4 +73,43 @@ Allowed matches：
 | `src/med_autogrant/product_entry_parts/primitives.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
 | `src/med_autogrant/product_entry_parts/typed_blocker_projection.py` | `repo_owned_product_status_session_shell` | `owner_receipt_signer / minimal_authority_function` |
 
-MAG production SHA、tests-only replay分账与最终 worktree cleanup在本生产 closeout提交发布并吸收 tests-only候选后追加。最终 canonical SHA由Git readback给出，不在自身提交内容中自引用。
+## Tests-only Final Closeout
+
+- Tests-only commit：`c755594d7a005176fab1e687de58f42a49ab0ece`，parent为 production canonical `3fd7cd3dc5bd3102ac8bf95b33a90a439b82e7fc`。
+- 写集严格为 `22` 个 `tests/**` 路径，`+995/-2690`，净删 `1695` 行；source、contracts、docs与scripts变化为 `0`。
+- 相对严格基线 `0268a89c0124`：`+2525/-16626`，净删 `14101` 行。
+- 相对本任务基线 `689881c438b7`：`+1530/-13061`，净删 `11531` 行。
+- Production-only分账保持：严格基线 `+1591/-13997`、净删 `12406`；本任务基线 `+592/-10428`、净删 `9836`。这些 source/contracts/docs混合阶段变化不计入 tests-only收益。
+- Final tracked tests：`57` 个文件、`6161` 行；其中 Python `56` 个文件、`6160` 行，另有 `tests/.gitkeep` 1行。
+- `rg 'sys.path.insert' tests` 为 `0`；6个 production-retired tests未复活。
+- Fresh evidence：changed-owner focused `65 passed + 120 subtests`；smoke `8 passed`；fast `88 passed + 96 subtests`；meta `36 passed`；full `163 passed + 235 subtests`；independent review `ACCEPT, P0-P3=0`。
+- Replay lane吸收分类为 `exact-merged`。三个旧 tests candidate clones先被owner判定为 superseded/rejected，再切到 canonical target取得 `exact-merged` cleanup evidence；四个 tests clone及 replay branch均已删除。无关 `stage-size-mag` lane保留。
+
+Per-file tests-only numstat：
+
+```text
+0   3   tests/cli_validate_cases.py
+32  180 tests/test_cli_validate_workspace_error_cases.py
+126 316 tests/test_cli_validate_workspace_revision_cases.py
+58  111 tests/test_codex_cli.py
+33  74  tests/test_codex_plugin_installer.py
+13  116 tests/test_codex_plugin_installer_script.py
+0   5   tests/test_critique_policy.py
+98  214 tests/test_domain_runtime.py
+3   3   tests/test_final_package.py
+0   91  tests/test_funding_discovery_cli.py
+117 205 tests/test_funding_landscape_discovery.py
+83  229 tests/test_grant_quality.py
+0   138 tests/test_grant_quality_cli.py
+55  180 tests/test_hosted_contract_bundle.py
+51  173 tests/test_hosted_contract_bundle_checkpoint_cases.py
+19  43  tests/test_opl_agent_lab_longline_migration.py
+0   6   tests/test_opl_executor_adapter.py
+61  201 tests/test_profile_selection_cli.py
+0   8   tests/test_project_profile_selector.py
+86  0   tests/test_public_cli_dispatch.py
+67  214 tests/test_stage_router.py
+93  180 tests/test_stage_run_kernel_profile_contract.py
+```
+
+最终 canonical SHA由Git push/readback给出，不在自身提交内容中自引用。
