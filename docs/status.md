@@ -19,13 +19,15 @@ MAG 已完成 private OPL platform cleanup 的结构收口：私有 standard-pac
 
 OPL/App 负责 generated product/status/user-loop/workbench caller。
 
+当前结构阶段已关闭，`current-program` 为 `structural_cleanup_closed`。后续 tranche 只接收 external owner/live evidence，不再恢复 MAG 私有 runtime、projection、compiler 或 self-audit 平台面。
+
 ## Machine State
 
 | Surface | Current owner/readback | 状态 |
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、8 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Source behavior | OPL conformance scanner | stop condition: matched 0, blockers 0 |
+| Source behavior | OPL `104a36d7a50aec237ec6e2340e445f093d4e9184` conformance scanner | passed；matched 0；blockers 0；allowed 10 |
 | Owner receipt | `contracts/owner_receipt_contract.json` | 3 canonical receipt classes |
 | Production acceptance | `contracts/production_acceptance/mag-production-acceptance.json` | provenance only, typed blocker open |
 | Live progress | `contracts/live_stage_run_progress_evidence.json` | owner blocker recorded, no ready claim |
@@ -40,6 +42,14 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 - implementation-bound and snapshot-bound tests
 
 这些内容不再作为 current source、active contract 或 active docs 入口。历史只能从 `docs/history/**` 或 git history 读取。
+
+## Structural Closeout
+
+- OPL canonical：`104a36d7a50aec237ec6e2340e445f093d4e9184`，local/origin/SSH443 readback一致。
+- OPL StageRun 持有 cycle、rollback、resume、dispatch、attempt ledger 与 output orchestration；MAG 只返回 domain refs、verdict、typed blocker 与 owner receipt。
+- Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`。
+- Allowed matches只覆盖 grant-native Codex adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 unclassified generic behavior或 active private generic residue。
+- Shared consumer dependency继续固定 release cohort `e1e734031ab3ea45596c6ce131f611f296ca9746`，不追 OPL dev main。
 
 ## 仍开放的 Evidence Gate
 

@@ -51,4 +51,26 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 
 ## Final Structural Evidence
 
-最终 MAG/OPL SHA、scanner结果、allowed matches、focused/fast/meta/full、tests-only基线分账与 worktree cleanup证据在终局发布后写入本节；发布前不保留过期 SHA、旧行数或历史测试绿灯作为 current claim。
+- OPL canonical：`104a36d7a50aec237ec6e2340e445f093d4e9184`；local、`origin/main` 与 SSH443 `refs/heads/main` 一致。
+- OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
+- OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。
+- OPL full residual：唯一 `system-seed-manifest` 失败在 candidate/base均为相同 `10/11` 与 `2 != 0`，不属于 MAG/Runway候选回归；其余 focused、MAG integration、smoke与静态门通过。
+- Shared consumer dependency pin保持 `e1e734031ab3ea45596c6ce131f611f296ca9746`。
+- MAG production closeout candidate：descriptor contract通过；CLI smoke `8 passed`；fast `124 passed + 60 subtests`；meta `36 passed`；full `235 passed + 177 subtests`。
+
+Allowed matches：
+
+| Path | Signature | Classification |
+| --- | --- | --- |
+| `src/med_autogrant/codex_cli.py` | `repo_owned_codex_executor_envelope` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/product_entry_parts/domain_handler.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/product_entry_parts/domain_handler_contract.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/product_entry_parts/domain_handler_dispatch.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/product_entry_parts/domain_memory_runtime.py` | `repo_owned_product_status_session_shell` | `memory_accept_reject / minimal_authority_function` |
+| `src/med_autogrant/product_entry_parts/domain_memory_runtime.py` | `repo_owned_receipt_observability_shell` | `memory_accept_reject / minimal_authority_function` |
+| `src/med_autogrant/product_entry_parts/owner_receipt_common.py` | `repo_owned_product_status_session_shell` | `owner_receipt_signer / minimal_authority_function` |
+| `src/med_autogrant/product_entry_parts/owner_receipt_writers.py` | `repo_owned_product_status_session_shell` | `owner_receipt_signer / minimal_authority_function` |
+| `src/med_autogrant/product_entry_parts/primitives.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/product_entry_parts/typed_blocker_projection.py` | `repo_owned_product_status_session_shell` | `owner_receipt_signer / minimal_authority_function` |
+
+MAG production SHA、tests-only replay分账与最终 worktree cleanup在本生产 closeout提交发布并吸收 tests-only候选后追加。最终 canonical SHA由Git readback给出，不在自身提交内容中自引用。

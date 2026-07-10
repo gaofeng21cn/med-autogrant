@@ -10,8 +10,8 @@
     "stage_executor": "codex_cli",
     "domain_authority_owner": "med-autogrant",
     "current_owner_line": "OPL/Temporal owns generic stage runtime and generated surfaces; MAG owns grant truth, verdicts, package authority, memory decisions and owner receipts.",
-    "active_phase": "structural_cleanup_in_progress",
-    "active_tranche": "opl_stage_pack_and_stagerun_cutover",
+    "active_phase": "structural_cleanup_closed",
+    "active_tranche": "external_owner_evidence_gated",
     "provenance_oracle": "contracts/stage_run_kernel_profile.json"
   },
   "domain_handler": {
