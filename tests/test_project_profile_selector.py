@@ -103,7 +103,6 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             [
                 "grant-quality-scorecard",
                 "grant-quality-diff",
-                "execute-grant-autonomy-controller",
             ],
         )
         self.assertEqual(

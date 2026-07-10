@@ -1,9 +1,9 @@
-# Quality, Autonomy Boundary, And Family Grammar
+# Quality, OPL Autonomy Boundary, And Family Grammar
 
 Owner: `Med Auto Grant`
 Purpose: `quality_autonomy_family_grammar_active_spec`
 State: `active_current_spec`
-Machine boundary: 本文是人读 active spec。机器真相归 quality/autonomy schemas、source、tests、stage contracts 与 `contracts/runtime-program/current-program.json`。
+Machine boundary: 本文是人读 active spec。机器真相归 quality schemas、source、tests、OPL-hosted stage contracts 与 `contracts/runtime-program/current-program.json`。
 Last reviewed: `2026-07-10`
 
 ## Quality Surfaces
@@ -23,27 +23,22 @@ AI-backed candidate status 必须携带独立 review provenance；projection-onl
 
 ## Autonomy Boundary
 
-`execute-grant-autonomy-controller` 当前是 thin direct adapter，不是 long-running scheduler。Controller v4：
+MAG 不再提供 `execute-grant-autonomy-controller` 公共 facade、runtime method 或 controller schema。该 facade 无论输入是否合法都只返回“交给 OPL runtime controller”的 blocker，没有执行 grant authority 行为，因此已直接退役。
 
-- 读取 request identity 与可选 OPL stage-attempt owner chain；
-- 不运行 discovery/profile/intake/mainline/quality callback loop；
-- 不拥有 budget cycle、rollback、resume、attempt ledger 或 stage transition；
-- 返回 `failed_closed`、body-free workspace identity 与 MAG typed blocker；
-- 有合法 OPL attempt 时要求通过 OPL runtime controller继续；缺少 attempt 时要求补齐 OPL provider owner chain。
+当前 autonomy 边界固定为：
 
-对应 schema：
-
-- `schemas/v1/grant-autonomy-controller-input.schema.json`
-- `schemas/v1/grant-autonomy-controller-report.schema.json`
-
-Report 必须包含 `workspace_identity`、`controller_execution_boundary` 与 `authority_return`。它不再包含旧 `controller_plan`、`tranche_history`、closure queue 或 private quality evaluator output。
+- OPL 持有 stage residency、attempt ledger、budget/retry/resume、queue 与 stage transition；
+- MAG 只执行 grant-native pass、quality/fundability/export/package authority 与 memory/receipt authority target；
+- `critique-revision-loop` 与 `authoring-mainline-loop` 仍要求显式 OPL stage-attempt owner chain，但不升级为私有 scheduler；
+- stage closeout 只返回 MAG owner receipt、typed blocker 或 no-regression evidence ref；
+- CLI 不保留 autonomy alias、wrapper 或兼容测试。
 
 ## Family Grammar
 
 `grant_family_registry.py`、project profile selector 与 workspace grammar contracts 持有 common grammar、funder profile 与 target-lock semantics。已锁定 funding call 后，authoring/quality/package path不得 opportunistic切换 funder。
 
-旧 `grant_governance_adapter.py` 无 production caller，已随 private autonomy controller planning退役。Family-specific policy 继续作为 declarative profile/context输入，由具体 grant stage 与 quality owner消费，不恢复 controller-local hydration 或 closure-queue排序层。
+旧 `grant_governance_adapter.py` 与私有 autonomy controller 均无 production authority 行为，已经退役。Family-specific policy 继续作为 declarative profile/context 输入，由具体 grant stage 与 quality owner 消费，不恢复 controller-local hydration、closure queue 或第二控制面。
 
 ## Evidence Boundary
 
-Schema、tests、controller typed blocker 或 OPL conformance pass 只证明对应 contract/structural gate；不能声明 grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。
+Schema、tests、owner typed blocker 或 OPL conformance pass 只证明对应 contract/structural gate；不能声明 grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。

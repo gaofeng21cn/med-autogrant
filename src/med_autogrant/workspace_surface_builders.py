@@ -82,7 +82,6 @@ def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
                 "governance_entry_points": [
                     "grant-quality-scorecard",
                     "grant-quality-diff",
-                    "execute-grant-autonomy-controller",
                 ],
             }
     return summary

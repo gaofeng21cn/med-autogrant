@@ -2,18 +2,28 @@
   "surface_kind": "mag_production_acceptance_evidence.v1",
   "surface_id": "mag.production_acceptance.provenance",
   "domain_id": "med-autogrant",
-  "acceptance_owner": "med-autogrant",
+  "domain_owner": "med-autogrant",
+  "evidence_tail_status": "domain_owned_typed_blocker_with_next_verification_ref",
   "state": "provenance_only_not_live_progress_or_readiness",
   "refs": {
     "current_program_ref": "contracts/runtime-program/current-program.json",
     "live_stage_run_progress_ref": "contracts/live_stage_run_progress_evidence.json",
     "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
-    "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "typed_blocker_refs": [
+      "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15"
+    ],
+    "next_verification_command_refs": [
+      "./scripts/run-pytest-clean.sh tests/test_live_stage_run_progress_evidence.py tests/test_production_acceptance.py -q"
+    ]
   },
   "closure_evidence": {
     "state": "typed_blocker_open",
     "domain_owned_closing_ref": null,
     "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15",
+    "accepted_return_shape": "typed_blocker",
+    "typed_blocker_kind": "missing_real_live_stage_run_progress_prerequisites",
+    "next_verification_ref": "./scripts/run-pytest-clean.sh tests/test_live_stage_run_progress_evidence.py tests/test_production_acceptance.py -q",
     "counts_as_live_progress": false,
     "counts_as_readiness": false
   },

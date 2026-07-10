@@ -114,7 +114,6 @@ class WorkspaceSummaryTest(unittest.TestCase):
                     "project_profile.grant_family_grammar.governance_entry_points": [
                         "grant-quality-scorecard",
                         "grant-quality-diff",
-                        "execute-grant-autonomy-controller",
                     ],
                     "project_profile.grant_family_grammar.governance_policy.default_tranche": "aims_significance_innovation_loop",
                     "project_profile.grant_family_grammar.governance_policy.quality_bar.minimum_score": 78,

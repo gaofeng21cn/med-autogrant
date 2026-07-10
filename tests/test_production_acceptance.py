@@ -24,7 +24,10 @@ def test_production_acceptance_is_provenance_only_with_open_typed_blocker() -> N
     assert surface["surface_id"] == "mag.production_acceptance.provenance"
     assert surface["state"] == "provenance_only_not_live_progress_or_readiness"
     assert surface["domain_id"] == "med-autogrant"
-    assert surface["acceptance_owner"] == "med-autogrant"
+    assert surface["domain_owner"] == "med-autogrant"
+    assert surface["evidence_tail_status"] == (
+        "domain_owned_typed_blocker_with_next_verification_ref"
+    )
     assert surface["refs"] == {
         "current_program_ref": "contracts/runtime-program/current-program.json",
         "live_stage_run_progress_ref": "contracts/live_stage_run_progress_evidence.json",
@@ -32,12 +35,27 @@ def test_production_acceptance_is_provenance_only_with_open_typed_blocker() -> N
         "external_evidence_ledger_ref": (
             "contracts/external_evidence/mag-evidence-receipt-ledger.json"
         ),
+        "typed_blocker_refs": [
+            "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/"
+            "real-production-prerequisites-missing/2026-06-15"
+        ],
+        "next_verification_command_refs": [
+            "./scripts/run-pytest-clean.sh tests/test_live_stage_run_progress_evidence.py "
+            "tests/test_production_acceptance.py -q"
+        ],
     }
 
     closure = surface["closure_evidence"]
     assert closure["state"] == "typed_blocker_open"
     assert closure["domain_owned_closing_ref"] is None
     assert closure["typed_blocker_ref"].startswith("typed-blocker:mag/")
+    assert closure["accepted_return_shape"] == "typed_blocker"
+    assert closure["typed_blocker_kind"] == (
+        "missing_real_live_stage_run_progress_prerequisites"
+    )
+    assert closure["next_verification_ref"] == surface["refs"][
+        "next_verification_command_refs"
+    ][0]
     assert closure["counts_as_live_progress"] is False
     assert closure["counts_as_readiness"] is False
 

@@ -223,8 +223,7 @@
       ],
       "governance_entry_points": [
         "grant-quality-scorecard",
-        "grant-quality-diff",
-        "execute-grant-autonomy-controller"
+        "grant-quality-diff"
       ]
     },
     "family_grammar_trace": {
@@ -306,8 +305,7 @@
       ],
       "governance_entry_points": [
         "grant-quality-scorecard",
-        "grant-quality-diff",
-        "execute-grant-autonomy-controller"
+        "grant-quality-diff"
       ]
     },
     "template_profile": {

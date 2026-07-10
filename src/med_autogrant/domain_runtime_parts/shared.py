@@ -11,8 +11,6 @@ GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
 GRANT_QUALITY_SCORECARD_SCHEMA_FILE = "grant-quality-scorecard.schema.json"
 GRANT_QUALITY_DIFF_SCHEMA_FILE = "grant-quality-diff.schema.json"
 GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE = "grant-quality-closure-dossier.schema.json"
-GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE = "grant-autonomy-controller-input.schema.json"
-GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE = "grant-autonomy-controller-report.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
@@ -36,8 +34,6 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "grant-quality-scorecard.schema.json",
     "grant-quality-closure-dossier.schema.json",
     "grant-quality-diff.schema.json",
-    "grant-autonomy-controller-input.schema.json",
-    "grant-autonomy-controller-report.schema.json",
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
     "funding-landscape-cache.schema.json",

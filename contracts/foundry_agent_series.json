@@ -43,10 +43,8 @@
     "no_parallel_blocker_lineage_schema": true,
     "no_parallel_progress_schema": true
   },
-  "domain_aliases": [
-    "med-autogrant"
-  ],
-  "domain_id": "medautogrant",
+  "domain_aliases": [],
+  "domain_id": "mag",
   "domain_label": "Grant Foundry",
   "domain_progress_aliases": {
     "deliverable": [
@@ -110,7 +108,7 @@
       "handoff"
     ]
   },
-  "foundry_agent_id": "medautogrant",
+  "foundry_agent_id": "mag",
   "owner": "one-person-lab",
   "product_layer": "foundry_agent",
   "product_model": "OPL Framework -> One Person Lab App -> Foundry Agents",

@@ -135,7 +135,6 @@
       "classification": "refs_only_domain_adapter",
       "code_paths": [
         "src/med_autogrant/codex_cli.py",
-        "src/med_autogrant/grant_autonomy_controller.py",
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_handler_contract.py",
         "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",

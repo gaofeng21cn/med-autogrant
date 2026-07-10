@@ -38,6 +38,5 @@ def test_domain_entry_contract_uses_command_catalog_as_single_source() -> None:
     for command in (
         "execute-critique-revision-loop",
         "execute-authoring-mainline-loop",
-        "execute-grant-autonomy-controller",
     ):
         assert "opl_stage_attempt" in commands[command]["required_fields"]

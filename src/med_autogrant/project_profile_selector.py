@@ -22,7 +22,6 @@ REQUIRED_SELECTION_INPUT_FIELDS: tuple[str, ...] = (
 GOVERNANCE_ENTRY_POINTS: tuple[str, ...] = (
     "grant-quality-scorecard",
     "grant-quality-diff",
-    "execute-grant-autonomy-controller",
 )
 
 

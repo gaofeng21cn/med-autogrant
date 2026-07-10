@@ -18,8 +18,6 @@ EXPECTED_SCHEMA_ALIASES = {
     "grant_cockpit_projection": "grant-cockpit.schema.json",
     "grant_direct_entry_surface": "grant-direct-entry.schema.json",
     "grant_user_loop_surface": "grant-user-loop.schema.json",
-    "product_entry_manifest_surface": "product-entry-manifest.schema.json",
-    "product_status_surface": "product-status.schema.json",
 }
 
 
@@ -93,11 +91,6 @@ class SchemaRegistryTest(unittest.TestCase):
         cases = (
             ("critique-loop-report.schema.json", None, {"grant_quality_scorecard", "grant_quality_closure_dossier"}),
             ("authoring-mainline-loop-report.schema.json", None, {"grant_quality_scorecard", "grant_quality_closure_dossier"}),
-            (
-                "grant-autonomy-controller-report.schema.json",
-                None,
-                {"workspace_identity", "controller_execution_boundary", "authority_return"},
-            ),
             (
                 "grant-quality-scorecard.schema.json",
                 "trackedIssue",

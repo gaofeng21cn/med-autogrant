@@ -40,11 +40,3 @@ def _apply_quality_gate_to_route(
     if gate_action == "ready_for_submission" and gate_reason:
         resolved_route["reason"] = f"{resolved_route.get('reason') or ''} {gate_reason}".strip()
     return resolved_route
-
-
-def _looks_like_workspace(payload: dict[str, Any]) -> bool:
-    return all(isinstance(payload.get(field), str) and payload[field] for field in (
-        "grant_run_id",
-        "workspace_id",
-        "lifecycle_stage",
-    ))

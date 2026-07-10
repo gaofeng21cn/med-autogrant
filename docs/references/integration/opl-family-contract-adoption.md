@@ -11,9 +11,9 @@ Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts
 
 ## Runtime Attempt Projection
 
-MAG 通过 `runtime_control`、`runtime_continuity`、`grant-autonomy-controller-report` 和 `workspace progress` 映射 `opl_family_runtime_attempt_contract.v1`。这些 surface 可以向 `OPL` 投影 attempt state、retry/backoff、workspace boundary、failure reason、reconciliation status 和 last observed projection。
+OPL 直接持有 runtime attempt、retry/resume、queue、reconciliation 与 stage transition。MAG 通过 current-program、stage pack、domain handler、workspace refs 和 owner receipt / typed blocker refs 提供领域输入与 closeout；仓内不再维护私有 autonomy controller、attempt projection 或 runtime-control facade。
 
-OPL 只能读取、索引、排队、唤醒、回执和投影；grant authoring runtime、route truth、workspace write authority 继续由 MAG 持有。
+OPL 只能读取、索引、排队、唤醒、回执和投影；grant truth、authoring outputs、quality/fundability/export/package authority 与 workspace body write authority 继续由 MAG 持有。
 
 ## Quality Projection
 
@@ -29,11 +29,11 @@ MAG 的质量门是 grant-specific：正文科学性、论证适配、fundabilit
 
 ## Incident Projection
 
-MAG 通过 `controller_report`、`runtime_control.semantic_closure`、`workspace cockpit` 和 explicit wakeup/TODO queue 映射 `opl_family_incident_learning_loop.v1`。真实 incident 必须回流成 guard、test、contract、runbook、taxonomy update 或 operator projection；domain-specific failure 必须有 MAG-owned closure ref。
+MAG 通过 owner receipt、typed blocker、quality closure dossier 与 source refs 返回 domain-specific failure；OPL 负责 incident projection、recovery 和 operator routing。真实 incident 必须回流成 guard、test、contract、runbook 或 taxonomy update，不能恢复 controller report、workspace cockpit 或私有 wakeup queue。
 
 ## Product Operator Projection
 
-MAG 通过 `product status`、`product user-loop`、`workspace progress`、`workspace cockpit` 与 `product direct-entry` 映射 `opl_family_product_operator_projection.v1`。这些投影必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
+Product status、user-loop、progress、cockpit 与 direct-entry 均由 OPL generated surfaces 从 MAG refs 投影。MAG 不保留本地 product renderer、manifest/status schema 或 public product CLI；投影仍必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
 
 ## Stage Control Projection
 
@@ -48,11 +48,11 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 | `review_and_rebuttal` | `critique`、review、`grant_quality_closure_dossier`、`quality-diff` |
 | `package_and_submit_ready` | `freeze` / `frozen`、`package submission-ready`、submission-ready export gate |
 
-这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。`product-entry-manifest` 中的 `family_stage_control_plane` 为 OPL discovery smoke 固定 stage goal、owner、skills、allowed action refs、handoff、source refs、freshness 与 authority boundary；`allowed_action_refs` 必须对齐同一 manifest 内的 `family_action_catalog`。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
+这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。OPL generated manifest 从 `agent/`、`contracts/stage_control_plane.json`、`contracts/action_catalog.json` 与 current-program refs 组装 stage goal、owner、skills、allowed action refs、handoff、freshness 与 authority boundary；MAG 不维护第二份 product-entry manifest。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
 
 ## Declarative Grant Pack
 
-MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton`。`agent/` 是 repo-source canonical semantic pack，不再只是 skeleton anchor，也不把 runtime 写成新的 grant executor。
+MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 current-program、capability/action/stage contracts 交给 OPL 生成 standard domain agent surfaces。`agent/` 是 repo-source canonical semantic pack，不再只是 skeleton anchor，也不把 runtime 写成新的 grant executor。
 
 - repo-source 边界固定为 `agent`、`contracts`、`runtime`、`docs`。
 - `agent/prompts/` 持有六个 stage prompt：`call_and_candidate_intake`、`fundability_strategy`、`specific_aims_and_structure`、`proposal_authoring`、`review_and_rebuttal`、`package_and_submit_ready`。
@@ -68,9 +68,9 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `prod
 - `contracts/stage_control_plane.json` 的 `prompt_refs` 必须解析到 `agent/prompts/*.md`；`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 必须列出完整 `agent/` pack 文件，且不把 `agent/README.md` 当成机器 required semantic pack path。
 - `contracts/runtime-program/current-program.json` 与 `contracts/pack_compiler_input.json` 使用 `canonical_semantic_pack_root="agent/"` 与 `canonical_semantic_pack_role="repo_source_declarative_grant_pack"`。若 runtime-program snapshot 中保留旧 `canonical_repo_source_semantic_pack` 字段，它只作为 historical/provenance 字段读取，不能覆盖 pack compiler input。
 
-## OPL Substrate Adapter Export
+## OPL Domain Handler Export
 
-MAG 现在在 `product-entry-manifest` 与 `domain-handler export` 中导出 `opl_substrate_adapter_export`。这层是 MAG-owned 薄导出面，专门给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引：
+MAG 只在 `domain-handler export` 中返回 OPL 可消费的 body-free refs。该薄导出面给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引，不再复制 product-entry manifest 或 runtime platform body：
 
 - 顶层 `source_provenance` 同步暴露 OPL `substrate projections` 可直接解析的 body-free source refs：source policy/support doc ref、historical fixture ref、explicit archive/import command ref 与 parity oracle ref。
 - workspace 只给 opaque ref、workspace locator、session/ref 与 restore/progress ref。

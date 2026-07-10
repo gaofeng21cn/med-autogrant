@@ -3,149 +3,49 @@
 Owner: `Med Auto Grant`
 Purpose: `schema_backed_product_entry_routing_support_record`
 State: `support_current_truth`
-Machine boundary: 本文是人读支撑记录，只在 schema-backed product-entry / route contract subsection 内有效。机器真相继续归 source、schemas、product-entry manifest、contracts 和 `contracts/runtime-program/current-program.json`。
+Machine boundary: 本文只说明 MAG schema/source 与 OPL-generated product-entry surfaces 的边界。机器真相归 source、schemas、contracts 和 `contracts/runtime-program/current-program.json`。
+Last reviewed: `2026-07-10`
 
-> 生命周期注记（`2026-05-17`）：这份 dated spec 只在仍被当前 owner surfaces 引用的 schema-backed product-entry / route contract subsection 内是 `support_current_truth`。当前 owner 是 MAG schema/source/product-entry manifest 与 `contracts/runtime-program/current-program.json`；OPL 只通过当前 stage-led framework path 消费 MAG descriptor/projection。下方旧 `Current Truth`、Upstream Hermes fast-cutover、`future OPL Gateway`、host-agent 或 federation wording 是 provenance，不是当前 owner line 或 compatibility target。
+## Current Boundary
 
-当前处置：
+MAG 保留并维护：
 
-- Keep：schema-backed `product_entry` / `executor_routing_contract` validation 和 fail-closed drift guard。
-- Superseded：`Upstream Hermes-Agent Fast Cutover`、`future OPL Gateway`、Hermes substrate runtime owner、gateway/federation caller language。
-- Direct retirement posture：如果旧 module/interface/test 只为保留 superseded Gateway/Hermes wording 且没有 current caller，应把 caller 迁到 MAG schema/source/product-entry manifest，并删除或归档旧 surface；不新增 compatibility aliases。
+- `schemas/v1/service-safe-domain-surface.schema.json`
+- `schemas/v1/executor-routing-contract.schema.json`
+- `schemas/v1/product-entry.schema.json`
+- `MedAutoGrantDomainEntry`、service-safe command catalog 与 grant route truth
+- grant truth、quality/fundability/export/package authority 与 owner closeout refs
 
-Last reviewed: `2026-06-12`
+OPL 生成并托管 product-entry manifest、status、user-loop、progress、cockpit、direct-entry 与 session surfaces。MAG source 中出现的 `/product_entry_manifest/*` 只是在 OPL-generated manifest 内定位 authority/descriptor refs 的 JSON pointer，不表示 MAG 维护本地 manifest schema、builder 或 public product CLI。
 
-## Activation Status
+## Retired Surfaces
 
-- Phase: `schema-backed product-entry support record`
-- Active boundary: `MAG product-entry / executor-routing contract schema validation`
-- Status: `support_current_truth_by_subsection`
+以下 repo-local surfaces 已退役，不再作为 current owner 或 compatibility target：
 
-## Goal
+- `product-entry-manifest.schema.json`
+- `product-status.schema.json`
+- local product/status/preflight/start/progress/cockpit/direct-entry text renderers
+- local `build-product-entry` wrapper
+- Upstream Hermes fast-cutover、future OPL Gateway 与 gateway/federation caller wording
 
-在已经 landed 的：
+旧 caller 应迁到 OPL generated surfaces 或 MAG service-safe/domain-handler authority target；不新增 alias、facade、re-export 或兼容测试。
 
-- `CLI-first + Codex-default execution plus explicit Hermes-Agent proof/provenance lane`
-- `MedAutoGrantDomainEntry`
-- lightweight `product entry` shell
+## Fail-Closed Contract
+
+`product-entry.schema.json` 继续持有：
+
+- domain agent entry spec
+- service-safe supported commands 与 command contracts
+- workspace locator、runtime session envelope、domain payload 与 stage snapshot
 - author-side executor routing contract
 
-之上，把当前 direct / `OPL` handoff 会直接消费的关键 surface 继续收口成 schema-backed contract，并在生成时 fail-closed。
-
-这条 current truth 解决的是：
-
-- `product_entry` 与 `executor_routing_contract` 不再只是“代码里手工拼 dict + 文档约定”
-- OPL stage-led framework / domain caller 可以通过当前 MAG descriptor/projection 和 repo-tracked schema 消费这层 contract
-- landed route catalog、nullability 与 route truth 边界不会悄悄漂移
-
-## Landed Facts
-
-### 1. 四份核心 contract schema 已经进入 repo-tracked index
-
-当前 `schemas/v1/schema-index.json` 已显式索引：
-
-- `service-safe-domain-surface.schema.json`
-- `executor-routing-contract.schema.json`
-- `product-entry.schema.json`
-
-这四份 schema 现在和 `nsfc-workspace.schema.json` 一起留在同一套 repo-tracked schema registry 里。
-
-### 2. schema subset validator 已经扩到当前 contract 真正需要的边界
-
-`workspace.py` 内部的 `_SchemaSubsetValidator` 当前已补齐：
-
-- `type: ["object", "null"]`
-- `type: ["string", "null"]`
-- `null`
-- `minItems`
-
-因此当前 contract 已经可以诚实表达：
-
-- early-stage `product_entry.domain_payload.draft_id = null`
-- 非空 route catalog
-
-### 3. route contract surfaces 现在会 schema-backed fail-closed
-
-当前 product-entry / route contract 在返回前会同时通过：
-
-- `executor-routing-contract.schema.json`
-- 冻结 truth 比对
-
-这意味着：
-
-- `current_stage_route`
-- `recommended_executor_route`
-- `author_side_route_catalog`
-
-不仅要结构合法，还必须与当前冻结的 author-side route truth 完全一致。
-
-如果有人误把：
-
-- critique handoff surface 写错
-- `current_stage_route` / `recommended_executor_route` 对调
-
-都会直接 fail-closed。
-
-### 4. `build-product-entry` 现在也会 schema-backed fail-closed
-
-当前 `build-product-entry.product_entry` 在写出前会通过：
-
-- `product-entry.schema.json`
-- 内嵌 `executor_routing_contract` 的同一套 schema + truth 校验
-
-因此下面这些字段现在都不只是“最好如此”，而是正式合同：
-
-- `workspace_locator`
-- `runtime_session_contract`
-- `return_surface_contract`
-  - `domain_entry_contract`
-    - `supported_commands`
-    - `command_contracts`
-- `domain_payload`
-- `stage_snapshot`
-- `executor_routing_contract.author_side_route_catalog`
-
-### 5. 这层 schema-backed closeout 没有改写 owner 边界
-
-当前新增的只是 machine-readable contract 与 fail-closed validation：
-
-- 没有新增 repo-local executor
-- 没有把 pending route 提前写成 landed
-- 没有把 `Hermes-Agent` 写回 author-side executor owner
-- 没有把 `OPL` / gateway story 扩成新的平台叙事
-
-也就是说，这条 support truth 仍然只服务：
-
-- MAG 持有 author-side grant contract truth、schema/source、product-entry manifest 和 route truth
-- OPL stage-led framework / domain caller 通过统一 envelope 消费 MAG descriptor/projection
-- 旧 Hermes/Gateway 叙事只作 provenance，不恢复为 runtime owner 或 compatibility layer
+MAG 的 workspace/authoring validators 复用 `opl_harness_shared.schema_validation.SchemaSubsetValidator`。OPL hosted contract bundle 复用 `product-entry.schema.json` 中的 domain-entry、operator 与 routing definitions；OPL-owned session/progress/artifact/runtime projection 不再复制进 MAG schema。
 
 ## Verification
 
-本 tranche 至少已覆盖：
+- `./scripts/run-pytest-clean.sh tests/test_schema_registry.py tests/test_domain_entry.py tests/test_hosted_contract_bundle.py -q`
+- `./scripts/run-python-clean.sh scripts/check_descriptor_contracts.py`
+- `<opl-repo>/bin/opl agents conformance --agent "mag=$PWD" --json`
+- `./scripts/verify.sh full`
 
-- `uv run pytest tests/test_schema_registry.py tests/product_entry_cases tests/test_domain_runtime.py -q`
-- `uv run pytest tests/test_domain_runtime.py -q`
-
-并验证：
-
-- schema registry 会追踪四份新 contract schema
-- `product_entry` 遇到非法 `executor_routing_contract` 会 fail-closed
-- product-entry / route contract 遇到非法 `executor_routing_contract` 会 fail-closed
-- `author_side_route_catalog` 必须继续等于当前冻结 route matrix
-- current `product_entry` / route handoff 仍保持 direct + `OPL` envelope truth 不漂移
-
-## Honest Boundary
-
-这条 current truth 只说明：
-
-- 当前 `product_entry` / `executor_routing_contract` 已经升级成 schema-backed contract
-- repo 现在会在生成时 fail-closed，阻止 contract drift
-
-明确不表示以下内容已经成立或需要恢复：
-
-- 不表示 mature product UX 已完成
-- 不表示 critique executor 已 landed；critique executor 的当前 truth 以 `2026-04-13-critique-codex-cli-executor-current-truth.md` 和 source/tests 为准
-- 不表示 hosted runtime 已完成
-- 不表示旧 `OPL Gateway` landed wording 是 current owner line；它只保留为 provenance
-- 不表示 Hermes-backed runtime owner、Gateway/federation caller 或 compatibility bridge 是当前目标
+这些检查只证明 schema、descriptor、route contract 与 structural conformance；不证明 grant-ready、submission-ready、production-ready 或真实 OPL-hosted stage consumption。

@@ -108,8 +108,8 @@
       },
       {
         "surface_id": "autonomy_controller",
-        "classification": "minimal_authority_function",
-        "source_refs": ["src/med_autogrant/grant_autonomy_controller.py"]
+        "classification": "provenance_or_retired",
+        "source_refs": ["docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md"]
       },
       {
         "surface_id": "legacy_runtime_residue",

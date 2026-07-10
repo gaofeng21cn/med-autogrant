@@ -38,7 +38,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | [Critique Codex CLI Executor Current Truth](./2026-04-13-critique-codex-cli-executor-current-truth.md) | critique executor vocabulary 与 Codex CLI route |
 | [AI-first Quality Boundary Current Truth](./2026-04-27-ai-first-quality-boundary-current-truth.md) | AI-first quality ownership 与 projection boundary |
 | [Authoring Completion Semantics Current Truth](./2026-04-23-authoring-completion-semantics-current-truth.md) | authoring completion semantics |
-| [Quality Governance, Autonomy Controller, And Family Grammar Current Truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md) | quality governance、autonomy controller 与 family grammar |
+| [Quality Governance, OPL Autonomy Boundary, And Family Grammar Current Truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md) | quality governance、OPL autonomy boundary 与 family grammar |
 
 ## 当前 Specs 生命周期
 
@@ -49,7 +49,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `2026-04-13-critique-codex-cli-executor-current-truth.md` | `active_current_spec` | active spec + core docs | 只读 critique executor vocabulary 与 Codex CLI route。 |
 | `2026-04-27-ai-first-quality-boundary-current-truth.md` | `active_current_spec` | active spec + quality owner docs | 只读 AI-first quality boundary。 |
 | `2026-04-23-authoring-completion-semantics-current-truth.md` | `active_current_spec` | active spec + authoring completion owner docs | 只读 completion semantics。 |
-| `2026-04-22-quality-autonomy-family-grammar-current-truth.md` | `active_current_spec` | active spec + current quality/autonomy docs | 只读 quality governance、autonomy controller 和 family grammar。 |
+| `2026-04-22-quality-autonomy-family-grammar-current-truth.md` | `active_current_spec` | active spec + current quality/autonomy docs | 只读 quality governance、OPL autonomy boundary 和 family grammar。 |
 | `2026-04-07-formal-entry-matrix-current-truth.md` | `support_current_truth` | core five + `current-program.json` | 作为 formal-entry 支撑 guard 阅读；旧 runtime-run/resume、journal 和 attempt ledger 只能按 history/provenance 读。 |
 | `2026-04-07-durability-model-clarification.md` | `support_current_truth` | architecture/status + runtime-state docs | 只读 durability boundary guard；不恢复 local journal、attempt ledger 或 MAG-owned generic runtime。 |
 | `product-entry-support-record.md` | `support_current_truth` | product-entry/product-status/user-loop/package owners | 作为 product-entry / package support 汇总阅读；public identity 仍是单一 MAG app skill。 |

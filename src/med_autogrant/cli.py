@@ -124,7 +124,7 @@ def _print_public_help() -> None:
         "Usage: medautogrant <group> <command> [options]",
         "",
         "Series: OPL Foundry Agent",
-        "Agent id: medautogrant",
+        "Agent id: mag",
         "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
         "Executable command surface: medautogrant",
         "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",

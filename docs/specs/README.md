@@ -21,7 +21,7 @@ Machine boundary: 本文是人读 specs 索引。机器消费者必须使用 `co
 - [Critique executor vocabulary current truth](./2026-04-13-critique-codex-cli-executor-current-truth.md)
 - [AI-first 质量边界 current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
-- [Quality governance, autonomy controller, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
+- [Quality governance, OPL autonomy boundary, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 
 密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package、historical route snapshot 与 superseded provider proof。
 

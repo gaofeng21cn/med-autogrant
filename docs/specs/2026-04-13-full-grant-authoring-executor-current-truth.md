@@ -103,7 +103,7 @@ Last reviewed: `2026-06-12`
 
 ### 5. `pending_handoff_requirements` 已退出当前主线 route output
 
-`product-status.schema.json` 继续只保留为历史兼容与旧真相追溯材料。
+旧 `product-status.schema.json` 已从 repo-tracked active schemas 删除；product status 只由 OPL generated surface 投影，历史形状从 git provenance 追溯。
 
 当前主线 route output 的真实口径已经是：
 

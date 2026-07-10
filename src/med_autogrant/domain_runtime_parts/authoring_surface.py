@@ -21,7 +21,6 @@ from med_autogrant.control_plane import (
 from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
-from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
 from med_autogrant.grant_quality import (
     build_grant_quality_closure_dossier,
     build_grant_quality_diff,
@@ -39,20 +38,15 @@ from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.domain_runtime_parts.shared import (
     CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
-    GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
-    GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE,
 )
 from med_autogrant.domain_runtime_parts.io import (
-    _read_active_draft_id,
     _guard_critique_output_identity,
     _guard_revision_output_identity,
     _guard_workspace_output_identity,
-    _load_json_object,
     _write_json_output,
     _write_revised_workspace_output,
 )
 from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
-from med_autogrant.domain_runtime_parts.runtime_ops import _looks_like_workspace
 from med_autogrant.domain_runtime_parts.authoring_mainline import build_authoring_mainline_payload
 
 
@@ -219,68 +213,6 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             opl_stage_attempt=opl_stage_attempt,
             run_authoring_mainline_controller=run_authoring_mainline_controller,
         )
-
-    def execute_grant_autonomy_controller(
-        self,
-        *,
-        input_path: str | Path,
-        output_dir: str | Path,
-        executor_kind: str | None = None,
-        opl_stage_attempt: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        request = _load_json_object(input_path, context="grant autonomy controller input")
-        _validate_schema_payload(
-            request,
-            schema_file=GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
-            context="grant_autonomy_controller_input",
-        )
-        resolved_output_dir = Path(output_dir).expanduser().resolve()
-        resolved_output_dir.mkdir(parents=True, exist_ok=True)
-
-        report = run_grant_autonomy_controller(
-            request=request,
-            opl_stage_attempt=opl_stage_attempt,
-        )
-        _validate_schema_payload(
-            report,
-            schema_file=GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE,
-            context="grant_autonomy_controller_report",
-        )
-
-        report_path = resolved_output_dir / "grant-autonomy-controller-report.json"
-        _write_json_output(report_path, report, label="grant autonomy controller report")
-
-        final_workspace = report.get("final_workspace") if isinstance(report.get("final_workspace"), dict) else {}
-        workspace_identity = (
-            report.get("workspace_identity")
-            if isinstance(report.get("workspace_identity"), dict)
-            else {}
-        )
-        final_workspace_path: Path | None = None
-        if _looks_like_workspace(final_workspace):
-            final_workspace_path = resolved_output_dir / "grant-autonomy-final-workspace.json"
-            _guard_workspace_output_identity(
-                final_workspace_path,
-                workspace_document=final_workspace,
-                draft_id=_read_active_draft_id(final_workspace),
-            )
-            _write_revised_workspace_output(final_workspace_path, final_workspace)
-
-        return {
-            "ok": True,
-            "command": "execute-grant-autonomy-controller",
-            "grant_run_id": workspace_identity.get("grant_run_id"),
-            "workspace_id": workspace_identity.get("workspace_id"),
-            "draft_id": workspace_identity.get("draft_id"),
-            "lifecycle_stage": workspace_identity.get("lifecycle_stage"),
-            "controller_status": report["controller_status"],
-            "termination_reason": report["termination_reason"],
-            "output_dir": str(resolved_output_dir),
-            "grant_autonomy_controller_report_path": str(report_path),
-            "final_workspace_path": str(final_workspace_path) if final_workspace_path else None,
-            "grant_autonomy_controller_report": report,
-            "final_workspace": final_workspace,
-        }
 
     def execute_freeze_pass(
         self,

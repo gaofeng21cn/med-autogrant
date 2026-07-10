@@ -17,7 +17,6 @@ REGRESSION_FILES = {
     "tests/test_cli_validate_workspace_error_cases.py",
     "tests/test_cli_validate_workspace_revision_cases.py",
     "tests/test_final_package.py",
-    "tests/test_grant_autonomy_controller.py",
     "tests/test_domain_runtime.py",
     "tests/test_hosted_contract_bundle.py",
     "tests/test_hosted_contract_bundle_checkpoint_cases.py",

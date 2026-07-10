@@ -123,12 +123,6 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         ("max_cycles", "executor_kind"),
         help_text="执行跨 question/argument/fit/drafting/critique/revision/frozen 的全链路主线 loop。",
     ),
-    "execute-grant-autonomy-controller": DomainEntryCommandSpec(
-        "execute_grant_autonomy_controller",
-        ("input_path", "output_dir", "opl_stage_attempt"),
-        ("executor_kind",),
-        help_text="执行长期自治 controller，调度 pre-workspace、mainline 与 quality gate。",
-    ),
     "execute-revision-pass": DomainEntryCommandSpec(
         "execute_revision_pass",
         ("input_path", "output_path"),

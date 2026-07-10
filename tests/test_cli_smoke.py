@@ -51,7 +51,7 @@ def test_public_cli_help_renders_group_index() -> None:
     assert exit_code == 0
     assert stderr == ""
     assert "Series: OPL Foundry Agent" in stdout
-    assert "Agent id: medautogrant" in stdout
+    assert "Agent id: mag" in stdout
     assert "Ordinary path: workspace/work/stage/run/vault/handoff/connect" in stdout
     assert "Executable command surface: medautogrant" in stdout
     assert "Authority boundary:" in stdout
@@ -85,7 +85,8 @@ def test_foundry_status_projects_mag_series_identity() -> None:
     assert payload == direct_payload
     assert payload["command"] == "foundry-status"
     assert payload["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
-    assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
+    assert payload["foundry_agent_series"]["domain_id"] == "mag"
+    assert payload["foundry_agent_series"]["foundry_agent_id"] == "mag"
     assert payload["status"]["series_label"] == "OPL Foundry Agent"
     assert payload["status"]["ordinary_path"] == "workspace/work/stage/run/vault/handoff/connect"
     assert payload["status"]["executable_command_surfaces"] == ["medautogrant"]

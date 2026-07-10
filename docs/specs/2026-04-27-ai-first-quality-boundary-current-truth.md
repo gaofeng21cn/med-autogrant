@@ -60,7 +60,6 @@ Relevant guardrails:
 
 - `tests/test_ai_first_quality_boundary.py`
 - `tests/test_grant_quality.py`
-- `tests/test_grant_autonomy_controller.py`
 - `tests/test_critique_executor.py`
 - `tests/test_revision_executor.py`
 - `scripts/verify.sh meta`

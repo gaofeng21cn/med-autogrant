@@ -54,7 +54,7 @@ MAG 可以沉淀可复用的基金写作经验，例如 fundability strategy、s
 | reviewer-style critique and rebuttal patterns | 自然语言 memory candidate；当前 workspace issue 留在 quality ledger。 |
 | template strategy and proposal structure examples | 默认是自然语言 memory；只有成为 audited export/package template 时才进入结构化 authority。 |
 | `grant-quality-scorecard`、`grant-quality-diff`、`grant-quality-closure-dossier` | schema-backed governance surface；不是 memory。 |
-| `execute-grant-autonomy-controller` report and blocker queues | controller / runtime surface；memory 只能引用 closeout 后的可复用经验。 |
+| OPL-hosted stage closeout receipt / typed blocker refs | runtime closeout surface；memory 只能引用 closeout 后的可复用经验。 |
 | `package submission-ready` | local export authority；不是 memory authority。 |
 
 ## Stage 使用边界

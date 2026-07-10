@@ -385,7 +385,6 @@
             "execute-critique-pass",
             "execute-critique-revision-loop",
             "execute-authoring-mainline-loop",
-            "execute-grant-autonomy-controller",
             "execute-revision-pass",
             "execute-freeze-pass",
             "build-final-package",
@@ -398,7 +397,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 29
+          "minItems": 28
         }
       }
     },
@@ -411,11 +410,7 @@
         "supported_entry_modes",
         "domain_entry_contract",
         "checkpoint_aggregation_surface",
-        "operator_contract",
-        "session_continuity",
-        "progress_projection",
-        "artifact_inventory",
-        "runtime_control"
+        "operator_contract"
       ],
       "properties": {
         "entry_adapter": {
@@ -438,18 +433,6 @@
         },
         "operator_contract": {
           "$ref": "#/$defs/operatorContract"
-        },
-        "session_continuity": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
-        },
-        "progress_projection": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
-        },
-        "artifact_inventory": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
-        },
-        "runtime_control": {
-          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
         }
       }
     },

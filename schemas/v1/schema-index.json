@@ -113,16 +113,6 @@
       "status": "frozen"
     },
     {
-      "name": "grant_autonomy_controller_input",
-      "file": "grant-autonomy-controller-input.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "grant_autonomy_controller_report",
-      "file": "grant-autonomy-controller-report.schema.json",
-      "status": "frozen"
-    },
-    {
       "name": "service_safe_domain_surface",
       "file": "service-safe-domain-surface.schema.json",
       "status": "frozen"
@@ -180,16 +170,6 @@
     {
       "name": "grant_user_loop_surface",
       "file": "grant-user-loop.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "product_entry_manifest_surface",
-      "file": "product-entry-manifest.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "product_status_surface",
-      "file": "product-status.schema.json",
       "status": "frozen"
     },
     {
