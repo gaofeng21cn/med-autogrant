@@ -21,6 +21,7 @@ from med_autogrant.authoring_executor import (  # noqa: E402
     build_outline_execution_document,
     build_question_refinement_execution_document,
 )
+from med_autogrant.codex_cli import read_codex_cli_contract  # noqa: E402
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
 
 
@@ -164,14 +165,66 @@ class AuthoringExecutorTest(unittest.TestCase):
 
         for stage, builder, document, input_path, response, workspace_key, counts, cleared in cases:
             with self.subTest(stage=stage):
+                calls: list[tuple[str, Path]] = []
+
+                def codex_runner(prompt: str, *, cwd: Path) -> dict[str, Any]:
+                    calls.append((prompt, cwd))
+                    return copy.deepcopy(response)
+
                 payload = builder(
                     document=document,
                     input_path=input_path,
-                    codex_runner=lambda _prompt, *, cwd, response=response: copy.deepcopy(response),
+                    codex_runner=codex_runner,
                 )
                 workspace = payload[workspace_key]
+                selection = workspace["current_selection"]
+                contract = read_codex_cli_contract()
+                executor = {
+                    "kind": "codex_cli",
+                    "model": contract["model_selection"],
+                    "reasoning_effort": contract["reasoning_selection"],
+                }
+                if stage == "direction_screening":
+                    execution_fields = {
+                        "selected_direction_id": selection["selected_direction_id"],
+                        "direction_count": len(workspace["direction_hypotheses"]),
+                    }
+                elif stage == "question_refinement":
+                    execution_fields = {
+                        "selected_direction_id": selection["selected_direction_id"],
+                        "selected_question_id": selection["selected_question_id"],
+                    }
+                elif stage == "argument_building":
+                    execution_fields = {
+                        "selected_question_id": selection["selected_question_id"],
+                        "argument_chain_id": workspace["argument_chains"][0]["argument_chain_id"],
+                    }
+                elif stage == "fit_alignment":
+                    execution_fields = {
+                        "selected_question_id": selection["selected_question_id"],
+                        "active_fit_mapping_id": selection["active_fit_mapping_id"],
+                    }
+                elif stage == "outline":
+                    execution_fields = {
+                        "active_fit_mapping_id": selection["active_fit_mapping_id"],
+                        "draft_id": selection["active_draft_id"],
+                        "outline_count": len(workspace["application_drafts"][0]["outline"]),
+                    }
+                else:
+                    execution_fields = {
+                        "draft_id": selection["active_draft_id"],
+                        "version_label": workspace["application_drafts"][0]["version_label"],
+                        "section_count": len(workspace["application_drafts"][0]["sections"]),
+                    }
 
                 self.assertEqual(payload["lifecycle_stage"], stage)
+                self.assertEqual(payload["grant_run_id"], workspace["grant_run_id"])
+                self.assertEqual(payload["workspace_id"], workspace["workspace_id"])
+                self.assertEqual(payload["draft_id"], selection.get("active_draft_id"))
+                self.assertEqual(payload[f"{stage}_execution"], {"executor": executor, **execution_fields})
+                self.assertEqual(len(calls), 1)
+                self.assertIn(str(input_path.resolve()), calls[0][0])
+                self.assertEqual(calls[0][1], input_path.resolve().parent)
                 for field, expected_count in counts.items():
                     self.assertEqual(len(workspace[field]), expected_count)
                 for field in cleared:
@@ -185,11 +238,27 @@ class AuthoringExecutorTest(unittest.TestCase):
                 self.assertTrue(validation.ok, validation.to_dict(workspace))
 
     def test_freeze_pass_closes_presubmission_authority_gate(self) -> None:
-        payload = build_freeze_execution_document(document=_load(READY_FOR_SUBMISSION_EXAMPLE_PATH))
+        document = _load(READY_FOR_SUBMISSION_EXAMPLE_PATH)
+        payload = build_freeze_execution_document(document=document)
         workspace = payload["frozen_workspace"]
 
         self.assertEqual(payload["lifecycle_stage"], "frozen")
+        self.assertEqual(payload["grant_run_id"], workspace["grant_run_id"])
+        self.assertEqual(payload["workspace_id"], workspace["workspace_id"])
+        self.assertEqual(payload["draft_id"], workspace["current_selection"]["active_draft_id"])
         self.assertTrue(workspace["gates"]["presubmission_frozen"])
         self.assertEqual(workspace["application_drafts"][0]["status"], "frozen")
-        self.assertEqual(payload["freeze_execution"]["executor"]["kind"], "deterministic_domain_logic")
+        self.assertEqual(
+            payload["freeze_execution"],
+            {
+                "executor": {
+                    "kind": "deterministic_domain_logic",
+                    "model": None,
+                    "reasoning_effort": None,
+                },
+                "draft_id": document["current_selection"]["active_draft_id"],
+                "revision_plan_id": document["current_selection"]["active_revision_plan_id"],
+                "critique_id": document["mentor_critiques"][0]["critique_id"],
+            },
+        )
         self.assertTrue(validate_workspace_document(workspace).ok)
