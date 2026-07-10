@@ -41,7 +41,7 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
     assert not (REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py").exists()
 
 
-def test_action_stage_routes_match_manifest_action_coverage() -> None:
+def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     action_catalog = _read_json("contracts/action_catalog.json")
     next_stages = {
@@ -71,6 +71,10 @@ def test_action_stage_routes_match_manifest_action_coverage() -> None:
     }
 
     for action in action_catalog["actions"]:
+        if action["effect"] == "read_only":
+            assert "stage_route" not in action
+            continue
+
         route = action["stage_route"]
         required = route["required_stage_refs"]
         optional = route["optional_stage_refs"]

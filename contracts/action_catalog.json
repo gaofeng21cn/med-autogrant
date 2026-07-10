@@ -80,22 +80,6 @@
       "input_schema_ref": "schemas/v1/grant-progress.schema.json",
       "output_schema_ref": "schemas/v1/grant-progress.schema.json",
       "owner": "med-autogrant",
-      "stage_route": {
-        "entry_stage_ref": "call_and_candidate_intake",
-        "required_stage_refs": [
-          "call_and_candidate_intake"
-        ],
-        "optional_stage_refs": [
-          "fundability_strategy",
-          "specific_aims_and_structure",
-          "review_and_rebuttal",
-          "package_and_submit_ready"
-        ],
-        "terminal_stage_refs": [
-          "call_and_candidate_intake"
-        ],
-        "route_policy": "ordered_stage_attempts_no_skip"
-      },
       "source_command": {
         "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
         "surface_kind": "grant_progress"
@@ -148,17 +132,6 @@
       "input_schema_ref": "schemas/v1/grant-cockpit.schema.json",
       "output_schema_ref": "schemas/v1/grant-cockpit.schema.json",
       "owner": "med-autogrant",
-      "stage_route": {
-        "entry_stage_ref": "call_and_candidate_intake",
-        "required_stage_refs": [
-          "call_and_candidate_intake"
-        ],
-        "optional_stage_refs": [],
-        "terminal_stage_refs": [
-          "call_and_candidate_intake"
-        ],
-        "route_policy": "ordered_stage_attempts_no_skip"
-      },
       "source_command": {
         "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
         "surface_kind": "grant_cockpit"
