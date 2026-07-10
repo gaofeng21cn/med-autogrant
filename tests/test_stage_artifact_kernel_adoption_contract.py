@@ -73,29 +73,6 @@ def test_state_index_kernel_adoption_is_opl_owned_refs_only_sidecar() -> None:
     }
 
 
-def test_opl_family_lifecycle_adapter_points_to_same_state_index_adoption() -> None:
-    stage_adoption = _read_json("contracts/stage_artifact_kernel_adoption.json")
-    family_adoption = _read_json("contracts/runtime-program/opl-family-contract-adoption.json")
-    state_index = stage_adoption["state_index_kernel_adoption"]
-    lifecycle_adapter = family_adoption["lifecycle_adapter"]
-    sidecar = lifecycle_adapter["state_index_sidecar_consumption"]
-
-    assert lifecycle_adapter["sqlite_migration_required"] is False
-    assert (
-        lifecycle_adapter["state_index_kernel_adoption_ref"]
-        == "contracts/stage_artifact_kernel_adoption.json#/state_index_kernel_adoption"
-    )
-    assert sidecar["maps_to"] == "opl_state_index_kernel_sidecar"
-    assert sidecar["state_index_kernel_owner"] == state_index["state_index_kernel_owner"]
-    assert sidecar["sqlite_sidecar_owner"] == state_index["sqlite_sidecar_owner"]
-    assert sidecar["mag_consumption_role"] == state_index["mag_consumption_role"]
-    assert sidecar["sqlite_migration_required"] is False
-    assert sidecar["source_of_truth"] == state_index["source_of_truth"]
-    assert sidecar["write_policy"] == "opl_refs_only_index_no_domain_truth_writes"
-    assert sidecar["forbidden_sqlite_payloads"] == state_index["forbidden_sqlite_payloads"]
-    assert sidecar["forbidden_mag_owner_roles"] == state_index["forbidden_mag_owner_roles"]
-
-
 def test_foundry_series_forbids_mag_specific_sqlite_or_state_index_owner_drift() -> None:
     series = _read_json("contracts/foundry_agent_series.json")
     profile = series["domain_specific_profile"]

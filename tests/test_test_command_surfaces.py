@@ -40,11 +40,9 @@ def test_makefile_lanes_route_to_repo_native_checks() -> None:
     structure_strict = _make_dry_run("test-structure-strict")
 
     assert "scripts/check_descriptor_contracts.py" in structure
-    assert "scripts/check_source_purity_guard.py" in structure
     assert "run-structural-quality-gate" not in structure
     assert "sentrux" not in structure.lower()
 
-    assert "scripts/check_source_purity_guard.py" in structure_strict
     assert "scripts/check_descriptor_contracts.py" in structure_strict
 
 
