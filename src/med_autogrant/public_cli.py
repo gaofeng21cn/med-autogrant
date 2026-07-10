@@ -4,7 +4,6 @@ from typing import Final
 
 
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
-    "foundry": "OPL Foundry Agent series status、inspect、interfaces、validate、doctor 与 peers。",
     "workspace": "工作区诊断、摘要、阶段路由与 grant quality refs。",
     "domain-handler": "OPL standard domain handler target：export refs 与 dispatch guarded actions。",
     "authority": "MAG-owned memory、receipt、typed-blocker 与 closeout authority targets。",
@@ -13,7 +12,6 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
 }
 
 PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
-    "foundry",
     "workspace",
     "domain-handler",
     "authority",
@@ -22,12 +20,6 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
 )
 
 INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
-    "foundry-status": ("foundry", "status"),
-    "foundry-inspect": ("foundry", "inspect"),
-    "foundry-interfaces": ("foundry", "interfaces"),
-    "foundry-validate": ("foundry", "validate"),
-    "foundry-doctor": ("foundry", "doctor"),
-    "foundry-peers": ("foundry", "peers"),
     "validate-workspace": ("workspace", "validate"),
     "summarize-workspace": ("workspace", "summarize"),
     "grant-intake-audit": ("workspace", "intake-audit"),
@@ -66,29 +58,9 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
 }
 
 GENERATED_SURFACE_COMMAND_REFS: Final[dict[str, str]] = {
-    "grant-progress": "opl://generated-surfaces/mag/inspect-progress",
-    "grant-cockpit": "opl://generated-surfaces/mag/inspect-cockpit",
-    "grant-direct-entry": "opl://generated-surfaces/mag/build-direct-entry",
-    "grant-user-loop": "opl://generated-surfaces/mag/open-grant-user-loop",
-    "skill-catalog": "opl://generated-surfaces/mag/skill-catalog",
     "product-entry-manifest": "opl://generated-surfaces/mag/product-entry-manifest",
     "product-status": "opl://generated-surfaces/mag/product-status",
-    "product-preflight": "opl://generated-surfaces/mag/product-preflight",
-    "product-start": "opl://generated-surfaces/mag/product-start",
     "build-product-entry": "opl://generated-surfaces/mag/product-entry-session",
-    "product-lifecycle-receipt-evidence": "opl://generated-surfaces/mag/lifecycle-receipt-evidence",
-    "controlled-soak-receipt-reconciliation-proof": (
-        "opl://generated-surfaces/mag/receipt-reconciliation-proof"
-    ),
-    "controlled-soak-receipt-reconciliation-inventory": (
-        "opl://generated-surfaces/mag/receipt-reconciliation-inventory"
-    ),
-    "focused-hosted-receipt-verification": "opl://generated-surfaces/mag/hosted-receipt-verification",
-    "lifecycle-receipt-bundle": "opl://generated-surfaces/mag/lifecycle-receipt-bundle",
-    "memory-receipt-projection": "opl://generated-surfaces/mag/memory-receipt-projection",
-    "package-lifecycle-handoff": "opl://generated-surfaces/mag/package-lifecycle-handoff",
-    "continuous-receipt-reconciliation": "opl://generated-surfaces/mag/continuous-receipt-reconciliation",
-    "operator-closeout-readiness": "opl://generated-surfaces/mag/operator-closeout-readiness",
 }
 
 PUBLIC_GROUP_COMMANDS: Final[dict[str, tuple[str, ...]]] = {
@@ -113,12 +85,3 @@ def public_command_label(command: str) -> str:
     if tokens is None:
         return command
     return " ".join(tokens)
-
-
-def public_cli_command(command: str, *args: str) -> str:
-    tokens = public_command_tokens(command)
-    generated_ref = GENERATED_SURFACE_COMMAND_REFS.get(command)
-    if generated_ref is not None:
-        return " ".join([generated_ref, *args])
-    command_words = list(tokens) if tokens is not None else [command]
-    return " ".join(["uv", "run", "python", "-m", "med_autogrant", *command_words, *args])

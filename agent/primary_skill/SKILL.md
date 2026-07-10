@@ -43,17 +43,9 @@ Domain handler dispatch 只允许三项 MAG-owned action：
 
 Scanner 通过只证明 standard-agent 结构与 source-behavior gate 对齐，不替代真实 workspace artifact、owner receipt、human gate、quality/export verdict 或 production evidence。
 
-## OPL Foundry Agent CLI grammar
+## OPL 公开检查面
 
-- `foundry status --format json`
-- `foundry inspect --format json`
-- `foundry interfaces --format json`
-- `foundry validate --format json`
-- `foundry doctor --format json`
-- `foundry peers --format json`
-- `status --format json`
-
-`grant` 是 `workspace` 的公共 alias，`work` 是 `pass` 的公共 alias；它们只映射到现有 MAG grant-native handler，不新增 runtime owner 或 product shell。
+Foundry membership、status、interfaces、validation、diagnostics 与 peers 由 OPL generated surface 统一投影。使用 `opl foundry agents inspect mag --json`，不要在 MAG repo-local CLI 重建同类 payload 或 alias。
 
 ## 操作约束
 

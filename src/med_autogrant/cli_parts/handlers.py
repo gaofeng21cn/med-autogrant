@@ -7,14 +7,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
-from med_autogrant.foundry_series_cli import (
-    build_foundry_series_doctor,
-    build_foundry_series_inspect,
-    build_foundry_series_interfaces,
-    build_foundry_series_peers,
-    build_foundry_series_status,
-    build_foundry_series_validate,
-)
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
 from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
@@ -36,24 +28,6 @@ class DirectCommandSpec:
 
 
 DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
-    "foundry-status": DirectCommandSpec(
-        build_foundry_series_status, "输出 MAG 的 OPL Foundry Agent series 状态。"
-    ),
-    "foundry-inspect": DirectCommandSpec(
-        build_foundry_series_inspect, "检查 MAG 的 Foundry Agent identity、输入输出与 authority profile。"
-    ),
-    "foundry-interfaces": DirectCommandSpec(
-        build_foundry_series_interfaces, "列出 MAG 的 Foundry Agent public interface grammar。"
-    ),
-    "foundry-validate": DirectCommandSpec(
-        build_foundry_series_validate, "校验 MAG 的 Foundry Agent series contract 与 CLI command surface。"
-    ),
-    "foundry-doctor": DirectCommandSpec(
-        build_foundry_series_doctor, "输出 MAG 的 Foundry Agent authority/currentness diagnostic。"
-    ),
-    "foundry-peers": DirectCommandSpec(
-        build_foundry_series_peers, "列出同系列 Foundry Agent peers 与 MAG topology profile。"
-    ),
     "domain-handler-export": DirectCommandSpec(
         build_domain_handler_export,
         "导出 OPL standard domain handler refs surface。",

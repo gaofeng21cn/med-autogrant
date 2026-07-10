@@ -410,30 +410,7 @@ def _render_build_submission_ready_package(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _render_foundry_series(payload: dict[str, Any]) -> str:
-    series = payload["foundry_agent_series"]
-    lines = [
-        _render_field("command", payload["command"]),
-        _render_field("domain_label", series["domain_label"]),
-        _render_field("foundry_agent_id", series["foundry_agent_id"]),
-        _render_field("series_version", series["version"]),
-        _render_field("contract_ref", series["contract_ref"]),
-    ]
-    for section_key in ("status", "inspect", "interfaces", "validation", "doctor", "peers"):
-        section = payload.get(section_key)
-        if not isinstance(section, dict):
-            continue
-        lines.append(f"- {section_key}: {json.dumps(section, ensure_ascii=False, sort_keys=True)}")
-    return "\n".join(lines)
-
-
 _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
-    'foundry-status': _render_foundry_series,
-    'foundry-inspect': _render_foundry_series,
-    'foundry-interfaces': _render_foundry_series,
-    'foundry-validate': _render_foundry_series,
-    'foundry-doctor': _render_foundry_series,
-    'foundry-peers': _render_foundry_series,
     'validate-workspace': _render_validate_workspace,
     'summarize-workspace': _render_summarize_workspace,
     'grant-intake-audit': _render_grant_intake_audit,

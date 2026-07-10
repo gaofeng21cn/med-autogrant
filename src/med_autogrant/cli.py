@@ -123,10 +123,9 @@ def _print_public_help() -> None:
     lines = [
         "Usage: medautogrant <group> <command> [options]",
         "",
-        "Series: OPL Foundry Agent",
+        "Med Auto Grant domain authority CLI",
         "Agent id: mag",
-        "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
-        "Executable command surface: medautogrant",
+        "OPL public inspection: opl foundry agents inspect mag --json",
         "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",
         "",
         "Public command groups:",
@@ -138,9 +137,8 @@ def _print_public_help() -> None:
         [
             "",
             "Examples:",
-            "  medautogrant foundry status --format json",
-            "  <med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --json",
             "  medautogrant workspace validate --input <workspace-path> --format json",
+            "  <med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli workspace validate --input <workspace-path> --format json",
             "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
             "Use `medautogrant <group>` to inspect the available commands in that group.",
