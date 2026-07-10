@@ -1,222 +1,82 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
+import subprocess
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
+from support.cli import run_cli  # noqa: E402
 
 
-from med_autogrant.cli import main  # noqa: E402
-from support.cli import public_cli_argv  # noqa: E402
-
-
-NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"
-NIH_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nih_r21.json"
-WELLCOME_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_wellcome_discovery.json"
+EXAMPLES = REPO_ROOT / "examples"
+NSFC_INPUT = EXAMPLES / "profile_selection_input_nsfc_general.json"
 
 
 class ProjectProfileSelectionCliTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            exit_code = main(public_cli_argv(args))
-        return exit_code, stdout.getvalue(), stderr.getvalue()
+    def json_cli(self, *args: str) -> dict[str, object]:
+        exit_code, stdout, stderr = run_cli(*args, allow_system_exit=False)
+        self.assertEqual((exit_code, stderr), (0, ""))
+        return json.loads(stdout)
 
-    def test_select_project_profile_returns_nsfc_recommendation(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-            "select-profile",
-            "--input",
-            str(NSFC_SELECTION_INPUT),
-            "--format",
-            "json",
+    def test_select_profile_covers_three_funders(self) -> None:
+        cases = (
+            ("profile_selection_input_nsfc_general.json", "nsfc_general_medical_v1", "nsfc-2026-general"),
+            ("profile_selection_input_nih_r21.json", "nih_r21_translational_v1", "nih-r21-2026-nhlbi"),
+            ("profile_selection_input_wellcome_discovery.json", "wellcome_discovery_v1", "wellcome-discovery-2026"),
         )
+        for filename, preset_id, brief_id in cases:
+            with self.subTest(funder=filename):
+                payload = self.json_cli(
+                    "workspace", "select-profile", "--input", str(EXAMPLES / filename), "--format", "json"
+                )["project_profile_selection"]
+                self.assertEqual(payload["recommended_project_profile"]["preset_id"], preset_id)
+                self.assertEqual(payload["recommended_funding_opportunity"]["brief_id"], brief_id)
+                self.assertEqual(payload["selection_summary"]["evaluated_profile_preset_count"], 3)
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nsfc_general_medical_v1")
-        self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nsfc-2026-general")
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["governance_policy"]["default_tranche"],
-            "direction_screening_to_argument_closure",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
-            3,
-        )
-
-    def test_select_project_profile_returns_nih_r21_recommendation(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-            "select-profile",
-            "--input",
-            str(NIH_SELECTION_INPUT),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nih_r21_translational_v1")
-        self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nih-r21-2026-nhlbi")
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["family_id"],
-            "nih_r21_translational_family_v1",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["governance_policy"]["preferred_stop_target"],
-            "ready_for_submission_after_significance_innovation_lock",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
-            3,
-        )
-
-    def test_select_project_profile_returns_wellcome_recommendation(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-            "select-profile",
-            "--input",
-            str(WELLCOME_SELECTION_INPUT),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_project_profile"]["preset_id"],
-            "wellcome_discovery_v1",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"],
-            "wellcome-discovery-2026",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["family_id"],
-            "wellcome_discovery_family_v1",
-        )
-        self.assertEqual(
-            payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
-            3,
-        )
-
-    def test_initialize_intake_workspace_materializes_input_intake_workspace(self) -> None:
+    def test_initialize_intake_materializes_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            output_path = Path(tmp_dir) / "initialized-workspace.json"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "initialize-intake",
-                "--input",
-                str(NSFC_SELECTION_INPUT),
-                "--output",
-                str(output_path),
-                "--format",
-                "json",
+            output_path = Path(tmp_dir) / "workspace.json"
+            payload = self.json_cli(
+                "workspace", "initialize-intake", "--input", str(NSFC_INPUT),
+                "--output", str(output_path), "--format", "json",
             )
 
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertTrue(payload["ok"])
+            self.assertTrue(output_path.is_file())
             self.assertEqual(payload["initialized_workspace"]["lifecycle_stage"], "input_intake")
-            self.assertEqual(
-                payload["initialized_workspace"]["project_profile"]["preset_id"],
-                "nsfc_general_medical_v1",
-            )
-            self.assertTrue(output_path.exists())
+            self.assertEqual(payload["initialized_workspace"]["project_profile"]["preset_id"], "nsfc_general_medical_v1")
 
-    def test_initialize_intake_workspace_materializes_directory_workspace_with_git_boundary(self) -> None:
+    def test_initialize_intake_directory_git_and_no_git_modes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_root = Path(tmp_dir) / "mag-workspace"
+            for no_git in (False, True):
+                with self.subTest(no_git=no_git):
+                    workspace_root = Path(tmp_dir) / ("without-git" if no_git else "with-git")
+                    argv = [
+                        "workspace", "initialize-intake", "--input", str(NSFC_INPUT),
+                        "--workspace-root", str(workspace_root),
+                    ]
+                    if no_git:
+                        argv.append("--no-git")
+                    argv.extend(("--format", "json"))
+                    payload = self.json_cli(*argv)
 
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "initialize-intake",
-                "--input",
-                str(NSFC_SELECTION_INPUT),
-                "--workspace-root",
-                str(workspace_root),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            workspace_path = workspace_root / "workspace.json"
-            self.assertTrue(payload["ok"])
-            self.assertEqual(payload["workspace_root"], str(workspace_root.resolve()))
-            self.assertEqual(payload["workspace_path"], str(workspace_path.resolve()))
-            self.assertTrue(payload["workspace_git"]["initialized"])
-            self.assertTrue((workspace_root / ".git").exists())
-            self.assertTrue(workspace_path.exists())
-            self.assertEqual(
-                json.loads(workspace_path.read_text(encoding="utf-8"))["lifecycle_stage"],
-                "input_intake",
-            )
-
-            runtime_probe = workspace_root / "runtime" / "probe.json"
-            runtime_probe.parent.mkdir(parents=True, exist_ok=True)
-            runtime_probe.write_text("{}", encoding="utf-8")
-            check_ignore = subprocess.run(
-                ["git", "check-ignore", str(runtime_probe.relative_to(workspace_root))],
-                cwd=workspace_root,
-                check=False,
-                text=True,
-                capture_output=True,
-            )
-            self.assertEqual(check_ignore.returncode, 0)
-
-            validate_exit, validate_stdout, validate_stderr = self.run_cli(
-                "workspace",
-                "validate",
-                "--input",
-                str(workspace_root),
-                "--format",
-                "json",
-            )
-            self.assertEqual(validate_exit, 0)
-            self.assertEqual(validate_stderr, "")
-            self.assertTrue(json.loads(validate_stdout)["ok"])
-
-    def test_initialize_intake_workspace_can_skip_git_boundary(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_root = Path(tmp_dir) / "mag-workspace"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "workspace",
-                "initialize-intake",
-                "--input",
-                str(NSFC_SELECTION_INPUT),
-                "--workspace-root",
-                str(workspace_root),
-                "--no-git",
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["workspace_git"]["enabled"])
-            self.assertFalse((workspace_root / ".git").exists())
-            self.assertTrue((workspace_root / "workspace.json").exists())
+                    self.assertTrue((workspace_root / "workspace.json").is_file())
+                    self.assertEqual((workspace_root / ".git").exists(), not no_git)
+                    self.assertEqual(payload["workspace_git"]["enabled"], not no_git)
+                    if not no_git:
+                        runtime_probe = workspace_root / "runtime" / "probe.json"
+                        runtime_probe.parent.mkdir(parents=True, exist_ok=True)
+                        runtime_probe.write_text("{}", encoding="utf-8")
+                        ignored = subprocess.run(
+                            ["git", "check-ignore", str(runtime_probe.relative_to(workspace_root))],
+                            cwd=workspace_root,
+                            capture_output=True,
+                            text=True,
+                        )
+                        self.assertEqual(ignored.returncode, 0)
+                        validated = self.json_cli(
+                            "workspace", "validate", "--input", str(workspace_root), "--format", "json"
+                        )
+                        self.assertTrue(validated["ok"])

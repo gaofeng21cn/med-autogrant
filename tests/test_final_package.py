@@ -110,10 +110,10 @@ class FinalPackageTest(unittest.TestCase):
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"
                 self._build_bundle(FROZEN, bundle_path)
-                bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
                 existing = {
-                    identity_field: bundle[identity_field]
-                    for identity_field in ("grant_run_id", "workspace_id", "draft_id")
+                    "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                    "workspace_id": "nsfc-demo-001",
+                    "draft_id": "draft-v1",
                 }
                 existing[field] = "other"
                 package_path.write_text(json.dumps(existing), encoding="utf-8")

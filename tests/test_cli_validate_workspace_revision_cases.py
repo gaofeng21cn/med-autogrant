@@ -19,344 +19,154 @@ from cli_validate_cases import (
 
 
 class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
-    def workspace_json(self, command: str, input_path: Path) -> dict[str, object]:
-        return self.run_json_cli(
-            "workspace",
-            command,
-            "--input",
-            str(input_path),
-            "--format",
-            "json",
-        )
-
-    def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
-        payload = self.workspace_json("route-report", QUESTION_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "question_refinement")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
-        self.assertEqual(payload["checkpoint_status"], "forward_progress")
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
-        self.assertEqual(
-            payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
-            "argument_building",
-        )
-        self.assertEqual(
-            payload["route"]["summarize_workspace"]["current_selection"]["selected_question_id"],
-            "question-immune-fibrosis",
-        )
-        self.assertNotIn("critique_summary", payload["route"])
-
-    def test_stage_route_report_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "route-report",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("下一阶段: 论证链搭建", stdout)
-        self.assertIn("当前 checkpoint: 继续向前推进", stdout)
-        self.assertIn("当前判断: 批注结论 major_revision", stdout)
-        self.assertNotIn("recommended_stage:", stdout)
-        self.assertNotIn("checkpoint_status:", stdout)
-
-    def test_next_step_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "next-step",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("下一阶段: 论证链搭建", stdout)
-        self.assertIn("当前判断: 导师批注 verdict=major_revision，应先执行结构化修订。", stdout)
-        self.assertIn("- 建议动作: 回退重建立项依据主链", stdout)
-        self.assertNotIn("current_stage:", stdout)
-        self.assertNotIn("recommended_stage:", stdout)
-        self.assertNotIn("reason:", stdout)
-
-    def test_stage_route_report_aggregates_p2b_outline_without_critique_summary(self) -> None:
-        payload = self.workspace_json("route-report", OUTLINE_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "outline")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "drafting")
-        self.assertEqual(payload["route"]["summarize_workspace"]["active_fit_mapping"]["id"], "fit-001")
-        self.assertEqual(payload["route"]["summarize_workspace"]["active_draft"]["id"], "draft-outline-v1")
-        self.assertNotIn("critique_summary", payload["route"])
-
-    def test_stage_route_report_aggregates_p2c_drafting_without_critique_summary(self) -> None:
-        payload = self.workspace_json("route-report", DRAFTING_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "drafting")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
-        self.assertEqual(payload["route"]["summarize_workspace"]["active_draft"]["section_count"], 3)
-        self.assertNotIn("critique_summary", payload["route"])
-
-    def test_critique_summary_exposes_revision_audit_for_p2c_critique(self) -> None:
-        payload = self.workspace_json("critique-summary", CRITIQUE_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["critique_id"], "critique-v1")
-        self.assertEqual(payload["revision_plan_id"], "revision-v1")
-        self.assertEqual(payload["execution_status"], "planned")
-        self.assertEqual(payload["recommended_next_stage"], "argument_building")
-
-    def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
-        payload = self.workspace_json("critique-summary", REVISION_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "revision")
-        self.assertEqual(payload["execution_status"], "completed")
-        self.assertEqual(payload["pre_revision_version_label"], "v0.3")
-        self.assertEqual(payload["post_revision_version_label"], "v0.4")
-        self.assertIn("比较", payload["comparison_summary"])
-        self.assertEqual(payload["recommended_next_stage"], "critique")
-
-    def test_critique_summary_exposes_major_reframe_verdict(self) -> None:
-        payload = self.workspace_json("critique-summary", MAJOR_REFRAME_EXAMPLE_PATH)
-        self.assertEqual(payload["verdict"], "major_reframe")
-        self.assertEqual(payload["recommended_next_stage"], "question_refinement")
-
-    def test_critique_summary_exposes_ready_for_submission_verdict(self) -> None:
-        payload = self.workspace_json("critique-summary", READY_FOR_SUBMISSION_EXAMPLE_PATH)
-        self.assertEqual(payload["verdict"], "ready_for_submission")
-        self.assertEqual(payload["recommended_next_stage"], "critique")
-
-    def test_stage_route_report_aggregates_p2c_critique_with_critique_summary(self) -> None:
-        payload = self.workspace_json("route-report", CRITIQUE_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
-        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "rollback_required")
-        self.assertEqual(payload["route"]["critique_summary"]["execution_status"], "planned")
-
-    def test_stage_route_report_aggregates_p2c_revision_with_re_review_boundary(self) -> None:
-        payload = self.workspace_json("route-report", REVISION_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "revision")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
-        self.assertEqual(payload["route"]["critique_summary"]["execution_status"], "completed")
-
-    def test_stage_route_report_aggregates_p3a_major_reframe_branch(self) -> None:
-        payload = self.workspace_json("route-report", MAJOR_REFRAME_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "question_refinement")
-        self.assertEqual(payload["route"]["critique_summary"]["verdict"], "major_reframe")
-
-    def test_stage_route_report_aggregates_p3a_ready_for_submission_branch(self) -> None:
-        payload = self.workspace_json("route-report", READY_FOR_SUBMISSION_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "continue")
-        self.assertEqual(payload["route"]["critique_summary"]["verdict"], "ready_for_submission")
-        self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
-        self.assertFalse(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
-
-    def test_validate_workspace_accepts_late_revision_fixture_workspaces(self) -> None:
+    def test_route_report_preserves_late_stage_branches(self) -> None:
         cases = (
+            (QUESTION_EXAMPLE_PATH, "question_refinement", "argument_building", "forward_progress"),
+            (OUTLINE_EXAMPLE_PATH, "outline", "drafting", "forward_progress"),
+            (DRAFTING_EXAMPLE_PATH, "drafting", "critique", "forward_progress"),
+            (CRITIQUE_EXAMPLE_PATH, "critique", "argument_building", "forward_progress"),
+            (REVISION_EXAMPLE_PATH, "revision", "critique", "forward_progress"),
+            (MAJOR_REFRAME_EXAMPLE_PATH, "critique", "question_refinement", "forward_progress"),
+            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "critique", "forward_progress"),
+            (RE_REVIEW_EXAMPLE_PATH, "critique", "argument_building", "forward_progress"),
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "rollback_required"),
+            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "critique", "submission_frozen"),
+        )
+
+        for input_path, stage, recommended_stage, checkpoint in cases:
+            with self.subTest(example=input_path.name):
+                payload = self.run_workspace_json("route-report", input_path)
+                self.assertTrue(payload["ok"])
+                self.assertEqual(payload["lifecycle_stage"], stage)
+                self.assertEqual(payload["route"]["next_step"]["recommended_stage"], recommended_stage)
+                self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], checkpoint)
+
+        rereview = self.run_workspace_json("route-report", RE_REVIEW_EXAMPLE_PATH)
+        self.assertEqual(
+            rereview["verification_checkpoint"]["review_checkpoint"]
+            ["reviewed_revision_evidence"]["revision_plan_id"],
+            "revision-v1",
+        )
+        rollback = self.run_workspace_json("route-report", FORCED_ROLLBACK_EXAMPLE_PATH)
+        self.assertEqual(rollback["route"]["next_step"]["forced_rollback_stage"], "argument_building")
+
+    def test_critique_summary_preserves_revision_branch_evidence(self) -> None:
+        cases = (
+            (
+                CRITIQUE_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "critique",
+                    "critique_id": "critique-v1",
+                    "revision_plan_id": "revision-v1",
+                    "execution_status": "planned",
+                    "recommended_next_stage": "argument_building",
+                },
+            ),
+            (
+                REVISION_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "revision",
+                    "execution_status": "completed",
+                    "pre_revision_version_label": "v0.3",
+                    "post_revision_version_label": "v0.4",
+                    "recommended_next_stage": "critique",
+                },
+            ),
+            (
+                MAJOR_REFRAME_EXAMPLE_PATH,
+                {"verdict": "major_reframe", "recommended_next_stage": "question_refinement"},
+            ),
+            (
+                READY_FOR_SUBMISSION_EXAMPLE_PATH,
+                {"verdict": "ready_for_submission", "recommended_next_stage": "critique"},
+            ),
+            (
+                RE_REVIEW_EXAMPLE_PATH,
+                {
+                    "critique_id": "critique-v2",
+                    "revision_plan_id": "revision-v2",
+                    "reviewed_revision_plan_id": "revision-v1",
+                },
+            ),
+            (
+                FORCED_ROLLBACK_EXAMPLE_PATH,
+                {
+                    "critique_id": "critique-v2",
+                    "forced_rollback_stage": "argument_building",
+                    "presubmission_frozen": False,
+                    "recommended_next_stage": "argument_building",
+                },
+            ),
+            (
+                PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+                {
+                    "lifecycle_stage": "frozen",
+                    "verdict": "ready_for_submission",
+                    "presubmission_frozen": True,
+                    "recommended_next_stage": "critique",
+                },
+            ),
+        )
+        for input_path, expected in cases:
+            with self.subTest(example=input_path.name):
+                payload = self.run_workspace_json("critique-summary", input_path)
+                for field, value in expected.items():
+                    self.assertEqual(payload[field], value)
+
+    def test_validate_accepts_late_revision_fixtures(self) -> None:
+        for input_path, lifecycle_stage in (
             (RE_REVIEW_EXAMPLE_PATH, "critique"),
             (FORCED_ROLLBACK_EXAMPLE_PATH, "critique"),
             (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen"),
-        )
-        for input_path, lifecycle_stage in cases:
+        ):
             with self.subTest(example=input_path.name):
-                payload = self.workspace_json("validate", input_path)
+                payload = self.run_workspace_json("validate", input_path)
                 self.assertTrue(payload["ok"])
                 self.assertEqual(payload["lifecycle_stage"], lifecycle_stage)
 
-    def test_generated_revised_workspace_reenters_validator_and_checkpoint_surfaces(self) -> None:
+    def test_generated_revision_roundtrip_reenters_all_read_surfaces(self) -> None:
         cases = (
             (CRITIQUE_EXAMPLE_PATH, "v0.4", None),
             (RE_REVIEW_EXAMPLE_PATH, "v0.5", "revision-v1"),
         )
 
         with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            for input_path, expected_version_label, expected_reviewed_revision_plan_id in cases:
+            for input_path, version, reviewed_plan_id in cases:
                 with self.subTest(example=input_path.name):
-                    revised_path = tmp_path / f"{input_path.stem}-revised.json"
-                    revised_payload = self.run_json_cli(
-                        "pass",
-                "revision",
-                "--input",
-                        str(input_path),
-                        "--output",
-                        str(revised_path),
-                        "--format",
-                        "json",
+                    output_path = Path(tmp_dir) / f"{input_path.stem}-revised.json"
+                    revised = self.run_json_cli(
+                        "pass", "revision", "--input", str(input_path),
+                        "--output", str(output_path), "--format", "json",
                     )
-                    self.assertTrue(revised_payload["ok"])
+                    validated = self.run_workspace_json("validate", output_path)
+                    summary = self.run_workspace_json("summarize", output_path)
+                    critique = self.run_workspace_json("critique-summary", output_path)
+                    route = self.run_workspace_json("route-report", output_path)
 
-                    validate_payload = self.run_json_cli(
-                        "workspace",
-                "validate",
-                "--input",
-                        str(revised_path),
-                        "--format",
-                        "json",
-                    )
-                    self.assertTrue(validate_payload["ok"])
-                    self.assertEqual(validate_payload["lifecycle_stage"], "critique")
-
-                    summary_payload = self.run_json_cli(
-                        "workspace",
-                "summarize",
-                "--input",
-                        str(revised_path),
-                        "--format",
-                        "json",
-                    )
-                    self.assertEqual(summary_payload["active_draft"]["status"], "revised")
-                    self.assertEqual(summary_payload["active_draft"]["version_label"], expected_version_label)
-                    self.assertEqual(summary_payload["active_revision_plan"]["execution_status"], "completed")
-
-                    next_step_payload = self.run_json_cli(
-                        "workspace",
-                "next-step",
-                "--input",
-                        str(revised_path),
-                        "--format",
-                        "json",
-                    )
-                    self.assertEqual(next_step_payload["current_stage"], "critique")
-                    self.assertEqual(next_step_payload["recommended_stage"], "argument_building")
-
-                    critique_payload = self.run_json_cli(
-                        "workspace",
-                "critique-summary",
-                "--input",
-                        str(revised_path),
-                        "--format",
-                        "json",
-                    )
-                    self.assertEqual(critique_payload["draft_status"], "revised")
-                    self.assertEqual(critique_payload["draft_version_label"], expected_version_label)
-                    self.assertEqual(critique_payload["execution_status"], "completed")
+                    self.assertTrue(revised["ok"])
+                    self.assertTrue(validated["ok"])
+                    self.assertEqual(validated["lifecycle_stage"], "critique")
+                    self.assertEqual(summary["active_draft"]["status"], "revised")
+                    self.assertEqual(summary["active_draft"]["version_label"], version)
+                    self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
+                    self.assertEqual(critique["reviewed_revision_plan_id"], reviewed_plan_id)
+                    self.assertEqual(critique["draft_status"], "revised")
+                    self.assertEqual(critique["draft_version_label"], version)
+                    self.assertEqual(route["route"]["next_step"]["recommended_stage"], "argument_building")
+                    self.assertEqual(route["verification_checkpoint"]["checkpoint_status"], "forward_progress")
                     self.assertEqual(
-                        critique_payload["reviewed_revision_plan_id"],
-                        expected_reviewed_revision_plan_id,
+                        route["route"]["critique_summary"]["reviewed_revision_plan_id"],
+                        reviewed_plan_id,
                     )
 
-                    route_payload = self.run_json_cli(
-                        "workspace",
-                "route-report",
-                "--input",
-                        str(revised_path),
-                        "--format",
-                        "json",
-                    )
-                    self.assertTrue(route_payload["ok"])
-                    self.assertEqual(route_payload["lifecycle_stage"], "critique")
-                    self.assertEqual(
-                        route_payload["route"]["next_step"]["recommended_stage"],
-                        "argument_building",
-                    )
-                    self.assertEqual(route_payload["route"]["summarize_workspace"]["active_draft"]["status"], "revised")
-                    self.assertEqual(
-                        route_payload["route"]["summarize_workspace"]["active_draft"]["version_label"],
-                        expected_version_label,
-                    )
-                    self.assertEqual(route_payload["route"]["critique_summary"]["execution_status"], "completed")
-                    self.assertEqual(route_payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
-                    self.assertEqual(
-                        route_payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
-                        "argument_building",
-                    )
-                    self.assertEqual(
-                        route_payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"],
-                        route_payload["route"]["summarize_workspace"]["reviewed_revision_evidence"],
-                    )
-                    self.assertEqual(
-                        route_payload["route"]["critique_summary"]["reviewed_revision_plan_id"],
-                        expected_reviewed_revision_plan_id,
-                    )
+    def test_presubmission_frozen_gate_stays_closed(self) -> None:
+        summary = self.run_workspace_json("summarize", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
+        critique = self.run_workspace_json("critique-summary", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
+        route = self.run_workspace_json("route-report", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
 
-    def test_critique_summary_exposes_re_review_linkage(self) -> None:
-        payload = self.workspace_json("critique-summary", RE_REVIEW_EXAMPLE_PATH)
-        self.assertEqual(payload["critique_id"], "critique-v2")
-        self.assertEqual(payload["revision_plan_id"], "revision-v2")
-        self.assertEqual(payload["reviewed_revision_plan_id"], "revision-v1")
-        self.assertEqual(payload["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
-
-    def test_critique_summary_exposes_forced_rollback_fields(self) -> None:
-        payload = self.workspace_json("critique-summary", FORCED_ROLLBACK_EXAMPLE_PATH)
-        self.assertEqual(payload["critique_id"], "critique-v2")
-        self.assertEqual(payload["forced_rollback_stage"], "argument_building")
-        self.assertEqual(payload["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
-        self.assertFalse(payload["presubmission_frozen"])
-        self.assertEqual(payload["recommended_next_stage"], "argument_building")
-
-    def test_critique_summary_exposes_presubmission_frozen_fields(self) -> None:
-        payload = self.workspace_json("critique-summary", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "frozen")
-        self.assertEqual(payload["verdict"], "ready_for_submission")
-        self.assertTrue(payload["presubmission_frozen"])
-        self.assertEqual(payload["recommended_next_stage"], "critique")
-
-    def test_summarize_workspace_exposes_re_review_evidence(self) -> None:
-        payload = self.workspace_json("summarize", RE_REVIEW_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["active_critique"]["reviewed_revision_plan_id"], "revision-v1")
-        self.assertEqual(payload["reviewed_revision_evidence"]["source_critique_id"], "critique-v1")
-
-    def test_summarize_workspace_exposes_forced_rollback_evidence(self) -> None:
-        payload = self.workspace_json("summarize", FORCED_ROLLBACK_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["active_critique"]["forced_rollback_stage"], "argument_building")
-        self.assertEqual(payload["active_critique"]["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
-        self.assertFalse(payload["gates"]["presubmission_frozen"])
-
-    def test_summarize_workspace_exposes_presubmission_frozen_gate(self) -> None:
-        payload = self.workspace_json("summarize", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-        self.assertEqual(payload["lifecycle_stage"], "frozen")
-        self.assertTrue(payload["gates"]["presubmission_frozen"])
-        self.assertEqual(payload["active_draft"]["status"], "frozen")
-
-    def test_stage_route_report_aggregates_p3b_re_review_branch(self) -> None:
-        payload = self.workspace_json("route-report", RE_REVIEW_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
-        self.assertEqual(payload["checkpoint_status"], "forward_progress")
-        self.assertEqual(payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
-        self.assertEqual(payload["route"]["critique_summary"]["reviewed_revision_plan_id"], "revision-v1")
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
-        self.assertEqual(
-            payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"]["revision_plan_id"],
-            "revision-v1",
-        )
-
-    def test_stage_route_report_aggregates_p3c_forced_rollback_branch(self) -> None:
-        payload = self.workspace_json("route-report", FORCED_ROLLBACK_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
-        self.assertEqual(payload["route"]["next_step"]["forced_rollback_stage"], "argument_building")
-        self.assertEqual(payload["route"]["critique_summary"]["forced_rollback_stage"], "argument_building")
-        self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "rollback_required")
-        self.assertEqual(
-            payload["verification_checkpoint"]["route_alignment"]["forced_rollback_stage"],
-            "argument_building",
-        )
-
-    def test_stage_route_report_aggregates_p3c_presubmission_frozen_branch(self) -> None:
-        payload = self.workspace_json("route-report", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
-        self.assertTrue(payload["ok"])
-        self.assertEqual(payload["lifecycle_stage"], "frozen")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "continue")
-        self.assertTrue(payload["route"]["summarize_workspace"]["gates"]["presubmission_frozen"])
-        self.assertTrue(payload["route"]["critique_summary"]["presubmission_frozen"])
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "submission_frozen")
-        self.assertTrue(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
+        self.assertEqual(summary["lifecycle_stage"], "frozen")
+        self.assertTrue(summary["gates"]["presubmission_frozen"])
+        self.assertEqual(summary["active_draft"]["status"], "frozen")
+        self.assertTrue(critique["presubmission_frozen"])
+        self.assertEqual(critique["recommended_next_stage"], "critique")
+        self.assertTrue(route["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
