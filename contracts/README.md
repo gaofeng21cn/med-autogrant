@@ -15,10 +15,10 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 - `pack_compiler_input.json`
 - `capability_map.json`
 - `action_catalog.json`
-- `stage_control_plane.json`
+- `../agent/stages/manifest.json`
 - `generated_surface_handoff.json`
 
-这些合同让 OPL 生成或托管 CLI/MCP/skill/product/status/user-loop/workbench caller；OPL 不能写 grant truth、memory/artifact/package body，不能签发 MAG verdict、receipt 或 typed blocker。
+OPL Pack 直接从 declarative stage manifest 生成 `family_stage_control_plane`，不在 MAG 跟踪生成快照。这些合同让 OPL 生成或托管 CLI/MCP/skill/product/status/user-loop/workbench caller；OPL 不能写 grant truth、memory/artifact/package body，不能签发 MAG verdict、receipt 或 typed blocker。
 
 ## MAG Authority
 

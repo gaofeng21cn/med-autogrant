@@ -58,7 +58,6 @@
     "canonical_domain_pack": "agent/",
     "stage_manifest": "agent/stages/manifest.json",
     "action_catalog": "contracts/action_catalog.json",
-    "stage_control_plane": "contracts/stage_control_plane.json",
     "functional_audit": "contracts/functional_privatization_audit.json"
   },
   "authority_boundary": {

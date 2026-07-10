@@ -42,7 +42,8 @@ Machine boundary: 本文是人读索引。机器真相归 root contracts、schem
 
 - Current program: `contracts/runtime-program/current-program.json`
 - Pack input: `contracts/pack_compiler_input.json`
-- Stage plane: `contracts/stage_control_plane.json`
+- Stage source: `agent/stages/manifest.json`
+- Generated stage plane locator: `/product_entry_manifest/family_stage_control_plane`
 - Functional audit: `contracts/functional_privatization_audit.json`
 - Receipt contract: `contracts/owner_receipt_contract.json`
 - Live progress: `contracts/live_stage_run_progress_evidence.json`

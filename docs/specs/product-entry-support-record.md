@@ -33,7 +33,7 @@ MAG 的 public identity 仍是单一 `Med Auto Grant` app skill。OPL/App 根据
 
 Package/export 的机器 SSOT 分层如下：
 
-- MAG authority truth: `agent/knowledge/package_authority.md`、`agent/quality_gates/export_and_package.md`、`contracts/stage_control_plane.json`、`contracts/private_functional_surface_policy.json`、package/export source、owner receipts 和 typed blockers。
+- MAG authority truth: `agent/stages/manifest.json`、`agent/knowledge/package_authority.md`、`agent/quality_gates/export_and_package.md`、`contracts/private_functional_surface_policy.json`、package/export source、owner receipts 和 typed blockers；generated stage plane归 OPL Pack。
 - Refs-only handoff truth: `contracts/generated_surface_handoff.json`、`contracts/runtime-program/current-program.json` 与 direct domain handler export。OPL 只消费 package/artifact/receipt/blocker refs；不读取或输出 package body、grant artifact body、private evidence 或 verdict body。
 - OPL/shared truth: OPL 持有 artifact/package lifecycle shell、stage artifact physical kernel、locator、retention UI 和 refs projection consumption；OPL 不持有 MAG package authority，不能声明 export-ready、submission-ready、quality-ready 或 portal-submitted。
 

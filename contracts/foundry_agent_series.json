@@ -145,7 +145,8 @@
     "product_layer",
     "domain_label",
     "authority_owner",
-    "stage_control_plane_ref"
+    "stage_control_plane_ref",
+    "stage_manifest_ref"
   ],
   "required_stage_packets": [
     "user_stage_log_contract",
@@ -228,8 +229,9 @@
       "package-lock.json"
     ]
   },
-  "stage_control_plane_ref": "contracts/stage_control_plane.json",
+  "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
   "stage_control_plane_target_domain_id": "med-autogrant",
+  "stage_manifest_ref": "agent/stages/manifest.json",
   "standard_agent_requirement": "foundry_agents_share_identity_stage_authority_progress_currentness_closeout_and_app_projection_packets",
   "standard_feedback_self_evolution_trigger_policy": {
     "accepted_feedback_profile": "target_agent_feedback_external_suite",

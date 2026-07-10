@@ -48,6 +48,27 @@ def test_pack_compiler_input_lists_all_professional_skills() -> None:
     assert skill_paths <= set(compiler_input["required_domain_pack_paths"])
 
 
+def test_capability_sources_and_generated_stage_projections_are_separate() -> None:
+    capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
+    stage_capabilities = [
+        capability
+        for capability in capability_map["capabilities"]
+        if capability["surface_role"]
+        in {"stage_prompt", "professional_skill", "knowledge_pack"}
+    ]
+
+    assert stage_capabilities
+    for capability in stage_capabilities:
+        source = capability["physical_source_ref"]
+        assert source["ref_kind"] == "repo_path"
+        assert source["ref"].startswith("agent/")
+        for projection in capability["runtime_projection_refs"]:
+            assert projection["ref_kind"] == "external_capability_ref"
+            assert projection["ref"] == (
+                "opl_generated:product_entry_manifest#/family_stage_control_plane/stages"
+            )
+
+
 def test_capability_map_self_evolution_routing_fields_are_refs_only() -> None:
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
 

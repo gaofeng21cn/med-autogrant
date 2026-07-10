@@ -89,7 +89,7 @@
       {
         "surface_id": "control_plane",
         "classification": "declarative_domain_pack",
-        "source_refs": ["contracts/stage_control_plane.json"]
+        "source_refs": ["agent/stages/manifest.json"]
       },
       {
         "surface_id": "lifecycle",

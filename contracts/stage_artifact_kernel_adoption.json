@@ -85,7 +85,8 @@
   },
   "domain_pack_binding": {
     "accepted_source_refs": [
-      "contracts/stage_control_plane.json",
+      "agent/stages/manifest.json",
+      "/product_entry_manifest/family_stage_control_plane",
       "contracts/foundry_agent_series.json",
       "contracts/artifact_locator_contract.json",
       "contracts/owner_receipt_contract.json"

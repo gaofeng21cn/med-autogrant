@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `opl_family_contract_adoption_reference`
 State: `reference`
-Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/generated_surface_handoff.json`、`contracts/action_catalog.json`、`contracts/stage_control_plane.json`、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
+Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/generated_surface_handoff.json`、`contracts/action_catalog.json`、`agent/stages/manifest.json`、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
 
 ## Purpose
 
@@ -48,7 +48,7 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 | `review_and_rebuttal` | `critique`、review、`grant_quality_closure_dossier`、`quality-diff` |
 | `package_and_submit_ready` | `freeze` / `frozen`、`package submission-ready`、submission-ready export gate |
 
-这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。OPL generated manifest 从 `agent/`、`contracts/stage_control_plane.json`、`contracts/action_catalog.json` 与 current-program refs 组装 stage goal、owner、skills、allowed action refs、handoff、freshness 与 authority boundary；MAG 不维护第二份 product-entry manifest。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
+这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。OPL Pack 从 `agent/stages/manifest.json`、`contracts/action_catalog.json`、pack input 与 current-program refs 生成 `family_stage_control_plane`，再组装 stage goal、owner、skills、allowed action refs、handoff、freshness 与 authority boundary；MAG 不维护 generated stage-plane snapshot或第二份 product-entry manifest。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
 
 ## Declarative Grant Pack
 
@@ -65,7 +65,7 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 curre
 - `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection、receipt refs 和 OPL-hosted controlled stage attempt proof refs。
 - `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
-- `contracts/stage_control_plane.json` 的 `prompt_refs` 必须解析到 `agent/prompts/*.md`；`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 必须列出完整 `agent/` pack 文件，且不把 `agent/README.md` 当成机器 required semantic pack path。
+- `agent/stages/manifest.json` 的 `prompt_ref`、knowledge、quality gate 与 action refs 必须可解析；`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 必须列出完整 `agent/` pack 文件，且不把 `agent/README.md` 当成机器 required semantic pack path。
 - `contracts/runtime-program/current-program.json` 与 `contracts/pack_compiler_input.json` 使用 `canonical_semantic_pack_root="agent/"` 与 `canonical_semantic_pack_role="repo_source_declarative_grant_pack"`。若 runtime-program snapshot 中保留旧 `canonical_repo_source_semantic_pack` 字段，它只作为 historical/provenance 字段读取，不能覆盖 pack compiler input。
 
 ## OPL Domain Handler Export

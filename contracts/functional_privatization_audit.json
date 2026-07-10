@@ -122,7 +122,7 @@
         "src/med_autogrant/stage_control_plane_parts/transition_oracle.py"
       ],
       "active_callers": [
-        "declarative MAG stage control plane"
+        "declarative MAG stage manifest and OPL generated stage control plane"
       ],
       "active_caller_status": "domain_authority_target",
       "migration_action": "retain_grant_transition_semantics",
