@@ -89,8 +89,6 @@ class SchemaRegistryTest(unittest.TestCase):
 
     def test_domain_quality_schemas_keep_high_value_required_surfaces(self) -> None:
         cases = (
-            ("critique-loop-report.schema.json", None, {"grant_quality_scorecard", "grant_quality_closure_dossier"}),
-            ("authoring-mainline-loop-report.schema.json", None, {"grant_quality_scorecard", "grant_quality_closure_dossier"}),
             (
                 "grant-quality-scorecard.schema.json",
                 "trackedIssue",

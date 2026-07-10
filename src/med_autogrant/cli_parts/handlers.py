@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import argparse
-import json
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Callable
 
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
@@ -69,8 +67,6 @@ def handle_domain_command(args: argparse.Namespace) -> dict[str, Any]:
     request: dict[str, Any] = {"command": args.command}
     for field in spec.required_fields + spec.optional_fields:
         value = getattr(args, field)
-        if field == "opl_stage_attempt":
-            value = _read_json_object(value)
         if value is not None:
             request[field] = value
     return _domain_entry().dispatch(request)
@@ -90,10 +86,3 @@ def _domain_entry() -> Any:
     from med_autogrant import domain_entry
 
     return domain_entry.MedAutoGrantDomainEntry()
-
-
-def _read_json_object(path: str) -> dict[str, Any]:
-    payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"Expected JSON object at {path}.")
-    return payload

@@ -59,7 +59,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("下一阶段: 修订落实", stdout)
+        self.assertIn("下一阶段: 论证链搭建", stdout)
         self.assertIn("当前 checkpoint: 继续向前推进", stdout)
         self.assertIn("当前判断: 批注结论 major_revision", stdout)
         self.assertNotIn("recommended_stage:", stdout)
@@ -78,9 +78,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("下一阶段: 修订落实", stdout)
+        self.assertIn("下一阶段: 论证链搭建", stdout)
         self.assertIn("当前判断: 导师批注 verdict=major_revision，应先执行结构化修订。", stdout)
-        self.assertIn("- 建议动作: 执行 revision plan 中的 P0/P1 项。", stdout)
+        self.assertIn("- 建议动作: 回退重建立项依据主链", stdout)
         self.assertNotIn("current_stage:", stdout)
         self.assertNotIn("recommended_stage:", stdout)
         self.assertNotIn("reason:", stdout)
@@ -108,7 +108,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["critique_id"], "critique-v1")
         self.assertEqual(payload["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["execution_status"], "planned")
-        self.assertEqual(payload["recommended_next_stage"], "revision")
+        self.assertEqual(payload["recommended_next_stage"], "argument_building")
 
     def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
         payload = self.workspace_json("critique-summary", REVISION_EXAMPLE_PATH)
@@ -127,13 +127,14 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
     def test_critique_summary_exposes_ready_for_submission_verdict(self) -> None:
         payload = self.workspace_json("critique-summary", READY_FOR_SUBMISSION_EXAMPLE_PATH)
         self.assertEqual(payload["verdict"], "ready_for_submission")
-        self.assertEqual(payload["recommended_next_stage"], "frozen")
+        self.assertEqual(payload["recommended_next_stage"], "critique")
 
     def test_stage_route_report_aggregates_p2c_critique_with_critique_summary(self) -> None:
         payload = self.workspace_json("route-report", CRITIQUE_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
+        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "rollback_required")
         self.assertEqual(payload["route"]["critique_summary"]["execution_status"], "planned")
 
     def test_stage_route_report_aggregates_p2c_revision_with_re_review_boundary(self) -> None:
@@ -154,10 +155,11 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         payload = self.workspace_json("route-report", READY_FOR_SUBMISSION_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
+        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "continue")
         self.assertEqual(payload["route"]["critique_summary"]["verdict"], "ready_for_submission")
         self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
-        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "freeze_ready")
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
         self.assertFalse(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
 
     def test_validate_workspace_accepts_late_revision_fixture_workspaces(self) -> None:
@@ -227,7 +229,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                         "json",
                     )
                     self.assertEqual(next_step_payload["current_stage"], "critique")
-                    self.assertEqual(next_step_payload["recommended_stage"], "revision")
+                    self.assertEqual(next_step_payload["recommended_stage"], "argument_building")
 
                     critique_payload = self.run_json_cli(
                         "workspace",
@@ -255,7 +257,10 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     )
                     self.assertTrue(route_payload["ok"])
                     self.assertEqual(route_payload["lifecycle_stage"], "critique")
-                    self.assertEqual(route_payload["route"]["next_step"]["recommended_stage"], "revision")
+                    self.assertEqual(
+                        route_payload["route"]["next_step"]["recommended_stage"],
+                        "argument_building",
+                    )
                     self.assertEqual(route_payload["route"]["summarize_workspace"]["active_draft"]["status"], "revised")
                     self.assertEqual(
                         route_payload["route"]["summarize_workspace"]["active_draft"]["version_label"],
@@ -265,7 +270,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(route_payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
                     self.assertEqual(
                         route_payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
-                        "revision",
+                        "argument_building",
                     )
                     self.assertEqual(
                         route_payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"],
@@ -296,7 +301,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["lifecycle_stage"], "frozen")
         self.assertEqual(payload["verdict"], "ready_for_submission")
         self.assertTrue(payload["presubmission_frozen"])
-        self.assertEqual(payload["recommended_next_stage"], "frozen")
+        self.assertEqual(payload["recommended_next_stage"], "critique")
 
     def test_summarize_workspace_exposes_re_review_evidence(self) -> None:
         payload = self.workspace_json("summarize", RE_REVIEW_EXAMPLE_PATH)
@@ -321,7 +326,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         payload = self.workspace_json("route-report", RE_REVIEW_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
         self.assertEqual(payload["checkpoint_status"], "forward_progress")
         self.assertEqual(payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["route"]["critique_summary"]["reviewed_revision_plan_id"], "revision-v1")
@@ -349,7 +354,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         payload = self.workspace_json("route-report", PRESUBMISSION_FROZEN_EXAMPLE_PATH)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "frozen")
-        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "critique")
+        self.assertEqual(payload["route"]["next_step"]["quality_gate"]["action"], "continue")
         self.assertTrue(payload["route"]["summarize_workspace"]["gates"]["presubmission_frozen"])
         self.assertTrue(payload["route"]["critique_summary"]["presubmission_frozen"])
         self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "submission_frozen")

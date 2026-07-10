@@ -88,8 +88,6 @@ class MagDomainRuntime:
     build_artifact_bundle = handoff_surfaces.build_artifact_bundle
     execute_revision_pass = handoff_surfaces.execute_revision_pass
     execute_critique_pass = handoff_surfaces.execute_critique_pass
-    execute_critique_revision_loop = authoring_surface.execute_critique_revision_loop
-    execute_authoring_mainline_loop = authoring_surface.execute_authoring_mainline_loop
     execute_freeze_pass = authoring_surface.execute_freeze_pass
     _write_authoring_execution_output = authoring_surface._write_authoring_execution_output
 
@@ -106,7 +104,6 @@ class MagDomainRuntime:
             "default_formal_entry": "CLI",
             "default_stage_attempt_executor": "Codex CLI",
             "supported_protocol_layer": "MCP",
-            "internal_controller_surface": "controller",
             "optional_proof_executor": "Hermes-Agent",
             "optional_proof_executor_boundary": "explicit opt-in only",
             "domain_logic_modules": [

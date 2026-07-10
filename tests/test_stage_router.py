@@ -12,7 +12,12 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.stage_router import determine_next_step  # noqa: E402
+from med_autogrant.route_report import build_stage_route_report  # noqa: E402
+from med_autogrant.stage_router import (  # noqa: E402
+    _apply_quality_gate_to_route,
+    _determine_structural_next_step,
+    determine_next_step,
+)
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
@@ -108,12 +113,32 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "critique")
         self.assertIn("当前草稿已形成", route["reason"])
 
-    def test_critique_routes_to_revision(self) -> None:
+    def test_quality_gate_can_force_critique_route_to_argument_building(self) -> None:
         route = determine_next_step(json.loads(CRITIQUE_EXAMPLE_PATH.read_text(encoding="utf-8")))
 
         self.assertEqual(route["current_stage"], "critique")
-        self.assertEqual(route["recommended_stage"], "revision")
-        self.assertIn("major_revision", route["reason"])
+        self.assertEqual(route["recommended_stage"], "argument_building")
+        self.assertEqual(route["quality_gate"]["action"], "rollback_required")
+        self.assertEqual(route["transition_intent"]["target_stage"], "argument_building")
+        self.assertIn("尚未充分说明", route["reason"])
+
+    def test_quality_gate_early_rollback_keeps_transition_intent_fail_closed(self) -> None:
+        document = json.loads(CRITIQUE_EXAMPLE_PATH.read_text(encoding="utf-8"))
+        route = _apply_quality_gate_to_route(
+            route=_determine_structural_next_step(document),
+            quality_scorecard={
+                "loop_gate": {
+                    "action": "rollback_required",
+                    "recommended_stage": "question_refinement",
+                    "reason": "科学问题需要回退重塑。",
+                }
+            },
+        )
+
+        self.assertEqual(route["recommended_stage"], "question_refinement")
+        self.assertTrue(route["requires_human_confirmation"])
+        self.assertEqual(route["transition_intent"]["target_stage"], "question_refinement")
+        self.assertEqual(route["transition_intent"]["return_shape"], "typed_blocker")
 
     def test_major_revision_routes_to_revision(self) -> None:
         route = determine_next_step(self.load_example())
@@ -166,12 +191,21 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "revision")
         self.assertIn("minor_revision", route["reason"])
 
-    def test_ready_for_submission_routes_to_frozen(self) -> None:
-        route = determine_next_step(json.loads(READY_FOR_SUBMISSION_EXAMPLE_PATH.read_text(encoding="utf-8")))
+    def test_quality_gate_vetoes_ready_for_submission_without_ai_review(self) -> None:
+        document = json.loads(READY_FOR_SUBMISSION_EXAMPLE_PATH.read_text(encoding="utf-8"))
+        route = determine_next_step(document)
+        report = build_stage_route_report(document)
 
         self.assertEqual(route["current_stage"], "critique")
-        self.assertEqual(route["recommended_stage"], "frozen")
-        self.assertIn("ready_for_submission", route["reason"])
+        self.assertEqual(route["recommended_stage"], "critique")
+        self.assertEqual(route["quality_gate"]["action"], "continue")
+        self.assertEqual(route["transition_intent"]["target_stage"], "critique")
+        self.assertIn("AI reviewer-backed critique", route["reason"])
+        self.assertEqual(report["checkpoint_status"], "forward_progress")
+        self.assertEqual(
+            report["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
+            "critique",
+        )
 
     def test_completed_revision_routes_back_to_critique(self) -> None:
         route = determine_next_step(json.loads(REVISION_EXAMPLE_PATH.read_text(encoding="utf-8")))
@@ -181,13 +215,14 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "critique")
         self.assertIn("revised", route["reason"])
 
-    def test_re_review_critique_routes_back_to_revision_using_new_active_plan(self) -> None:
+    def test_re_review_quality_gate_routes_back_to_argument_building(self) -> None:
         route = determine_next_step(self.build_re_review_workspace())
 
         self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["current_stage"], "critique")
-        self.assertEqual(route["recommended_stage"], "revision")
-        self.assertIn("major_revision", route["reason"])
+        self.assertEqual(route["recommended_stage"], "argument_building")
+        self.assertEqual(route["quality_gate"]["action"], "rollback_required")
+        self.assertIn("质量 gate 要求回退", route["reason"])
 
     def test_major_revision_can_force_rollback_to_argument_building(self) -> None:
         route = determine_next_step(self.build_forced_rollback_workspace())
@@ -210,12 +245,14 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["forced_rollback_stage"], "fit_alignment")
         self.assertIn("forced rollback", route["reason"])
 
-    def test_presubmission_frozen_stage_stays_frozen(self) -> None:
+    def test_presubmission_frozen_stage_routes_to_critique_when_quality_is_blocked(self) -> None:
         route = determine_next_step(json.loads(PRESUBMISSION_FROZEN_EXAMPLE_PATH.read_text(encoding="utf-8")))
 
         self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["current_stage"], "frozen")
-        self.assertEqual(route["recommended_stage"], "frozen")
+        self.assertEqual(route["recommended_stage"], "critique")
+        self.assertEqual(route["quality_gate"]["action"], "continue")
+        self.assertEqual(route["transition_intent"]["target_stage"], "critique")
         self.assertTrue(route["presubmission_frozen"])
 
 

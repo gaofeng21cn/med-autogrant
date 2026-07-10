@@ -111,18 +111,6 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         ("executor_kind",),
         help_text="通过 Codex CLI critique executor 生成导师式批注与 revision plan。",
     ),
-    "execute-critique-revision-loop": DomainEntryCommandSpec(
-        "execute_critique_revision_loop",
-        ("input_path", "output_dir", "opl_stage_attempt"),
-        ("max_rounds", "executor_kind"),
-        help_text="执行多轮 critique/revision closed loop，直到通过或 fail-closed 停止。",
-    ),
-    "execute-authoring-mainline-loop": DomainEntryCommandSpec(
-        "execute_authoring_mainline_loop",
-        ("input_path", "output_dir", "opl_stage_attempt"),
-        ("max_cycles", "executor_kind"),
-        help_text="执行跨 question/argument/fit/drafting/critique/revision/frozen 的全链路主线 loop。",
-    ),
     "execute-revision-pass": DomainEntryCommandSpec(
         "execute_revision_pass",
         ("input_path", "output_path"),

@@ -15,12 +15,10 @@ HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
 PROJECT_PROFILE_SELECTION_SCHEMA_FILE = "project-profile-selection.schema.json"
-CRITIQUE_LOOP_REPORT_SCHEMA_FILE = "critique-loop-report.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE = "funding-landscape-discovery-input.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE = "funding-landscape-discovery.schema.json"
 FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE = "funding-landscape-cache.schema.json"
 FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE = "funding-landscape-diff-report.schema.json"
-AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE = "authoring-mainline-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 GENERATED_SESSION_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session"
 GENERATED_SESSION_RESUME_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session#resume"
@@ -40,8 +38,6 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "funding-landscape-diff-report.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
-    "critique-loop-report.schema.json",
-    "authoring-mainline-loop-report.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
 )

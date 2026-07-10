@@ -97,8 +97,11 @@ def test_pass_group_help_renders_canonical_commands() -> None:
     exit_code, stdout, stderr = _run_cli("pass", "--help")
     assert exit_code == 0
     assert stderr == ""
-    assert "revision" in stdout
-    assert "mainline-loop" in stdout
+    assert "\n  revision\n" in stdout
+    assert "\n  critique\n" in stdout
+    assert "\n  freeze\n" in stdout
+    assert "critique-loop" not in stdout
+    assert "mainline-loop" not in stdout
 
 
 @pytest.mark.smoke

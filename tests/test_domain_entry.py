@@ -35,8 +35,16 @@ def test_domain_entry_contract_uses_command_catalog_as_single_source() -> None:
 
     assert set(commands) == set(SERVICE_SAFE_DOMAIN_COMMANDS)
     assert contract["domain_agent_entry_spec"]["agent_id"] == "mag"
-    for command in (
-        "execute-critique-revision-loop",
-        "execute-authoring-mainline-loop",
-    ):
-        assert "opl_stage_attempt" in commands[command]["required_fields"]
+    assert "execute-critique-revision-loop" not in commands
+    assert "execute-authoring-mainline-loop" not in commands
+    assert {
+        "execute-direction-screening-pass",
+        "execute-question-refinement-pass",
+        "execute-argument-building-pass",
+        "execute-fit-alignment-pass",
+        "execute-outline-pass",
+        "execute-drafting-pass",
+        "execute-critique-pass",
+        "execute-revision-pass",
+        "execute-freeze-pass",
+    } <= commands.keys()

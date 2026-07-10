@@ -11,7 +11,7 @@ Last reviewed: `2026-07-10`
 - `grant-quality-scorecard` 持有 workspace-version quality judgment。
 - `grant-quality-closure-dossier` 从 scorecard派生 closure packages，不建立第二条评分路径。
 - `grant-quality-diff` 比较版本间 score、dimension、issue lineage 与 evidence movement。
-- critique/mainline authoring pass 可以消费这些 MAG-owned quality surfaces；OPL/provider completion不能生成 quality/export verdict。
+- MAG single-pass authoring handlers 可以消费这些 MAG-owned quality surfaces；多步 critique/revision 与 authoring mainline 编排归 OPL StageRun/Runway，OPL/provider completion不能生成 quality/export verdict。
 
 对应 schema：
 
@@ -29,7 +29,7 @@ MAG 不再提供 `execute-grant-autonomy-controller` 公共 facade、runtime met
 
 - OPL 持有 stage residency、attempt ledger、budget/retry/resume、queue 与 stage transition；
 - MAG 只执行 grant-native pass、quality/fundability/export/package authority 与 memory/receipt authority target；
-- `critique-revision-loop` 与 `authoring-mainline-loop` 仍要求显式 OPL stage-attempt owner chain，但不升级为私有 scheduler；
+- repo-local `critique-revision-loop` 与 `authoring-mainline-loop` 已物理退役；OPL StageRun/Runway 通过声明化 stage manifest 调用 MAG single-pass handlers，并持有 owner chain、cycle/rollback/exhaustion 与 output-dir 编排；
 - stage closeout 只返回 MAG owner receipt、typed blocker 或 no-regression evidence ref；
 - CLI 不保留 autonomy alias、wrapper 或兼容测试。
 
