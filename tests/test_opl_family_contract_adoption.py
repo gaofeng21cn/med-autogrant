@@ -13,6 +13,19 @@ from opl_family_contract_adoption_cases.controlled_soak import (
 pytestmark = pytest.mark.meta
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "contracts" / "runtime-program" / "opl-family-contract-adoption.json"
+STAGE_PROJECTION_OWNER_BOUNDARY = {
+    "domain_truth_owner": "med-autogrant",
+    "fundability_judgment_owner": "med-autogrant",
+    "submission_ready_export_gate_owner": "med-autogrant",
+    "opl_role": "stage descriptor/projection consumer only",
+}
+USER_STAGE_AUTHORITY_BOUNDARY = {
+    "opl_can_authorize_quality_or_export": False,
+    "opl_can_infer_domain_semantics": False,
+    "opl_can_read_artifact_body": False,
+    "opl_can_write_domain_truth": False,
+    "provider_completion_can_claim_stage_semantics_complete": False,
+}
 
 
 def _contract() -> dict[str, object]:
@@ -45,9 +58,10 @@ def test_stage_projection_is_body_free_and_matches_domain_handler_actions() -> N
     projection = contract["stage_control_projection"]
     assert projection["projection_role"] == "descriptor_only_stage_pack"
     assert projection["maps_existing_surfaces_only"] is True
+    assert projection["owner_boundary"] == STAGE_PROJECTION_OWNER_BOUNDARY
     for stage in plane["stages"]:
         boundary = stage["stage_contract"]["user_stage_log_contract"]["authority_boundary"]
-        assert all(value is False for value in boundary.values())
+        assert boundary == USER_STAGE_AUTHORITY_BOUNDARY
 
     current_program = json.loads(
         (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")

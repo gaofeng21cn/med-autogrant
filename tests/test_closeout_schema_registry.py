@@ -5,44 +5,56 @@ from pathlib import Path
 
 
 SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas" / "v1"
+NO_CONST = object()
+
+
+def _assert_exact_authority_boundary(
+    boundary: dict[str, object], expected: dict[str, object]
+) -> None:
+    assert set(boundary["required"]) == set(expected)
+    properties = boundary["properties"]
+    assert set(properties) == set(expected)
+    for field, value in expected.items():
+        if value is NO_CONST:
+            assert properties[field] == {"type": "boolean"}
+        else:
+            assert properties[field] == {"const": value}
 
 
 def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
-    cases: tuple[tuple[str, str, dict[str, object], set[str]], ...] = (
+    cases: tuple[tuple[str, str, dict[str, object]], ...] = (
         (
             "codex-stage-execution-receipt-bundle.schema.json",
             "codexStageExecutionReceiptBundle",
             {
                 "projection_scope": "codex_stage_execution_and_review_receipt_refs_only",
                 "codex_cli_is_default_executor": True,
-            },
-            {
-                "mag_implements_opl_runtime",
-                "mag_implements_app_workbench",
-                "can_write_grant_truth_body",
-                "can_write_memory_body",
-                "execution_receipt_refs_equal_quality_ready",
-                "review_receipt_refs_equal_quality_ready",
-                "can_declare_fundability_ready",
-                "can_declare_quality_ready",
-                "can_declare_export_ready",
-                "can_declare_submission_ready",
+                "mag_implements_opl_runtime": False,
+                "mag_implements_app_workbench": False,
+                "can_write_grant_truth_body": False,
+                "can_write_memory_body": False,
+                "execution_receipt_refs_equal_quality_ready": False,
+                "review_receipt_refs_equal_quality_ready": False,
+                "can_declare_fundability_ready": False,
+                "can_declare_quality_ready": False,
+                "can_declare_export_ready": False,
+                "can_declare_submission_ready": False,
             },
         ),
         (
             "operator-closeout-readiness-projection.schema.json",
             "operatorCloseoutReadinessProjection",
-            {"projection_scope": "operator_closeout_readiness_only"},
             {
-                "mag_implements_opl_runtime",
-                "mag_implements_app_workbench",
-                "request_accounting_closure_equals_real_evidence",
-                "receipt_refs_ready_equals_quality_ready",
-                "production_tail_closure_equals_grant_ready",
-                "can_declare_fundability_ready",
-                "can_declare_quality_ready",
-                "can_declare_export_ready",
-                "can_declare_submission_ready",
+                "projection_scope": "operator_closeout_readiness_only",
+                "mag_implements_opl_runtime": False,
+                "mag_implements_app_workbench": False,
+                "request_accounting_closure_equals_real_evidence": False,
+                "receipt_refs_ready_equals_quality_ready": False,
+                "production_tail_closure_equals_grant_ready": False,
+                "can_declare_fundability_ready": False,
+                "can_declare_quality_ready": False,
+                "can_declare_export_ready": False,
+                "can_declare_submission_ready": False,
             },
         ),
         (
@@ -51,15 +63,14 @@ def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
             {
                 "projection_scope": "source_path_module_role_evidence_refs_only",
                 "mag_role": "physical_morphology_read_guard_projection",
-            },
-            {
-                "mag_implements_opl_runtime",
-                "mag_implements_scheduler_daemon",
-                "mag_implements_attempt_ledger",
-                "mag_implements_local_journal",
-                "mag_implements_app_workbench",
-                "mag_restores_compatibility_alias",
-                "can_declare_physical_cleanup_complete",
+                "mag_implements_opl_runtime": False,
+                "mag_implements_scheduler_daemon": False,
+                "mag_implements_attempt_ledger": False,
+                "mag_implements_local_journal": False,
+                "mag_implements_app_workbench": False,
+                "mag_restores_compatibility_alias": False,
+                "can_declare_physical_cleanup_complete": False,
+                "can_declare_ready_for_owner_receipted_cleanup": NO_CONST,
             },
         ),
         (
@@ -73,29 +84,23 @@ def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
                 "mag_owns_owner_receipt_authority": True,
                 "opl_owns_generic_runtime": True,
                 "opl_owns_operator_workbench": True,
-            },
-            {
-                "bundle_can_declare_fundability_ready",
-                "bundle_can_declare_quality_ready",
-                "bundle_can_declare_export_ready",
-                "bundle_can_declare_submission_ready",
-                "receipt_refs_equal_ready_verdict",
-                "physical_guard_pass_equals_runtime_cleanup_complete",
+                "bundle_can_declare_fundability_ready": False,
+                "bundle_can_declare_quality_ready": False,
+                "bundle_can_declare_export_ready": False,
+                "bundle_can_declare_submission_ready": False,
+                "receipt_refs_equal_ready_verdict": False,
+                "physical_guard_pass_equals_runtime_cleanup_complete": False,
             },
         ),
     )
 
-    for schema_name, definition, expected_consts, false_fields in cases:
+    for schema_name, definition, expected_boundary in cases:
         schema = json.loads((SCHEMA_ROOT / schema_name).read_text(encoding="utf-8"))
         surface = schema["$defs"][definition]
-        boundary = schema["$defs"]["authorityBoundary"]["properties"]
         assert {"surface_kind", "version", "target_domain_id", "owner", "authority_boundary"} <= set(surface["required"])
         assert surface["properties"]["version"]["const"] == "v1"
         assert surface["properties"]["target_domain_id"]["const"] == "med-autogrant"
         assert surface["properties"]["owner"]["const"] == "med-autogrant"
-        assert {field for field, spec in boundary.items() if spec.get("const") is False} == false_fields
-        assert {
-            field: spec["const"]
-            for field, spec in boundary.items()
-            if "const" in spec and spec["const"] is not False
-        } == expected_consts
+        _assert_exact_authority_boundary(
+            schema["$defs"]["authorityBoundary"], expected_boundary
+        )

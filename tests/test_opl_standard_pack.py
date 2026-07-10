@@ -26,6 +26,15 @@ ROOT_CONTRACTS = (
     "agent_lab_handoff",
     "oma_handoff_refs",
 )
+GRANT_READY_CLAIM_PERMISSIONS = {
+    "domain_ready": False,
+    "export_ready": False,
+    "fundability_ready": False,
+    "grant_ready": False,
+    "production_ready": False,
+    "quality_ready": False,
+    "submission_ready": False,
+}
 
 
 def _opl_bin() -> Path:
@@ -45,7 +54,10 @@ def test_generated_pack_matches_contract_files_and_authority_sentinels() -> None
     assert "owner_receipt" in policy["mag_retained_authority_surfaces"]
     assert "typed_blocker_ref" in policy["accepted_domain_closing_ref_fields"]
     assert policy["stage_run_consumption_boundary"]["payload_body_allowed"] is False
-    assert all(value is False for value in policy["grant_ready_completion_audit"]["claim_permissions"].values())
+    assert (
+        policy["grant_ready_completion_audit"]["claim_permissions"]
+        == GRANT_READY_CLAIM_PERMISSIONS
+    )
 
     handoff = generated["agent_lab_handoff"]
     assert handoff["payload_policy"] == "refs_only_no_body_material"
