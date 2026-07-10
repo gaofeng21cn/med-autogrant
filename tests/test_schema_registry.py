@@ -8,52 +8,18 @@ from urllib.parse import urlparse
 
 
 SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas" / "v1"
-EXPECTED_SCHEMA_NAME_TO_FILE = {
-    "active_project_set": "active-project-set.schema.json",
-    "applicant_fit_mapping": "applicant-fit-mapping.schema.json",
-    "applicant_profile": "applicant-profile.schema.json",
-    "application_draft": "application-draft.schema.json",
-    "argument_chain": "argument-chain.schema.json",
-    "authoring_mainline_loop_report": "authoring-mainline-loop-report.schema.json",
-    "codex_stage_execution_receipt_bundle": "codex-stage-execution-receipt-bundle.schema.json",
-    "common": "common.schema.json",
-    "critique_loop_report": "critique-loop-report.schema.json",
-    "direction_hypothesis": "direction-hypothesis.schema.json",
-    "executor_first_closeout_bundle": "executor-first-closeout-bundle.schema.json",
-    "executor_routing_contract": "executor-routing-contract.schema.json",
-    "funding_landscape_cache": "funding-landscape-cache.schema.json",
-    "funding_landscape_diff_report": "funding-landscape-diff-report.schema.json",
-    "funding_landscape_discovery": "funding-landscape-discovery.schema.json",
-    "funding_landscape_discovery_input": "funding-landscape-discovery-input.schema.json",
-    "funding_opportunity_brief": "funding-opportunity-brief.schema.json",
-    "grant_autonomy_controller_input": "grant-autonomy-controller-input.schema.json",
-    "grant_autonomy_controller_report": "grant-autonomy-controller-report.schema.json",
+EXPECTED_SCHEMA_ALIASES = {
+    "grant_intake_audit_surface": "grant-intake-audit.schema.json",
+    "grant_evidence_grounding_surface": "grant-evidence-grounding.schema.json",
+    "grant_quality_scorecard_surface": "grant-quality-scorecard.schema.json",
+    "grant_quality_diff_surface": "grant-quality-diff.schema.json",
+    "grant_quality_closure_dossier_surface": "grant-quality-closure-dossier.schema.json",
+    "grant_progress_projection": "grant-progress.schema.json",
     "grant_cockpit_projection": "grant-cockpit.schema.json",
     "grant_direct_entry_surface": "grant-direct-entry.schema.json",
-    "grant_evidence_grounding_surface": "grant-evidence-grounding.schema.json",
-    "grant_intake_audit_surface": "grant-intake-audit.schema.json",
-    "grant_progress_projection": "grant-progress.schema.json",
-    "grant_quality_closure_dossier_surface": "grant-quality-closure-dossier.schema.json",
-    "grant_quality_diff_surface": "grant-quality-diff.schema.json",
-    "grant_quality_scorecard_surface": "grant-quality-scorecard.schema.json",
     "grant_user_loop_surface": "grant-user-loop.schema.json",
-    "hosted_contract_bundle": "hosted-contract-bundle.schema.json",
-    "mentor_critique": "mentor-critique.schema.json",
-    "nsfc_workspace": "nsfc-workspace.schema.json",
-    "operator_closeout_readiness_projection": "operator-closeout-readiness-projection.schema.json",
-    "physical_morphology_guard_projection": "physical-morphology-guard-projection.schema.json",
-    "preliminary_evidence_pack": "preliminary-evidence-pack.schema.json",
-    "product_entry": "product-entry.schema.json",
     "product_entry_manifest_surface": "product-entry-manifest.schema.json",
     "product_status_surface": "product-status.schema.json",
-    "project_profile": "project-profile.schema.json",
-    "project_profile_selection": "project-profile-selection.schema.json",
-    "project_profile_selection_input": "project-profile-selection-input.schema.json",
-    "revision_plan": "revision-plan.schema.json",
-    "scientific_question_card": "scientific-question-card.schema.json",
-    "service_safe_domain_surface": "service-safe-domain-surface.schema.json",
-    "submission_ready_package": "submission-ready-package.schema.json",
-    "track_record": "track-record.schema.json",
 }
 
 
@@ -82,7 +48,12 @@ class SchemaRegistryTest(unittest.TestCase):
 
         self.assertEqual(len(names), len(set(names)))
         self.assertEqual(len(files), len(set(files)))
-        self.assertEqual({item["name"]: item["file"] for item in entries}, EXPECTED_SCHEMA_NAME_TO_FILE)
+        semantic_aliases = {
+            item["name"]: item["file"]
+            for item in entries
+            if item["name"] != item["file"].removesuffix(".schema.json").replace("-", "_")
+        }
+        self.assertEqual(semantic_aliases, EXPECTED_SCHEMA_ALIASES)
         self.assertEqual(
             set(files),
             {path.name for path in SCHEMA_ROOT.glob("*.json")} - {"schema-index.json"},

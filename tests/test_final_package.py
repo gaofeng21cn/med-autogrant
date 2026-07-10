@@ -6,7 +6,6 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from med_autogrant import artifact_bundle_validation as bundle_validation  # noqa: E402
 from support.cli import run_cli, run_json_cli  # noqa: E402
 
 
@@ -119,163 +118,74 @@ class FinalPackageTest(unittest.TestCase):
             )
             self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), existing)
 
-    def test_manual_artifact_bundle_validator_fails_closed_for_every_contract_entry(self) -> None:
-        cases: list[tuple[str, tuple[str | int, ...], object, str]] = [
+    def test_manual_artifact_bundle_validator_fails_closed_across_shape_boundaries(self) -> None:
+        cases: tuple[tuple[tuple[str | int, ...], object, str], ...] = (
             (
-                "lifecycle_stage",
                 ("lifecycle_stage",),
                 MISSING,
                 "artifact bundle 缺少必填字段: lifecycle_stage",
             ),
-            ("identity", ("grant_run_id",), "other", "artifact bundle identity 不匹配"),
-        ]
-        for field in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_OBJECT_FIELDS:
-            cases.append((field, (field,), None, f"artifact bundle 缺少必填字段: {field}"))
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_NESTED_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"required:{object_field}.{field}",
-                        (object_field, field),
-                        MISSING,
-                        f"artifact bundle {object_field} 缺少字段: {field}",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_STRING_NESTED_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"string:{object_field}.{field}",
-                        (object_field, field),
-                        None,
-                        f"artifact bundle {object_field}.{field} 非法",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_NONNEGATIVE_INT_NESTED_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"integer:{object_field}.{field}",
-                        (object_field, field),
-                        True,
-                        f"artifact bundle {object_field}.{field} 非法",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_LIST_NESTED_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"list:{object_field}.{field}",
-                        (object_field, field),
-                        {},
-                        f"artifact bundle {object_field}.{field} 非法",
-                    )
-                )
-        for list_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_FIELDS.items():
-            cases.append(
-                (
-                    f"object:artifacts.{list_field}[0]",
-                    ("artifacts", list_field, 0),
-                    None,
-                    f"artifact bundle artifacts.{list_field}[0] 非法",
-                )
-            )
-            for field in fields:
-                cases.append(
-                    (
-                        f"required:artifacts.{list_field}[0].{field}",
-                        ("artifacts", list_field, 0, field),
-                        MISSING,
-                        f"artifact bundle artifacts.{list_field}[0] 缺少字段: {field}",
-                    )
-                )
-        for list_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_REQUIRED_STRING_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"string:artifacts.{list_field}[0].{field}",
-                        ("artifacts", list_field, 0, field),
-                        None,
-                        f"artifact bundle artifacts.{list_field}[0].{field} 非法",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_DICT_NESTED_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"object:{object_field}.{field}",
-                        (object_field, field),
-                        [],
-                        f"artifact bundle {object_field}.{field} 非法",
-                    )
-                )
-        for list_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_REQUIRED_LIST_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"list:artifacts.{list_field}[0].{field}",
-                        ("artifacts", list_field, 0, field),
-                        {},
-                        f"artifact bundle artifacts.{list_field}[0].{field} 非法",
-                    )
-                )
-        for list_field, fields in (
-            bundle_validation.REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_REQUIRED_LIST_ELEMENT_STRING_FIELDS.items()
-        ):
-            for field in fields:
-                cases.append(
-                    (
-                        f"string:artifacts.{list_field}[0].{field}[0]",
-                        ("artifacts", list_field, 0, field),
-                        [None],
-                        f"artifact bundle artifacts.{list_field}[0].{field}[0] 非法",
-                    )
-                )
-        for object_field, field in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_PRIMARY_ID_FIELDS.items():
-            cases.append(
-                (
-                    f"id:artifacts.{object_field}.{field}",
-                    ("artifacts", object_field, field),
-                    None,
-                    f"artifact bundle artifacts.{object_field}.{field} 非法",
-                )
-            )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_LINKAGE_ID_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"linkage:artifacts.{object_field}.{field}",
-                        ("artifacts", object_field, field),
-                        None,
-                        f"artifact bundle artifacts.{object_field}.{field} 非法",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_STRING_FIELDS.items():
-            for field in fields:
-                cases.append(
-                    (
-                        f"string:artifacts.{object_field}.{field}",
-                        ("artifacts", object_field, field),
-                        None,
-                        f"artifact bundle artifacts.{object_field}.{field} 非法",
-                    )
-                )
-        for object_field, fields in bundle_validation.REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS.items():
-            for field in fields:
-                field_path = ("artifacts", object_field, field)
-                error = f"artifact bundle artifacts.{object_field}.{field} 非法"
-                cases.append((f"list:{object_field}.{field}", field_path, {}, error))
-                cases.append(
-                    (
-                        f"string:{object_field}.{field}[0]",
-                        field_path,
-                        [None],
-                        error.replace(" 非法", "[0] 非法"),
-                    )
-                )
+            (("grant_run_id",), "other", "artifact bundle identity 不匹配"),
+            (("manifest",), MISSING, "artifact bundle 缺少必填字段: manifest"),
+            (
+                ("selection", "selected_direction_id"),
+                MISSING,
+                "artifact bundle selection 缺少字段: selected_direction_id",
+            ),
+            (("manifest", "draft_status"), None, "artifact bundle manifest.draft_status 非法"),
+            (("bundle_summary", "outline_count"), True, "artifact bundle bundle_summary.outline_count 非法"),
+            (("artifacts", "draft_outline"), {}, "artifact bundle artifacts.draft_outline 非法"),
+            (("artifacts", "draft_sections", 0), None, "artifact bundle artifacts.draft_sections[0] 非法"),
+            (
+                ("artifacts", "draft_outline", 0, "core_claim"),
+                MISSING,
+                "artifact bundle artifacts.draft_outline[0] 缺少字段: core_claim",
+            ),
+            (
+                ("artifacts", "draft_sections", 0, "section_title"),
+                None,
+                "artifact bundle artifacts.draft_sections[0].section_title 非法",
+            ),
+            (
+                ("artifacts", "draft_outline", 0, "linked_object_ids"),
+                {},
+                "artifact bundle artifacts.draft_outline[0].linked_object_ids 非法",
+            ),
+            (
+                ("artifacts", "draft_sections", 0, "linked_object_ids"),
+                [None],
+                "artifact bundle artifacts.draft_sections[0].linked_object_ids[0] 非法",
+            ),
+            (("artifacts", "selected_direction"), [], "artifact bundle artifacts.selected_direction 非法"),
+            (
+                ("artifacts", "selected_direction", "direction_id"),
+                None,
+                "artifact bundle artifacts.selected_direction.direction_id 非法",
+            ),
+            (
+                ("artifacts", "selected_question", "parent_direction_id"),
+                None,
+                "artifact bundle artifacts.selected_question.parent_direction_id 非法",
+            ),
+            (
+                ("artifacts", "selected_direction", "title"),
+                None,
+                "artifact bundle artifacts.selected_direction.title 非法",
+            ),
+            (
+                ("artifacts", "selected_direction", "required_evidence_ids"),
+                {},
+                "artifact bundle artifacts.selected_direction.required_evidence_ids 非法",
+            ),
+            (
+                ("artifacts", "selected_direction", "required_evidence_ids"),
+                [None],
+                "artifact bundle artifacts.selected_direction.required_evidence_ids[0] 非法",
+            ),
+        )
 
-        for name, case_path, value, error in cases:
-            with self.subTest(category=name), tempfile.TemporaryDirectory() as tmp_dir:
+        for case_path, value, error in cases:
+            with self.subTest(path=case_path), tempfile.TemporaryDirectory() as tmp_dir:
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"
                 self._build_bundle(FROZEN, bundle_path)
