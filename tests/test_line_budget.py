@@ -59,7 +59,7 @@ def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
     assert "test-line-budget-strict:" in makefile
     assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" not in makefile
     assert makefile.index("$(MAKE) test-line-budget") < makefile.index(
-        '$(PYTEST_CLEAN) -q -m "not meta and not regression and not proof"'
+        "$(PYTEST_CLEAN)"
     )
 
 

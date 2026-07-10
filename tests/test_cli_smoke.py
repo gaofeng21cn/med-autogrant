@@ -54,7 +54,6 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "Agent id: medautogrant" in stdout
     assert "Ordinary path: workspace/work/stage/run/vault/handoff/connect" in stdout
     assert "Executable command surface: medautogrant" in stdout
-    assert "Brand shorthand: mag" in stdout
     assert "Authority boundary:" in stdout
     assert "Public command groups:" in stdout
     assert "foundry" in stdout

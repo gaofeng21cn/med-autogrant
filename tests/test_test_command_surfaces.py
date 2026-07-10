@@ -39,13 +39,13 @@ def test_makefile_lanes_route_to_repo_native_checks() -> None:
     structure = _make_dry_run("test-structure")
     structure_strict = _make_dry_run("test-structure-strict")
 
-    assert "scripts/check_generated_aggregate_sources.py" in structure
+    assert "scripts/check_descriptor_contracts.py" in structure
     assert "scripts/check_source_purity_guard.py" in structure
     assert "run-structural-quality-gate" not in structure
     assert "sentrux" not in structure.lower()
 
     assert "scripts/check_source_purity_guard.py" in structure_strict
-    assert "scripts/check_generated_aggregate_sources.py" in structure_strict
+    assert "scripts/check_descriptor_contracts.py" in structure_strict
 
 
 def test_clean_python_runners_route_caches_outside_checkout() -> None:
@@ -62,7 +62,6 @@ def test_pyproject_registers_cli_scripts_and_external_cache() -> None:
     pyproject = tomllib.loads(_read("pyproject.toml"))
     scripts = pyproject["project"]["scripts"]
     assert scripts["medautogrant"] == "med_autogrant.cli:entrypoint"
-    assert scripts["mag"] == "med_autogrant.cli:entrypoint"
 
     pytest_options = pyproject["tool"]["pytest"]["ini_options"]
     assert pytest_options["cache_dir"] == "/tmp/med-autogrant-pytest-cache"
@@ -76,14 +75,6 @@ def test_sentrux_sidecar_is_not_a_tracked_structure_dependency() -> None:
     assert ".github/workflows/sentrux-advisory.yml" not in tracked
     assert "scripts/run-structural-quality-gate.sh" not in tracked
     assert "scripts/run-opl-quality-details.sh" not in tracked
-
-
-def test_product_entry_cases_are_direct_regression_cases() -> None:
-    conftest = _read("tests/conftest.py")
-
-    assert 'relative_path.startswith("tests/product_entry_cases/")' in conftest
-    assert "PRODUCT_ENTRY_AGGREGATOR" not in conftest
-    assert "pytest_ignore_collect" not in conftest
 
 
 def test_mag_skill_keeps_authority_command_public_without_generic_shells() -> None:

@@ -12,7 +12,11 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
-from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
+
+
+CRITIQUE_EXAMPLE_PATH = (
+    Path(__file__).resolve().parents[2] / "examples" / "nsfc_workspace_p2c_critique.json"
+)
 
 
 class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):

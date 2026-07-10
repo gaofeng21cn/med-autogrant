@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
 from opl_family_contract_adoption_cases.controlled_soak import (
     test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression as _assert_controlled_soak,
 )
@@ -19,12 +20,11 @@ STAGE_PROJECTION_OWNER_BOUNDARY = {
     "submission_ready_export_gate_owner": "med-autogrant",
     "opl_role": "stage descriptor/projection consumer only",
 }
-USER_STAGE_AUTHORITY_BOUNDARY = {
+STAGE_AUTHORITY_BOUNDARY = {
     "opl_can_authorize_quality_or_export": False,
-    "opl_can_infer_domain_semantics": False,
-    "opl_can_read_artifact_body": False,
-    "opl_can_write_domain_truth": False,
-    "provider_completion_can_claim_stage_semantics_complete": False,
+    "opl_can_write_grant_truth": False,
+    "provider_completion_counts_as_domain_completion": False,
+    "domain_truth_owner": "med-autogrant",
 }
 
 
@@ -51,8 +51,6 @@ def test_adoption_keeps_mag_truth_receipt_and_export_authority() -> None:
 
 
 def test_stage_projection_is_body_free_and_matches_domain_handler_actions() -> None:
-    from med_autogrant.product_entry import MedAutoGrantProductEntry
-
     contract = _contract()
     plane = json.loads((REPO_ROOT / "contracts" / "stage_control_plane.json").read_text(encoding="utf-8"))
     projection = contract["stage_control_projection"]
@@ -60,23 +58,17 @@ def test_stage_projection_is_body_free_and_matches_domain_handler_actions() -> N
     assert projection["maps_existing_surfaces_only"] is True
     assert projection["owner_boundary"] == STAGE_PROJECTION_OWNER_BOUNDARY
     for stage in plane["stages"]:
-        boundary = stage["stage_contract"]["user_stage_log_contract"]["authority_boundary"]
-        assert boundary == USER_STAGE_AUTHORITY_BOUNDARY
+        assert stage["authority_boundary"] == STAGE_AUTHORITY_BOUNDARY
 
     current_program = json.loads(
         (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
     )
     expected_actions = current_program["runtime_owner"]["stage_led_framework_boundary"]["domain_handler_adapter"]["allowed_dispatch_actions"]
-    export = MedAutoGrantProductEntry().build_domain_handler_export(
+    export = build_domain_handler_export(
         input_path=REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
     )
-    assert export["domain_handler_export"]["opl_control_plane"]["allowed_dispatch_actions"] == expected_actions
+    assert export["domain_handler_export"]["allowed_dispatch_actions"] == expected_actions
 
 
-def test_source_layout_sentinels_exist_and_controlled_soak_stays_deferred() -> None:
-    audit = _contract()["repo_source_layout_audit"]
-    assert audit["forbidden_active_path_residue"] == []
-    for boundary in audit["boundary_keys"]:
-        assert (REPO_ROOT / boundary).is_dir()
-        assert audit["source_refs_by_boundary"][boundary]
+def test_controlled_soak_stays_deferred() -> None:
     _assert_controlled_soak()

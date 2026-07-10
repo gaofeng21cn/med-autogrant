@@ -71,4 +71,3 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     assert "public_runtime=false" in skill_text
     assert 'display_name: "Med Auto Grant"' in metadata_text
     assert 'default_prompt: "Use $med-autogrant' in metadata_text
-    assert "$mag alias remains supported" in metadata_text

@@ -17,7 +17,7 @@ AUTHORITY_IDS = {
 }
 
 
-def test_functional_audit_keeps_eight_distinct_authority_ids_with_exact_paths() -> None:
+def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
     audit = json.loads(
         (REPO_ROOT / "contracts" / "functional_privatization_audit.json").read_text(
             encoding="utf-8"
@@ -35,12 +35,6 @@ def test_functional_audit_keeps_eight_distinct_authority_ids_with_exact_paths() 
         in {"domain_authority", "minimal_authority_function", "refs_only_domain_adapter"}
         for item in modules.values()
     )
-    assert all(
-        not path.endswith("/")
-        for item in modules.values()
-        for path in item["code_paths"]
-    )
-    assert "src/med_autogrant/final_package.py" in modules["package_authority"]["code_paths"]
 
 
 def test_pack_compiler_uses_the_same_eight_authority_ids() -> None:

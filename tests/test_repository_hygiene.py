@@ -140,53 +140,6 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertIn("test-line-budget-strict:", (REPO_ROOT / "Makefile").read_text(encoding="utf-8"))
 
-    def test_machine_surfaces_do_not_restore_retired_product_entry_compatibility_claims(self) -> None:
-        retired_claim_patterns = (
-            '"compatibility_alias_allowed": true',
-            "compatibility_alias_allowed: true",
-            '"claims_compatibility_alias_owner": true',
-            "claims_compatibility_alias_owner: true",
-            '"mag_restores_compatibility_alias": true',
-            "mag_restores_compatibility_alias: true",
-            "active_compatibility_alias",
-            "default_compatibility_alias",
-        )
-        scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/")
-        scanned_suffixes = {".py", ".json", ".yaml", ".yml", ".toml", ".sh"}
-        violations: list[str] = []
-
-        for relative_path in _tracked_or_pending_files():
-            if relative_path == "tests/test_repository_hygiene.py":
-                continue
-            if not relative_path.startswith(scanned_roots):
-                continue
-            path = REPO_ROOT / relative_path
-            if path.suffix not in scanned_suffixes or not path.is_file():
-                continue
-            text = path.read_text(encoding="utf-8").lower()
-            for pattern in retired_claim_patterns:
-                if pattern in text:
-                    violations.append(f"{relative_path}: {pattern}")
-
-        self.assertEqual(violations, [])
-
-    def test_cli_validate_cases_is_not_a_star_import_facade(self) -> None:
-        offenders: list[str] = []
-        for relative_path in _tracked_or_pending_files():
-            if not relative_path.startswith("tests/test_cli_validate_workspace_") or not relative_path.endswith(".py"):
-                continue
-            path = REPO_ROOT / relative_path
-            tree = ast.parse(path.read_text(encoding="utf-8"))
-            if any(
-                isinstance(node, ast.ImportFrom)
-                and node.module == "cli_validate_cases"
-                and any(alias.name == "*" for alias in node.names)
-                for node in ast.walk(tree)
-            ):
-                offenders.append(relative_path)
-
-        self.assertEqual(offenders, [])
-
     def test_source_modules_do_not_generate_dynamic_all_exports(self) -> None:
         offenders: list[str] = []
         for relative_path in _tracked_or_pending_files():

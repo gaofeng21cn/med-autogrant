@@ -8,7 +8,11 @@ import pytest
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
 from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
 from med_autogrant.workspace import WorkspaceStateError
-from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
+
+
+CRITIQUE_EXAMPLE_PATH = (
+    Path(__file__).resolve().parents[2] / "examples" / "nsfc_workspace_p2c_critique.json"
+)
 
 
 def _write_task(tmp_path: Path, payload: dict[str, object]) -> Path:
