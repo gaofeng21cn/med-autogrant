@@ -48,6 +48,7 @@ Machine boundary: 本文是人读计划。机器真相归 current-program、root
 - MAG base main：`689881c438b7c87393be042584675638e9a16689`。
 - OPL consumer binding：`673eac1f8193296ed371aeef7fe82f14bd441370`；conformance `status=passed`、source behavior `matched=0`、blockers `0`、allowed matches `10`。
 - Canonical identity：OPL agent id `mag`；`medautogrant` 只作为 executable command，`med-autogrant` 只作为 repo/package/plugin/skill locator。
+- Action catalog：`contracts/action_catalog.json` 保留为 OPL 可消费的 canonical descriptor；零 caller、无 freshness gate 的私有 Python compiler 已退役，不再维护第二套生成真相。
 - Tests-only：当前 Python test source 为 `8,807` 行，相对严格 Python 基线 `20,261` 行减少 `11,454`；若包含稳定的 1 行 `tests/.gitkeep`，则 tracked `tests/**` 为 `8,808` 行，相对同口径严格基线 `20,262` 行同样净减 `11,454`。
 - Path-filtered diff：相对严格基线提交 `0268a89c01240a7303ee032745af7b0ef08724e8`，`tests/** +1,527 / -12,981 / net -11,454`；相对本任务 main 基线 `17,692` 行，`tests/** +410 / -9,294 / net -8,884`。`src/**`、`contracts/**`、schemas、docs 与 README 的删除不计入 tests-only 收益。
 - Fresh owner evidence：focused `50 passed + 128 subtests`；CLI smoke `11 passed`；fast `148 passed + 67 subtests`；meta `35 passed`；full `258 passed + 183 subtests`；descriptor contract、diff-check 与 OPL scanner通过。
