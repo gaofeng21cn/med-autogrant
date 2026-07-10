@@ -41,11 +41,12 @@ def main() -> int:
     if not isinstance(stage_manifest, dict):
         errors.append("agent/stages/manifest.json: must be a JSON object")
     else:
-        if stage_manifest.get("surface_kind") != "mag_declarative_stage_manifest":
+        if stage_manifest.get("surface_kind") != "opl_standard_agent_declarative_stage_manifest":
             errors.append(
-                "agent/stages/manifest.json: surface_kind must be mag_declarative_stage_manifest"
+                "agent/stages/manifest.json: surface_kind must be "
+                "opl_standard_agent_declarative_stage_manifest"
             )
-        if stage_manifest.get("version") != "mag-declarative-stage-manifest.v1":
+        if stage_manifest.get("version") != "opl-standard-agent-declarative-stage-manifest.v1":
             errors.append("agent/stages/manifest.json: version is missing or invalid")
         if stage_manifest.get("target_domain_id") != "med-autogrant":
             errors.append("agent/stages/manifest.json: target_domain_id must be med-autogrant")

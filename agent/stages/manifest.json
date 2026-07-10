@@ -1,6 +1,6 @@
 {
-  "surface_kind": "mag_declarative_stage_manifest",
-  "version": "mag-declarative-stage-manifest.v1",
+  "surface_kind": "opl_standard_agent_declarative_stage_manifest",
+  "version": "opl-standard-agent-declarative-stage-manifest.v1",
   "target_domain_id": "med-autogrant",
   "owner": "med-autogrant",
   "stages": [
