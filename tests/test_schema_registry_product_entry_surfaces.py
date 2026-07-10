@@ -4,8 +4,24 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas" / "v1"
+REQUIRED_PRODUCT_ENTRY_OWNER_SURFACES = {
+    "opl_provider_runtime_contract",
+    "runtime_control",
+    "family_orchestration",
+    "family_action_catalog",
+    "family_stage_control_plane",
+    "controlled_stage_attempt_projection",
+    "mag_consumer_thinning_contract",
+    "temporal_stage_run_consumption_policy",
+}
+TEMPORAL_POLICY_OWNER_CONSTS = {
+    "owner": "med-autogrant",
+    "runtime_substrate_owner": "one-person-lab",
+    "stage_run_substrate_owner": "one-person-lab",
+    "domain_truth_owner": "med-autogrant",
+    "temporal_attempt_ledger_owner": "one-person-lab/OPL",
+}
 
 
 def _load(name: str) -> dict[str, Any]:
@@ -21,21 +37,7 @@ def test_product_schemas_keep_companions_and_owner_authority_fail_closed() -> No
     manifest = manifest_schema["$defs"]["productEntryManifest"]
     status = _load("product-status.schema.json")["$defs"]["productStatus"]
 
-    assert {
-        "opl_provider_runtime_contract",
-        "runtime_control",
-        "product_entry_start",
-        "product_entry_overview",
-        "product_entry_preflight",
-        "product_entry_readiness",
-        "grant_authoring_readiness",
-        "family_orchestration",
-        "owner_payload_response",
-        "workspace_receipt_scaleout_evidence",
-        "manifest_sustained_consumption_evidence",
-        "mag_consumer_thinning_contract",
-        "temporal_stage_run_consumption_policy",
-    } <= set(manifest["required"])
+    assert REQUIRED_PRODUCT_ENTRY_OWNER_SURFACES <= set(manifest["required"])
     manifest_refs = {
         "product_entry_start": "productEntryStart",
         "product_entry_overview": "productEntryOverview",
@@ -136,6 +138,13 @@ def test_product_schemas_keep_companions_and_owner_authority_fail_closed() -> No
         "provider_completion_counts_as_domain_completion",
         "generated_surface_ready_counts_as_domain_ready",
     )
+    assert {
+        field for field in policy["required"] if field == "owner" or field.endswith("_owner")
+    } == set(TEMPORAL_POLICY_OWNER_CONSTS)
+    assert {
+        field: policy["properties"][field]["const"]
+        for field in TEMPORAL_POLICY_OWNER_CONSTS
+    } == TEMPORAL_POLICY_OWNER_CONSTS
 
 
 def test_receipt_and_temporal_nested_authority_remains_fail_closed() -> None:

@@ -100,23 +100,31 @@ class FinalPackageTest(unittest.TestCase):
 
     def test_nonfinal_checkpoint_and_output_identity_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_root = Path(tmp_dir)
-            bundle_path = tmp_root / "bundle.json"
-            package_path = tmp_root / "final.json"
+            bundle_path = Path(tmp_dir) / "bundle.json"
+            package_path = Path(tmp_dir) / "final.json"
             self._build_bundle(FORWARD, bundle_path)
             self._assert_failure(FORWARD, bundle_path, package_path, "checkpoint_status")
 
-            self._build_bundle(FREEZE_READY, bundle_path)
-            existing = {"grant_run_id": "other", "workspace_id": "other", "draft_id": "other"}
-            package_path.write_text(json.dumps(existing), encoding="utf-8")
-            self._assert_failure(
-                FREEZE_READY,
-                bundle_path,
-                package_path,
-                "final package output identity 不匹配",
-                package_must_be_absent=False,
-            )
-            self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), existing)
+        for field in ("grant_run_id", "workspace_id", "draft_id"):
+            with self.subTest(output_identity_field=field), tempfile.TemporaryDirectory() as tmp_dir:
+                bundle_path = Path(tmp_dir) / "bundle.json"
+                package_path = Path(tmp_dir) / "final.json"
+                self._build_bundle(FREEZE_READY, bundle_path)
+                bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+                existing = {
+                    identity_field: bundle[identity_field]
+                    for identity_field in ("grant_run_id", "workspace_id", "draft_id")
+                }
+                existing[field] = "other"
+                package_path.write_text(json.dumps(existing), encoding="utf-8")
+                self._assert_failure(
+                    FREEZE_READY,
+                    bundle_path,
+                    package_path,
+                    "final package output identity 不匹配",
+                    package_must_be_absent=False,
+                )
+                self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), existing)
 
     def test_manual_artifact_bundle_validator_fails_closed_across_shape_boundaries(self) -> None:
         cases: tuple[tuple[tuple[str | int, ...], object, str], ...] = (
@@ -125,7 +133,10 @@ class FinalPackageTest(unittest.TestCase):
                 MISSING,
                 "artifact bundle 缺少必填字段: lifecycle_stage",
             ),
+            (("bundle_kind",), "other", "artifact bundle kind 非法"),
             (("grant_run_id",), "other", "artifact bundle identity 不匹配"),
+            (("workspace_id",), "other", "artifact bundle identity 不匹配"),
+            (("draft_id",), "other", "artifact bundle identity 不匹配"),
             (("manifest",), MISSING, "artifact bundle 缺少必填字段: manifest"),
             (
                 ("selection", "selected_direction_id"),
