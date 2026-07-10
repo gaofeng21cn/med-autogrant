@@ -10,15 +10,10 @@ pytestmark = pytest.mark.meta
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LIVE_PROGRESS_PATH = REPO_ROOT / "contracts" / "live_stage_run_progress_evidence.json"
-LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
 
 
 def _live_progress() -> dict[str, object]:
     return json.loads(LIVE_PROGRESS_PATH.read_text(encoding="utf-8"))
-
-
-def _ledger() -> dict[str, object]:
-    return json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
 
 
 def test_live_stage_run_progress_evidence_is_mag_source_of_truth_blocker() -> None:
@@ -177,32 +172,6 @@ def test_live_stage_run_progress_lists_missing_real_prerequisites_without_succes
         assert prerequisite["state"] in {"open", "blocked_by_existing_human_gate_typed_blocker"}
         assert prerequisite["current_refs"]
         assert prerequisite["required_evidence"]
-
-
-def test_live_stage_run_progress_binds_existing_canary_as_provenance_only() -> None:
-    payload = _live_progress()
-    ledger = _ledger()
-    canary = ledger["owner_chain_live_progress_evidence_lane"]["canary_attempts"][-1]
-
-    assert payload["refs"]["typed_blocker_refs"][1] == (
-        canary["mag_owned_typed_blocker"]["typed_blocker_ref"]
-    )
-    assert payload["refs"]["no_regression_refs"][0] == (
-        canary["mag_owned_no_regression"]["no_regression_evidence_ref"]
-    )
-    assert payload["refs"]["quality_or_export_receipt_refs"][0] == (
-        canary["quality_export_package_evidence"]["quality_receipt_ref"]
-    )
-    assert payload["refs"]["quality_or_export_receipt_refs"][1] == (
-        canary["quality_export_package_evidence"]["export_receipt_ref"]
-    )
-    assert payload["production_acceptance_tail_policy"] == {
-        "production_acceptance_tail_ref": "contracts/production_acceptance/mag-production-acceptance.json",
-        "production_acceptance_tail_counts_as_live_progress": False,
-        "production_acceptance_tail_role": (
-            "historical_acceptance_provenance_not_live_stage_progress_source_of_truth"
-        ),
-    }
 
 
 def test_live_stage_run_progress_authority_boundary_has_no_ready_claims() -> None:

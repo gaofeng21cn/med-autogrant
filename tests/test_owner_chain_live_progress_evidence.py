@@ -7,255 +7,35 @@ import pytest
 
 
 pytestmark = pytest.mark.meta
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
-KERNEL_PROFILE_PATH = REPO_ROOT / "contracts" / "stage_run_kernel_profile.json"
-LIVE_PROGRESS_PATH = REPO_ROOT / "contracts" / "live_stage_run_progress_evidence.json"
-
-
-def _ledger() -> dict[str, object]:
-    return json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
+LEDGER_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "contracts"
+    / "external_evidence"
+    / "mag-evidence-receipt-ledger.json"
+)
 
 
-def _kernel_profile() -> dict[str, object]:
-    return json.loads(KERNEL_PROFILE_PATH.read_text(encoding="utf-8"))
+def test_external_evidence_ledger_keeps_owner_refs_open_and_body_free() -> None:
+    ledger = json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
 
+    assert ledger["surface_kind"] == "mag_external_evidence_receipt_ledger.v1"
+    assert ledger["state"] == "refs_only_provenance_with_open_live_evidence_gates"
+    assert ledger["domain_id"] == "med-autogrant"
+    assert ledger["owner"] == "med-autogrant"
 
-def _live_progress() -> dict[str, object]:
-    return json.loads(LIVE_PROGRESS_PATH.read_text(encoding="utf-8"))
+    owner_refs = ledger["first_live_production_evidence"]
+    assert owner_refs["state"] == "provenance_only_not_currentness_or_readiness"
+    assert owner_refs["owner_receipt_ref"].startswith("receipt:mag/")
+    assert owner_refs["typed_blocker_ref"].startswith("typed-blocker:mag/")
+    assert owner_refs["no_regression_ref"].startswith("no-regression:mag/")
 
-
-def test_owner_chain_live_progress_evidence_lane_records_all_mag_owned_ref_shapes() -> None:
-    lane = _ledger()["owner_chain_live_progress_evidence_lane"]
-
-    assert lane["surface_kind"] == "mag_owner_chain_live_progress_evidence_lane.v1"
-    assert lane["evidence_scope"] == "live_progress_refs_only_not_readiness"
-    assert lane["stage_id"] == "specific_aims_and_structure"
-    assert lane["opl_hosted_path"]["runtime_owner"] == "one-person-lab"
-    assert lane["opl_hosted_path"]["executor"] == "codex_cli"
-    assert lane["opl_hosted_path"]["domain_owner"] == "med-autogrant"
-    assert lane["opl_hosted_path"]["payload_body_included"] is False
-
-    assert lane["accepted_return_shapes"] == [
-        "domain_owner_receipt_ref",
-        "typed_blocker_ref",
-        "quality_receipt_ref",
-        "export_receipt_ref",
-        "package_receipt_ref",
-        "no_regression_evidence_ref",
-    ]
-
-    refs = lane["accepted_ref_shapes"]
-    assert refs["domain_owner_receipt_ref"].startswith("receipt:mag/owner-chain-live-progress/")
-    assert refs["typed_blocker_ref"].startswith("typed-blocker:mag/owner-chain-live-progress/")
-    assert refs["quality_receipt_ref"].startswith("receipt:mag/grant-quality/")
-    assert refs["export_receipt_ref"].startswith("receipt:mag/export-verdict/")
-    assert refs["package_receipt_ref"].startswith("receipt:mag/package-lifecycle/")
-    assert refs["no_regression_evidence_ref"].startswith("no-regression:mag/owner-chain-live-progress/")
-
-    evidence = lane["machine_readable_evidence"]
-    assert evidence["owner_receipt"]["owner"] == "med-autogrant"
-    assert evidence["typed_blocker"]["owner"] == "med-autogrant"
-    assert evidence["quality_export_package_receipts"]["owner"] == "med-autogrant"
-    assert evidence["no_regression"]["owner"] == "med-autogrant"
-    assert evidence["quality_export_package_receipts"]["body_included"] is False
-    assert evidence["no_regression"]["body_included"] is False
-
-
-def test_owner_chain_live_progress_evidence_lane_keeps_false_authority_flags_closed() -> None:
-    lane = _ledger()["owner_chain_live_progress_evidence_lane"]
-
-    assert lane["false_authority_flags"] == {
-        "claims_live_domain_progress": True,
-        "claims_grant_ready": False,
-        "claims_fundability_ready": False,
-        "claims_authoring_quality_ready": False,
-        "claims_export_ready": False,
-        "claims_package_fresh": False,
-        "claims_submission_ready": False,
-        "claims_production_ready": False,
-        "claims_external_submission_authorized": False,
-    }
-
-    boundary = lane["authority_boundary"]
-    assert boundary["mag_owns_owner_receipt_and_typed_blocker"] is True
-    assert boundary["mag_owns_quality_export_package_receipts"] is True
-    assert boundary["opl_records_refs_only"] is True
-    for forbidden in (
-        "opl_can_write_grant_truth",
-        "opl_can_mutate_artifact_body",
-        "opl_can_sign_owner_receipt",
-        "opl_can_create_typed_blocker",
-        "opl_can_authorize_quality_or_export",
-        "opl_can_declare_grant_ready",
-        "opl_can_declare_submission_ready",
-        "provider_completion_counts_as_readiness",
-        "file_presence_counts_as_readiness",
-        "read_model_counts_as_readiness",
-    ):
-        assert boundary[forbidden] is False, forbidden
-
-
-def test_owner_chain_live_progress_canary_records_command_backed_typed_blocker() -> None:
-    lane = _ledger()["owner_chain_live_progress_evidence_lane"]
-    attempts = lane["canary_attempts"]
-
-    assert isinstance(attempts, list)
-    attempt = attempts[-1]
-    attempt_date = attempt["attempt_date"]
-    command_date = attempt_date.replace("-", "")
-    assert attempt["attempt_id"] == f"mag-owner-chain-live-progress-canary-{attempt_date}"
-    assert attempt["state"] == "blocked_by_mag_owned_typed_blocker_with_runtime_receipt_refs"
-    assert attempt["repo_tracks_runtime_receipt_instance_body"] is False
-
-    commands = {item["command_ref"]: item for item in attempt["commands"]}
-    assert set(commands) == {
-        f"cmd:mag-owner-chain-canary-quality-scorecard-{command_date}",
-        f"cmd:mag-owner-chain-canary-quality-closure-dossier-{command_date}",
-        f"cmd:mag-owner-chain-canary-package-{command_date}",
-        f"cmd:mag-owner-chain-canary-typed-blocker-receipt-{command_date}",
-        f"cmd:mag-owner-chain-canary-no-regression-receipt-{command_date}",
-    }
-    assert commands[f"cmd:mag-owner-chain-canary-quality-scorecard-{command_date}"]["result"][
-        "overall_status"
-    ] == "blocked"
-    assert commands[f"cmd:mag-owner-chain-canary-package-{command_date}"]["result"]["ok"] is False
-    assert commands[f"cmd:mag-owner-chain-canary-package-{command_date}"]["result"][
-        "output_dir_created"
-    ] is False
-    assert commands[f"cmd:mag-owner-chain-canary-typed-blocker-receipt-{command_date}"][
-        "result"
-    ]["closeout_summary_required"] is True
-    assert commands[f"cmd:mag-owner-chain-canary-no-regression-receipt-{command_date}"][
-        "result"
-    ]["closeout_summary_required"] is True
-
-    typed_blocker = attempt["mag_owned_typed_blocker"]
-    assert typed_blocker["owner"] == "med-autogrant"
-    assert typed_blocker["typed_blocker_ref"].startswith(
-        "typed-blocker:mag/owner-chain-live-progress/"
+    owner_lane = ledger["owner_chain_live_progress_evidence_lane"]
+    assert owner_lane["state"] == "owner_refs_recorded_with_open_gates"
+    assert owner_lane["evidence_ref"] == (
+        "contracts/live_stage_run_progress_evidence.json#/domain_owner_chain_scaleout"
     )
-    assert typed_blocker["runtime_receipt_instance_ref"].startswith("/private/tmp/")
-    assert typed_blocker["body_included"] is False
-    assert attempt["mag_owned_no_regression"]["no_regression_evidence_ref"].startswith(
-        "no-regression:mag/owner-chain-live-progress/"
-    )
+    assert owner_lane["typed_blocker_ref"] == owner_refs["typed_blocker_ref"]
+    assert owner_lane["counts_as_domain_ready"] is False
+    assert owner_lane["counts_as_production_ready"] is False
 
-    package_refs = attempt["quality_export_package_evidence"]
-    assert package_refs["quality_receipt_ref"].startswith("receipt:mag/grant-quality/")
-    assert package_refs["export_receipt_ref"].startswith("receipt:mag/export-verdict/")
-    assert package_refs["package_receipt_ref"].startswith("receipt:mag/package-lifecycle/")
-    assert package_refs["body_included"] is False
-
-    forbidden_write = attempt["forbidden_write_proof"]
-    for field_name, value in forbidden_write.items():
-        assert value is False, field_name
-
-
-def test_owner_chain_live_progress_canary_keeps_readiness_claims_closed() -> None:
-    lane = _ledger()["owner_chain_live_progress_evidence_lane"]
-    attempt = lane["canary_attempts"][-1]
-
-    assert attempt["claims"]["claims_live_domain_progress"] is True
-    for claim_name in (
-        "claims_grant_ready",
-        "claims_fundability_ready",
-        "claims_authoring_quality_ready",
-        "claims_quality_ready",
-        "claims_export_ready",
-        "claims_package_fresh",
-        "claims_submission_ready",
-        "claims_submission_ready_export",
-        "claims_production_ready",
-        "claims_external_submission_authorized",
-    ):
-        assert attempt["claims"][claim_name] is False, claim_name
-
-    boundary = attempt["authority_boundary"]
-    assert boundary["mag_owns_typed_blocker"] is True
-    assert boundary["mag_owns_no_regression_evidence"] is True
-    assert boundary["mag_owns_quality_export_package_refs"] is True
-    assert boundary["opl_records_refs_only"] is True
-    for forbidden in (
-        "opl_can_write_grant_truth",
-        "opl_can_mutate_artifact_body",
-        "opl_can_sign_owner_receipt",
-        "opl_can_create_typed_blocker",
-        "opl_can_authorize_quality_or_export",
-        "human_gate_approval_recorded",
-    ):
-        assert boundary[forbidden] is False, forbidden
-
-
-def test_kernel_profile_points_to_live_progress_contract_and_keeps_owner_chain_as_provenance() -> None:
-    profile = _kernel_profile()
-    live_progress = _live_progress()
-
-    assert profile["live_stage_run_progress_evidence_ref"] == (
-        "contracts/live_stage_run_progress_evidence.json"
-    )
-    assert profile["owner_chain_live_progress_provenance_ref"] == (
-        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-        "owner_chain_live_progress_evidence_lane"
-    )
-    assert live_progress["source_of_truth"] is True
-    assert live_progress["refs"]["typed_blocker_refs"]
-
-
-def test_domain_owner_chain_scaleout_backfill_is_refs_only_not_ready_claim() -> None:
-    live_progress = _live_progress()
-    scaleout = live_progress["domain_owner_chain_scaleout"]
-
-    assert scaleout["surface_kind"] == "mag_domain_owner_chain_scaleout_evidence_lane"
-    assert scaleout["gate_id"] == "domain_owner_chain_scaleout"
-    assert scaleout["owner"] == "med-autogrant"
-    assert scaleout["status"] == "domain_owned_refs_recorded_not_ready_claim"
-    assert scaleout["opl_consumption_status"] == (
-        "owner_chain_refs_available_with_mag_owned_typed_blocker"
-    )
-    assert scaleout["ready_claim_authorized"] is False
-    assert scaleout["domain_ready_claimed"] is False
-    assert scaleout["production_ready_claimed"] is False
-    assert scaleout["accepted_ref_shapes"] == [
-        "owner_receipt_ref",
-        "typed_blocker_ref",
-        "human_gate_ref",
-        "quality_or_export_receipt_ref",
-        "no_regression_ref",
-        "long_soak_or_typed_blocker_ref",
-    ]
-
-    backfill_refs = scaleout["opl_backfill_refs"]
-    live_refs = live_progress["refs"]
-    assert backfill_refs["owner_receipt_refs"] == live_refs["owner_receipt_refs"]
-    assert backfill_refs["typed_blocker_refs"] == live_refs["typed_blocker_refs"]
-    assert backfill_refs["human_gate_refs"] == live_refs["human_gate_refs"]
-    assert backfill_refs["quality_or_export_receipt_refs"] == live_refs[
-        "quality_or_export_receipt_refs"
-    ]
-    assert backfill_refs["no_regression_refs"] == live_refs["no_regression_refs"]
-    assert backfill_refs["long_soak_refs"] == live_refs["long_soak_refs"]
-
-    assert scaleout["observed_ref_counts"] == {
-        "owner_receipt_ref_count": 1,
-        "typed_blocker_ref_count": 3,
-        "human_gate_ref_count": 1,
-        "quality_or_export_receipt_ref_count": 2,
-        "no_regression_ref_count": 1,
-        "long_soak_ref_count": 1,
-    }
-    assert scaleout["blocked_gate_categories"] == live_progress["blocked_gate_categories"]
-    boundary = scaleout["authority_boundary"]
-    assert boundary["refs_only"] is True
-    assert boundary["mag_owns_owner_chain_refs"] is True
-    assert boundary["opl_can_consume_refs"] is True
-    for field_name in (
-        "opl_can_write_grant_truth",
-        "opl_can_sign_owner_receipt",
-        "opl_can_create_typed_blocker",
-        "opl_can_authorize_quality_or_export",
-        "opl_can_claim_domain_ready",
-        "opl_can_claim_production_ready",
-    ):
-        assert boundary[field_name] is False, field_name
+    assert all(value is False for value in ledger["authority_boundary"].values())

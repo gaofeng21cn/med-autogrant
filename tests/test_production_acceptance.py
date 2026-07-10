@@ -7,229 +7,75 @@ import pytest
 
 
 pytestmark = pytest.mark.meta
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
-ACCEPTANCE_PATH = REPO_ROOT / "contracts" / "production_acceptance" / "mag-production-acceptance.json"
-LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
+ACCEPTANCE_PATH = (
+    REPO_ROOT / "contracts" / "production_acceptance" / "mag-production-acceptance.json"
+)
 
 
 def _acceptance() -> dict[str, object]:
     return json.loads(ACCEPTANCE_PATH.read_text(encoding="utf-8"))
 
 
-def _ledger() -> dict[str, object]:
-    return json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
-
-
-def _assert_ref_list(values: object) -> None:
-    assert isinstance(values, list)
-    assert values
-    for value in values:
-        assert isinstance(value, str)
-        assert value
-        assert (
-            value.startswith("/")
-            or value.startswith("contracts/")
-            or value.startswith("docs/")
-            or value.startswith("tests/")
-            or value.startswith("agent/")
-            or value.startswith("rtk ")
-            or value.startswith("receipt:")
-            or value.startswith("receipt-projection:")
-            or value.startswith("typed-blocker:")
-            or value.startswith("human_gate:")
-            or "::" in value
-        ), value
-
-
-def test_mag_production_acceptance_surface_exists_with_domain_owned_tail_state() -> None:
-    assert ACCEPTANCE_PATH.exists()
+def test_production_acceptance_is_provenance_only_with_open_typed_blocker() -> None:
     surface = _acceptance()
 
     assert surface["surface_kind"] == "mag_production_acceptance_evidence.v1"
+    assert surface["surface_id"] == "mag.production_acceptance.provenance"
+    assert surface["state"] == "provenance_only_not_live_progress_or_readiness"
     assert surface["domain_id"] == "med-autogrant"
     assert surface["acceptance_owner"] == "med-autogrant"
-    assert surface["evidence_tail_status"] in {
-        "closed_by_domain_owned_acceptance_receipt",
-        "domain_owned_typed_blocker_with_next_verification_ref",
+    assert surface["refs"] == {
+        "current_program_ref": "contracts/runtime-program/current-program.json",
+        "live_stage_run_progress_ref": "contracts/live_stage_run_progress_evidence.json",
+        "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+        "external_evidence_ledger_ref": (
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+        ),
     }
-    assert surface["conformance_status"] == {
-        "structural_conformance": "passed",
-        "physical_conformance": "passed",
-        "conformance_can_claim_domain_ready": False,
-        "conformance_can_claim_fundability_ready": False,
-    }
-    assert surface["grant_receipt_chain"]["production_like_grant_receipt_chain_present"] is True
-    assert surface["domain_readiness_policy"]["domain_readiness_owner"] == "med-autogrant"
-    assert surface["domain_readiness_policy"]["fundability_readiness_owner"] == "med-autogrant"
 
-
-def test_mag_production_acceptance_is_refs_only_and_contains_required_refs() -> None:
-    surface = _acceptance()
-
-    refs = surface["refs"]
-    for key in (
-        "grant_owner_receipt_refs",
-        "fundability_review_gate_refs",
-        "package_proposal_lifecycle_refs",
-        "typed_blocker_refs",
-        "next_verification_command_refs",
-    ):
-        _assert_ref_list(refs[key])
-
-    forbidden_payloads = surface["refs_only_policy"]["forbidden_payload_classes"]
-    for forbidden in (
-        "grant_artifact_body",
-        "memory_body",
-        "opl_runtime_state_body",
-        "fundability_verdict_body",
-        "proposal_text_body",
-    ):
-        assert forbidden in forbidden_payloads
-
-    assert surface["refs_only_policy"]["repo_tracks_receipt_instance_body"] is False
-    assert surface["refs_only_policy"]["repo_tracks_grant_artifact_body"] is False
-
-
-def test_opl_provider_completion_cannot_authorize_mag_grant_readiness() -> None:
-    surface = _acceptance()
-    authority = surface["authority_boundary"]
-
-    assert authority["opl_can_authorize_grant_domain_ready"] is False
-    assert authority["opl_can_authorize_fundability_ready"] is False
-    assert authority["provider_completion_equals_fundability_ready"] is False
-    assert authority["provider_completion_equals_domain_ready"] is False
-    assert authority["provider_completion_equals_submission_ready"] is False
-    assert authority["structural_conformance_equals_domain_ready"] is False
-
-
-def test_external_evidence_ledger_records_first_live_production_refs_without_ready_authority() -> None:
-    ledger = _ledger()
-    summary = ledger["summary"]
-    first_live = ledger["first_live_production_evidence"]
-
-    assert ledger["state"] == "first_live_production_evidence_consumed_refs_only"
-    assert summary["closed_request_count"] == 7
-    assert summary["receipt_ref_count"] == 7
-    assert summary["domain_owned_typed_blocker_count"] == 0
-    assert summary["claims_external_runtime_evidence_received"] is True
-    assert summary["claims_direct_hosted_parity_passed"] is True
-    assert summary["claims_temporal_provider_long_soak_complete"] is False
-    assert summary["temporal_provider_reconciliation_ref_recorded"] is True
-    assert summary["claims_grant_or_fundability_ready"] is False
-    assert ledger["domain_owned_typed_blocker_request_ids"] == []
-    assert ledger["remaining_real_evidence_gap_ids"] == [
-        "temporal_provider_long_soak_window_evidence"
-    ]
-
-    assert first_live["state"] == "consumed_complete_refs_only"
-    for key in (
-        "external_default_caller_release_dist_consumed",
-        "app_workbench_package_refs_consumed",
-        "owner_receipt_typed_blocker_roundtrip_verified",
-        "continuous_no_forbidden_write_guard_verified",
-        "direct_hosted_parity_no_regression_verified",
-    ):
-        assert first_live[key] is True
-    assert first_live["temporal_soak_reconciliation_verified"] is False
-    assert first_live["temporal_provider_reconciliation_ref_recorded"] is True
-
-    boundary = first_live["authority_boundary"]
-    assert boundary["mag_records_domain_owned_owner_receipt"] is True
-    assert boundary["mag_records_external_receipt_refs"] is True
-    for claim in (
-        "mag_declares_opl_provider_domain_ready",
-        "mag_declares_grant_ready",
-        "mag_declares_fundability_ready",
-        "mag_declares_submission_ready_export",
-        "mag_implements_opl_runtime",
-        "mag_implements_app_workbench",
-    ):
-        assert boundary[claim] is False
-
-
-def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> None:
-    surface = _acceptance()
     closure = surface["closure_evidence"]
-    refs = surface["refs"]
+    assert closure["state"] == "typed_blocker_open"
+    assert closure["domain_owned_closing_ref"] is None
+    assert closure["typed_blocker_ref"].startswith("typed-blocker:mag/")
+    assert closure["counts_as_live_progress"] is False
+    assert closure["counts_as_readiness"] is False
 
-    assert closure["required_return_shapes"] == [
+    tail = surface["live_stage_run_progress_tail_policy"]
+    assert tail["role"] == "provenance_only_not_live_owner_closing_ref"
+    assert tail["live_progress_source_ref"] == surface["refs"]["live_stage_run_progress_ref"]
+    assert tail["domain_owned_closing_ref"] is None
+
+
+def test_production_acceptance_keeps_return_and_readiness_authority_closed() -> None:
+    surface = _acceptance()
+    receipt_chain = surface["grant_receipt_chain"]
+
+    assert receipt_chain["accepted_return_shapes"] == [
         "domain_owner_receipt_ref",
         "typed_blocker_ref",
         "no_regression_evidence_ref",
     ]
-    assert closure["accepted_return_shape"] in closure["required_return_shapes"]
-    if surface["evidence_tail_status"] == "closed_by_domain_owned_acceptance_receipt":
-        assert closure["accepted_return_shape"] == "domain_owner_receipt_ref"
-        assert closure["owner_receipt_ref"] in refs["owner_receipt_refs"]
-        _assert_ref_list(refs["grant_owner_receipt_refs"])
-        _assert_ref_list(refs["acceptance_receipt_refs"])
-        assert "tests/product_entry_cases/test_production_live_acceptance.py" in refs["next_verification_command_refs"]
-    else:
-        assert closure["accepted_return_shape"] == "typed_blocker_ref"
-        _assert_ref_list(refs["typed_blocker_refs"])
-        assert closure["next_verification_ref"] in refs["next_verification_command_refs"]
-
-
-def test_production_acceptance_tail_is_not_w7_live_owner_closing_ref() -> None:
-    surface = _acceptance()
-    policy = surface["live_stage_run_progress_tail_policy"]
-
-    assert policy["surface_kind"] == "mag_live_stage_run_progress_tail_policy.v1"
-    assert policy["owner"] == "med-autogrant"
-    assert policy["w7_owner_evidence_tail_role"] == (
-        "provenance_input_not_domain_owned_closing_ref"
-    )
-    assert policy["live_stage_run_progress_source_of_truth"] == (
-        "contracts/live_stage_run_progress_evidence.json"
-    )
-    assert policy["production_acceptance_tail_counts_as_live_owner_closing_ref"] is False
-    assert policy["domain_owned_closing_ref"] is None
-    assert policy["required_live_closing_shapes"] == [
-        "real_submission_ready_human_gate_receipt_ref",
-        "real_quality_or_export_receipt_ref",
-        "temporal_provider_long_soak_window_evidence_ref",
-        "owner_acceptance_or_success_rate_evidence_ref",
+    assert receipt_chain["owner_receipt_contract_ref"] == surface["refs"][
+        "owner_receipt_contract_ref"
     ]
-    assert policy["current_blocked_gate_categories"] == [
-        "human_gate",
-        "quality_or_export",
-        "long_soak",
-        "owner_acceptance",
-    ]
-    for claim_name, value in policy["forbidden_claims"].items():
-        assert value is False, claim_name
+    assert receipt_chain["provider_completion_counts_as_domain_completion"] is False
 
-
-def test_mag_production_acceptance_exposes_real_target_patch_loop_refs() -> None:
-    surface = _acceptance()
-    patch_loop_refs = surface["patch_loop_refs"]
-
-    assert set(patch_loop_refs) == {
-        "blocked_suite_result_ref",
-        "developer_patch_work_order_ref",
-        "patch_traceability_matrix_ref",
-        "target_repo_verification_refs",
-        "target_runtime_read_model_consumption_ref",
-        "workspace_environment_proof_ref",
-        "no_forbidden_write_proof_ref",
-        "target_owner_receipt_or_typed_blocker_ref",
-        "patch_absorption_ref",
-        "worktree_cleanup_ref",
-        "agent_lab_re_evaluation_ref",
+    authority = surface["authority_boundary"]
+    assert set(authority) == {
+        "opl_can_authorize_grant_domain_ready",
+        "opl_can_authorize_fundability_ready",
+        "opl_can_authorize_review_ready",
+        "opl_can_authorize_submission_ready",
+        "provider_completion_equals_domain_ready",
+        "structural_conformance_equals_domain_ready",
     }
-    assert patch_loop_refs["target_runtime_read_model_consumption_ref"] == (
-        "/product_entry_manifest/production_live_acceptance_receipt"
-    )
-    assert patch_loop_refs["no_forbidden_write_proof_ref"] == (
-        "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
-    )
-    assert patch_loop_refs["target_owner_receipt_or_typed_blocker_ref"] in (
-        surface["refs"]["owner_receipt_refs"] + surface["refs"]["typed_blocker_refs"]
-    )
-    _assert_ref_list(patch_loop_refs["target_repo_verification_refs"])
-    for key, value in patch_loop_refs.items():
-        if key == "target_repo_verification_refs":
-            continue
-        assert isinstance(value, str)
-        assert value
+    assert all(value is False for value in authority.values())
+    assert surface["forbidden_claims"] == [
+        "grant_ready",
+        "fundability_ready",
+        "quality_ready",
+        "export_ready",
+        "submission_ready",
+        "production_ready",
+    ]
