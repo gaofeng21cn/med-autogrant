@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -36,6 +39,36 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
 
     assert not (REPO_ROOT / "contracts" / "stage_control_plane.json").exists()
     assert not (REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py").exists()
+
+
+def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> None:
+    isolated_repo = tmp_path / "repo"
+    shutil.copytree(REPO_ROOT / "agent", isolated_repo / "agent")
+    shutil.copytree(REPO_ROOT / "contracts", isolated_repo / "contracts")
+    (isolated_repo / "scripts").mkdir()
+    shutil.copy2(
+        REPO_ROOT / "scripts" / "check_descriptor_contracts.py",
+        isolated_repo / "scripts" / "check_descriptor_contracts.py",
+    )
+
+    manifest_path = isolated_repo / "agent" / "stages" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["stages"][1]["stage_id"] = manifest["stages"][0]["stage_id"]
+    manifest["stages"][0]["policy_ref"] = "agent/stages/missing.md"
+    manifest["stages"][0]["allowed_action_refs"].append("unknown_action")
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    result = subprocess.run(
+        [sys.executable, isolated_repo / "scripts" / "check_descriptor_contracts.py"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "duplicate stage_id" in result.stdout
+    assert "missing repo ref" in result.stdout
+    assert "unknown allowed_action_ref" in result.stdout
 
 
 def test_current_program_and_direct_handler_share_three_actions() -> None:
