@@ -3,25 +3,31 @@
 Owner: `Med Auto Grant`
 Purpose: `machine_contract_index`
 State: `current_index`
-Machine boundary: 本文是人读合同索引；机器真相归本目录下 JSON contracts、schemas、source、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。
+Machine boundary: 本文是人读索引。机器真相归本目录 JSON contracts、schemas、source、CLI/API behavior、runtime receipts 与 `contracts/runtime-program/current-program.json`。
 
-- `contracts/runtime-program/current-program.json`：当前 repo-tracked 的 Med Auto Grant 主线合同。它声明 OPL/Temporal hosted autonomous runtime 是任务启动后的默认 task runtime，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger，`Codex CLI` 是默认 concrete stage executor。
-- `contracts/workspace_lifecycle_policy.json`：MAG source/workspace/file lifecycle 的 OPL-owned structural policy。它固定真实 workspace/runtime artifact roots 外置，repo source 只保存 locator/index/schema/receipt refs，OPL 持有 workspace/file lifecycle、artifact locator index、restore/retention 和 operator projection，MAG 继续持有 grant truth、fundability / quality / export / submission verdict、artifact body authority、memory accept/reject 和 owner receipt。
-- `contracts/stage_run_kernel_profile.json`、`contracts/stage_run_canary_evidence.json` 与 `contracts/live_stage_run_progress_evidence.json`：StageRun Kernel 的 MAG profile、controlled canary evidence 和当前 live progress owner-answer/blocker source of truth。canary 只记录 body-free refs，覆盖 candidate direction/section variant、reflection/review、ranking/selection、revision/evolution、meta-review、independent fundability/review gate、owner receipt / typed blocker closeout、scoped operator summary 和 explicit overclaim boundary；scope 固定为 `controlled_fixture_not_live_domain_progress`，不声明 live domain progress、stage-complete、grant-ready、fundability-ready、quality/export-ready、artifact/package fresh、submission-ready、production-ready 或 external submission authorization。`live_stage_run_progress_evidence.json` 当前使用 OPL 标准 `surface_kind=domain_live_stage_run_progress_evidence` 与 `status=owner_typed_blocker_recorded_not_ready_claim`，并写入 MAG-owned typed blocker；`refs.owner_receipt_refs` / `refs.typed_blocker_refs` / `refs.human_gate_refs` / `refs.quality_or_export_receipt_refs` / `refs.no_regression_refs` / `refs.long_soak_refs` 表达 live owner answer 输入。W7 owner evidence tail 当前暴露 `domain_owned_closing_ref=null` 与 `w7_owner_evidence_tail_read_model`，把缺口分类为 human gate、quality/export、long soak 与 owner acceptance；该 read-model 不是 readiness 或 closing ref。profile 同时携带 `legacy_runtime_residue_guard`，把旧本地 runtime residue 固定为 history / diagnostic / provenance / refs-only adapter / tombstone 角色，并声明 canary fixture 或 conformance pass 不能关闭 residue retirement 或恢复 MAG-owned scheduler、attempt ledger、session store、workbench、generic runner、workflow wrapper。
-- `contracts/opl_ledger_artifact_registration.json`：MAG 给 OPL Ledger 的轻量 artifact registration 合同。MAG 只发布长期 grant deliverable 的 `artifact_ref`、`artifact_hash`、`index_ref`、`review_ref` 与 `receipt_ref` 登记形状；`product-entry-manifest` 通过 `/product_entry_manifest/artifact_locator_contract/opl_ledger_artifact_registration` 暴露 readback projection。该合同不保存 grant body、artifact/package body、verdict body、owner receipt body、typed blocker body、runtime queue 或 provider attempt，也不授权 OPL Ledger 写 grant truth、创建 owner receipt / typed blocker、签 quality/export verdict 或声明 submission-ready。
-- `contracts/production_acceptance/mag-production-acceptance.json`：MAG-owned production acceptance provenance surface。它只指向 current program、live progress、owner receipt contract 与 body-free evidence ledger；`domain_owned_closing_ref` 仍为空，不能替代 live owner answer 或授权任何 ready claim。
-- `contracts/agent_lab_handoff.json`：OMA / Agent Lab 通用 `agent:evidence` handoff refs surface。它只传递 domain owner receipt、typed blocker、no-regression、human-gate 与 quality/export refs；旧 patch/worktree closeout 只保留 retired provenance 状态，不构成 active absorption authority。
-- `contracts/oma_handoff_refs.json`：MAG-specific OMA wrapper，只指向标准 `contracts/agent_lab_handoff.json`；OMA 不需要读取 MAG-specific 文件名。
-- `contracts/external_evidence/mag-evidence-receipt-ledger.json`：MAG-owned body-free evidence ledger。它只保留当前 owner receipt、typed blocker、no-regression 与 open evidence gate refs，不保存旧测试清单、patch/worktree 状态、grant truth、memory/artifact body 或 OPL runtime state，也不授权 readiness。
-- `domain_descriptor.json`、`pack_compiler_input.json`、`generated_surface_handoff.json`、`action_catalog.json`、`stage_control_plane.json`、`stage_artifact_kernel_adoption.json`、`memory_descriptor.json`、`artifact_locator_contract.json`、`owner_receipt_contract.json`、`agent_lab_handoff.json`、`oma_handoff_refs.json`、`functional_privatization_audit.json`、`private_functional_surface_policy.json`：OPL standard domain-agent pack 输入。OPL 用它们生成统一 CLI / MCP / Skill / product-entry / tool descriptors；MAG 本地 CLI、`MedAutoGrantDomainEntry`、`domain-handler export|dispatch`、schema-backed scripts/contracts 和 submission-ready export chain 继续作为 grant domain action target 与 authority function。`stage_artifact_kernel_adoption.json` 是根层机器声明：MAG grant stage output roles 映射到 OPL Stage Folder + Manifest + Receipt + current pointer kernel，但 grant truth、quality/export verdict 和 owner receipt 仍归 MAG。旧 product/status/user-loop/workbench wrapper 只按 generated refs target、migration input 或 tombstone 读取。
-- `current-program.json` 现在还携带 `product_layer_metadata`，把 MAG 的公开发布定位固定为 `Foundry Agent / OPL-compatible package built on OPL Framework`，并把 skill catalog、stage control plane、hosted-contract-bundle 与 submission-ready export 归并为同一发布形态；托管路径默认由 OPL/Temporal 承担持久在线调度、唤醒、retry、resume 和 attempt ledger。
-- 当前 machine-readable 稳定能力面固定为：`CLI` / `MedAutoGrantDomainEntry`（agent entry）、`domain-handler export|dispatch`（active/default MAG handler target）、本地脚本与 schema-backed authority contract。单一 Med Auto Grant app skill 之下的 `product entry/status/direct-entry/user-loop` 只作为 OPL/App generated shell target、refs-only projection 或 migration input，不作为 MAG 长期 product/workbench wrapper。
-- 当前 `product build-entry` / `product manifest` / `product status` / `executor routing` / `workspace progress` / `workspace cockpit` / `product direct-entry` / `product user-loop` / `package submission-ready` 也已经作为 schema-backed refs contract 固定在 `schemas/v1/`，并由 `schema-index.json` 统一索引；其中 `product-entry-manifest.schema.json`、`product-status.schema.json`、`grant-progress.schema.json`、`grant-cockpit.schema.json`、`grant-direct-entry.schema.json`、`grant-user-loop.schema.json` 与 `submission-ready-package.schema.json` 会把 generated product target、direct-product projection、composition、user loop target 与 local submission-ready delivery 收口成 generation-time fail-closed contract。`product-entry-manifest.schema.json` 同时固定 `owner_receipt_contract`、`controlled_domain_memory_apply_proof`、`lifecycle_guarded_apply_proof` 与 `physical_skeleton_follow_through`，用于审计 owner receipt refs、consumed memory refs、writeback proposal、accept/reject decision、runtime receipt evidence writer、operator receipt projection、cleanup/restore/retention typed blocker 和 repo-source layout audit；`domain-handler dispatch` 与 authority commands 负责把 OPL-hosted closeout / lifecycle guarded apply 写成 runtime receipt instance。这些仍是 app skill 的内部 refs contract，而不是对外第一主语或 MAG-owned workbench wrapper。
-- 机器本地 session、log、report、prompt 与其他运行态不再落在仓库根目录，统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-- 本地 `runtime run / runtime resume` journal 已退役；session/resume 由 OPL generated surface refs 表达，MAG 只在 runtime-state 下保留 log、report、prompt 与 handoff state。
-- `package hosted-contract-bundle` 会把当前 `current-program` pointer、runtime-state durable surface 与 canonical operator surface 一起导出到 hosted-friendly contract bundle，并额外显式携带 `domain_entry_contract`、`schema_contract`、`authoring_contract`；这类 bundle 继续只作为 integration/reference surface 供 hosted caller / external caller 消费。
-- `package submission-ready` 会把当前本地导出链进一步收口成 submission-ready delivery surface；它只在 frozen gate、必备章节、预实验、代表作和在研项目都满足时写出 `submission_ready_package`，不会宣称已执行外部官网提交，也不替代正文科学完成或作者最终判断。
-- MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority；OPL 持有 generic Agent Executor Adapter / registry 与 executor substrate，`Hermes-Agent` / `Claude Code` 只属于 OPL-owned 显式 provider / receipt / migration / provenance 语境。MAG 只声明/消费对应 request 与 receipt vocabulary，不管理 helper/runtime implementation。
-- 共享 `domain_entry_contract` 当前还会固定 `supported_commands` 与 `command_contracts`，供 external caller 直接消费。
-- `schemas/v1/hosted-contract-bundle.schema.json` 现在定义整份 hosted contract bundle 的 fail-closed 结构。
-- `contracts/runtime-program/current-program.json` 现在还额外固定了 `stage_led_framework_boundary`、`executor_defaults`、`ideal_target` 与 `phase_map`，用于说明 `Med Auto Grant` 独立 domain agent、`OPL` Codex-first stage-led framework、显式 opt-in executor backend（如外部 `Hermes-Agent` / `Claude Code`）的技术位置，以及 `OPL` family-level 协作边界与当前阶段。
+## Current Program
+
+`contracts/runtime-program/current-program.json` 是 compact pointer，只声明 canonical identity、OPL runtime binding、direct domain handler、minimal authority function ref 与当前 contract refs。它不再嵌入 product/status/user-loop、consumer-thinning、phase map、executor registry 或 production evidence snapshot。
+
+## Declarative Pack
+
+- `domain_descriptor.json`
+- `pack_compiler_input.json`
+- `capability_map.json`
+- `action_catalog.json`
+- `stage_control_plane.json`
+- `generated_surface_handoff.json`
+
+这些合同让 OPL 生成或托管 CLI/MCP/skill/product/status/user-loop/workbench caller；OPL 不能写 grant truth、memory/artifact/package body，不能签发 MAG verdict、receipt 或 typed blocker。
+
+## MAG Authority
+
+- `functional_privatization_audit.json`：八项 retained authority function 与逐文件 source classification。
+- `owner_receipt_contract.json`：`domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
+- `memory_descriptor.json`、`artifact_locator_contract.json`：body-free locator/refs contract。
+- `production_acceptance/mag-production-acceptance.json`：provenance-only acceptance tail；不是 live readiness。
+- `live_stage_run_progress_evidence.json`：真实 owner refs 与 typed blocker source。
+
+## Runtime Boundary
+
+OPL/Temporal 持有 generic stage runtime、queue、attempt ledger、retry/resume、lifecycle transport 与 generated surfaces。MAG runtime state 写入 `$CODEX_HOME/projects/med-autogrant/runtime-state/` 或 workspace/artifact roots，不进入 repo source。

@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `opl_family_contract_adoption_reference`
 State: `reference`
-Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/runtime-program/opl-family-contract-adoption.json`、product-entry manifest、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
+Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/generated_surface_handoff.json`、`contracts/action_catalog.json`、`contracts/stage_control_plane.json`、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
 
 ## Purpose
 
@@ -66,7 +66,7 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `prod
 - `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
 - `contracts/stage_control_plane.json` 的 `prompt_refs` 必须解析到 `agent/prompts/*.md`；`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 必须列出完整 `agent/` pack 文件，且不把 `agent/README.md` 当成机器 required semantic pack path。
-- `contracts/runtime-program/current-program.json` 与 `contracts/runtime-program/opl-family-contract-adoption.json` 的 current machine surface 使用 `canonical_semantic_pack_root="agent/"` 与 `canonical_semantic_pack_role="repo_source_declarative_grant_pack"`。若 runtime-program snapshot 中保留旧 `canonical_repo_source_semantic_pack` 字段，它只作为 historical/provenance 字段读取，不能覆盖 pack compiler input。
+- `contracts/runtime-program/current-program.json` 与 `contracts/pack_compiler_input.json` 使用 `canonical_semantic_pack_root="agent/"` 与 `canonical_semantic_pack_role="repo_source_declarative_grant_pack"`。若 runtime-program snapshot 中保留旧 `canonical_repo_source_semantic_pack` 字段，它只作为 historical/provenance 字段读取，不能覆盖 pack compiler input。
 
 ## OPL Substrate Adapter Export
 

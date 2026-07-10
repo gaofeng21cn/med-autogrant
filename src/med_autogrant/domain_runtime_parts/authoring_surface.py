@@ -15,10 +15,6 @@ from med_autogrant.authoring_executor import (
     build_question_refinement_execution_document,
 )
 from med_autogrant.control_plane import (
-    CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
-    read_current_program_contract as _read_current_program_contract_from_contract,
-    read_program_id as _read_program_id_from_contract,
-    resolve_current_program_contract_path,
     resolve_runtime_state_root,
     runtime_state_display_path,
 )

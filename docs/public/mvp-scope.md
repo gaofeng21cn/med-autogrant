@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `public_mvp_scope`
 State: `current_public_support`
-Machine boundary: 本文是人读 MVP 范围补充。产品和机器真相继续归核心文档、contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 grant workspace artifacts。
+Machine boundary: 本文是人读 MVP 范围补充。产品和机器真相归核心文档、current-program、root contracts、schemas、source、CLI/API 行为、runtime receipts 与 grant workspace artifacts。
 
 ## MVP 目标
 

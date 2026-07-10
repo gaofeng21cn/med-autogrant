@@ -6,7 +6,6 @@ from typing import Final
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
     "foundry": "OPL Foundry Agent series status、inspect、interfaces、validate、doctor 与 peers。",
     "workspace": "工作区诊断、摘要、阶段路由与 grant quality refs。",
-    "mainline": "当前 line/current focus 概览与维护者参考记录。",
     "domain-handler": "OPL standard domain handler target：export refs 与 dispatch guarded actions。",
     "authority": "MAG-owned memory、receipt、typed-blocker 与 closeout authority targets。",
     "pass": "authoring pass 执行入口。",
@@ -16,7 +15,6 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
 PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "foundry",
     "workspace",
-    "mainline",
     "domain-handler",
     "authority",
     "pass",
@@ -44,8 +42,6 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "next-step": ("workspace", "next-step"),
     "critique-summary": ("workspace", "critique-summary"),
     "stage-route-report": ("workspace", "route-report"),
-    "mainline-status": ("mainline", "status"),
-    "mainline-phase": ("mainline", "phase"),
     "domain-handler-export": ("domain-handler", "export"),
     "domain-handler-dispatch": ("domain-handler", "dispatch"),
     "product-domain-memory-proposal": ("authority", "memory-proposal"),

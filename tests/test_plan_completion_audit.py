@@ -16,6 +16,6 @@ def test_historical_plan_audit_is_not_a_machine_truth_gate() -> None:
     contract = json.loads(CURRENT_PROGRAM_CONTRACT.read_text(encoding="utf-8"))
 
     assert all(
-        not surface_ref.startswith("docs/history/")
-        for surface_ref in contract["repo_tracked_truth_surfaces"]
+        not surface_ref.startswith("docs/")
+        for surface_ref in contract["contract_refs"].values()
     )

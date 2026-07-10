@@ -22,6 +22,8 @@
     "agent/prompts/review_and_rebuttal.md",
     "agent/prompts/package_and_submit_ready.md",
     "agent/skills/grant_authoring.md",
+    "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+    "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
     "agent/tools/domain_affordances.md",
     "agent/quality_gates/fundability.md",
     "agent/quality_gates/quality.md",

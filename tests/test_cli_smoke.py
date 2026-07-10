@@ -62,6 +62,7 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "workspace" in stdout
     assert "authority" in stdout
     assert "product" not in stdout
+    assert "\n  mainline        " not in stdout
     assert "runtime" not in stdout
 
 
@@ -194,9 +195,10 @@ def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
 
 
 @pytest.mark.smoke
-def test_product_group_is_not_a_public_default_shell() -> None:
+@pytest.mark.parametrize("group", ["product", "mainline"])
+def test_generic_shell_group_is_not_a_public_default(group: str) -> None:
     exit_code, stdout, stderr = _run_cli(
-        "product",
+        group,
         "status",
         "--input",
         str(CRITIQUE_EXAMPLE_PATH),
@@ -206,13 +208,4 @@ def test_product_group_is_not_a_public_default_shell() -> None:
 
     assert exit_code == 2
     assert stdout == ""
-    assert "invalid choice: 'product'" in stderr
-
-
-@pytest.mark.smoke
-def test_mainline_status_projects_current_program_pointer() -> None:
-    payload = _run_json_cli("mainline", "status", "--format", "json")
-
-    assert payload["program_id"] == "med-autogrant-mainline"
-    assert "current_owner_line" in payload["current_line"]
-    assert payload["current_focus"]["summary"]
+    assert f"invalid choice: '{group}'" in stderr

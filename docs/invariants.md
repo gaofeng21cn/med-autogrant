@@ -3,67 +3,44 @@
 Owner: `Med Auto Grant`
 Purpose: `stable_invariants`
 State: `current`
-Machine boundary: 本文是人读约束集。可执行约束继续归 contracts、schemas、source、CLI/API behavior、验证脚本、runtime receipts 与 workspace/artifact outputs。
+Machine boundary: 本文是人读约束集。可执行约束归 contracts、schemas、source、CLI/API behavior、验证命令、runtime receipts 与 workspace/artifact outputs。
 
-## 身份、入口与运行真相
+## 身份与入口
 
-- `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。
-- `CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry` / `product status` / `direct-entry` / `user-loop` 是单一 app skill 下的内部 command contract / direct-product projection，不提升成公开第一主语。
-- formal-entry matrix 当前固定为 `CLI`（默认正式入口）/ `MCP`（future protocol layer）/ `controller`（内部控制面）。不得把 `supported_protocol_layer=MCP` 或 developer control-plane entry 写成当前 public runtime / 产品 controller 已正式支持。
-- 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + product-entry/user-loop surfaced local scripts/contracts`；local scripts/contracts 必须是 schema-backed、受控 surface，不得作为绕开 authoring runtime 的 ad-hoc 执行路径。
+- OPL canonical agent id 是 `mag`；`med-autogrant` 是 repo/package/plugin/skill locator。
+- 正式 repo-local entry 是 `medautogrant` CLI、`MedAutoGrantDomainEntry` 和 direct domain handler。
+- `MCP` 仍是 `descriptor_only=true`、`public_runtime=false` 的协议投影，不是当前 public runtime。
+- 不恢复 `mag` console script、旧 flat command、wrapper、facade 或 compatibility alias。
 
-## Repo Truth 与本地状态
+## Authority
 
-- `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer；项目级 `.runtime-program/`、`.codex/` 与 `.omx/` 已退役，本机 runtime state 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-- repo-tracked current truth 以核心五件套、`contracts/runtime-program/current-program.json`、以及 `docs/specs/README*` 中列出的 active current-truth specs 为准；较早 dated specs、activation package、历史 closeout label 与 baseline 只作为 provenance。
-- 当前 owner line 是 `OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor`。任务启动后的默认运行驻留由 OPL/Temporal 承担；默认 concrete stage executor 是 `codex_cli` / `Codex CLI`；MAG 不实现自己的 daemon、scheduler、attempt loop、attempt ledger 或 executor substrate。`Hermes-Agent`、Gateway、local-manager、旧 host-agent runtime 和非默认 executor/proof backend 只允许作为 OPL-owned 显式 proof lane、技术参考、history 或 regression oracle；MAG 只能声明/消费 request / receipt vocabulary，不得把 helper/runtime implementation 写成默认安装依赖、product-entry owner、runtime-registration owner 或 MAG-owned executor surface。
-- `domain_runtime_parts/substrate.py` 与 `domain_entry.py` 只能写成 repo-side domain adapter / entry adapter；旧 `domain_runtime.py` facade 已无 active source，runtime parts 不得通过 facade 读取 monkeypatch target 或重新引入 `domain_runtime_parts.patch_targets` 这类兼容桥。
+- MAG 只保留八项 canonical authority ID；ID 集合不得在 audit、pack、current-program 与 handler export 间漂移。
+- OPL/provider completion、schema completeness、generated surface、测试或 package 文件存在都不能替代 MAG verdict、receipt 或 human gate。
+- Owner receipt class 固定为 `domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
+- Domain handler dispatch 只允许三项 action；新增 action 必须先证明属于 MAG authority，而非 generic platform shell。
 
-## OPL 边界与标准 Agent 目标
+## OPL 边界
 
-- `OPL` 是 stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架，可把 MAG 作为外部领域依赖托管；它不承担 grant-domain truth owner、fundability owner、authoring quality owner、submission-ready export authority、concrete authoring executor 或 private Hermes fork。
-- OPL runtime framework 持有 stage attempt lifecycle、scheduler、session store、memory locator/index、queue/wakeup/handoff/receipt、retry/dead-letter、operator projection、shared modules/contracts/indexes 和 Temporal-backed provider 编排；OPL-hosted production path 必须以 Temporal readiness 为前提，local provider 只允许作为 dev/CI/offline diagnostic baseline。
-- OPL native helper 与高频状态索引只能缓存、探测和投影 MAG 已暴露的 `runtime_control`、`runtime_continuity`、workspace projection、artifact locator 与 explicit wakeup/TODO queue；不得替代 current-program、authoring contract、quality gate、route truth 或 submission-ready export gate。
-- 当前 OPL stage-led 对齐 surface 只供 OPL discovery、queue、wakeup、handoff、receipt、retry/dead-letter 和 operator projection 使用；不得授权 OPL 生成 fundability judgment、authoring quality verdict 或 submission-ready export verdict。
+- Generic runtime、scheduler、queue、attempt ledger、session、lifecycle transport、generated product shell 与 workbench 归 OPL。
+- MAG 不写 OPL stage attempt/current/terminal state，不拥有 Temporal worker，也不把 bounded controller 扩成 durable loop。
+- Generated caller 只能回到 MAG action target；不能读取 grant/memory/artifact/package body。
 
-## 标准 Agent 目标与 legacy 退役
+## Source 与状态
 
-- MAG 的目标态高于当前实现分布。product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake、package/memory helper 或 product wrapper 只能作为迁移输入；不得因为已有 active caller 或当前能跑就写成长期合理。
-- MAG 作为标准 OPL Agent 的长期形态是 `Declarative Grant Pack + OPL generated/hosted surfaces + minimal authority functions`。通用 transport、ledger、index、lifecycle、runner、workbench、observability、source/package/memory shell 和 generated wrapper 必须上收到 OPL primitive / pack compiler / App shell，或收薄成 refs-only adapter / diagnostic cleanup path。
-- Live Evidence 后置是 MAG 日常开发基本原则。strict source-purity、purpose-first owner-delta / domain-thinning、refs-only package/memory/lifecycle boundary、product/status/user-loop/domain-handler shell 收薄、generated/default caller consumption guard、no-active-caller、no-resurrection 和 tombstone/provenance 属于功能/结构 lane，可以不等待 Temporal long-soak、submission human-gate、App/operator sustained consumption、真实 workspace receipt scaleout 或 W7 live closing ref 先行关闭。后置 Live Evidence 仍是 grant-ready、submission-ready、App sustained-consumption、provider long-soak、physical delete owner authorization 和 production-ready claim 的必要验收；schema completeness、stage replay projection、provider completion、grouped CLI success、product-entry manifest success 或 refs-only accounting closeout 不能替代。
-- 保留在 MAG 的私有程序面必须是无法声明化的 grant authority function：funding call 解释、fundability verdict、specific aims / authoring quality / export verdict、package authority、memory accept/reject、owner receipt signer 或 grant-native helper implementation。缺少接口、active caller、不能上收原因、receipt/blocker/ref 输出边界和 no-forbidden-write 证据时，必须作为功能/结构差距处理。
-- Domain memory apply 只能通过 MAG-owned descriptor、writeback proposal、accept/reject decision、runtime receipt evidence writer、operator receipt projection 与 `controlled_domain_memory_apply_proof` 推进。OPL 只能消费 refs / receipt projection，不能写 memory body、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
-- MAG owner receipt 与 lifecycle guarded apply 必须保持 ref-only 边界：`owner_receipt_contract` 只允许 OPL 消费 `domain_owner_receipt`、`typed_blocker` 或 `no_regression_evidence` refs；cleanup/restore/retention 若触及 grant artifact、memory body、quality verdict 或 submission-ready export verdict，必须返回 MAG owner receipt requirement 或 typed blocker。
-- 开发 checkout 只保存 repo source、docs、schema/contract、locator/index、receipt ref、restore/retention policy 与 authority-function descriptor。真实 workspace state、runtime artifact、receipt instance、submission/export package、临时 build/cache/venv/pycache/pytest cache/install sync 副产物必须写入 workspace/runtime artifact root 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-- `runtime/authority_functions/` 的语义只限最小 MAG authority function anchor；它不得变成 runtime artifact root、generic lifecycle engine、session store、scheduler、runner、queue、workbench 或 memory body store。
-- OPL 上收通用 workspace/file lifecycle primitive 后，MAG 私有 scheduler/runner/session/workbench 残留只能作为迁移输入、refs-only adapter、diagnostic 或 tombstone；不得继续定义长期结构。
-- 旧 local host-agent runtime、旧 `OPL Gateway` wording、默认 Hermes/Gateway/local-manager active path、旧 product-status traces、旧 canonical CLI verifier baseline、兼容聚合面和旧 alias/facade/wrapper 只能作为 history、tombstone、explicit proof history 或 regression oracle；active caller 迁走后不保留 compatibility shim。
+- `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
+- 开发 checkout 不保存 runtime artifact、receipt instance、workspace body、package body、venv 或 cache。
+- `src/` 只允许 domain entry、authority function、refs-only adapter 与 grant-native helper；无 caller 的平台壳直接删除。
+- 历史路径只在 `docs/history/**`、明确 provenance 或 negative guard 中出现，不作为兼容承诺。
 
-## 任务边界与 AI-first Gate
+## 验证
 
-- MAG 当前任务边界固定为“指定基金任务正文 authoring”，不把跨 funder 重选写成默认主线动作。
-- “科学完成可待审包”与“形式/客观补件完成”必须分层表达；`package submission-ready` 是本地严格导出 gate，不等于外部基金官网 portal submission 已完成，也不能替代正文科学完成判断。
-- AI-first 质量判断必须由 authoring executor / critique executor 产生的 AI-authored artifact 持有；schema、scorecard、closure dossier 与 autonomy controller 只能聚合结构、证据引用、机械状态和队列。缺少 active AI-backed critique 时，不得把质量状态提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
-- `pass revision` 只能应用 AI-authored `mutation_payload.replacement_text` / `replacement_core_claim`，不得程序化生成正文 replacement prose 或使用 fallback prose 补齐正文。
-- 形式/客观补件默认进入 `TODO + 显式唤醒` 队列；除非直接破坏正文科学成立，否则不得升级为正文 authoring blocker。
-- 人工 gate 只覆盖同一基金任务内的作者决策，不跨任务改写 funding 目标。
+- 默认入口是 `scripts/verify.sh`；`full` 运行完整 repo suite。
+- Python/pytest 必须经 clean runner，避免把 cache/venv/bytecode 写回 checkout。
+- 结构 source gate 使用 OPL canonical conformance scanner，不再维护 MAG 私有 source-purity wrapper。
+- 测试只固定可观察 behavior、authority 和 fail-closed contract，不固定 MRO、`__module__`、源码文件位置、wrapper 存在或文档措辞。
 
-## 执行句柄与验证审计
+## 证据边界
 
-- `grant_run_id` 是执行句柄，不替代或污染 `workspace_id`、`draft_id`、`program_id`；所有 CLI 输出必须保持句柄分离并稳定回显。
-- 旧五个 canonical CLI surfaces 只作为 regression oracle / historical verifier context 保留；当前验证以 `scripts/verify.sh` 分层 lane、schema / contract / CLI behavior 和生成产物结构为准。
-- 测试调用 CLI 时必须使用当前 grouped public command tokens；内部 flat command string 只能作为 payload / schema / dispatch contract 字段存在，不得再作为 public shell alias 调用。
-- `next-step` / `stage-route-report` 只能输出 MAG transition oracle recommendation 与 checkpoint projection；`current_stage` 是 workspace lifecycle observation，`recommended_stage` 是 transition intent recommendation。它们必须携带 `mag_stage_transition_authority_boundary`，且不得写 OPL Stage current pointer、terminal state、`current_owner_delta` 或 next-stage decision。
-- `critique_loop_controller`、`authoring_mainline_controller` 与 `grant_autonomy_controller` 只能作为 bounded MAG domain authority target 返回 owner receipt、typed blocker 或 no-regression evidence refs；`loop_status` / `controller_status` 是 MAG domain controller result，不是 OPL Stage terminal state。OPL Stage Transition Authority 是唯一 Stage current/terminal/next writer。
-- `stage-route-report` 是唯一 canonical route/checkpoint 聚合面，必须输出 `verification_checkpoint` 与 `checkpoint_status`；`checkpoint_status` 是 domain checkpoint projection，不是 OPL Stage terminal state。
-- 最小验证入口是 `scripts/verify.sh`；它只做 hygiene/cleanup 与兼容 lane 转发，验证 lane 组合由 Makefile `test-*` target 持有。默认执行 `make test-fast`，保留 `meta`、`smoke`、`cli-smoke`、`source-purity`、`full` 分层 lane。
-- Python / pytest 验证必须通过 clean runner 路由缓存、bytecode 与 `uv sync` project venv；开发 checkout 不应产生 `.venv`、`__pycache__`、`.pytest_cache` 或 `*.egg-info` 副产物。
-
-## 文档治理
-
-- `AGENTS.md` 只管工作方式，不堆项目事实。
-- 项目事实优先收敛到 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`。
-- 理想态差距和开发计划必须按目标态拆分 `功能/结构差距` 与 `测试/证据差距`；现有通用功能面应由 OPL 承担时，即使可运行，也写成功能/结构差距。
-- Live Evidence、production evidence、Temporal long-soak、submission human-gate、App/operator sustained consumption、真实 workspace receipt scaleout、grant-ready / submission-ready owner verdict 和 physical delete authorization 默认进入后置 `测试/证据差距` / readiness lane；只有它们直接保护 grant authority、package/export mutation、owner receipt、typed blocker、human gate、closeout admission 或 release/production claim 时，才可阻塞对应动作。
-- `当前实际` 只能作为迁移起点、风险和证据来源；不得反向约束理想态，不得把现有私有实现包装成长期设计。
-- 历史 OMX 资料只从 `docs/history/omx/` 进入。
+- Live progress、quality/export、human gate、long soak、owner acceptance 与 production status 必须由对应 live/readback/receipt 证明。
+- Production acceptance contract 是 provenance，不是 live closing ref；`domain_owned_closing_ref` 为空时不得写成完成。
+- 文档、focused tests、conformance pass 和 refs-only ledger 不能单独支撑 readiness claim。

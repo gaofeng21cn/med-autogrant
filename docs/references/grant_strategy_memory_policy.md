@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `grant_strategy_memory_policy`
 State: `reference`
-Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、controller reports、stage route reports、submission-ready package surfaces、`contracts/runtime-program/opl-family-contract-adoption.json`、`contracts/runtime-program/domain-memory-seed-fixture.json`、`/product_entry_manifest/domain_memory_descriptor` 与 `/product_entry_manifest/domain_memory_descriptor_locator`。
+Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、stage route reports、submission-ready package surfaces、`contracts/runtime-program/current-program.json`、`contracts/memory_descriptor.json` 与 `contracts/runtime-program/domain-memory-seed-fixture.json`。
 Last reviewed: `2026-06-12`
 
 ## 结论

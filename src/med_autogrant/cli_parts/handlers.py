@@ -15,7 +15,6 @@ from med_autogrant.foundry_series_cli import (
     build_foundry_series_status,
     build_foundry_series_validate,
 )
-from med_autogrant.mainline_status import read_mainline_phase_status, read_mainline_status
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
 from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
@@ -54,14 +53,6 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
     ),
     "foundry-peers": DirectCommandSpec(
         build_foundry_series_peers, "列出同系列 Foundry Agent peers 与 MAG topology profile。"
-    ),
-    "mainline-status": DirectCommandSpec(
-        read_mainline_status, "输出当前 repo 主线的 current line / current focus / completed records / remaining gaps。"
-    ),
-    "mainline-phase": DirectCommandSpec(
-        read_mainline_phase_status,
-        "输出 maintainer reference 下某个记录卡片的入口与退出条件。",
-        ("selector",),
     ),
     "domain-handler-export": DirectCommandSpec(
         build_domain_handler_export,

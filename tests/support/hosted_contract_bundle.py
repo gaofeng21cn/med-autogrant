@@ -99,7 +99,7 @@ def assert_hosted_contract_bundle_cli_failure(
 
 def current_runtime_owner(current_program_contract: Path) -> dict[str, str]:
     contract = json.loads(current_program_contract.read_text(encoding="utf-8"))
-    return contract["runtime_owner"]
+    return contract["runtime_binding"]
 
 
 def assert_hosted_contract_bundle_contract(

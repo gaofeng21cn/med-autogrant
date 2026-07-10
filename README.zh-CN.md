@@ -10,7 +10,7 @@
 Owner: Med Auto Grant
 Purpose: public repository entry
 State: current_public
-Machine boundary: Human-readable entry only. Machine truth remains in contracts, schemas, source, CLI/API behavior, product-entry manifest, runtime receipts, and grant workspace artifacts.
+Machine boundary: Human-readable entry only. Machine truth remains in current-program, root contracts, schemas, source, CLI/API behavior, runtime receipts, and grant workspace artifacts.
 -->
 
 # Med Auto Grant
@@ -135,7 +135,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - 先读 [文档索引](./docs/README.md)，再读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。
 - 改 route、公开表述或 operator 命令前，以 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 作为当前技术真相集。
 - MAG direct path 与 OPL-hosted path 必须回到同一套 MAG-owned route、workspace、quality 和 export surfaces。
-- 检查 command surface 或导出 handler 数据时，使用文档索引与 contracts 中记录的 repo-local clean runner 命令；除非已确认当前 shell 指向本 checkout，不要把 PATH 上的裸 `mag` 当成 readiness evidence。
+- 检查 command surface 或导出 handler 数据时，使用文档索引与 contracts 中记录的 repo-local clean runner 命令；已退役的 `mag` console alias 不是入口或 readiness evidence。
 
 </details>
 

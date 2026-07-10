@@ -10,7 +10,7 @@
 Owner: Med Auto Grant
 Purpose: public repository entry
 State: current_public
-Machine boundary: Human-readable entry only. Machine truth remains in contracts, schemas, source, CLI/API behavior, product-entry manifest, runtime receipts, and grant workspace artifacts.
+Machine boundary: Human-readable entry only. Machine truth remains in current-program, root contracts, schemas, source, CLI/API behavior, runtime receipts, and grant workspace artifacts.
 -->
 
 # Med Auto Grant
@@ -135,7 +135,7 @@ You can start with prompts like:
 - Read the [Docs Guide](./docs/README.md) first, then [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json).
 - Before changing routes, public wording, or operator commands, use [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the current technical truth set.
 - Direct MAG use and OPL-hosted use must converge on the same MAG-owned route, workspace, quality, and export surfaces.
-- Use repo-local clean runner commands described in the Docs Guide and contracts when inspecting command surfaces or exporting handler data; do not treat a bare `mag` on `PATH` as readiness evidence unless the shell is known to point at this checkout.
+- Use repo-local clean runner commands described in the Docs Guide and contracts when inspecting command surfaces or exporting handler data; the retired `mag` console alias is not an entry or readiness signal.
 
 </details>
 

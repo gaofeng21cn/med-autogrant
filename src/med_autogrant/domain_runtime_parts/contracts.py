@@ -275,9 +275,9 @@ def build_service_safe_domain_surface(command: str) -> dict[str, str]:
 
 
 def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]) -> dict[str, Any]:
-    runtime_owner = current_program_contract.get("runtime_owner")
-    if not isinstance(runtime_owner, dict):
-        raise WorkspaceStateError("CURRENT_PROGRAM contract 缺少字段: runtime_owner")
+    runtime_binding = current_program_contract.get("runtime_binding")
+    if not isinstance(runtime_binding, dict):
+        raise WorkspaceStateError("CURRENT_PROGRAM contract 缺少字段: runtime_binding")
 
     return {
         "runtime_owner": DEFAULT_RUNTIME_OWNER,
@@ -285,24 +285,24 @@ def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]
         "runtime_substrate": DEFAULT_RUNTIME_SUBSTRATE,
         "stage_executor_owner": DEFAULT_EXECUTOR_OWNER,
         "current_owner_line": require_nonempty_string(
-            runtime_owner,
+            runtime_binding,
             "current_owner_line",
-            context="CURRENT_PROGRAM contract runtime_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
         ),
         "active_phase": require_nonempty_string(
-            runtime_owner,
+            runtime_binding,
             "active_phase",
-            context="CURRENT_PROGRAM contract runtime_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
         ),
         "active_tranche": require_nonempty_string(
-            runtime_owner,
+            runtime_binding,
             "active_tranche",
-            context="CURRENT_PROGRAM contract runtime_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
         ),
         "provenance_oracle": require_nonempty_string(
-            runtime_owner,
+            runtime_binding,
             "provenance_oracle",
-            context="CURRENT_PROGRAM contract runtime_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
         ),
         "repo_tracked_current_program_contract": CURRENT_PROGRAM_RELATIVE_PATH.as_posix(),
     }

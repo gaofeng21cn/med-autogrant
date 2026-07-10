@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `formal_entry_support_record`
 State: `support_current_truth`
-Machine boundary: 本文是人读支撑记录。当前机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API behavior、product-entry manifest 与语义化 `human_doc:*` id。
+Machine boundary: 本文是人读支撑记录。当前机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/generated_surface_handoff.json`、schemas、source、CLI/API behavior 与语义化 `human_doc:*` id。
 Last reviewed: `2026-06-12`
 
 ## 当前读法

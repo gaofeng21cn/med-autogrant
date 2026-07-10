@@ -1,4 +1,4 @@
 interface:
   display_name: "Med Auto Grant"
-  short_description: "Grant authoring runtime for Codex"
-  default_prompt: "Use $med-autogrant to open the current Med Auto Grant product status and continue the active grant authoring loop. The old $mag alias remains supported."
+  short_description: "Grant authoring domain agent for Codex"
+  default_prompt: "Use $med-autogrant to inspect the current grant workspace and continue through MAG's grant-native handlers and authority targets."

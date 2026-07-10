@@ -12,12 +12,6 @@ _WORKSPACE_STATUS_LABELS = {
     "healthy": "运行正常",
 }
 
-_PHASE_STATUS_LABELS = {
-    "current": "当前阶段",
-    "next": "下一阶段",
-    "completed": "已完成",
-}
-
 _START_MODE_LABELS = {
     "open_product_entry": "打开 status",
     "continue_grant_loop": "继续 grant loop",
@@ -80,28 +74,11 @@ def _workspace_status_label(value: object) -> str:
     return _WORKSPACE_STATUS_LABELS.get(text, text)
 
 
-def _phase_status_label(value: object) -> str:
-    text = str(value or "").strip()
-    if not text:
-        return "未知"
-    return _PHASE_STATUS_LABELS.get(text, text)
-
-
 def _start_mode_label(value: object) -> str:
     text = str(value or "").strip()
     if not text:
         return "未命名入口"
     return _START_MODE_LABELS.get(text, text.replace("_", " "))
-
-
-def _entry_surface_label(value: object) -> str:
-    text = str(value or "").strip()
-    if not text:
-        return "未命名入口"
-    public_label = public_command_label(text.replace("_", "-"))
-    if public_label != text.replace("_", "-"):
-        return public_label
-    return text.replace("_", " ")
 
 
 def _field_label(field: str) -> str:
@@ -376,38 +353,6 @@ def _render_grant_cockpit(payload: dict[str, Any]) -> str:
         lines.append(f"- 关注项: {item}")
     for name, command_line in cockpit["commands"].items():
         lines.append(f"- 可用命令 {name}: {command_line}")
-    return "\n".join(lines)
-
-
-def _render_mainline_status(payload: dict[str, Any]) -> str:
-    current_line = payload["current_line"]
-    current_focus = payload["current_focus"]
-    lines = [
-        _render_field("program_id", payload["program_id"]),
-        _render_field("current_line", current_line["current_owner_line"]),
-        _render_field("current_focus", current_focus["summary"]),
-    ]
-    for item in current_focus["focus_items"]:
-        lines.append(f"- 当前 focus 项: {item}")
-    for item in payload["completed_records"]:
-        lines.append(f"- 已完成 record {item['record_id']}: {item['summary']}")
-    for item in payload["remaining_gaps"]:
-        lines.append(f"- 剩余 gap: {item}")
-    return "\n".join(lines)
-
-
-def _render_mainline_phase(payload: dict[str, Any]) -> str:
-    reference = payload["maintainer_reference"]
-    phase = reference["record_detail"]
-    lines = [
-        f"当前 line: {payload['current_line']['current_owner_line']}",
-        f"维护参考 selector: {reference['selector']}",
-        f"维护参考记录: {phase['phase_id']}",
-        f"记录名称: {phase['phase_name']}",
-        f"记录状态: {_phase_status_label(phase['status'])}",
-    ]
-    for item in phase["entry_points"]:
-        lines.append(f"- 可用入口 {_entry_surface_label(item['name'])}: {item['command']}")
     return "\n".join(lines)
 
 
@@ -738,8 +683,6 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'stage-route-report': _render_stage_route_report,
     'grant-progress': _render_grant_progress,
     'grant-cockpit': _render_grant_cockpit,
-    'mainline-status': _render_mainline_status,
-    'mainline-phase': _render_mainline_phase,
     'grant-direct-entry': _render_grant_direct_entry,
     'grant-user-loop': _render_grant_user_loop,
     'product-entry-manifest': _render_product_entry_manifest,

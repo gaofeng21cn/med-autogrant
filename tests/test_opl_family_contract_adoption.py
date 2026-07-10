@@ -6,17 +6,11 @@ from pathlib import Path
 import pytest
 
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
+from med_autogrant.product_entry_parts.domain_handler_contract import ALLOWED_ACTIONS
 
 
 pytestmark = pytest.mark.meta
 REPO_ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_DOMAIN_HANDLER_ACTIONS = [
-    "domain-memory/decide",
-    "domain-memory/propose",
-    "stage-attempt/closeout",
-]
-
-
 def _read_json(relative_path: str) -> dict[str, object]:
     return json.loads((REPO_ROOT / relative_path).read_text(encoding="utf-8"))
 
@@ -42,14 +36,13 @@ def test_stage_control_plane_keeps_mag_authority_boundary() -> None:
 
 def test_current_program_and_direct_handler_share_three_actions() -> None:
     current_program = _read_json("contracts/runtime-program/current-program.json")
-    configured_actions = current_program["runtime_owner"]["stage_led_framework_boundary"][
-        "domain_handler_adapter"
-    ]["allowed_dispatch_actions"]
+    configured_actions = current_program["domain_handler"]["allowed_dispatch_actions"]
+    expected_actions = sorted(ALLOWED_ACTIONS)
     export = build_domain_handler_export(
         input_path=REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
     )
-    assert configured_actions == EXPECTED_DOMAIN_HANDLER_ACTIONS
+    assert configured_actions == expected_actions
     assert (
         export["domain_handler_export"]["allowed_dispatch_actions"]
-        == EXPECTED_DOMAIN_HANDLER_ACTIONS
+        == expected_actions
     )
