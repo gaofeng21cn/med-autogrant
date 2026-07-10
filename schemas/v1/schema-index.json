@@ -103,16 +103,6 @@
       "status": "frozen"
     },
     {
-      "name": "critique_loop_report",
-      "file": "critique-loop-report.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "authoring_mainline_loop_report",
-      "file": "authoring-mainline-loop-report.schema.json",
-      "status": "frozen"
-    },
-    {
       "name": "service_safe_domain_surface",
       "file": "service-safe-domain-surface.schema.json",
       "status": "frozen"

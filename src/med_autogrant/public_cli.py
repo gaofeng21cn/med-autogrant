@@ -47,8 +47,6 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "execute-outline-pass": ("pass", "outline"),
     "execute-drafting-pass": ("pass", "drafting"),
     "execute-critique-pass": ("pass", "critique"),
-    "execute-critique-revision-loop": ("pass", "critique-loop"),
-    "execute-authoring-mainline-loop": ("pass", "mainline-loop"),
     "execute-revision-pass": ("pass", "revision"),
     "execute-freeze-pass": ("pass", "freeze"),
     "build-artifact-bundle": ("package", "artifact-bundle"),

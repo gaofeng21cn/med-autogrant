@@ -325,36 +325,6 @@ def _render_execute_critique_pass(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _render_execute_critique_revision_loop(payload: dict[str, Any]) -> str:
-    loop_report = payload["loop_report"]
-    lines = [
-        f"grant_run_id: {payload['grant_run_id']}",
-        f"workspace_id: {payload['workspace_id']}",
-        f"draft_id: {payload['draft_id']}",
-        f"lifecycle_stage: {payload['lifecycle_stage']}",
-        f"loop_status: {loop_report['loop_status']}",
-        f"termination_reason: {loop_report['termination_reason']}",
-        f"completed_rounds: {loop_report['completed_rounds']}",
-        f"output_dir: {payload['output_dir']}",
-    ]
-    return "\n".join(lines)
-
-
-def _render_execute_authoring_mainline_loop(payload: dict[str, Any]) -> str:
-    loop_report = payload["mainline_loop_report"]
-    lines = [
-        f"grant_run_id: {payload['grant_run_id']}",
-        f"workspace_id: {payload['workspace_id']}",
-        f"draft_id: {payload['draft_id']}",
-        f"lifecycle_stage: {payload['lifecycle_stage']}",
-        f"loop_status: {loop_report['loop_status']}",
-        f"termination_reason: {loop_report['termination_reason']}",
-        f"completed_cycles: {loop_report['completed_cycles']}",
-        f"output_dir: {payload['output_dir']}",
-    ]
-    return "\n".join(lines)
-
-
 def _render_execute_revision_pass(payload: dict[str, Any]) -> str:
     revision_execution = payload["revision_execution"]
     lines = [
@@ -434,8 +404,6 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'execute-drafting-pass': _render_execute_direction_screening_pass,
     'execute-freeze-pass': _render_execute_direction_screening_pass,
     'execute-critique-pass': _render_execute_critique_pass,
-    'execute-critique-revision-loop': _render_execute_critique_revision_loop,
-    'execute-authoring-mainline-loop': _render_execute_authoring_mainline_loop,
     'execute-revision-pass': _render_execute_revision_pass,
     'build-final-package': _render_build_final_package,
     'build-hosted-contract-bundle': _render_build_hosted_contract_bundle,
