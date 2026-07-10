@@ -4,10 +4,6 @@ import argparse
 import json
 import sys
 
-from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
-
-_editable_shared_bootstrap.ensure_editable_dependency_paths()
-
 from med_autogrant.cli_parts import handlers, parser_adders
 from med_autogrant.cli_rendering_parts import _render_text
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
@@ -131,7 +127,6 @@ def _print_public_help() -> None:
         "Agent id: medautogrant",
         "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
         "Executable command surface: medautogrant",
-        "Brand shorthand: mag (package alias; do not use as PATH readiness evidence on macOS)",
         "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",
         "",
         "Public command groups:",

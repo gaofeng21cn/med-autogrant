@@ -2,12 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
-from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
-from med_autogrant.public_cli import public_command_label
-
-_editable_shared_bootstrap.ensure_editable_dependency_paths()
-
 from opl_harness_shared.family_entry_contracts import (
     build_domain_agent_entry_spec as _build_shared_domain_agent_entry_spec,
     build_domain_entry_command_catalog as _build_shared_domain_entry_command_catalog,
@@ -15,6 +9,9 @@ from opl_harness_shared.family_entry_contracts import (
     build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
     build_family_user_interaction_contract as _build_shared_family_user_interaction_contract,
 )
+
+from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
+from med_autogrant.public_cli import public_command_label
 
 
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
@@ -39,8 +36,8 @@ DOMAIN_AGENT_LOCATOR_SCHEMA: dict[str, Any] = {
 DOMAIN_AGENT_CODEX_ENTRY_STRATEGY = "domain_agent_entry"
 DOMAIN_AGENT_ARTIFACT_CONVENTIONS = "grant_proposal_package"
 DOMAIN_AGENT_PROGRESS_CONVENTIONS = "grant_workloop_narration"
-DOMAIN_AGENT_ENTRY_COMMAND = "product-status"
-DOMAIN_AGENT_MANIFEST_COMMAND = "product-entry-manifest"
+DOMAIN_AGENT_ENTRY_COMMAND = public_command_label("product-status")
+DOMAIN_AGENT_MANIFEST_COMMAND = public_command_label("product-entry-manifest")
 
 
 def build_domain_entry_contract() -> dict[str, Any]:

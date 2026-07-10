@@ -1,14 +1,14 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-descriptor-contracts test-family test-meta test-cli-smoke test-smoke test-regression test-proof test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-source-purity-strict test-source-purity test-descriptor-contracts test-family test-meta test-cli-smoke test-smoke test-regression test-structure test-structure-strict test-full
 
 test: test-fast
 
 test-fast:
 	$(MAKE) test-line-budget
 	$(MAKE) test-cli-smoke
-	$(PYTEST_CLEAN) -q -m "not meta and not regression and not proof"
+	$(PYTEST_CLEAN) -q -m "not meta and not regression"
 
 test-line-budget:
 	$(PYTHON_CLEAN) scripts/line_budget.py
@@ -26,7 +26,7 @@ test-descriptor-contracts:
 
 test-family:
 	$(MAKE) test-line-budget
-	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"
+	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py -q
 
 test-meta:
 	./scripts/repo-hygiene.sh --fix
@@ -43,10 +43,7 @@ test-smoke:
 	$(MAKE) test-cli-smoke
 
 test-regression:
-	$(PYTEST_CLEAN) -q -m "regression and not proof"
-
-test-proof:
-	$(PYTEST_CLEAN) -q -m proof
+	$(PYTEST_CLEAN) -q -m regression
 
 test-structure:
 	$(MAKE) test-line-budget
@@ -59,5 +56,4 @@ test-structure-strict:
 	$(MAKE) test-descriptor-contracts
 
 test-full:
-	$(PYTEST_CLEAN) -q -m "not proof"
-	$(MAKE) test-proof
+	$(PYTEST_CLEAN) -q

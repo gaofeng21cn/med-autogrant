@@ -3,7 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
+from opl_harness_shared.workspace_boundary import (
+    DEFAULT_WORKSPACE_DOCUMENT,
+    WorkspaceScaffoldFile,
+    materialize_directory_workspace,
+)
+
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
@@ -57,14 +62,6 @@ from med_autogrant.workspace_profile import (
 )
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
-
-_editable_shared_bootstrap.ensure_editable_dependency_paths()
-
-from opl_harness_shared.workspace_boundary import (  # noqa: E402
-    DEFAULT_WORKSPACE_DOCUMENT,
-    WorkspaceScaffoldFile,
-    materialize_directory_workspace,
-)
 
 
 class MagDomainRuntime(

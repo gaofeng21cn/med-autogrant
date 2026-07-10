@@ -184,7 +184,7 @@
           ],
           "declarative_pack_surface_count": 3,
           "refs_only_adapter_surface_count": 5,
-          "minimal_authority_function_count": 6,
+          "minimal_authority_function_count": 8,
           "legacy_proof_tombstone_count": 6,
           "declarative_pack_surfaces": [
             "runtime_registration",
@@ -199,12 +199,14 @@
             "human_workbench_scheduler_daemon"
           ],
           "minimal_authority_functions": [
-            "grant_lifecycle_stage",
-            "fundability_quality_export_verdicts",
-            "package_readiness_submission_ready",
+            "fundability_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "package_authority",
+            "memory_accept_reject",
+            "owner_receipt_signer",
             "grant_transition_oracle",
-            "owner_receipt_and_no_regression_evidence",
-            "grant_memory_accept_reject"
+            "grant_native_helper"
           ],
           "legacy_proof_tombstones": [
             "closed_default_path_history_index",
@@ -215,14 +217,14 @@
             "repo_owned_scheduler_daemon"
           ],
           "domain_authority_do_not_retire": [
-            "grant_lifecycle_stage",
-            "package_readiness_submission_ready",
             "fundability_verdict",
-            "authoring_quality_verdict",
-            "submission_ready_export_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "package_authority",
+            "memory_accept_reject",
+            "owner_receipt_signer",
             "grant_transition_oracle",
-            "owner_receipt",
-            "grant_strategy_memory_accept_reject"
+            "grant_native_helper"
           ],
           "representative_private_functional_surfaces": {
             "legacy_local_runtime_history_attempt_record": {
@@ -257,7 +259,8 @@
               "package_authority",
               "memory_accept_reject",
               "owner_receipt_signer",
-              "grant_helper"
+              "grant_transition_oracle",
+              "grant_native_helper"
             ],
             "compatibility_alias_allowed": false,
             "function_id_policy": "canonical_authority_surface_ids_only",
@@ -267,7 +270,8 @@
             "programmatic_authority_surface_ids": [
               "package_authority",
               "owner_receipt_signer",
-              "grant_helper"
+              "grant_transition_oracle",
+              "grant_native_helper"
             ],
             "programmatic_verdict_generation_allowed": false,
             "surface_kind": "mag_minimal_authority_surface_taxonomy",
@@ -569,7 +573,8 @@
             "package_authority",
             "memory_accept_reject",
             "owner_receipt_signer",
-            "grant_helper"
+            "grant_transition_oracle",
+            "grant_native_helper"
           ],
           "compatibility_alias_allowed": false,
           "function_id_policy": "canonical_authority_surface_ids_only",
@@ -579,7 +584,8 @@
           "programmatic_authority_surface_ids": [
             "package_authority",
             "owner_receipt_signer",
-            "grant_helper"
+            "grant_transition_oracle",
+            "grant_native_helper"
           ],
           "programmatic_verdict_generation_allowed": false,
           "surface_kind": "mag_minimal_authority_surface_taxonomy",
@@ -587,7 +593,7 @@
           "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
         },
         "minimal_authority_surface_contracts_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions",
-        "minimal_authority_surface_contract_count": 7,
+        "minimal_authority_surface_contract_count": 8,
         "ai_first_judgment_surface_ids": [
           "fundability_verdict",
           "quality_verdict",
@@ -597,7 +603,8 @@
         "programmatic_authority_surface_ids": [
           "package_authority",
           "owner_receipt_signer",
-          "grant_helper"
+          "grant_transition_oracle",
+          "grant_native_helper"
         ],
         "programmatic_verdict_generation_allowed": false,
         "mechanical_decision_forbidden_for_all_authority_surfaces": true
@@ -609,13 +616,8 @@
         "dispatch_command": "domain-handler dispatch",
         "role": "MAG-owned domain handler refs projection and guarded dispatch target for OPL stage-led typed queue and explicit provider consumption",
         "allowed_dispatch_actions": [
-          "closeout/codex-stage-receipts",
-          "closeout/executor-first-bundle",
-          "closeout/operator-readiness",
-          "closeout/physical-morphology-guard",
           "domain-memory/decide",
           "domain-memory/propose",
-          "lifecycle/receipt",
           "stage-attempt/closeout"
         ],
         "hermes_proof_executor_default": false

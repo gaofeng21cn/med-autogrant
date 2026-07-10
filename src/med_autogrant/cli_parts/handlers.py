@@ -30,7 +30,7 @@ from med_autogrant.product_entry_parts.owner_receipt_writers import (
 
 @dataclass(frozen=True)
 class DirectCommandSpec:
-    target: str
+    target: Callable[..., dict[str, Any]]
     help_text: str
     required_fields: tuple[str, ...] = ()
     optional_fields: tuple[str, ...] = ()
@@ -38,61 +38,61 @@ class DirectCommandSpec:
 
 DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
     "foundry-status": DirectCommandSpec(
-        "build_foundry_series_status", "输出 MAG 的 OPL Foundry Agent series 状态。"
+        build_foundry_series_status, "输出 MAG 的 OPL Foundry Agent series 状态。"
     ),
     "foundry-inspect": DirectCommandSpec(
-        "build_foundry_series_inspect", "检查 MAG 的 Foundry Agent identity、输入输出与 authority profile。"
+        build_foundry_series_inspect, "检查 MAG 的 Foundry Agent identity、输入输出与 authority profile。"
     ),
     "foundry-interfaces": DirectCommandSpec(
-        "build_foundry_series_interfaces", "列出 MAG 的 Foundry Agent public interface grammar。"
+        build_foundry_series_interfaces, "列出 MAG 的 Foundry Agent public interface grammar。"
     ),
     "foundry-validate": DirectCommandSpec(
-        "build_foundry_series_validate", "校验 MAG 的 Foundry Agent series contract 与 CLI command surface。"
+        build_foundry_series_validate, "校验 MAG 的 Foundry Agent series contract 与 CLI command surface。"
     ),
     "foundry-doctor": DirectCommandSpec(
-        "build_foundry_series_doctor", "输出 MAG 的 Foundry Agent authority/currentness diagnostic。"
+        build_foundry_series_doctor, "输出 MAG 的 Foundry Agent authority/currentness diagnostic。"
     ),
     "foundry-peers": DirectCommandSpec(
-        "build_foundry_series_peers", "列出同系列 Foundry Agent peers 与 MAG topology profile。"
+        build_foundry_series_peers, "列出同系列 Foundry Agent peers 与 MAG topology profile。"
     ),
     "mainline-status": DirectCommandSpec(
-        "read_mainline_status", "输出当前 repo 主线的 current line / current focus / completed records / remaining gaps。"
+        read_mainline_status, "输出当前 repo 主线的 current line / current focus / completed records / remaining gaps。"
     ),
     "mainline-phase": DirectCommandSpec(
-        "read_mainline_phase_status",
+        read_mainline_phase_status,
         "输出 maintainer reference 下某个记录卡片的入口与退出条件。",
         ("selector",),
     ),
     "domain-handler-export": DirectCommandSpec(
-        "build_domain_handler_export",
+        build_domain_handler_export,
         "导出 OPL standard domain handler refs surface。",
         ("input_path",),
     ),
     "domain-handler-dispatch": DirectCommandSpec(
-        "dispatch_domain_handler_task",
+        dispatch_domain_handler_task,
         "执行 OPL standard domain handler guarded action。",
         ("task_path",),
     ),
     "product-domain-memory-proposal": DirectCommandSpec(
-        "build_domain_memory_writeback_proposal",
+        build_domain_memory_writeback_proposal,
         "生成 MAG-owned domain memory writeback proposal projection。",
         ("input_path", "stage_id", "source_ref", "lesson_summary"),
         ("proposal_id",),
     ),
     "product-domain-memory-decision": DirectCommandSpec(
-        "build_domain_memory_writeback_decision",
+        build_domain_memory_writeback_decision,
         "生成 MAG-owned domain memory accept/reject decision projection。",
         ("proposal_path", "decision", "decision_reason"),
         ("memory_id",),
     ),
     "product-domain-memory-receipt-evidence": DirectCommandSpec(
-        "write_domain_memory_receipt_evidence",
+        write_domain_memory_receipt_evidence,
         "把 MAG-owned domain memory accept/reject decision 写成 runtime receipt evidence。",
         ("decision_payload",),
         ("runtime_root",),
     ),
     "product-owner-receipt-evidence": DirectCommandSpec(
-        "write_owner_receipt_evidence",
+        write_owner_receipt_evidence,
         "把 OPL-hosted stage attempt closeout 写成 MAG owner receipt runtime evidence。",
         ("input_path", "receipt_shape", "stage_id", "source_ref", "closeout_summary"),
         ("runtime_root", "receipt_id"),
@@ -113,17 +113,12 @@ def handle_domain_command(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
     spec = DIRECT_CLI_COMMANDS[args.command]
-    target = _resolve_direct_target(spec)
-    return target(
+    return spec.target(
         **{
             field: getattr(args, field)
             for field in spec.required_fields + spec.optional_fields
         }
     )
-
-
-def _resolve_direct_target(spec: DirectCommandSpec) -> Callable[..., dict[str, Any]]:
-    return globals()[spec.target]
 
 
 def _domain_entry() -> Any:

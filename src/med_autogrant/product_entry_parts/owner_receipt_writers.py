@@ -4,8 +4,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.owner_receipt_common import (
-    LIFECYCLE_OPERATIONS,
-    LIFECYCLE_RECEIPT_EVIDENCE_KIND,
     OWNER_RECEIPT_EVIDENCE_KIND,
     RECEIPT_SHAPES,
     STAGE_IDS,
@@ -61,13 +59,12 @@ def write_owner_receipt_evidence(
             "repo_tracked": False,
         },
         "receipt_instance_ref": str(receipt_path),
-        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+        "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
         "source_refs": [
-            "/product_entry_manifest/controlled_stage_attempt_projection",
-            "/product_entry_manifest/owner_receipt_contract",
-            "/product_entry_manifest/controlled_domain_memory_apply_proof",
-            "/product_entry_manifest/artifact_locator_contract",
-            "/product_entry_manifest/grant_authoring_readiness",
+            "contracts/stage_control_plane.json",
+            "contracts/owner_receipt_contract.json",
+            "contracts/artifact_locator_contract.json",
+            "contracts/functional_privatization_audit.json",
         ],
         "artifact_mutation": "none",
         "memory_mutation": "none",
@@ -82,70 +79,4 @@ def write_owner_receipt_evidence(
         "ok": True,
         "command": "owner-receipt-evidence",
         "owner_receipt_evidence": receipt,
-    }
-
-
-def write_lifecycle_receipt_evidence(
-    *,
-    input_path: str | Path,
-    operation: str,
-    receipt_shape: str,
-    source_ref: str,
-    closeout_summary: str,
-    runtime_root: str | Path | None = None,
-    receipt_id: str | None = None,
-) -> dict[str, Any]:
-    resolved_input_path = Path(input_path).expanduser().resolve()
-    resolved_operation = require_choice(
-        operation,
-        choices=LIFECYCLE_OPERATIONS,
-        field_name="operation",
-    )
-    resolved_shape = require_choice(
-        receipt_shape,
-        choices=RECEIPT_SHAPES,
-        field_name="receipt_shape",
-    )
-    resolved_source_ref = _require_nonempty_string(source_ref, field_name="source_ref")
-    resolved_summary = _require_nonempty_string(closeout_summary, field_name="closeout_summary")
-    resolved_receipt_id = receipt_id or f"{resolved_operation}-{resolved_shape}"
-    runtime_state_root = resolve_receipt_runtime_root(runtime_root)
-    receipt_path = runtime_state_root / "receipts" / "lifecycle" / f"{resolved_receipt_id}.json"
-    receipt = {
-        "surface_kind": LIFECYCLE_RECEIPT_EVIDENCE_KIND,
-        "version": "v1",
-        "receipt_id": f"mag.lifecycle.receipt.{resolved_receipt_id}",
-        "state": "runtime_receipt_instance_written",
-        "operation": resolved_operation,
-        "receipt_shape": resolved_shape,
-        "owner": TARGET_DOMAIN_ID,
-        "target_domain_id": TARGET_DOMAIN_ID,
-        "source_ref": resolved_source_ref,
-        "closeout_summary": resolved_summary,
-        "workspace_locator": {
-            "workspace_surface_kind": "nsfc_workspace",
-            "workspace_path": str(resolved_input_path),
-            "repo_tracked": False,
-        },
-        "receipt_instance_ref": str(receipt_path),
-        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-        "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
-        "source_refs": [
-            "/product_entry_manifest/lifecycle_guarded_apply_proof",
-            "/product_entry_manifest/owner_receipt_contract",
-            "/product_entry_manifest/artifact_locator_contract",
-            "/product_entry_manifest/runtime_control/restore_point",
-        ],
-        "artifact_mutation": "none",
-        "memory_mutation": "none",
-        "lifecycle_mutation": "receipt_metadata_only",
-        "repo_tracked": False,
-        "forbidden_write_proof": forbidden_write_proof(),
-        "opl_consumption": opl_receipt_ref_consumption(),
-    }
-    write_receipt(receipt_path, receipt)
-    return {
-        "ok": True,
-        "command": "lifecycle-receipt-evidence",
-        "lifecycle_receipt_evidence": receipt,
     }

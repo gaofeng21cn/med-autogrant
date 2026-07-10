@@ -95,9 +95,6 @@ chmod +x "${entrypoint_bin}/medautogrant"
 export PATH="${entrypoint_bin}:${PATH}"
 
 sync_args=(uv sync --frozen --group dev --no-install-project --inexact)
-if [[ -n "${MAG_CLEAN_RUNNER_UV_EXTRA:-}" ]]; then
-  sync_args+=(--extra "${MAG_CLEAN_RUNNER_UV_EXTRA}")
-fi
 
 if [[ "${MAG_CLEAN_RUNNER_SKIP_SYNC:-0}" != "1" && "${UV_NO_SYNC:-0}" != "1" ]]; then
   "${sync_args[@]}"

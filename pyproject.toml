@@ -18,7 +18,6 @@ dependencies = [
 
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"
-mag = "med_autogrant.cli:entrypoint"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -28,12 +27,8 @@ markers = [
   "smoke: minimal default CLI/product entry health checks",
   "integration: cross-surface integration checks that are broader than unit contracts",
   "regression: heavier matrix, provenance oracle, runtime/export, and product regression checks",
-  "proof: explicit optional hosted/executor proof lane",
   "structure: repository structure and architecture governance checks",
 ]
-
-[tool.setuptools.package-data]
-med_autogrant = ["product_entry_parts/consumer_thinning_audit/*.json"]
 
 [dependency-groups]
 dev = [

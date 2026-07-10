@@ -13,7 +13,6 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 
 
 OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
-LIFECYCLE_RECEIPT_EVIDENCE_KIND = "mag_lifecycle_receipt_evidence"
 RECEIPT_RECONCILIATION_PROOF_KIND = "mag_controlled_soak_receipt_reconciliation_proof"
 RECEIPT_RECONCILIATION_INVENTORY_KIND = "mag_controlled_soak_receipt_reconciliation_inventory"
 PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND = (
@@ -38,7 +37,6 @@ STAGE_IDS = (
     "review_and_rebuttal",
     "package_and_submit_ready",
 )
-LIFECYCLE_OPERATIONS = ("cleanup", "restore", "retention")
 PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker")
 PATCH_LOOP_REF_KEYS = (
     "blocked_suite_result_ref",
