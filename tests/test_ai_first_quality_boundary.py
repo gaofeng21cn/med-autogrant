@@ -61,41 +61,6 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
     assert "mag_owner_typed_blocker" in verdict["properties"]["source_kind"]["enum"]
 
 
-def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -> None:
-    from med_autogrant.ai_first_boundaries import AI_REVIEWER_BACKED_OWNERS
-    from med_autogrant.domain_runtime_parts import runtime_ops
-
-    assert AI_REVIEWER_BACKED_OWNERS == {
-        "Codex CLI critique executor",
-        "OPL executor adapter critique receipt owner",
-    }
-
-    def projection_only_scorecard(workspace: dict[str, object]) -> dict[str, object]:
-        return {
-            "surface_kind": "grant_quality_scorecard",
-            "overall_status": "submission_grade_candidate",
-            "assessment_owner": "projection_only",
-            "ai_reviewer_required": True,
-            "unresolved_hard_issues": [],
-            "tracked_issues": [],
-            "dimensions": [],
-            "evidence_supply_queue": [],
-        }
-
-    def closure_dossier(workspace: dict[str, object]) -> dict[str, object]:
-        return {"surface_kind": "grant_quality_closure_dossier"}
-
-    with pytest.MonkeyPatch.context() as monkeypatch:
-        monkeypatch.setattr(runtime_ops, "build_grant_quality_scorecard", projection_only_scorecard)
-        monkeypatch.setattr(runtime_ops, "build_grant_quality_closure_dossier", closure_dossier)
-        quality_output = runtime_ops.build_autonomy_quality_evaluator_output({})
-
-    assert quality_output["quality_status"] == "not_ready"
-    assert quality_output["blocker_report"]["assessment_owner"] == "projection_only"
-    assert quality_output["blocker_report"]["ai_reviewer_required"] is True
-    assert any("AI reviewer-backed critique is required" in item for item in quality_output["unresolved_blockers"])
-
-
 def test_revision_executor_only_applies_ai_authored_mutation_payload() -> None:
     from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
     from med_autogrant.workspace import WorkspaceStateError

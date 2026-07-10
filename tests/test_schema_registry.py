@@ -96,7 +96,7 @@ class SchemaRegistryTest(unittest.TestCase):
             (
                 "grant-autonomy-controller-report.schema.json",
                 None,
-                {"controller_plan", "tranche_history", "latest_quality_closure_dossier", "closure_package_queue"},
+                {"workspace_identity", "controller_execution_boundary", "authority_return"},
             ),
             (
                 "grant-quality-scorecard.schema.json",

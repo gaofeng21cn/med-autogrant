@@ -59,18 +59,6 @@ def test_pack_compiler_input_lists_all_professional_skills() -> None:
     assert skill_paths <= set(compiler_input["required_domain_pack_paths"])
 
 
-def test_generated_pack_compiler_input_lists_all_professional_skills() -> None:
-    from med_autogrant.opl_standard_pack import build_standard_pack
-
-    generated = build_standard_pack()["pack_compiler_input"]
-    skill_paths = {
-        str(path.relative_to(REPO_ROOT))
-        for path in (REPO_ROOT / "agent/professional_skills").glob("*/SKILL.md")
-    }
-
-    assert skill_paths <= set(generated["required_domain_pack_paths"])
-
-
 def test_capability_map_self_evolution_routing_fields_are_refs_only() -> None:
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
 

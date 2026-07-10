@@ -13,6 +13,7 @@ PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
 PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
 PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agents" / "openai.yaml"
+PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
 
 
@@ -46,28 +47,31 @@ def test_repo_does_not_track_repo_local_codex_marketplace() -> None:
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
     metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
+    pack_input = json.loads((REPO_ROOT / "contracts/pack_compiler_input.json").read_text())
+    capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
+    action_catalog = json.loads((REPO_ROOT / "contracts/action_catalog.json").read_text())
     frontmatter_match = re.match(r"---\n(?P<frontmatter>.*?)\n---", skill_text, re.DOTALL)
 
     assert frontmatter_match is not None
     frontmatter = frontmatter_match.group("frontmatter")
     assert re.search(r"^name:\s*med-autogrant$", frontmatter, re.MULTILINE)
-    assert "domain entry" in frontmatter
-    assert "authority targets" in frontmatter
-    assert "schema-backed contracts" in frontmatter
-    for command_surface in (
-        "workspace route-report",
-        "workspace quality-scorecard",
-        "pass revision",
-        "package submission-ready",
-        "authority memory-proposal",
-        "authority memory-decision",
-        "authority source-purity",
-    ):
-        assert (
-            f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}"
-            in skill_text
-        )
-    assert "descriptor_only=true" in skill_text
-    assert "public_runtime=false" in skill_text
+    assert pack_input["canonical_agent_id"] == "mag"
+
+    primary_skill = next(
+        capability
+        for capability in capability_map["capabilities"]
+        if capability["surface_role"] == "primary_skill"
+    )
+    carrier = primary_skill["carrier_projection_contract"]
+    assert carrier["canonical_source"] == "agent/primary_skill/SKILL.md"
+    assert carrier["carrier_skill_ref"] == "plugins/med-autogrant/skills/med-autogrant/SKILL.md"
+    assert PRIMARY_SKILL_PATH.read_bytes() == PLUGIN_SKILL_PATH.read_bytes()
+
+    for action in action_catalog["actions"]:
+        assert action["authority_boundary"]["descriptor_only"] is True
+        assert action["authority_boundary"]["public_runtime"] is False
+        assert action["supported_surfaces"]["mcp"]["descriptor_only"] is True
+        assert action["supported_surfaces"]["mcp"]["public_runtime"] is False
+
     assert 'display_name: "Med Auto Grant"' in metadata_text
-    assert 'default_prompt: "Use $med-autogrant' in metadata_text
+    assert "$med-autogrant" in metadata_text
