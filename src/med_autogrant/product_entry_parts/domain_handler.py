@@ -75,7 +75,8 @@ def build_domain_handler_export(
             "workspace_path": str(resolved_input_path),
         },
         "family_action_catalog": _read_contract("action_catalog.json"),
-        "family_stage_control_plane": _read_contract("stage_control_plane.json"),
+        "declarative_stage_manifest_ref": "agent/stages/manifest.json",
+        "family_stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
         "owner_receipt_contract": _read_contract("owner_receipt_contract.json"),
         "minimal_authority_functions": [
             {"authority_id": authority_id, "ref": ref}

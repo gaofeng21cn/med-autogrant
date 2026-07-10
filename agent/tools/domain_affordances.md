@@ -7,7 +7,7 @@ Machine boundary: This file declares available domain tool affordances for MAG s
 
 ## Boundary
 
-MAG stage attempts may use tools to read grant calls, applicant context, repo contracts, package workspaces, and refs-only evidence. Tool use stays inside the permission, credential, write-scope, side-effect, and forbidden-authority boundaries declared by `contracts/pack_compiler_input.json`, `contracts/stage_control_plane.json`, and `contracts/cognitive_kernel_adoption.json`.
+MAG stage attempts may use tools to read grant calls, applicant context, repo contracts, package workspaces, and refs-only evidence. Tool use stays inside the permission, credential, write-scope, side-effect, and forbidden-authority boundaries declared by `agent/stages/manifest.json`, `contracts/pack_compiler_input.json`, and `contracts/cognitive_kernel_adoption.json`.
 
 ## Affordances
 

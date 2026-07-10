@@ -48,6 +48,26 @@ def test_pack_compiler_input_lists_all_professional_skills() -> None:
     assert skill_paths <= set(compiler_input["required_domain_pack_paths"])
 
 
+def test_capability_runtime_projections_use_declarative_stage_manifest() -> None:
+    capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
+    stage_runtime_refs = [
+        projection
+        for capability in capability_map["capabilities"]
+        for projection in capability.get("runtime_projection_refs", [])
+        if projection["role"].startswith("stage_")
+    ]
+
+    assert stage_runtime_refs
+    assert all(
+        projection["ref"] == "agent/stages/manifest.json#/stages"
+        for projection in stage_runtime_refs
+    )
+    assert all(
+        projection["role"].startswith("stage_manifest_")
+        for projection in stage_runtime_refs
+    )
+
+
 def test_capability_map_self_evolution_routing_fields_are_refs_only() -> None:
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
 

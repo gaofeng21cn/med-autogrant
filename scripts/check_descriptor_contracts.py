@@ -4,14 +4,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from med_autogrant.stage_control_plane import build_mag_family_stage_control_plane
-
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
+STAGE_MANIFEST_PATH = REPO_ROOT / "agent" / "stages" / "manifest.json"
+LEGACY_STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane.json"
+LEGACY_STAGE_COMPILER_PATH = REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py"
 FIXED_OPL_CONTRACTS = {
     "pack_compiler_input.json": "opl_domain_pack_compiler_input",
     "generated_surface_handoff.json": "opl_generated_surface_handoff",
-    "stage_control_plane.json": "family_stage_control_plane",
     "functional_privatization_audit.json": "functional_privatization_audit",
 }
 
@@ -33,17 +32,30 @@ def main() -> int:
             errors.append(f"{filename}: surface_kind must be {surface_kind}")
         contracts[filename] = payload
 
-    action_catalog = json.loads(
-        (REPO_ROOT / "contracts" / "action_catalog.json").read_text(encoding="utf-8")
-    )
-    expected_stage_plane = build_mag_family_stage_control_plane(
-        family_action_catalog=action_catalog
-    )
-    if contracts.get("stage_control_plane.json") != expected_stage_plane:
-        errors.append(
-            "stage_control_plane.json: stale; run "
-            "scripts/run-python-clean.sh -m med_autogrant.stage_control_plane"
-        )
+    try:
+        stage_manifest = json.loads(STAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"agent/stages/manifest.json: unreadable JSON: {exc}")
+        stage_manifest = {}
+    if not isinstance(stage_manifest, dict):
+        errors.append("agent/stages/manifest.json: must be a JSON object")
+    else:
+        if stage_manifest.get("surface_kind") != "mag_declarative_stage_manifest":
+            errors.append(
+                "agent/stages/manifest.json: surface_kind must be mag_declarative_stage_manifest"
+            )
+        if stage_manifest.get("target_domain_id") != "med-autogrant":
+            errors.append("agent/stages/manifest.json: target_domain_id must be med-autogrant")
+        stages = stage_manifest.get("stages")
+        if not isinstance(stages, list) or not stages:
+            errors.append("agent/stages/manifest.json: stages must be a non-empty list")
+
+    for legacy_path in (LEGACY_STAGE_CONTROL_PLANE_PATH, LEGACY_STAGE_COMPILER_PATH):
+        if legacy_path.exists():
+            errors.append(
+                f"retired private stage compiler surface must remain absent: "
+                f"{legacy_path.relative_to(REPO_ROOT)}"
+            )
 
     pack = contracts.get("pack_compiler_input.json", {})
     listed_paths = pack.get("required_domain_pack_paths")

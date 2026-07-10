@@ -61,7 +61,8 @@ def write_owner_receipt_evidence(
         "receipt_instance_ref": str(receipt_path),
         "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
         "source_refs": [
-            "contracts/stage_control_plane.json",
+            "agent/stages/manifest.json",
+            "/product_entry_manifest/family_stage_control_plane",
             "contracts/owner_receipt_contract.json",
             "contracts/artifact_locator_contract.json",
             "contracts/functional_privatization_audit.json",

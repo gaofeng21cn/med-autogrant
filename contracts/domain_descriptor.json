@@ -21,7 +21,7 @@
     "generated_surface_handoff": "contracts/generated_surface_handoff.json",
     "oma_handoff_refs": "contracts/oma_handoff_refs.json",
     "pack_compiler_input": "contracts/pack_compiler_input.json",
-    "stage_control_plane": "contracts/stage_control_plane.json"
+    "stage_manifest": "agent/stages/manifest.json"
   },
   "surface_kind": "domain_agent_descriptor"
 }

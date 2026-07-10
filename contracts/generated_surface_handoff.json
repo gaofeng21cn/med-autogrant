@@ -7,7 +7,8 @@
   "domain_repo_can_own_generated_surface": false,
   "source_contract_ref": "contracts/pack_compiler_input.json",
   "domain_pack_ref": "agent/",
-  "stage_descriptor_ref": "contracts/stage_control_plane.json",
+  "stage_descriptor_ref": "agent/stages/manifest.json",
+  "generated_stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
   "generated_surfaces": [
     "cli",
     "mcp",

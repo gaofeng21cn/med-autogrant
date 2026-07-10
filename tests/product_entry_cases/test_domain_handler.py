@@ -44,6 +44,11 @@ def test_domain_handler_export_is_direct_and_keeps_eight_authority_targets() -> 
         "domain-memory/propose",
         "stage-attempt/closeout",
     ]
+    assert export["declarative_stage_manifest_ref"] == "agent/stages/manifest.json"
+    assert export["family_stage_control_plane_ref"] == (
+        "/product_entry_manifest/family_stage_control_plane"
+    )
+    assert "family_stage_control_plane" not in export
     assert "product_entry_manifest" not in export
 
 
