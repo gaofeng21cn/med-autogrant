@@ -29,7 +29,6 @@ def _mutate(payload: dict[str, Any], path: tuple[str | int, ...], value: object)
 class FinalPackageTest(unittest.TestCase):
     def test_final_package_accepts_only_final_gate_states(self) -> None:
         cases = (
-            (FREEZE_READY, "critique", "freeze_ready", "revised", False),
             (FROZEN, "frozen", "submission_frozen", "frozen", True),
         )
         for input_path, lifecycle_stage, checkpoint, draft_status, presubmission_frozen in cases:
@@ -99,17 +98,18 @@ class FinalPackageTest(unittest.TestCase):
                 self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), final_package)
 
     def test_nonfinal_checkpoint_and_output_identity_fail_closed(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            bundle_path = Path(tmp_dir) / "bundle.json"
-            package_path = Path(tmp_dir) / "final.json"
-            self._build_bundle(FORWARD, bundle_path)
-            self._assert_failure(FORWARD, bundle_path, package_path, "checkpoint_status")
+        for input_path in (FORWARD, FREEZE_READY):
+            with self.subTest(input_path=input_path.name), tempfile.TemporaryDirectory() as tmp_dir:
+                bundle_path = Path(tmp_dir) / "bundle.json"
+                package_path = Path(tmp_dir) / "final.json"
+                self._build_bundle(input_path, bundle_path)
+                self._assert_failure(input_path, bundle_path, package_path, "checkpoint_status")
 
         for field in ("grant_run_id", "workspace_id", "draft_id"):
             with self.subTest(output_identity_field=field), tempfile.TemporaryDirectory() as tmp_dir:
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"
-                self._build_bundle(FREEZE_READY, bundle_path)
+                self._build_bundle(FROZEN, bundle_path)
                 bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
                 existing = {
                     identity_field: bundle[identity_field]
@@ -118,7 +118,7 @@ class FinalPackageTest(unittest.TestCase):
                 existing[field] = "other"
                 package_path.write_text(json.dumps(existing), encoding="utf-8")
                 self._assert_failure(
-                    FREEZE_READY,
+                    FROZEN,
                     bundle_path,
                     package_path,
                     "final package output identity 不匹配",

@@ -30,7 +30,6 @@ def build_hosted_contract_bundle_document(
         "formal_entry_matrix": {
             "default_formal_entry": "CLI",
             "supported_protocol_layer": "MCP",
-            "internal_controller_surface": "controller",
         },
         "execution_identity": {
             "grant_run_id": final_package["grant_run_id"],

@@ -47,7 +47,10 @@ class RevisionExecutorTest(unittest.TestCase):
             self.assertEqual(revision["post_revision_version_label"], "v0.4")
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8")), workspace)
             self.assertTrue(validate_workspace_document(workspace).ok)
-            self.assertEqual(build_stage_route_report(workspace)["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(
+                build_stage_route_report(workspace)["route"]["next_step"]["recommended_stage"],
+                "argument_building",
+            )
 
     def test_rereview_preserves_completed_revision_evidence(self) -> None:
         payload = build_revision_execution_document(document=_load(P3B_RE_REVIEW_EXAMPLE_PATH))

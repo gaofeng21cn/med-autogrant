@@ -9,8 +9,7 @@
       "additionalProperties": false,
       "required": [
         "default_formal_entry",
-        "supported_protocol_layer",
-        "internal_controller_surface"
+        "supported_protocol_layer"
       ],
       "properties": {
         "default_formal_entry": {
@@ -18,9 +17,6 @@
         },
         "supported_protocol_layer": {
           "const": "MCP"
-        },
-        "internal_controller_surface": {
-          "const": "controller"
         }
       }
     },

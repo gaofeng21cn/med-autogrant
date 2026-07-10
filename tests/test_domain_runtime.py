@@ -112,7 +112,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             self.assertEqual(critique_report["verification_checkpoint"]["identity"]["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
             self.assertEqual(
                 critique_report["route"]["next_step"]["recommended_stage"],
-                "revision",
+                "argument_building",
             )
 
             revised_payload = runtime.execute_revision_pass(
@@ -139,7 +139,10 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
 
             revised_route_report = runtime.stage_route_report(input_path=str(revised_workspace_path))
             self.assertTrue(revised_route_report["ok"])
-            self.assertEqual(revised_route_report["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(
+                revised_route_report["route"]["next_step"]["recommended_stage"],
+                "argument_building",
+            )
 
             frozen_bundle = runtime.build_artifact_bundle(
                 input_path=str(FROZEN_EXAMPLE_PATH),
