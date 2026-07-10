@@ -13,11 +13,6 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 
 
 OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
-RECEIPT_RECONCILIATION_PROOF_KIND = "mag_controlled_soak_receipt_reconciliation_proof"
-RECEIPT_RECONCILIATION_INVENTORY_KIND = "mag_controlled_soak_receipt_reconciliation_inventory"
-PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND = (
-    "mag_production_live_acceptance_receipt_projection"
-)
 
 RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker", "no_regression_evidence")
 FORBIDDEN_WRITE_KEYS = (
@@ -37,21 +32,6 @@ STAGE_IDS = (
     "review_and_rebuttal",
     "package_and_submit_ready",
 )
-PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker")
-PATCH_LOOP_REF_KEYS = (
-    "blocked_suite_result_ref",
-    "developer_patch_work_order_ref",
-    "patch_traceability_matrix_ref",
-    "target_repo_verification_refs",
-    "target_runtime_read_model_consumption_ref",
-    "workspace_environment_proof_ref",
-    "no_forbidden_write_proof_ref",
-    "target_owner_receipt_or_typed_blocker_ref",
-    "patch_absorption_ref",
-    "worktree_cleanup_ref",
-    "agent_lab_re_evaluation_ref",
-)
-PATCH_LOOP_REF_LIST_KEYS = ("target_repo_verification_refs",)
 
 
 def resolve_receipt_runtime_root(runtime_root: str | Path | None) -> Path:

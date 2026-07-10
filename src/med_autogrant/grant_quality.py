@@ -35,15 +35,6 @@ from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
-_QUALITY_CONTROLLER_ACTIONS = {
-    "continue_mainline",
-    "rollback_upstream",
-    "reselect_project_profile",
-    "fail_closed",
-}
-
-
-
 def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise TypeError("quality scorecard 输入必须是 workspace object。")

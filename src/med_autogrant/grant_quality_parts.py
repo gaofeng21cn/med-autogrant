@@ -54,13 +54,7 @@ def _read_nested_string_list(payload: Mapping[str, Any], parent_key: str, child_
 
 
 def _dedupe_preserve_order(values: Iterable[str]) -> list[str]:
-    seen: set[str] = set()
-    ordered: list[str] = []
-    for item in values:
-        if item not in seen:
-            seen.add(item)
-            ordered.append(item)
-    return ordered
+    return list(dict.fromkeys(values))
 
 
 def _flatten_to_strings(values: Iterable[Any]) -> list[str]:

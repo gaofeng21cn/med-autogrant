@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-
+from collections import Counter
 from typing import Any
 
 from med_autogrant.workspace_projection_parts import (
@@ -110,8 +110,9 @@ def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
         blocking_gaps.append("FundingOpportunityBrief 缺少 mandatory_sections。")
 
     evidence_entries = _collect_trust_ranked_evidence(document)
+    trust_counts = Counter(item["trust_level"] for item in evidence_entries)
     trust_summary = {
-        trust_level: sum(1 for item in evidence_entries if item["trust_level"] == trust_level)
+        trust_level: trust_counts[trust_level]
         for trust_level in _EVIDENCE_TRUST_LEVELS
     }
 

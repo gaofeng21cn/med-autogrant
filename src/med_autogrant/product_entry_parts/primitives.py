@@ -7,19 +7,8 @@ from typing import Any, Mapping
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
-PRODUCT_ENTRY_VERSION = 1
-PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
-PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
-PRODUCT_STATUS_KIND = "product_status"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
-GRANT_PROGRESS_PROJECTION_VERSION = 1
-GRANT_PROGRESS_PROJECTION_KIND = "grant_progress"
-GRANT_COCKPIT_KIND = "grant_cockpit"
-GRANT_DIRECT_ENTRY_VERSION = 1
-GRANT_DIRECT_ENTRY_KIND = "grant_direct_entry"
-GRANT_USER_LOOP_VERSION = 1
-GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 

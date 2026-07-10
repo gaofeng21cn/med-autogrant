@@ -14,7 +14,6 @@ from opl_harness_shared.family_action_catalog import (
 
 
 CATALOG_ID = "med_autogrant_action_catalog"
-ACTION_CATALOG_REF = "/product_entry_manifest/family_action_catalog"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FORBIDDEN_GENERIC_OWNER_ROLES = [
     "generic_scheduler_owner",
