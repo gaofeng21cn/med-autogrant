@@ -1,64 +1,27 @@
 from __future__ import annotations
 
-import json
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
-from med_autogrant.control_plane import (
-    CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
-    read_current_program_contract as _read_current_program_contract_from_contract,
-    read_program_id as _read_program_id_from_contract,
-    resolve_current_program_contract_path,
-    resolve_runtime_state_root,
-    runtime_state_display_path,
+from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
+from med_autogrant.domain_runtime_parts.contracts import (
+    validate_contract_schema as _validate_contract_schema,
+    validate_schema_payload as _validate_schema_payload,
 )
-from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
-from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
-from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
-from med_autogrant.final_package import (
-    _validate_required_artifact_bundle_fields,
-    build_final_package_document,
+from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
+from med_autogrant.domain_runtime_parts.io import (
+    _build_selection_input_from_discovery,
+    _default_funding_landscape_cache_path,
+    _derive_funding_landscape_diff_report_path,
+    _guard_workspace_output_identity,
+    _load_existing_cache_snapshot,
+    _load_funding_landscape_cache_if_needed,
+    _load_json_object,
+    _write_json_output,
+    _write_revised_workspace_output,
 )
-from med_autogrant.hosted_contract_bundle import (
-    SUPPORTED_FINAL_PACKAGE_VERSION,
-    _validate_required_final_package_fields,
-    build_hosted_contract_bundle_document,
-)
-from med_autogrant.submission_ready import build_submission_ready_package_document
-from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.funding_landscape_discovery import discover_funding_landscape
-from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
-from med_autogrant.funding_landscape_discovery import build_funding_landscape_diff_report
-from med_autogrant.project_profile_selector import (
-    build_initialized_intake_workspace,
-    select_project_profile,
-)
-from med_autogrant.stage_router import _build_forced_rollback_actions, determine_next_step
-from med_autogrant.domain_entry_contract import (
-    SERVICE_SAFE_ENTRY_ADAPTER,
-    SERVICE_SAFE_ENTRY_SURFACE_KIND,
-    build_domain_entry_contract,
-)
-from opl_harness_shared.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
-from med_autogrant.workspace import (
-    build_grant_evidence_grounding,
-    build_grant_intake_audit,
-    build_critique_summary,
-    load_workspace_document,
-    materialize_workspace_surfaces,
-    summarize_workspace_document,
-)
-from med_autogrant.workspace_projection_parts import _require_workspace_context
-from med_autogrant.workspace_profile import (
-    MAG_WORKSPACE_GITIGNORE_ENTRIES,
-    MAG_WORKSPACE_DIRECTORIES,
-    render_mag_workspace_readme,
-)
-from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
-from med_autogrant.workspace_validation import validate_workspace_document
+from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
 from med_autogrant.domain_runtime_parts.shared import (
     FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
     FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE,
@@ -69,9 +32,31 @@ from med_autogrant.domain_runtime_parts.shared import (
     PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
     PROJECT_PROFILE_SELECTION_SCHEMA_FILE,
 )
-from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
-from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
-from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
+from med_autogrant.funding_landscape_discovery import (
+    build_funding_landscape_cache,
+    build_funding_landscape_diff_report,
+    discover_funding_landscape,
+)
+from med_autogrant.project_profile_selector import (
+    build_initialized_intake_workspace,
+    select_project_profile,
+)
+from med_autogrant.route_report import build_stage_route_report
+from med_autogrant.stage_router import determine_next_step
+from med_autogrant.workspace import (
+    build_grant_evidence_grounding,
+    build_grant_intake_audit,
+    build_critique_summary,
+    load_workspace_document,
+    summarize_workspace_document,
+)
+from med_autogrant.workspace_profile import (
+    MAG_WORKSPACE_GITIGNORE_ENTRIES,
+    MAG_WORKSPACE_DIRECTORIES,
+    render_mag_workspace_readme,
+)
+from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
@@ -393,58 +378,5 @@ class MagDomainRuntime(
 
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
-
-from med_autogrant.domain_runtime_parts.contracts import (
-    build_author_side_route_contract as _build_author_side_route_contract,
-    build_executor_routing_contract as _build_executor_routing_contract,
-    build_hosted_authoring_contract as _build_hosted_authoring_contract,
-    build_operator_contract as _build_operator_contract,
-    build_service_safe_domain_surface as _build_service_safe_domain_surface,
-    build_stage_route_contract as _build_stage_route_contract,
-    build_runtime_state_contract as _build_runtime_state_contract,
-    build_runtime_substrate_contract as _build_runtime_substrate_contract,
-    build_schema_contract as _build_schema_contract,
-    parse_git_worktree_list_porcelain as _parse_git_worktree_list_porcelain,
-    read_current_program_contract as _read_current_program_contract,
-    read_git_worktree_list as _read_git_worktree_list,
-    read_program_id as _read_program_id,
-    require_known_route_id as _require_known_route_id,
-    require_nonempty_route_id as _require_nonempty_route_id,
-    require_nonempty_string as _require_nonempty_string,
-    resolve_control_plane_current_program_path as _resolve_control_plane_current_program_path,
-    select_control_plane_current_program_path as _select_control_plane_current_program_path,
-    validate_contract_schema as _validate_contract_schema,
-    validate_executor_routing_contract as _validate_executor_routing_contract,
-    validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
-    validate_schema_payload as _validate_schema_payload,
-)
-from med_autogrant.domain_runtime_parts.io import (
-    _build_selection_input_from_discovery,
-    _default_funding_landscape_cache_path,
-    _derive_funding_landscape_diff_report_path,
-    _guard_artifact_bundle_output_identity,
-    _guard_critique_output_identity,
-    _guard_final_package_output_identity,
-    _guard_hosted_contract_output_identity,
-    _guard_revision_output_identity,
-    _guard_submission_ready_package_output_identity,
-    _guard_workspace_output_identity,
-    _load_existing_cache_snapshot,
-    _load_funding_landscape_cache_if_needed,
-    _load_json_object,
-    _read_artifact_bundle,
-    _read_final_package,
-    _write_artifact_bundle_output,
-    _write_final_package_output,
-    _write_hosted_contract_bundle_output,
-    _write_json_output,
-    _write_revised_workspace_output,
-    _write_submission_ready_package_output,
-)
-from med_autogrant.domain_runtime_parts.runtime_ops import (
-    _apply_quality_gate_to_route,
-    _build_autonomy_quality_evaluator_output,
-    _looks_like_workspace,
-)
 
 __all__ = ["MagDomainRuntime"]

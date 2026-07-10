@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
+from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.public_cli import public_command_label
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
@@ -40,118 +41,19 @@ DOMAIN_AGENT_ARTIFACT_CONVENTIONS = "grant_proposal_package"
 DOMAIN_AGENT_PROGRESS_CONVENTIONS = "grant_workloop_narration"
 DOMAIN_AGENT_ENTRY_COMMAND = "product-status"
 DOMAIN_AGENT_MANIFEST_COMMAND = "product-entry-manifest"
-DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
-    {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "grant-quality-scorecard", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "grant-quality-closure-dossier", "required_fields": ["input_path"], "optional_fields": []},
-    {
-        "command": "grant-quality-diff",
-        "required_fields": ["input_path", "previous_input_path"],
-        "optional_fields": [],
-    },
-    {"command": "discover-funding-opportunities", "required_fields": ["input_path"], "optional_fields": []},
-    {
-        "command": "refresh-funding-opportunities-cache",
-        "required_fields": ["input_path"],
-        "optional_fields": ["output_path"],
-    },
-    {"command": "select-project-profile", "required_fields": ["input_path"], "optional_fields": []},
-    {
-        "command": "initialize-intake-workspace",
-        "required_fields": ["input_path"],
-        "optional_fields": ["output_path", "workspace_root", "initialize_git"],
-    },
-    {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
-    {
-        "command": "execute-direction-screening-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-question-refinement-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-argument-building-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-fit-alignment-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-outline-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-drafting-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-artifact-bundle",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-critique-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": ["executor_kind"],
-    },
-    {
-        "command": "execute-critique-revision-loop",
-        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
-        "optional_fields": ["max_rounds", "executor_kind"],
-    },
-    {
-        "command": "execute-authoring-mainline-loop",
-        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
-        "optional_fields": ["max_cycles", "executor_kind"],
-    },
-    {
-        "command": "execute-grant-autonomy-controller",
-        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
-        "optional_fields": ["executor_kind"],
-    },
-    {
-        "command": "execute-revision-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-freeze-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-final-package",
-        "required_fields": ["input_path", "artifact_bundle_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-hosted-contract-bundle",
-        "required_fields": ["final_package_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-submission-ready-package",
-        "required_fields": ["input_path", "output_dir"],
-        "optional_fields": [],
-    },
-]
 
 
 def build_domain_entry_contract() -> dict[str, Any]:
-    catalog = _build_shared_domain_entry_command_catalog(DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES)
+    catalog = _build_shared_domain_entry_command_catalog(
+        [
+            {
+                "command": command,
+                "required_fields": list(spec.required_fields),
+                "optional_fields": list(spec.optional_fields),
+            }
+            for command, spec in SERVICE_SAFE_DOMAIN_COMMANDS.items()
+        ]
+    )
     domain_agent_entry_spec = _build_shared_domain_agent_entry_spec(
         agent_id=DOMAIN_AGENT_ID,
         title=DOMAIN_AGENT_ENTRY_TITLE,

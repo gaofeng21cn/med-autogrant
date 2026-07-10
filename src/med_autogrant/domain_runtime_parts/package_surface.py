@@ -5,10 +5,8 @@ from typing import Any
 
 from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.final_package import build_final_package_document
-from med_autogrant.hosted_contract_bundle import (
-    _validate_required_final_package_fields,
-    build_hosted_contract_bundle_document,
-)
+from med_autogrant.final_package_validation import _validate_required_final_package_fields
+from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_document
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.workspace_projection_parts import _require_workspace_context
@@ -38,6 +36,30 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_submission_ready_package_output,
 )
 from med_autogrant.domain_runtime_parts.shared import SUBMISSION_READY_PACKAGE_SCHEMA_FILE
+
+
+def _build_hosted_contract_bundle(final_package: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    current_program_contract = _read_current_program_contract()
+    program_id = _read_program_id()
+    hosted_contract_bundle = build_hosted_contract_bundle_document(
+        final_package=final_package,
+        program_id=program_id,
+        runtime_substrate_contract=_build_runtime_substrate_contract(
+            current_program_contract=current_program_contract,
+        ),
+        runtime_state_contract=_build_runtime_state_contract(),
+        operator_contract=_build_operator_contract(),
+        domain_entry_contract=build_domain_entry_contract(),
+        schema_contract=_build_schema_contract(),
+        authoring_contract=_build_hosted_authoring_contract(),
+    )
+    _validate_hosted_contract_bundle(
+        hosted_contract_bundle,
+        grant_run_id=final_package["grant_run_id"],
+        workspace_id=final_package["workspace_id"],
+        lifecycle_stage=final_package["lifecycle_stage"],
+    )
+    return hosted_contract_bundle, program_id
 
 
 class DomainRuntimePackageSurfaceMixin:
@@ -90,26 +112,7 @@ class DomainRuntimePackageSurfaceMixin:
     ) -> dict[str, Any]:
         final_package = _read_final_package(final_package_path)
         _validate_required_final_package_fields(final_package)
-        current_program_contract = _read_current_program_contract()
-        program_id = _read_program_id()
-        hosted_contract_bundle = build_hosted_contract_bundle_document(
-            final_package=final_package,
-            program_id=program_id,
-            runtime_substrate_contract=_build_runtime_substrate_contract(
-                current_program_contract=current_program_contract,
-            ),
-            runtime_state_contract=_build_runtime_state_contract(),
-            operator_contract=_build_operator_contract(),
-            domain_entry_contract=build_domain_entry_contract(),
-            schema_contract=_build_schema_contract(),
-            authoring_contract=_build_hosted_authoring_contract(),
-        )
-        _validate_hosted_contract_bundle(
-            hosted_contract_bundle,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
+        hosted_contract_bundle, program_id = _build_hosted_contract_bundle(final_package)
         resolved_output_path = Path(output_path).expanduser().resolve()
         _guard_hosted_contract_output_identity(
             resolved_output_path,
@@ -141,26 +144,7 @@ class DomainRuntimePackageSurfaceMixin:
             document=document,
             artifact_bundle=artifact_bundle,
         )
-        current_program_contract = _read_current_program_contract()
-        program_id = _read_program_id()
-        hosted_contract_bundle = build_hosted_contract_bundle_document(
-            final_package=final_package,
-            program_id=program_id,
-            runtime_substrate_contract=_build_runtime_substrate_contract(
-                current_program_contract=current_program_contract,
-            ),
-            runtime_state_contract=_build_runtime_state_contract(),
-            operator_contract=_build_operator_contract(),
-            domain_entry_contract=build_domain_entry_contract(),
-            schema_contract=_build_schema_contract(),
-            authoring_contract=_build_hosted_authoring_contract(),
-        )
-        _validate_hosted_contract_bundle(
-            hosted_contract_bundle,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
+        hosted_contract_bundle, program_id = _build_hosted_contract_bundle(final_package)
         submission_ready_package = build_submission_ready_package_document(
             document=document,
             artifact_bundle=artifact_bundle,

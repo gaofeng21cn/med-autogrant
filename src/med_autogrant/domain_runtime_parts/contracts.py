@@ -4,10 +4,8 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.control_plane import (
-    CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_current_program_contract as _read_current_program_contract_from_contract,
     read_program_id as _read_program_id_from_contract,
-    resolve_current_program_contract_path,
     runtime_state_display_path,
 )
 from med_autogrant.domain_entry_contract import (
@@ -400,53 +398,3 @@ def require_known_route_id(value: Any, *, context: str) -> str:
 
 def directory_display_path(*segments: str) -> str:
     return runtime_state_display_path(*segments).rstrip("/") + "/"
-
-
-def resolve_control_plane_current_program_path(
-    *,
-    repo_root: Path | None = None,
-    worktree_list_text: str | None = None,
-) -> Path:
-    del worktree_list_text
-    return resolve_current_program_contract_path(repo_root=repo_root)
-
-
-def read_git_worktree_list(*, repo_root: Path) -> str:
-    del repo_root
-    raise WorkspaceStateError("项目级 .runtime-program 已退役；不再通过 git worktree 列表解析 control-plane root。")
-
-
-def select_control_plane_current_program_path(
-    *,
-    repo_root: Path,
-    worktree_list_text: str,
-) -> Path:
-    del repo_root
-    del worktree_list_text
-    raise WorkspaceStateError("项目级 .runtime-program 已退役；不再通过 main worktree 回退解析 CURRENT_PROGRAM。")
-
-
-def parse_git_worktree_list_porcelain(worktree_list_text: str) -> list[dict[str, str]]:
-    entries: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
-
-    for raw_line in worktree_list_text.splitlines():
-        if not raw_line:
-            continue
-        key, _, value = raw_line.partition(" ")
-        if key == "worktree":
-            if current is not None:
-                entries.append(current)
-            current = {"worktree": value}
-            continue
-        if current is None:
-            continue
-        if key in {"branch", "HEAD"}:
-            current[key] = value
-
-    if current is not None:
-        entries.append(current)
-    return entries
-
-
-CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH

@@ -396,32 +396,6 @@ def _trust_note_from_preliminary_item(item: dict[str, Any]) -> str:
         return "前期结果强度偏弱，仅适合作为方向线索。"
     return "前期结果缺少可判定的强度信息。"
 
-def _index_objects(
-    items: Any,
-    key_name: str,
-    scope_name: str,
-    issues: list[ValidationIssue],
-) -> dict[str, dict[str, Any]]:
-    indexed: dict[str, dict[str, Any]] = {}
-    if not isinstance(items, list):
-        return indexed
-    for index, item in enumerate(items):
-        if not isinstance(item, dict):
-            continue
-        key = item.get(key_name)
-        if not isinstance(key, str) or not key:
-            continue
-        if key in indexed:
-            issues.append(
-                ValidationIssue(
-                    path=f"{scope_name}[{index}].{key_name}",
-                    message=f"{key_name} 不能重复。",
-                )
-            )
-            continue
-        indexed[key] = item
-    return indexed
-
 def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
     state = _build_workspace_state(document)
     if (
