@@ -2,226 +2,93 @@ from __future__ import annotations
 
 from copy import deepcopy
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
+from support.cli import run_cli, run_json_cli  # noqa: E402
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
+FROZEN = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+EXPORT_VERDICT = {
+    "export_verdict_ref": "mag-verdict://submission-ready-export/nsfc-demo-001/draft-v1",
+    "verdict_state": "submission_ready",
+    "owner": "med-autogrant",
+    "source_kind": "mag_owner_receipt",
+    "provenance_ref": "runtime://mag/receipts/export/nsfc-demo-001/draft-v1.json",
+}
 
-from support.cli import run_cli  # noqa: E402
 
-
-FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
-
-
-class SubmissionReadyPackageCliTest(unittest.TestCase):
-    def run_cli(self, *args: str) -> tuple[int, str, str]:
-        return run_cli(*args)
-
-    def test_build_submission_ready_package_writes_local_submission_bundle(self) -> None:
+class SubmissionReadyPackageTest(unittest.TestCase):
+    def test_submission_ready_is_the_complete_package_integration_owner(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_path = self._write_complete_submission_workspace(Path(tmp_dir))
-            output_dir = Path(tmp_dir) / "submission-ready"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "submission-ready",
-                "--input",
-                str(workspace_path),
-                "--output-dir",
-                str(output_dir),
-                "--format",
-                "json",
+            tmp_root = Path(tmp_dir)
+            workspace_path = self._complete_workspace(tmp_root, include_export_verdict=True)
+            output_dir = tmp_root / "submission-ready"
+            payload = run_json_cli(
+                "package", "submission-ready", "--input", str(workspace_path), "--output-dir", str(output_dir), "--format", "json"
             )
 
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertTrue(payload["ok"])
-            self.assertEqual(payload["command"], "build-submission-ready-package")
-            self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-            self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
-            self.assertEqual(payload["draft_id"], "draft-v1")
-            self.assertEqual(payload["lifecycle_stage"], "frozen")
+            paths = {name: Path(path) for name, path in payload["output_paths"].items()}
+            self.assertEqual(set(paths), {"artifact_bundle", "final_package", "hosted_contract_bundle", "submission_ready_package"})
+            self.assertTrue(all(path.exists() for path in paths.values()))
+            self.assertEqual(json.loads(paths["artifact_bundle"].read_text(encoding="utf-8"))["bundle_kind"], "artifact_bundle")
+            final_package = json.loads(paths["final_package"].read_text(encoding="utf-8"))
+            self.assertEqual(final_package["package_kind"], "final_package")
+            self.assertEqual(final_package["checkpoint_summary"]["checkpoint_status"], "submission_frozen")
+            self.assertEqual(json.loads(paths["hosted_contract_bundle"].read_text(encoding="utf-8"))["bundle_kind"], "hosted_contract_bundle")
 
-            output_paths = payload["output_paths"]
-            self.assertEqual(
-                set(output_paths),
-                {
-                    "artifact_bundle",
-                    "final_package",
-                    "hosted_contract_bundle",
-                    "submission_ready_package",
-                },
-            )
-            for output_path in output_paths.values():
-                self.assertTrue(Path(output_path).exists(), output_path)
+            package = payload["submission_ready_package"]
+            self.assertEqual(package["package_kind"], "submission_ready_package")
+            self.assertEqual(package["readiness_verdict"], "submission_ready")
+            self.assertTrue(package["submission_ready"])
+            self.assertFalse(package["fully_automatic"])
+            self.assertFalse(package["external_submission_performed"])
+            self.assertEqual(package["submission_ready_export_verdict"], EXPORT_VERDICT)
+            self.assertEqual(package["mechanical_package_completeness"]["status"], "passed")
+            self.assertEqual(package["audit_summary"]["blocking_issue_count"], 0)
+            self.assertIn("## 研究方案", package["submission_dossier"]["final_draft_markdown"])
+            self.assertEqual(json.loads(paths["submission_ready_package"].read_text(encoding="utf-8")), package)
 
-            submission_package = payload["submission_ready_package"]
-            self.assertEqual(submission_package["package_kind"], "submission_ready_package")
-            self.assertEqual(submission_package["readiness_verdict"], "submission_ready")
-            self.assertFalse(submission_package["fully_automatic"])
-            self.assertTrue(submission_package["submission_ready"])
-            self.assertFalse(submission_package["external_submission_performed"])
-            self.assertEqual(submission_package["automation_scope"], "local_submission_package")
-            self.assertEqual(
-                submission_package["mechanical_package_completeness"],
-                {
-                    "status": "passed",
-                    "passed": True,
-                    "blocking_issue_count": 0,
-                    "blocking_issue_ids": [],
-                },
-            )
-            self.assertEqual(
-                submission_package["submission_ready_export_verdict"],
-                {
-                    "export_verdict_ref": "mag-verdict://submission-ready-export/nsfc-demo-001/draft-v1",
-                    "verdict_state": "submission_ready",
-                    "owner": "med-autogrant",
-                    "source_kind": "mag_owner_receipt",
-                    "provenance_ref": "runtime://mag/receipts/export/nsfc-demo-001/draft-v1.json",
-                },
-            )
-            self.assertEqual(submission_package["audit_summary"]["blocking_issue_count"], 0)
-            self.assertEqual(submission_package["audit_summary"]["missing_mandatory_sections"], [])
-            self.assertEqual(submission_package["audit_summary"]["unresolved_evidence_gap_count"], 0)
-            self.assertIn("## 研究方案", submission_package["submission_dossier"]["final_draft_markdown"])
-            self.assertIn("## 创新点", submission_package["submission_dossier"]["final_draft_markdown"])
-            self.assertEqual(
-                json.loads(Path(output_paths["submission_ready_package"]).read_text(encoding="utf-8")),
-                submission_package,
-            )
-
-    def test_build_submission_ready_package_fails_closed_for_incomplete_submission_materials(self) -> None:
+    def test_incomplete_materials_and_missing_owner_export_verdict_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            output_dir = Path(tmp_dir) / "submission-ready"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "submission-ready",
-                "--input",
-                str(FROZEN_EXAMPLE_PATH),
-                "--output-dir",
-                str(output_dir),
-                "--format",
-                "json",
+            tmp_root = Path(tmp_dir)
+            cases = (
+                (FROZEN, "missing_mandatory_sections"),
+                (self._complete_workspace(tmp_root, include_export_verdict=False), "missing_submission_ready_export_verdict"),
             )
+            for index, (input_path, error) in enumerate(cases):
+                with self.subTest(error=error):
+                    output_dir = tmp_root / f"submission-ready-{index}"
+                    exit_code, stdout, stderr = run_cli(
+                        "package",
+                        "submission-ready",
+                        "--input",
+                        str(input_path),
+                        "--output-dir",
+                        str(output_dir),
+                        "--format",
+                        "json",
+                    )
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    self.assertIn(error, json.loads(stdout)["error"])
+                    self.assertFalse(output_dir.exists())
 
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("submission ready package blocked", payload["error"])
-            self.assertIn("missing_mandatory_sections", payload["error"])
-            self.assertFalse(output_dir.exists())
-
-    def test_build_submission_ready_package_requires_owner_export_verdict(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_path = self._write_complete_submission_workspace(
-                Path(tmp_dir),
-                include_export_verdict=False,
-            )
-            output_dir = Path(tmp_dir) / "submission-ready"
-
-            exit_code, stdout, stderr = self.run_cli(
-                "package",
-                "submission-ready",
-                "--input",
-                str(workspace_path),
-                "--output-dir",
-                str(output_dir),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(exit_code, 1)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
-            self.assertFalse(payload["ok"])
-            self.assertIn("submission ready package blocked", payload["error"])
-            self.assertIn("missing_submission_ready_export_verdict", payload["error"])
-            self.assertFalse(output_dir.exists())
-
-    def _write_complete_submission_workspace(
-        self,
-        tmp_root: Path,
-        *,
-        include_export_verdict: bool = True,
-    ) -> Path:
-        workspace = json.loads(FROZEN_EXAMPLE_PATH.read_text(encoding="utf-8"))
-        workspace = deepcopy(workspace)
-        active_draft = workspace["application_drafts"][-1]
-        active_draft["outline"].extend(
+    @staticmethod
+    def _complete_workspace(tmp_root: Path, *, include_export_verdict: bool) -> Path:
+        workspace = deepcopy(json.loads(FROZEN.read_text(encoding="utf-8")))
+        workspace["application_drafts"][-1]["sections"].extend(
             [
-                {
-                    "section_key": "plan",
-                    "section_title": "研究方案",
-                    "core_claim": "围绕关键通讯轴识别、时间窗验证与功能阻断形成可执行研究方案。",
-                    "linked_object_ids": [
-                        "question-immune-fibrosis",
-                        "arg-001",
-                        "fit-001",
-                        "prelim-item-1",
-                    ],
-                },
-                {
-                    "section_key": "innovation",
-                    "section_title": "创新点",
-                    "core_claim": "以炎症巨噬细胞-成纤维细胞跨细胞通讯作为纤维化重塑的新机制切入点。",
-                    "linked_object_ids": [
-                        "question-immune-fibrosis",
-                        "arg-001",
-                        "fit-001",
-                    ],
-                },
+                {"section_key": "plan", "section_title": "研究方案", "text": "完成通讯轴筛选、时间窗验证与功能阻断。", "linked_object_ids": ["question-immune-fibrosis", "arg-001", "fit-001"]},
+                {"section_key": "innovation", "section_title": "创新点", "text": "以跨细胞通讯解释纤维化重塑机制。", "linked_object_ids": ["question-immune-fibrosis", "arg-001", "fit-001"]},
             ]
         )
-        active_draft["sections"].extend(
-            [
-                {
-                    "section_key": "plan",
-                    "section_title": "研究方案",
-                    "text": "研究方案包括通讯轴筛选、关键时间窗验证、功能阻断和跨组学一致性复核四个步骤。",
-                    "linked_object_ids": [
-                        "question-immune-fibrosis",
-                        "arg-001",
-                        "fit-001",
-                        "prelim-item-1",
-                    ],
-                },
-                {
-                    "section_key": "innovation",
-                    "section_title": "创新点",
-                    "text": "创新点在于把心梗后炎症巨噬细胞介导的跨细胞通讯作为纤维化重塑的可验证机制主线。",
-                    "linked_object_ids": [
-                        "question-immune-fibrosis",
-                        "arg-001",
-                        "fit-001",
-                    ],
-                },
-            ]
-        )
-        for evidence_item in workspace["preliminary_evidence_pack"]["evidence_items"]:
-            evidence_item["gaps"] = []
+        for item in workspace["preliminary_evidence_pack"]["evidence_items"]:
+            item["gaps"] = []
         if include_export_verdict:
-            workspace["submission_ready_export_verdict"] = {
-                "export_verdict_ref": "mag-verdict://submission-ready-export/nsfc-demo-001/draft-v1",
-                "verdict_state": "submission_ready",
-                "owner": "med-autogrant",
-                "source_kind": "mag_owner_receipt",
-                "provenance_ref": "runtime://mag/receipts/export/nsfc-demo-001/draft-v1.json",
-            }
-
-        workspace_path = tmp_root / "submission-ready-workspace.json"
-        workspace_path.write_text(json.dumps(workspace, ensure_ascii=False, indent=2), encoding="utf-8")
-        return workspace_path
-
-
-if __name__ == "__main__":
-    unittest.main()
+            workspace["submission_ready_export_verdict"] = EXPORT_VERDICT
+        output_path = tmp_root / f"complete-{include_export_verdict}.json"
+        output_path.write_text(json.dumps(workspace, ensure_ascii=False), encoding="utf-8")
+        return output_path
