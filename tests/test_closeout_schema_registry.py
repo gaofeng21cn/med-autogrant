@@ -8,11 +8,14 @@ SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas" / "v1"
 
 
 def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
-    cases: tuple[tuple[str, str, dict[str, str], set[str]], ...] = (
+    cases: tuple[tuple[str, str, dict[str, object], set[str]], ...] = (
         (
             "codex-stage-execution-receipt-bundle.schema.json",
             "codexStageExecutionReceiptBundle",
-            {"projection_scope": "codex_stage_execution_and_review_receipt_refs_only"},
+            {
+                "projection_scope": "codex_stage_execution_and_review_receipt_refs_only",
+                "codex_cli_is_default_executor": True,
+            },
             {
                 "mag_implements_opl_runtime",
                 "mag_implements_app_workbench",
@@ -62,7 +65,15 @@ def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
         (
             "executor-first-closeout-bundle.schema.json",
             "executorFirstCloseoutBundle",
-            {},
+            {
+                "mag_owns_grant_truth": True,
+                "mag_owns_quality_verdict": True,
+                "mag_owns_export_verdict": True,
+                "mag_owns_package_authority": True,
+                "mag_owns_owner_receipt_authority": True,
+                "opl_owns_generic_runtime": True,
+                "opl_owns_operator_workbench": True,
+            },
             {
                 "bundle_can_declare_fundability_ready",
                 "bundle_can_declare_quality_ready",
@@ -83,4 +94,8 @@ def test_closeout_schemas_keep_shape_and_non_authority_boundary() -> None:
         assert surface["properties"]["target_domain_id"]["const"] == "med-autogrant"
         assert surface["properties"]["owner"]["const"] == "med-autogrant"
         assert {field for field, spec in boundary.items() if spec.get("const") is False} == false_fields
-        assert all(boundary[field]["const"] == value for field, value in expected_consts.items())
+        assert {
+            field: spec["const"]
+            for field, spec in boundary.items()
+            if "const" in spec and spec["const"] is not False
+        } == expected_consts
