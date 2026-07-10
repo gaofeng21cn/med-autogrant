@@ -9,12 +9,16 @@ from opl_harness_shared.workspace_boundary import (
     materialize_directory_workspace,
 )
 
-from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
+from med_autogrant.domain_runtime_parts import (
+    authoring_surface,
+    handoff_surfaces,
+    package_surface,
+    quality_surface,
+)
 from med_autogrant.domain_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
     validate_schema_payload as _validate_schema_payload,
 )
-from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
 from med_autogrant.domain_runtime_parts.io import (
     _build_selection_input_from_discovery,
     _default_funding_landscape_cache_path,
@@ -26,7 +30,6 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_json_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
 from med_autogrant.domain_runtime_parts.shared import (
     FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
     FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE,
@@ -64,14 +67,31 @@ from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 
 
-class MagDomainRuntime(
-    DomainRuntimeAuthoringSurfaceMixin,
-    DomainRuntimeHandoffSurfaceMixin,
-    DomainRuntimeQualitySurfaceMixin,
-):
+class MagDomainRuntime:
     """Repo-side domain adapter and regression oracle for grant authoring, quality, and export."""
 
     runtime_owner = "one-person-lab"
+
+    # Keep the implementation split by responsibility without a single-implementation hierarchy.
+    grant_quality_scorecard = quality_surface.grant_quality_scorecard
+    grant_quality_diff = quality_surface.grant_quality_diff
+    grant_quality_closure_dossier = quality_surface.grant_quality_closure_dossier
+    build_final_package = package_surface.build_final_package
+    build_hosted_contract_bundle = package_surface.build_hosted_contract_bundle
+    build_submission_ready_package = package_surface.build_submission_ready_package
+    execute_direction_screening_pass = handoff_surfaces.execute_direction_screening_pass
+    execute_question_refinement_pass = handoff_surfaces.execute_question_refinement_pass
+    execute_argument_building_pass = handoff_surfaces.execute_argument_building_pass
+    execute_fit_alignment_pass = handoff_surfaces.execute_fit_alignment_pass
+    execute_outline_pass = handoff_surfaces.execute_outline_pass
+    execute_drafting_pass = handoff_surfaces.execute_drafting_pass
+    build_artifact_bundle = handoff_surfaces.build_artifact_bundle
+    execute_revision_pass = handoff_surfaces.execute_revision_pass
+    execute_critique_pass = handoff_surfaces.execute_critique_pass
+    execute_critique_revision_loop = authoring_surface.execute_critique_revision_loop
+    execute_authoring_mainline_loop = authoring_surface.execute_authoring_mainline_loop
+    execute_freeze_pass = authoring_surface.execute_freeze_pass
+    _write_authoring_execution_output = authoring_surface._write_authoring_execution_output
 
     def describe_topology(self) -> dict[str, Any]:
         return {
