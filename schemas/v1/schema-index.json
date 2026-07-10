@@ -188,21 +188,6 @@
       "status": "frozen"
     },
     {
-      "name": "operator_closeout_readiness_projection",
-      "file": "operator-closeout-readiness-projection.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "physical_morphology_guard_projection",
-      "file": "physical-morphology-guard-projection.schema.json",
-      "status": "frozen"
-    },
-    {
-      "name": "executor_first_closeout_bundle",
-      "file": "executor-first-closeout-bundle.schema.json",
-      "status": "frozen"
-    },
-    {
       "name": "nsfc_workspace",
       "file": "nsfc-workspace.schema.json",
       "status": "frozen"
