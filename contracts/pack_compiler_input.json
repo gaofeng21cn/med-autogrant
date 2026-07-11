@@ -158,6 +158,18 @@
     "grant_transition_oracle",
     "grant_native_helper"
   ],
+  "declarative_domain_pack": [
+    "stage_manifest",
+    "stage_policies_and_prompts",
+    "grant_authoring_skill",
+    "professional_skill_refs",
+    "tool_affordance_catalog",
+    "grant_quality_gate_refs",
+    "grant_knowledge_refs",
+    "action_catalog",
+    "owner_receipt_schema",
+    "authority_function_refs"
+  ],
   "generated_surfaces_requested": [
     "cli",
     "mcp",

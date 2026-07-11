@@ -23,18 +23,45 @@ def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
             encoding="utf-8"
         )
     )
-    modules = {
-        item["module_id"]: item
-        for item in audit["modules"]
-        if item["module_id"] != "mag_declarative_grant_pack"
-    }
+    modules = {item["module_id"]: item for item in audit["modules"]}
 
     assert set(modules) == AUTHORITY_IDS
+    assert audit["surface_kind"] == "functional_privatization_audit"
+    assert audit["schema_version"] == 1
+    assert audit["domain_id"] == "med-autogrant"
+    assert audit["target_domain_id"] == "med-autogrant"
+
+    for module_id, item in modules.items():
+        expected_layer = (
+            "private_platform_residue_inventory"
+            if module_id == "grant_native_helper"
+            else "authority_function_inventory"
+        )
+        assert item["classification"] == (
+            "refs_only_domain_adapter"
+            if module_id == "grant_native_helper"
+            else "minimal_authority_function"
+        )
+        assert item["standardization_layer"] == expected_layer
+        assert item["code_paths"]
+        assert all((REPO_ROOT / code_path).is_file() for code_path in item["code_paths"])
+
+    retired_provenance = audit["retired_generated_surface_provenance"]
+    assert len(retired_provenance) == 3
     assert all(
-        item["classification"]
-        in {"domain_authority", "minimal_authority_function", "refs_only_domain_adapter"}
-        for item in modules.values()
+        entry["surface_id"]
+        and entry["replacement_ref"]
+        and entry["provenance_refs"]
+        for entry in retired_provenance
     )
+
+    bridge_exit_gate = audit["bridge_exit_gate"]
+    assert set(bridge_exit_gate) == {
+        "physical_delete_authorization_refs",
+        "no_forbidden_write_refs",
+        "provenance_refs",
+    }
+    assert all(bridge_exit_gate[field] for field in bridge_exit_gate)
 
 
 def test_pack_compiler_uses_the_same_eight_authority_ids() -> None:
@@ -43,3 +70,4 @@ def test_pack_compiler_uses_the_same_eight_authority_ids() -> None:
     )
 
     assert set(pack["minimal_authority_functions"]) == AUTHORITY_IDS
+    assert pack["declarative_domain_pack"]

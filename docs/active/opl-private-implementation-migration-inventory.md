@@ -9,14 +9,14 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 
 | Surface | 当前分类 | Owner / 结果 |
 | --- | --- | --- |
-| `agent/` stages/prompts/skills/knowledge/gates | declarative pack | MAG source，OPL compiler消费 |
+| `agent/` stages/prompts/skills/knowledge/gates | declarative pack | 唯一 inventory 在 `contracts/pack_compiler_input.json#declarative_domain_pack`；MAG source，OPL compiler消费 |
 | action catalog / stage control plane | declarative contract | MAG声明，OPL runtime消费 |
 | domain handler export/dispatch | refs-only domain adapter | MAG，3 actions |
-| fundability/quality/export verdict | domain authority | MAG retained |
-| final package authority | domain authority | MAG retained |
+| fundability/quality/export verdict | minimal authority function | MAG retained |
+| final package authority | minimal authority function | MAG retained |
 | memory accept/reject | minimal authority function | MAG retained |
 | owner receipt signer / typed blocker | minimal authority function | MAG retained |
-| transition oracle | domain authority | MAG retained |
+| transition oracle | minimal authority function | MAG retained |
 | codex/grant-native helper | refs-only domain adapter | MAG retained |
 | generated product/status/user-loop/workbench | OPL generated surface | MAG private implementations deleted |
 | scheduler/queue/attempt ledger/session/lifecycle transport | OPL platform | MAG private implementations deleted |
@@ -26,7 +26,7 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 
 ## Exact Allowed Source Matches
 
-OPL scanner allowed matches 只能由 functional audit 对具体文件声明：
+OPL scanner allowed matches 只能由 compact functional audit 对具体文件声明。该 audit 只枚举八项 authority/refs adapter；declarative pack 不再作为第二份 module inventory：
 
 - `codex_cli.py`
 - direct domain handler files
