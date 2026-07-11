@@ -13,6 +13,20 @@
       "input_schema_ref": "schemas/v1/grant-user-loop.schema.json",
       "output_schema_ref": "schemas/v1/grant-user-loop.schema.json",
       "owner": "med-autogrant",
+      "stage_route": {
+        "entry_stage_ref": "fundability_strategy",
+        "required_stage_refs": [
+          "fundability_strategy",
+          "specific_aims_and_structure",
+          "proposal_authoring",
+          "review_and_rebuttal"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "review_and_rebuttal"
+        ],
+        "route_policy": "ordered_stage_attempts_no_skip"
+      },
       "source_command": {
         "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
         "surface_kind": "grant_user_loop"
@@ -170,6 +184,17 @@
       "input_schema_ref": "schemas/v1/product-entry.schema.json",
       "output_schema_ref": "schemas/v1/grant-direct-entry.schema.json",
       "owner": "med-autogrant",
+      "stage_route": {
+        "entry_stage_ref": "proposal_authoring",
+        "required_stage_refs": [
+          "proposal_authoring"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "proposal_authoring"
+        ],
+        "route_policy": "ordered_stage_attempts_no_skip"
+      },
       "source_command": {
         "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
         "surface_kind": "grant_direct_entry"
@@ -225,6 +250,17 @@
       "input_schema_ref": "schemas/v1/submission-ready-package.schema.json",
       "output_schema_ref": "schemas/v1/submission-ready-package.schema.json",
       "owner": "med-autogrant",
+      "stage_route": {
+        "entry_stage_ref": "package_and_submit_ready",
+        "required_stage_refs": [
+          "package_and_submit_ready"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "package_and_submit_ready"
+        ],
+        "route_policy": "ordered_stage_attempts_no_skip"
+      },
       "source_command": {
         "command": "opl://generated-surfaces/mag/build-submission-ready-package --input <input_path> --output-dir <output_dir> --format json",
         "surface_kind": "submission_ready_package"
