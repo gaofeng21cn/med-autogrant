@@ -24,9 +24,6 @@ wheels = [
 name = "med-autogrant"
 version = "0.1.0"
 source = { editable = "." }
-dependencies = [
-    { name = "opl-harness-shared" },
-]
 
 [package.dev-dependencies]
 dev = [
@@ -34,15 +31,9 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "opl-harness-shared", git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=e1e734031ab3ea45596c6ce131f611f296ca9746" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9,<10" }]
-
-[[package]]
-name = "opl-harness-shared"
-version = "0.1.0"
-source = { git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=e1e734031ab3ea45596c6ce131f611f296ca9746#e1e734031ab3ea45596c6ce131f611f296ca9746" }
 
 [[package]]
 name = "packaging"

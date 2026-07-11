@@ -39,7 +39,7 @@ OPL 生成并托管 product-entry manifest、status、user-loop、progress、coc
 - workspace locator、runtime session envelope、domain payload 与 stage snapshot
 - author-side executor routing contract
 
-MAG 的 workspace/authoring validators 复用 `opl_harness_shared.schema_validation.SchemaSubsetValidator`。OPL hosted contract bundle 复用 `product-entry.schema.json` 中的 domain-entry、operator 与 routing definitions；OPL-owned session/progress/artifact/runtime projection 不再复制进 MAG schema。
+MAG 的 workspace/authoring validators 复用 `opl_framework.schema_validation.SchemaSubsetValidator`。OPL hosted contract bundle 复用 `product-entry.schema.json` 中的 domain-entry、operator 与 routing definitions；OPL-owned session/progress/artifact/runtime projection 不再复制进 MAG schema。
 
 ## Verification
 

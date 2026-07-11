@@ -33,7 +33,7 @@ from med_autogrant.authoring_executor_parts import (
 )
 from med_autogrant.codex_cli import read_codex_cli_contract, run_codex_exec
 from med_autogrant.schema_loader import SchemaStore
-from opl_harness_shared.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
+from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     materialize_workspace_surfaces,
 )

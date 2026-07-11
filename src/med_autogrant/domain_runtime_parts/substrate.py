@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from opl_harness_shared.workspace_boundary import (
+from opl_framework.workspace_boundary import (
     DEFAULT_WORKSPACE_DOCUMENT,
     WorkspaceScaffoldFile,
     materialize_directory_workspace,

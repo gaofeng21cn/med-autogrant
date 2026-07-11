@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from opl_harness_shared.workspace_boundary import (
+from opl_framework.workspace_boundary import (
     DEFAULT_WORKSPACE_DOCUMENT,
     resolve_workspace_document_path,
 )

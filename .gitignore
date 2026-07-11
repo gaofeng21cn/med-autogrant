@@ -11,6 +11,7 @@ artifacts/opl-quality-details/
 *.log
 .env
 *.egg-info/
+/src/opl_framework
 .worktrees/
 .codegraph/
 worktrees/

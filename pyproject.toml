@@ -12,9 +12,7 @@ requires-python = ">=3.12"
 authors = [
   { name = "Gao Feng" }
 ]
-dependencies = [
-    "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@e1e734031ab3ea45596c6ce131f611f296ca9746#subdirectory=python/opl-harness-shared",
-]
+dependencies = []
 
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"
@@ -34,3 +32,7 @@ markers = [
 dev = [
     "pytest>=9,<10",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["med_autogrant*"]

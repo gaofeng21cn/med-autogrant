@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any, Callable
 
-from opl_harness_shared.status_narration import build_status_narration_human_view
+from opl_framework.status_narration import build_status_narration_human_view
 
 
 _HUMAN_FIELD_LABELS = {

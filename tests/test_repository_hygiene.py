@@ -114,18 +114,10 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertEqual(agent_paths, [])
         self.assertTrue((REPO_ROOT / "plugins" / "med-autogrant" / ".codex-plugin" / "plugin.json").is_file())
 
-    def test_pyproject_pins_opl_harness_shared_to_a_full_commit(self) -> None:
+    def test_framework_python_carrier_is_not_an_agent_dependency(self) -> None:
         pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-        dependency = next(
-            item
-            for item in pyproject["project"]["dependencies"]
-            if item.startswith("opl-harness-shared @ ")
-        )
-
-        self.assertRegex(
-            dependency,
-            r"^opl-harness-shared @ git\+https://github\.com/gaofeng21cn/one-person-lab\.git@[0-9a-f]{40}#subdirectory=python/opl-harness-shared$",
-        )
+        self.assertFalse(any("one-person-lab.git" in item for item in pyproject["project"]["dependencies"]))
+        self.assertNotIn("one-person-lab.git", (REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
 
     def test_repo_tracked_code_file_line_budget_accepts_current_tree(self) -> None:
         result = subprocess.run(

@@ -37,9 +37,9 @@ OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarat
 
 结构清理可以在没有 production long soak 的情况下完成；但 grant-ready、quality/export ready、submission-ready、owner acceptance 与 production-ready 必须继续 fail closed，直到对应 receipt/human gate/live evidence 到位。
 
-## D9 Dependency pin
+## D9 Framework carrier
 
-MAG 继续消费 release cohort 指定的 `opl-harness-shared` commit。OPL conformance 使用当前 OPL main 运行，但不得把 consumer dependency pin追到 OPL dev HEAD。
+MAG 不声明、不安装、不锁定 OPL Framework implementation。OPL module workflow 在 checkout 维护 `src/opl_framework` carrier；MAG 只通过该 namespace 消费 Framework helper。
 
 ## D10 Transition runner locator
 
