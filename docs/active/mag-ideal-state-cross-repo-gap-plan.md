@@ -26,8 +26,11 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 | 11 | 删除 MAG 私有 product/status/user-loop/runtime/workbench平台面 | done | 100% | direct domain handler + OPL generated/hosted handoff |
 | 12 | 删除私有 OPL pack compiler与tracked generated aggregate | done | 100% | `agent/`/root contracts是声明源；OPL Pack生成 family stage plane |
 | 13 | 将 cycle/rollback/resume/dispatch/output编排迁入 OPL StageRun | done | 100% | MAG只保留 selector、quality、transition oracle与 authority receipt |
+| 14 | 将非默认 executor transport 上收到 OPL Python client | done | 100% | MAG 直接调用 `opl_framework.executor_client.run_agent_execution_request`；repo-local adapter/default command 已删除 |
+| 15 | 将 Codex plugin 生命周期统一到 OPL Connect | done | 100% | canonical `opl connect install/update/remove --module medautogrant`；本地 installer/symlink/marketplace mutation 已删除 |
+| 16 | 关闭 6 个 generated default-caller retirement tails | done | 100% | 4 个 physically absent surface 声明 retired；`cli/domain_handler` 保留为 authority adapter 并提供 keep/no-write/provenance refs |
 
-结构规划完成度：`13/13 done`。这只证明源码、contracts、docs与结构边界已经收口，不证明运行态 ready。
+结构规划完成度：`16/16 done`。这只证明源码、contracts、docs与结构边界已经收口，不证明运行态 ready。
 
 ## Live Evidence Gate
 
@@ -51,6 +54,8 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 
 ## Final Structural Evidence
 
+- 2026-07-11 boundary convergence：OPL default-caller readback 为 `8/8` retirement gates closed、active deletion worklist `0`、retired default surface `4`，`cli/domain_handler` owner decision 为 `keep_as_authority_adapter_ref`；OPL conformance 继续满足 structural passed、matched generic behavior `0`、active private generic residue `0`。
+- MAG 使用 OPL Python `executor_client` 的真实跨仓 focused 验证为 `22 passed + 36 subtests`，MAG full 为 `167 passed + 235 subtests`。这只证明结构与行为兼容，不代表 live grant、provider long-soak 或 production readiness。
 - Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；MAG 只消费 canonical policy export、policy release pin 和 `opl-generated:family_stage_control_plane`，不复制 Foundry policy bodies。
 - OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
 - OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。

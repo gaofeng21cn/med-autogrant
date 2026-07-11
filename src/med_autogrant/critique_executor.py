@@ -16,15 +16,8 @@ from med_autogrant.critique_policy import (
     build_weight_contract,
     resolve_critique_policy_from_document,
 )
-from med_autogrant.opl_executor_adapter import run_opl_agent_executor
-from med_autogrant.runtime_defaults import (
-    NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
-    OPL_AGENT_EXECUTION_RECEIPT_CONTRACT,
-    OPL_AGENT_EXECUTION_REQUEST_CONTRACT,
-    OPL_EXECUTOR_ADAPTER_CONTRACT_REF,
-    OPL_EXECUTOR_ADAPTER_OWNER,
-)
 from med_autogrant.schema_loader import SchemaStore
+from opl_framework.executor_client import run_agent_execution_request
 from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
@@ -34,6 +27,13 @@ from med_autogrant.workspace_validation import validate_workspace_document
 
 CodexRunner = Callable[[str], dict[str, Any]]
 OplExecutorRunner = Callable[..., dict[str, Any]]
+
+OPL_EXECUTOR_ADAPTER_OWNER = "one-person-lab"
+OPL_EXECUTOR_ADAPTER_CONTRACT_REF = "contracts/opl-framework/family-executor-adapter-defaults.json"
+OPL_AGENT_EXECUTION_REQUEST_CONTRACT = "AgentExecutionRequest"
+OPL_AGENT_EXECUTION_RECEIPT_CONTRACT = "AgentExecutionReceipt"
+NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE = "connectivity_lifecycle_receipt_audit_only"
+OPL_EXECUTOR_TIMEOUT_SECONDS = 300.0
 
 DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli"
 HERMES_AGENT_EXECUTOR_KIND = "hermes_agent"
@@ -56,7 +56,7 @@ def build_critique_execution_document(
     input_path: str | Path,
     executor_kind: str | None = None,
     codex_runner: Callable[..., dict[str, Any]] = run_codex_exec,
-    opl_executor_runner: Callable[..., dict[str, Any]] = run_opl_agent_executor,
+    opl_executor_runner: Callable[..., dict[str, Any]] = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     critique_context = _build_critique_context(document=document, state=state)
@@ -137,23 +137,26 @@ def _run_critique_generation(
             raise WorkspaceStateError("Codex critique pass 返回值必须是 object。")
         return payload, _build_codex_executor_payload(codex_contract)
 
-    receipt = opl_executor_runner(
-        {
-            "executor_kind": resolved_executor_kind,
-            "mode": "agent_loop",
-            "prompt": prompt,
-            "cwd": str(resolved_cwd),
-            "json": True,
-            "domain_payload": {
-                "domain_id": "med-autogrant",
-                "route_id": "critique",
-                "input_path": str(Path(input_path).expanduser().resolve()),
+    try:
+        receipt = opl_executor_runner(
+            {
+                "executor_kind": resolved_executor_kind,
+                "mode": "agent_loop",
+                "prompt": prompt,
+                "cwd": str(resolved_cwd),
+                "json": True,
+                "domain_payload": {
+                    "domain_id": "med-autogrant",
+                    "route_id": "critique",
+                    "input_path": str(Path(input_path).expanduser().resolve()),
+                },
             },
-        },
-        cwd=resolved_cwd,
-    )
+            timeout_seconds=OPL_EXECUTOR_TIMEOUT_SECONDS,
+        )
+    except (RuntimeError, TimeoutError, ValueError) as exc:
+        raise WorkspaceStateError(f"OPL executor client 执行失败: {exc}") from exc
     if not isinstance(receipt, dict):
-        raise WorkspaceStateError("OPL executor adapter 返回的 receipt 必须是 object。")
+        raise WorkspaceStateError("OPL executor client 返回的 receipt 必须是 object。")
     hermes_proof = _require_object(receipt, "proof")
     hermes_contract = _require_object(receipt, "executor_contract")
     hermes_payload = _require_domain_closeout_payload(receipt)
@@ -436,7 +439,7 @@ def _normalize_mentor_critique(
     executor_kind = str(executor_payload.get("kind") or "").strip()
     critique["critique_id"] = critique_context["next_critique_id"]
     if executor_kind == "hermes_agent":
-        metadata["owner"] = "OPL executor adapter critique receipt owner"
+        metadata["owner"] = "OPL executor client critique receipt owner"
     else:
         metadata["owner"] = "Codex CLI critique executor"
     metadata["independent_review_evidence"] = _build_independent_review_evidence(

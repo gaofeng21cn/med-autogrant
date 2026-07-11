@@ -30,6 +30,13 @@ def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
     assert audit["schema_version"] == 1
     assert audit["domain_id"] == "med-autogrant"
     assert audit["target_domain_id"] == "med-autogrant"
+    assert audit["default_surface_boundary"]["state"] == "physically_absent"
+    assert set(audit["retired_default_surface_ids"]) == {
+        "product_entry",
+        "product_status",
+        "product_session",
+        "workbench",
+    }
 
     for module_id, item in modules.items():
         expected_layer = (
@@ -62,6 +69,15 @@ def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
         "provenance_refs",
     }
     assert all(bridge_exit_gate[field] for field in bridge_exit_gate)
+
+    native_helper = modules["grant_native_helper"]
+    assert {
+        "src/med_autogrant/cli.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
+    } <= set(native_helper["current_surface_refs"])
+    assert native_helper["bridge_exit_gate"]["keep_as_authority_adapter_refs"]
+    assert native_helper["bridge_exit_gate"]["no_forbidden_write_refs"]
+    assert native_helper["bridge_exit_gate"]["provenance_refs"]
 
 
 def test_pack_compiler_uses_the_same_eight_authority_ids() -> None:

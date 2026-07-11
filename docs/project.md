@@ -25,6 +25,8 @@ OPL/Temporal 持有 generic runtime、stage attempt lifecycle、queue/wakeup、r
 
 Domain handler dispatch 只允许 `domain-memory/propose`、`domain-memory/decide`、`stage-attempt/closeout`。旧 product/status/user-loop/runtime/workbench wrapper 已退役；对应用户面由 OPL/App generated surfaces 提供。
 
+非默认 executor 由 MAG 组装 grant prompt 和 domain payload，再直接交给 OPL Python executor client；MAG 不实现 subprocess/timeout/receipt transport。Codex plugin carrier 的 install/update/remove 统一由 `opl connect ... --module medautogrant` 管理，本仓不提供 installer 或 symlink/marketplace mutation。
+
 ## 目标
 
 - 在同一 funding call 下保持 workspace、draft、route、quality 与 package identity 稳定。

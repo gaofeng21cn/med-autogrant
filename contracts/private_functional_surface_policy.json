@@ -28,7 +28,9 @@
     "generated_surface_owner",
     "workbench_owner",
     "generic_lifecycle_owner",
-    "temporal_worker_owner"
+    "temporal_worker_owner",
+    "executor_transport_owner",
+    "plugin_lifecycle_owner"
   ],
   "canonical_source_behavior_gate": {
     "owner": "one-person-lab",
@@ -136,6 +138,8 @@
     "policy_can_claim_external_runtime_ready": false,
     "policy_can_claim_grant_ready": false,
     "policy_can_claim_submission_ready": false,
-    "policy_can_claim_production_ready": false
+    "policy_can_claim_production_ready": false,
+    "domain_repo_can_spawn_opl_executor_transport": false,
+    "domain_repo_can_install_or_update_codex_plugin": false
   }
 }

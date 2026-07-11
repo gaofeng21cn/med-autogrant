@@ -5,9 +5,23 @@
   "domain_id": "med-autogrant",
   "target_domain_id": "med-autogrant",
   "state": "compact_domain_pack_inventory_and_eight_authority_functions",
+  "default_surface_boundary": {
+    "state": "physically_absent",
+    "retired_surface_provenance_ref": "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md",
+    "replacement_ref": "contracts/generated_surface_handoff.json"
+  },
+  "retired_default_surface_ids": [
+    "product_entry",
+    "product_status",
+    "product_session",
+    "workbench"
+  ],
   "authority_boundary": {
     "domain_can_claim_generic_runtime_owner": false,
     "domain_repo_can_own_generated_surface": false,
+    "domain_repo_can_own_executor_transport": false,
+    "domain_repo_can_own_plugin_lifecycle": false,
+    "plugin_lifecycle_owner": "opl_connect",
     "opl_can_write_domain_truth": false,
     "opl_can_write_memory_body": false,
     "opl_can_authorize_quality_or_export": false
@@ -129,6 +143,7 @@
       "standardization_layer": "private_platform_residue_inventory",
       "code_paths": [
         "src/med_autogrant/codex_cli.py",
+        "src/med_autogrant/critique_executor.py",
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_handler_contract.py",
         "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
@@ -140,9 +155,26 @@
         "OPL generated handlers"
       ],
       "active_caller_status": "domain_handler_and_first_class_codex_adapter_targets",
-      "migration_action": "retain_only_direct_domain_adapter_helpers",
-      "retention_reason": "Keeps the formal direct handler target, validation primitives, thin grant route policy, and current first-class Codex domain executor adapter.",
-      "cannot_absorb_reason": "OPL owns hosting and generic runtime; MAG still supplies domain prompts, accepted answer shapes, and guarded authority targets."
+      "migration_action": "retain_only_direct_domain_authority_adapters_and_consume_opl_executor_client",
+      "retention_reason": "Keeps the formal direct CLI and domain-handler targets, validation primitives, grant prompts, accepted answer shapes, and guarded authority routes. Generic executor transport is consumed directly from OPL.",
+      "cannot_absorb_reason": "OPL owns hosting, executor transport, plugin lifecycle, and generic runtime; MAG still supplies grant prompts, accepted answer shapes, and guarded authority targets.",
+      "current_surface_refs": [
+        "src/med_autogrant/cli.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
+        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
+        "contracts/generated_surface_handoff.json#/domain_handler_targets"
+      ],
+      "bridge_exit_gate": {
+        "keep_as_authority_adapter_refs": [
+          "contracts/functional_privatization_audit.json#/modules/7"
+        ],
+        "no_forbidden_write_refs": [
+          "contracts/private_functional_surface_policy.json#/canonical_source_behavior_gate"
+        ],
+        "provenance_refs": [
+          "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md"
+        ]
+      }
     }
   ],
   "retired_generated_surface_provenance": [

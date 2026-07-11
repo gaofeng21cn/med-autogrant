@@ -5,6 +5,7 @@
   "canonical_agent_id": "mag",
   "domain_id": "med-autogrant",
   "runtime_binding": {
+    "runtime_provider_owner": "configured_family_runtime_provider",
     "task_runtime_owner": "one-person-lab",
     "runtime_substrate": "temporal",
     "stage_executor": "codex_cli",

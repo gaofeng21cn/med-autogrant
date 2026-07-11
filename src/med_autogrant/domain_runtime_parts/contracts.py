@@ -15,12 +15,6 @@ from med_autogrant.domain_entry_contract import (
 )
 from med_autogrant.schema_loader import SchemaStore
 from opl_framework.schema_validation import SchemaSubsetValidator
-from med_autogrant.runtime_defaults import (
-    DEFAULT_EXECUTOR_OWNER,
-    DEFAULT_RUNTIME_OWNER,
-    DEFAULT_RUNTIME_SUBSTRATE,
-    DEFAULT_TASK_RUNTIME_OWNER,
-)
 from med_autogrant.workspace_types import WorkspaceStateError
 
 from .shared import (
@@ -280,10 +274,26 @@ def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]
         raise WorkspaceStateError("CURRENT_PROGRAM contract 缺少字段: runtime_binding")
 
     return {
-        "runtime_owner": DEFAULT_RUNTIME_OWNER,
-        "task_runtime_owner": DEFAULT_TASK_RUNTIME_OWNER,
-        "runtime_substrate": DEFAULT_RUNTIME_SUBSTRATE,
-        "stage_executor_owner": DEFAULT_EXECUTOR_OWNER,
+        "runtime_owner": require_nonempty_string(
+            runtime_binding,
+            "runtime_provider_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
+        ),
+        "task_runtime_owner": require_nonempty_string(
+            runtime_binding,
+            "task_runtime_owner",
+            context="CURRENT_PROGRAM contract runtime_binding",
+        ),
+        "runtime_substrate": require_nonempty_string(
+            runtime_binding,
+            "runtime_substrate",
+            context="CURRENT_PROGRAM contract runtime_binding",
+        ),
+        "stage_executor_owner": require_nonempty_string(
+            runtime_binding,
+            "stage_executor",
+            context="CURRENT_PROGRAM contract runtime_binding",
+        ),
         "current_owner_line": require_nonempty_string(
             runtime_binding,
             "current_owner_line",

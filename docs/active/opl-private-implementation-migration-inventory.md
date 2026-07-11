@@ -17,7 +17,9 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 | memory accept/reject | minimal authority function | MAG retained |
 | owner receipt signer / typed blocker | minimal authority function | MAG retained |
 | transition oracle | minimal authority function | MAG retained |
-| codex/grant-native helper | refs-only domain adapter | MAG retained |
+| grant prompt / answer validation / direct CLI-domain handler | refs-only domain adapter | MAG retained；generic executor transport 直接消费 `opl_framework.executor_client` |
+| OPL executor subprocess / timeout / request temp / receipt envelope | OPL Runway | MAG private adapter deleted |
+| Codex plugin install/update/remove、marketplace/symlink lifecycle | OPL Connect | MAG installer 与 shell wrapper deleted；canonical module id=`medautogrant` |
 | generated product/status/user-loop/workbench | OPL generated surface | MAG private implementations deleted |
 | scheduler/queue/attempt ledger/session/lifecycle transport | OPL platform | MAG private implementations deleted |
 | private pack compiler/source scanner/consumer-thinning mesh | OPL platform | deleted |
@@ -43,6 +45,8 @@ OPL scanner allowed matches 只能由 compact functional audit 对具体文件�
 ## Retirement Rule
 
 无 production caller且不属于八项 authority 的程序面直接删除。Tests/docs/contracts 只能更新到新 owner surface，不得恢复 wrapper。历史来源从 git history 或 `docs/history/**` 读取。
+
+Default caller 中 `product_entry/product_status/product_session/workbench` 已物理不存在，机器声明为 retired；`cli/domain_handler` 是合法 direct authority adapter，以 `keep_as_authority_adapter_ref`、no-forbidden-write 和 provenance refs 关闭退休门，不得误删。
 
 ## Verification
 

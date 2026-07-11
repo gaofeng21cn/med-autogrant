@@ -15,6 +15,11 @@ PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
 PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agents" / "openai.yaml"
 PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
+PACKAGE_MANIFEST_PATH = REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
+REPO_LOCAL_INSTALLER_PATHS = (
+    REPO_ROOT / "scripts" / "install-codex-plugin.sh",
+    REPO_ROOT / "src" / "med_autogrant" / "codex_plugin_installer.py",
+)
 
 
 def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
@@ -42,6 +47,25 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
 
 def test_repo_does_not_track_repo_local_codex_marketplace() -> None:
     assert not MARKETPLACE_PATH.exists()
+
+
+def test_codex_plugin_lifecycle_is_owned_by_opl_connect() -> None:
+    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    lifecycle = package_manifest["lifecycle"]
+
+    assert lifecycle == {
+        "owner": "opl_connect",
+        "module_id": "medautogrant",
+        "commands": {
+            "install": "opl connect install --module medautogrant",
+            "update": "opl connect update --module medautogrant",
+            "remove": "opl connect remove --module medautogrant",
+        },
+        "repo_local_installer_allowed": False,
+        "repo_local_marketplace_mutation_allowed": False,
+        "repo_local_user_symlink_mutation_allowed": False,
+    }
+    assert all(not path.exists() for path in REPO_LOCAL_INSTALLER_PATHS)
 
 
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:

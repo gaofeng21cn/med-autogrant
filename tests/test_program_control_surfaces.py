@@ -32,6 +32,7 @@ def test_current_program_tracks_runtime_owner_and_executor_boundary() -> None:
     assert contract["program_id"] == "med-autogrant-mainline"
     assert contract["canonical_agent_id"] == "mag"
     assert contract["domain_id"] == "med-autogrant"
+    assert runtime_binding["runtime_provider_owner"] == "configured_family_runtime_provider"
     assert runtime_binding["task_runtime_owner"] == "one-person-lab"
     assert runtime_binding["runtime_substrate"] == "temporal"
     assert runtime_binding["stage_executor"] == "codex_cli"

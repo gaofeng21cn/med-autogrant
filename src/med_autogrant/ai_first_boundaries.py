@@ -6,7 +6,7 @@ from typing import Any
 AI_REVIEWER_BACKED_OWNERS = frozenset(
     {
         "Codex CLI critique executor",
-        "OPL executor adapter critique receipt owner",
+        "OPL executor client critique receipt owner",
     }
 )
 
