@@ -16,7 +16,6 @@ LEGACY_POLICY_BODY_FIELDS = {
     "required_stage_packets",
     "series_design_profile",
     "shared_progress_projection_fields",
-    "shared_release_pin_strategy",
     "standard_feedback_self_evolution_trigger_policy",
     "standard_public_projection_policy",
     "workspace_topology_profile",
@@ -32,7 +31,7 @@ def test_foundry_series_is_a_thin_current_opl_consumer() -> None:
 
     assert series["surface_kind"] == "opl_foundry_agent_series_consumer"
     assert series["version"] == "foundry-agent-series-consumer.v1"
-    assert series["canonical_policy_export"] == "opl-framework-shared/foundry-agent-series-policy"
+    assert series["canonical_policy_export"] == "opl-framework/foundry-agent-series-policy"
     assert series["canonical_series_contract_ref"] == (
         "contracts/opl-framework/foundry-agent-series-contract.json"
     )
