@@ -21,12 +21,42 @@ from med_autogrant.authoring_executor import (  # noqa: E402
     build_outline_execution_document,
     build_question_refinement_execution_document,
 )
-from med_autogrant.codex_cli import read_codex_cli_contract  # noqa: E402
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
+from opl_framework.executor_client import run_agent_execution_request  # noqa: E402
 
 
 def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _executor_receipt(route_id: str, domain_output: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_agent_execution_receipt",
+        "executor_kind": "codex_cli",
+        "mode": "structured_call",
+        "cwd": "/tmp",
+        "prompt_preview": "prompt",
+        "session_id": f"codex-{route_id}",
+        "event_summary": [],
+        "stdout_preview": "{}",
+        "stderr_preview": "",
+        "exit_code": 0,
+        "closeout_packet": {
+            "surface_kind": "domain_stage_closeout_packet",
+            "route_id": route_id,
+            "domain_output_kind": "mag_authoring_output",
+            "domain_output": copy.deepcopy(domain_output),
+        },
+        "executor_contract": None,
+        "capabilities": ["structured_call"],
+        "non_equivalence_notice": "codex_cli_first_class_default",
+        "proof": {
+            "model": None,
+            "provider": None,
+            "reasoning_effort": None,
+            "default_executor": True,
+        },
+    }
 
 
 def _rewind_critique(
@@ -163,27 +193,37 @@ class AuthoringExecutorTest(unittest.TestCase):
             ),
         )
 
+        for _stage, builder, *_rest in cases:
+            self.assertIs(
+                builder.__kwdefaults__["executor_runner"],
+                run_agent_execution_request,
+            )
+
         for stage, builder, document, input_path, response, workspace_key, counts, cleared in cases:
             with self.subTest(stage=stage):
-                calls: list[tuple[str, Path]] = []
+                calls: list[tuple[dict[str, Any], float]] = []
 
-                def codex_runner(prompt: str, *, cwd: Path) -> dict[str, Any]:
-                    calls.append((prompt, cwd))
-                    return copy.deepcopy(response)
+                def executor_runner(
+                    request: dict[str, Any],
+                    *,
+                    timeout_seconds: float,
+                ) -> dict[str, Any]:
+                    calls.append((request, timeout_seconds))
+                    return _executor_receipt(stage, response)
 
                 payload = builder(
                     document=document,
                     input_path=input_path,
-                    codex_runner=codex_runner,
+                    executor_runner=executor_runner,
                 )
                 workspace = payload[workspace_key]
                 selection = workspace["current_selection"]
-                contract = read_codex_cli_contract()
-                executor = {
-                    "kind": "codex_cli",
-                    "model": contract["model_selection"],
-                    "reasoning_effort": contract["reasoning_selection"],
-                }
+                executor = payload[f"{stage}_execution"]["executor"]
+                self.assertEqual(executor["kind"], "codex_cli")
+                self.assertEqual(executor["adapter_owner"], "one-person-lab")
+                self.assertEqual(executor["model"], "inherit_local_executor_default")
+                self.assertEqual(executor["reasoning_effort"], "inherit_local_executor_default")
+                self.assertEqual(executor["session_id"], f"codex-{stage}")
                 if stage == "direction_screening":
                     execution_fields = {
                         "selected_direction_id": selection["selected_direction_id"],
@@ -221,10 +261,17 @@ class AuthoringExecutorTest(unittest.TestCase):
                 self.assertEqual(payload["grant_run_id"], workspace["grant_run_id"])
                 self.assertEqual(payload["workspace_id"], workspace["workspace_id"])
                 self.assertEqual(payload["draft_id"], selection.get("active_draft_id"))
-                self.assertEqual(payload[f"{stage}_execution"], {"executor": executor, **execution_fields})
+                self.assertEqual(
+                    {key: value for key, value in payload[f"{stage}_execution"].items() if key != "executor"},
+                    execution_fields,
+                )
                 self.assertEqual(len(calls), 1)
-                self.assertIn(str(input_path.resolve()), calls[0][0])
-                self.assertEqual(calls[0][1], input_path.resolve().parent)
+                request, timeout_seconds = calls[0]
+                self.assertIn(str(input_path.resolve()), request["prompt"])
+                self.assertEqual(request["cwd"], str(input_path.resolve().parent))
+                self.assertEqual(request["executor_kind"], "codex_cli")
+                self.assertEqual(request["domain_payload"]["route_id"], stage)
+                self.assertEqual(timeout_seconds, 300.0)
                 for field, expected_count in counts.items():
                     self.assertEqual(len(workspace[field]), expected_count)
                 for field in cleared:

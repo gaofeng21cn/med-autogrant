@@ -32,7 +32,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、8 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |
-| Foundry consumer + source behavior | OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8` conformance scanner | thin consumer ABI passed；matched 0；blockers 0；allowed 10 |
+| Foundry consumer + source behavior | OPL conformance scanner | thin consumer ABI passed；matched 0；blockers 0；allowed 9 |
 | Owner receipt | `contracts/owner_receipt_contract.json` | 3 canonical receipt classes |
 | Production acceptance | `contracts/production_acceptance/mag-production-acceptance.json` | provenance only, typed blocker open |
 | Live progress | `contracts/live_stage_run_progress_evidence.json` | owner blocker recorded, no ready claim |
@@ -52,8 +52,8 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 - Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；`contracts/foundry_agent_series.json` 只保留 MAG identity/domain delta、canonical policy refs 和 `opl-generated:family_stage_control_plane` locator，不复制 OPL policy body。
 - OPL StageRun 持有 cycle、rollback、resume、dispatch、attempt ledger 与 output orchestration；MAG 只返回 domain refs、verdict、typed blocker 与 owner receipt。
-- Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`。
-- Allowed matches只覆盖 grant-native Codex adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 unclassified generic behavior或 active private generic residue。
+- Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=9`。
+- Allowed matches只覆盖 typed executor closeout adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 repo-local executor transport、unclassified generic behavior或 active private generic residue。
 - Framework Python helper 由 OPL 在 `opl_framework` namespace 托管；MAG manifest / lock 不声明或锁定 OPL implementation。
 - MAG production base为 `3fd7cd3dc5bd3102ac8bf95b33a90a439b82e7fc`；tests-only consolidation `c755594d7a005176fab1e687de58f42a49ab0ece` 已线性吸收，严格只改 `tests/**`，净删 `1695` 行。
 - Final tests boundary：`sys.path.insert` 为0，6个 retired owner tests未复活；fresh focused、smoke、fast、meta与full均为零失败，independent review `ACCEPT`。

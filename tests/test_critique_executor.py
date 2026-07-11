@@ -22,8 +22,32 @@ def _closeout_packet(path: Path) -> dict[str, object]:
     }
 
 
-def _codex_runner(packet: dict[str, object]):
-    return lambda _prompt, *, cwd: deepcopy(packet)
+def _codex_receipt(packet: dict[str, object]) -> dict[str, object]:
+    return {
+        "surface_kind": "opl_agent_execution_receipt",
+        "executor_kind": "codex_cli",
+        "mode": "structured_call",
+        "cwd": str(DRAFTING_EXAMPLE_PATH.resolve().parent),
+        "prompt_preview": "prompt",
+        "session_id": "codex-session-proof-001",
+        "event_summary": [],
+        "stdout_preview": "{}",
+        "stderr_preview": "",
+        "exit_code": 0,
+        "non_equivalence_notice": "codex_cli_first_class_default",
+        "proof": {
+            "model": None,
+            "provider": None,
+            "reasoning_effort": None,
+            "default_executor": True,
+        },
+        "closeout_packet": {
+            "surface_kind": "domain_stage_closeout_packet",
+            "route_id": "critique",
+            "domain_output_kind": "mag_critique_output",
+            "domain_output": deepcopy(packet),
+        },
+    }
 
 
 def _hermes_receipt(packet: dict[str, object]) -> dict[str, object]:
@@ -53,8 +77,10 @@ def _hermes_receipt(packet: dict[str, object]) -> dict[str, object]:
             "reasoning_effort": "xhigh",
         },
         "closeout_packet": {
-            "surface_kind": "mag_critique_closeout_packet",
-            **deepcopy(packet),
+            "surface_kind": "domain_stage_closeout_packet",
+            "route_id": "critique",
+            "domain_output_kind": "mag_critique_output",
+            "domain_output": deepcopy(packet),
         },
     }
 
@@ -103,7 +129,9 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 payload = build_critique_execution_document(
                     document=load_workspace_document(input_path),
                     input_path=input_path,
-                    codex_runner=_codex_runner(_closeout_packet(packet_path)),
+                    executor_runner=lambda _request, *, timeout_seconds: _codex_receipt(
+                        _closeout_packet(packet_path)
+                    ),
                 )
                 workspace = payload["critique_workspace"]
                 critique = workspace["mentor_critiques"][-1]
@@ -123,14 +151,12 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 self.assertTrue(validate_workspace_document(workspace).ok)
 
     def test_hermes_receipt_preserves_non_equivalence_and_review_receipt(self) -> None:
-        from med_autogrant.critique_executor import (
-            OPL_EXECUTOR_TIMEOUT_SECONDS,
-            build_critique_execution_document,
-        )
+        from med_autogrant.critique_executor import build_critique_execution_document
+        from med_autogrant.domain_executor_client import OPL_EXECUTOR_TIMEOUT_SECONDS
         from opl_framework.executor_client import run_agent_execution_request
 
         self.assertIs(
-            build_critique_execution_document.__kwdefaults__["opl_executor_runner"],
+            build_critique_execution_document.__kwdefaults__["executor_runner"],
             run_agent_execution_request,
         )
 
@@ -145,7 +171,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
             document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
             input_path=DRAFTING_EXAMPLE_PATH,
             executor_kind="hermes_agent",
-            opl_executor_runner=run_via_opl,
+            executor_runner=run_via_opl,
         )
         executor = payload["critique_execution"]["executor"]
         evidence = payload["critique_workspace"]["mentor_critiques"][-1]["metadata"][
@@ -165,6 +191,31 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(request["mode"], "agent_loop")
         self.assertEqual(request["cwd"], str(DRAFTING_EXAMPLE_PATH.resolve().parent))
         self.assertEqual(request["domain_payload"]["route_id"], "critique")
+
+    def test_default_codex_critique_uses_the_same_opl_client_contract(self) -> None:
+        from med_autogrant.critique_executor import build_critique_execution_document
+
+        observed: dict[str, object] = {}
+
+        def run_via_opl(request: dict[str, object], *, timeout_seconds: float) -> dict[str, object]:
+            observed["request"] = request
+            observed["timeout_seconds"] = timeout_seconds
+            return _codex_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
+
+        payload = build_critique_execution_document(
+            document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
+            input_path=DRAFTING_EXAMPLE_PATH,
+            executor_runner=run_via_opl,
+        )
+
+        executor = payload["critique_execution"]["executor"]
+        request = observed["request"]
+        self.assertEqual(executor["kind"], "codex_cli")
+        self.assertEqual(executor["adapter_owner"], "one-person-lab")
+        self.assertEqual(request["executor_kind"], "codex_cli")
+        self.assertEqual(request["mode"], "structured_call")
+        self.assertEqual(request["domain_payload"]["domain_output_kind"], "mag_critique_output")
+        self.assertEqual(observed["timeout_seconds"], 300.0)
 
     def test_executor_selection_and_receipt_shape_fail_closed(self) -> None:
         from med_autogrant.critique_executor import (
@@ -187,7 +238,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
                 input_path=DRAFTING_EXAMPLE_PATH,
                 executor_kind="hermes_agent",
-                opl_executor_runner=lambda _request, *, timeout_seconds: invalid_receipt,
+                executor_runner=lambda _request, *, timeout_seconds: invalid_receipt,
             )
 
         def timed_out(_request: dict[str, object], *, timeout_seconds: float) -> dict[str, object]:
@@ -198,7 +249,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
                 input_path=DRAFTING_EXAMPLE_PATH,
                 executor_kind="hermes_agent",
-                opl_executor_runner=timed_out,
+                executor_runner=timed_out,
             )
 
     @staticmethod

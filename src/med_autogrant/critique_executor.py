@@ -5,17 +5,14 @@ import re
 from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
-from med_autogrant.codex_cli import (
-    read_codex_cli_contract,
-    run_codex_exec,
-)
 from med_autogrant.critique_policy import (
     build_policy_prompt_lines,
     build_weight_contract,
     resolve_critique_policy_from_document,
 )
+from med_autogrant.domain_executor_client import ExecutorRunner, run_domain_executor
 from med_autogrant.schema_loader import SchemaStore
 from opl_framework.executor_client import run_agent_execution_request
 from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
@@ -24,16 +21,6 @@ from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 
-
-CodexRunner = Callable[[str], dict[str, Any]]
-OplExecutorRunner = Callable[..., dict[str, Any]]
-
-OPL_EXECUTOR_ADAPTER_OWNER = "one-person-lab"
-OPL_EXECUTOR_ADAPTER_CONTRACT_REF = "contracts/opl-framework/family-executor-adapter-defaults.json"
-OPL_AGENT_EXECUTION_REQUEST_CONTRACT = "AgentExecutionRequest"
-OPL_AGENT_EXECUTION_RECEIPT_CONTRACT = "AgentExecutionReceipt"
-NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE = "connectivity_lifecycle_receipt_audit_only"
-OPL_EXECUTOR_TIMEOUT_SECONDS = 300.0
 
 DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli"
 HERMES_AGENT_EXECUTOR_KIND = "hermes_agent"
@@ -55,8 +42,7 @@ def build_critique_execution_document(
     document: dict[str, Any],
     input_path: str | Path,
     executor_kind: str | None = None,
-    codex_runner: Callable[..., dict[str, Any]] = run_codex_exec,
-    opl_executor_runner: Callable[..., dict[str, Any]] = run_agent_execution_request,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     critique_context = _build_critique_context(document=document, state=state)
@@ -66,8 +52,7 @@ def build_critique_execution_document(
         prompt=prompt,
         input_path=input_path,
         executor_kind=executor_kind,
-        codex_runner=codex_runner,
-        opl_executor_runner=opl_executor_runner,
+        executor_runner=executor_runner,
     )
     critique = _normalize_mentor_critique(
         critique_context=critique_context,
@@ -121,47 +106,18 @@ def _run_critique_generation(
     prompt: str,
     input_path: str | Path,
     executor_kind: str | None,
-    codex_runner: Callable[..., dict[str, Any]],
-    opl_executor_runner: Callable[..., dict[str, Any]],
+    executor_runner: ExecutorRunner,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     resolved_executor_kind = _resolve_critique_executor_kind(executor_kind)
-    resolved_cwd = Path(input_path).expanduser().resolve().parent
-
-    if resolved_executor_kind == DEFAULT_CRITIQUE_EXECUTOR_KIND:
-        codex_contract = read_codex_cli_contract()
-        payload = codex_runner(
-            prompt,
-            cwd=resolved_cwd,
-        )
-        if not isinstance(payload, dict):
-            raise WorkspaceStateError("Codex critique pass 返回值必须是 object。")
-        return payload, _build_codex_executor_payload(codex_contract)
-
-    try:
-        receipt = opl_executor_runner(
-            {
-                "executor_kind": resolved_executor_kind,
-                "mode": "agent_loop",
-                "prompt": prompt,
-                "cwd": str(resolved_cwd),
-                "json": True,
-                "domain_payload": {
-                    "domain_id": "med-autogrant",
-                    "route_id": "critique",
-                    "input_path": str(Path(input_path).expanduser().resolve()),
-                },
-            },
-            timeout_seconds=OPL_EXECUTOR_TIMEOUT_SECONDS,
-        )
-    except (RuntimeError, TimeoutError, ValueError) as exc:
-        raise WorkspaceStateError(f"OPL executor client 执行失败: {exc}") from exc
-    if not isinstance(receipt, dict):
-        raise WorkspaceStateError("OPL executor client 返回的 receipt 必须是 object。")
-    hermes_proof = _require_object(receipt, "proof")
-    hermes_contract = _require_object(receipt, "executor_contract")
-    hermes_payload = _require_domain_closeout_payload(receipt)
-    receipt = _require_agent_execution_receipt(receipt, hermes_proof)
-    return hermes_payload, _build_hermes_executor_payload(hermes_contract, hermes_proof, receipt)
+    return run_domain_executor(
+        prompt=prompt,
+        input_path=input_path,
+        executor_kind=resolved_executor_kind,
+        route_id="critique",
+        closeout_surface_kind="domain_stage_closeout_packet",
+        domain_output_kind="mag_critique_output",
+        executor_runner=executor_runner,
+    )
 
 
 def _resolve_critique_executor_kind(executor_kind: str | None) -> str:
@@ -174,97 +130,6 @@ def _resolve_critique_executor_kind(executor_kind: str | None) -> str:
         "execute-critique-pass 不支持该 executor_kind："
         f"{normalized}。当前只允许 {', '.join(SUPPORTED_CRITIQUE_EXECUTOR_KINDS)}。"
     )
-
-
-def _build_codex_executor_payload(codex_contract: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "kind": "codex_cli",
-        "model": codex_contract["model_selection"],
-        "reasoning_effort": codex_contract["reasoning_selection"],
-    }
-
-
-def _build_hermes_executor_payload(
-    hermes_contract: dict[str, Any],
-    hermes_proof: dict[str, Any],
-    receipt: dict[str, Any],
-) -> dict[str, Any]:
-    return {
-        "kind": "hermes_agent",
-        "mode": "agent_loop",
-        "adapter_owner": OPL_EXECUTOR_ADAPTER_OWNER,
-        "adapter_contract_ref": OPL_EXECUTOR_ADAPTER_CONTRACT_REF,
-        "request_contract": OPL_AGENT_EXECUTION_REQUEST_CONTRACT,
-        "receipt_contract": OPL_AGENT_EXECUTION_RECEIPT_CONTRACT,
-        "fallback_allowed": False,
-        "non_equivalence_notice": NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
-        "entrypoint": _require_string(hermes_contract, "entrypoint", context="Hermes contract"),
-        "model": _require_string(hermes_contract, "model", context="Hermes contract"),
-        "provider": hermes_contract.get("provider"),
-        "api_mode": hermes_contract.get("api_mode"),
-        "reasoning_effort": hermes_contract.get("reasoning_effort"),
-        "full_agent_loop_proved": _require_bool(hermes_proof, "full_agent_loop_proved", context="Hermes proof"),
-        "session_id": hermes_proof.get("session_id"),
-        "api_calls": _require_nonnegative_int(hermes_proof, "api_calls", context="Hermes proof"),
-        "tool_call_count": _require_nonnegative_int(hermes_proof, "tool_call_count", context="Hermes proof"),
-        "event_count": _require_nonnegative_int(hermes_proof, "event_count", context="Hermes proof"),
-        "reasoning_semantics_status": _require_string(
-            hermes_proof,
-            "provider_reasoning_status",
-            context="Hermes proof",
-        ),
-        "event_stream": _require_object_list(
-            hermes_proof,
-            "event_stream",
-            context="Hermes proof",
-        ),
-        "agent_execution_receipt": dict(receipt),
-    }
-
-
-def _require_agent_execution_receipt(
-    receipt: dict[str, Any],
-    hermes_proof: dict[str, Any],
-) -> dict[str, Any]:
-    context = "OPL non-default AgentExecutionReceipt"
-    surface_kind = _require_string(receipt, "surface_kind", context=context)
-    if surface_kind != "opl_agent_execution_receipt":
-        raise WorkspaceStateError(f"{context} surface_kind 必须是 opl_agent_execution_receipt。")
-    executor_kind = _require_string(receipt, "executor_kind", context=context)
-    if executor_kind != HERMES_AGENT_EXECUTOR_KIND:
-        raise WorkspaceStateError(f"{context} executor_kind 必须是 hermes_agent。")
-    mode = _require_string(receipt, "mode", context=context)
-    if mode != "agent_loop":
-        raise WorkspaceStateError(f"{context} mode 必须是 agent_loop。")
-    notice = _require_string(receipt, "non_equivalence_notice", context=context)
-    if notice != NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE:
-        raise WorkspaceStateError(f"{context} non_equivalence_notice 不符合 OPL non-default executor 合同。")
-    if not _require_object_list(receipt, "event_summary", context=context):
-        raise WorkspaceStateError(f"{context} event_summary 必须包含 agent loop 事件。")
-    if _require_nonnegative_int(receipt, "exit_code", context=context) != 0:
-        raise WorkspaceStateError(f"{context} exit_code 必须为 0。")
-    receipt_proof = _require_object(receipt, "proof")
-    if receipt_proof.get("full_agent_loop_proved") is not True:
-        raise WorkspaceStateError(f"{context} proof 必须证明 full_agent_loop_proved。")
-    if _require_nonnegative_int(receipt_proof, "tool_call_count", context=context) <= 0:
-        raise WorkspaceStateError(f"{context} proof 必须包含至少一个 tool call。")
-    if receipt_proof.get("session_id") != hermes_proof.get("session_id"):
-        raise WorkspaceStateError(f"{context} proof.session_id 必须与 Hermes proof 对齐。")
-    if receipt_proof.get("tool_call_count") != hermes_proof.get("tool_call_count"):
-        raise WorkspaceStateError(f"{context} proof.tool_call_count 必须与 Hermes proof 对齐。")
-    return receipt
-
-
-def _require_domain_closeout_payload(receipt: dict[str, Any]) -> dict[str, Any]:
-    closeout = _require_object(receipt, "closeout_packet")
-    context = "OPL non-default domain closeout packet"
-    surface_kind = _require_string(closeout, "surface_kind", context=context)
-    if surface_kind != "mag_critique_closeout_packet":
-        raise WorkspaceStateError(f"{context} surface_kind 必须是 mag_critique_closeout_packet。")
-    return {
-        "mentor_critique": _require_object(closeout, "mentor_critique"),
-        "revision_plan": _require_object(closeout, "revision_plan"),
-    }
 
 
 def _build_critique_context(
@@ -386,7 +251,13 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             f"RevisionPlan schema: {revision_schema}",
             "",
             "Output contract:",
-            'Return exactly one JSON object with keys "mentor_critique" and "revision_plan".',
+            (
+                'Return exactly one JSON object shaped as '
+                '{"surface_kind":"domain_stage_closeout_packet",'
+                '"route_id":"critique","domain_output_kind":"mag_critique_output",'
+                '"domain_output":{...}}.'
+            ),
+            'domain_output must contain exactly the keys "mentor_critique" and "revision_plan".',
             "",
             "Critique policy/persona contract:",
             *policy_lines,
@@ -480,9 +351,9 @@ def _build_independent_review_evidence(
     execution_attempt_ref = (
         f"draft_artifact::{critique_context['grant_run_id']}::{critique_context['draft_id']}"
     )
-    if executor_kind == "hermes_agent" and isinstance(session_id, str) and session_id.strip():
+    if isinstance(session_id, str) and session_id.strip():
         review_receipt_ref = f"opl_agent_execution_receipt::{session_id.strip()}"
-        reviewer_agent_ref = f"hermes_agent::{session_id.strip()}"
+        reviewer_agent_ref = f"{executor_kind}::{session_id.strip()}"
     else:
         review_receipt_ref = f"mentor_critiques::{critique_id}::metadata.independent_review_evidence"
         reviewer_agent_ref = "codex_cli::critique_executor"
@@ -680,34 +551,6 @@ def _require_object(payload: dict[str, Any], key: str) -> dict[str, Any]:
     value = payload.get(key)
     if not isinstance(value, dict):
         raise WorkspaceStateError(f"critique executor 输出缺少 object 字段: {key}")
-    return value
-
-
-def _require_object_list(payload: dict[str, Any], key: str, *, context: str) -> list[dict[str, Any]]:
-    value = payload.get(key)
-    if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
-        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}` object list。")
-    return value
-
-
-def _require_string(payload: dict[str, Any], key: str, *, context: str) -> str:
-    value = payload.get(key)
-    if not isinstance(value, str) or not value.strip():
-        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
-    return value
-
-
-def _require_bool(payload: dict[str, Any], key: str, *, context: str) -> bool:
-    value = payload.get(key)
-    if not isinstance(value, bool):
-        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
-    return value
-
-
-def _require_nonnegative_int(payload: dict[str, Any], key: str, *, context: str) -> int:
-    value = payload.get(key)
-    if not isinstance(value, int) or value < 0:
-        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
     return value
 
 

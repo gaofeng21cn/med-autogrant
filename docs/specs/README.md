@@ -18,7 +18,7 @@ Machine boundary: 本文是人读 specs 索引。机器消费者必须使用 `co
 
 当前优先级最高、仍由 docs guide 或 status 直接引用的 active current-truth specs 只有四份：
 
-- [Critique executor vocabulary current truth](./2026-04-13-critique-codex-cli-executor-current-truth.md)
+- [Critique executor and OPL transport boundary](./2026-04-13-critique-codex-cli-executor-current-truth.md)
 - [AI-first 质量边界 current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, OPL autonomy boundary, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)

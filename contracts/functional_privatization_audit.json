@@ -142,7 +142,9 @@
       "classification": "refs_only_domain_adapter",
       "standardization_layer": "private_platform_residue_inventory",
       "code_paths": [
-        "src/med_autogrant/codex_cli.py",
+        "src/med_autogrant/domain_executor_client.py",
+        "src/med_autogrant/authoring_executor.py",
+        "src/med_autogrant/authoring_executor_parts.py",
         "src/med_autogrant/critique_executor.py",
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_handler_contract.py",
@@ -154,10 +156,10 @@
         "medautogrant CLI",
         "OPL generated handlers"
       ],
-      "active_caller_status": "domain_handler_and_first_class_codex_adapter_targets",
-      "migration_action": "retain_only_direct_domain_authority_adapters_and_consume_opl_executor_client",
-      "retention_reason": "Keeps the formal direct CLI and domain-handler targets, validation primitives, grant prompts, accepted answer shapes, and guarded authority routes. Generic executor transport is consumed directly from OPL.",
-      "cannot_absorb_reason": "OPL owns hosting, executor transport, plugin lifecycle, and generic runtime; MAG still supplies grant prompts, accepted answer shapes, and guarded authority targets.",
+      "active_caller_status": "domain_handler_and_opl_executor_client_domain_adapter_targets",
+      "migration_action": "retain_only_grant_prompts_typed_closeout_validation_and_direct_domain_authority_adapters",
+      "retention_reason": "Keeps the formal direct CLI and domain-handler targets, grant prompts, accepted answer shapes, typed MAG closeout validation, and guarded authority routes. All Codex and non-default executor transport is consumed from OPL.",
+      "cannot_absorb_reason": "OPL owns hosting, all executor transport, plugin lifecycle, and generic runtime; MAG still supplies grant prompts, typed domain outputs, and guarded authority targets.",
       "current_surface_refs": [
         "src/med_autogrant/cli.py",
         "src/med_autogrant/product_entry_parts/domain_handler.py",

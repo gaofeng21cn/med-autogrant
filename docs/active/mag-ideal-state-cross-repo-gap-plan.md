@@ -26,7 +26,7 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 | 11 | 删除 MAG 私有 product/status/user-loop/runtime/workbench平台面 | done | 100% | direct domain handler + OPL generated/hosted handoff |
 | 12 | 删除私有 OPL pack compiler与tracked generated aggregate | done | 100% | `agent/`/root contracts是声明源；OPL Pack生成 family stage plane |
 | 13 | 将 cycle/rollback/resume/dispatch/output编排迁入 OPL StageRun | done | 100% | MAG只保留 selector、quality、transition oracle与 authority receipt |
-| 14 | 将非默认 executor transport 上收到 OPL Python client | done | 100% | MAG 直接调用 `opl_framework.executor_client.run_agent_execution_request`；repo-local adapter/default command 已删除 |
+| 14 | 将全部 executor transport 上收到 OPL Python client | done | 100% | authoring/critique 的 `codex_cli` 与 `hermes_agent` 均调用 `opl_framework.executor_client.run_agent_execution_request`；repo-local Codex/OPL subprocess、adapter 和 default command 已删除 |
 | 15 | 将 Codex plugin 生命周期统一到 OPL Connect | done | 100% | canonical `opl connect install/update/remove --module medautogrant`；本地 installer/symlink/marketplace mutation 已删除 |
 | 16 | 关闭 6 个 generated default-caller retirement tails | done | 100% | 4 个 physically absent surface 声明 retired；`cli/domain_handler` 保留为 authority adapter 并提供 keep/no-write/provenance refs |
 
@@ -55,9 +55,9 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 ## Final Structural Evidence
 
 - 2026-07-11 boundary convergence：OPL default-caller readback 为 `8/8` retirement gates closed、active deletion worklist `0`、retired default surface `4`，`cli/domain_handler` owner decision 为 `keep_as_authority_adapter_ref`；OPL conformance 继续满足 structural passed、matched generic behavior `0`、active private generic residue `0`。
-- MAG 使用 OPL Python `executor_client` 的真实跨仓 focused 验证为 `22 passed + 36 subtests`，MAG full 为 `167 passed + 235 subtests`。这只证明结构与行为兼容，不代表 live grant、provider long-soak 或 production readiness。
+- MAG authoring/critique 全部使用 OPL Python `executor_client`；fresh full 为 `170 passed + 231 subtests`，production source executor transport 扫描为 `0`。这只证明结构与行为兼容，不代表 live grant、provider long-soak 或 production readiness。
 - Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；MAG 只消费 canonical policy export、policy release pin 和 `opl-generated:family_stage_control_plane`，不复制 Foundry policy bodies。
-- OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
+- OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=9`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
 - OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。
 - OPL full residual：唯一 `system-seed-manifest` 失败在 candidate/base均为相同 `10/11` 与 `2 != 0`，不属于 MAG/Runway候选回归；其余 focused、MAG integration、smoke与静态门通过。
 - Shared consumer dependency pin保持 `e1e734031ab3ea45596c6ce131f611f296ca9746`。
@@ -67,7 +67,9 @@ Allowed matches：
 
 | Path | Signature | Classification |
 | --- | --- | --- |
-| `src/med_autogrant/codex_cli.py` | `repo_owned_codex_executor_envelope` | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/domain_executor_client.py` | typed MAG request/closeout adapter over OPL client | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/authoring_executor.py` | grant authoring prompts and domain output normalization | `grant_native_helper / refs_only_domain_adapter` |
+| `src/med_autogrant/critique_executor.py` | grant critique prompt and typed closeout normalization | `grant_native_helper / refs_only_domain_adapter` |
 | `src/med_autogrant/product_entry_parts/domain_handler.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
 | `src/med_autogrant/product_entry_parts/domain_handler_contract.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
 | `src/med_autogrant/product_entry_parts/domain_handler_dispatch.py` | `repo_owned_product_status_session_shell` | `grant_native_helper / refs_only_domain_adapter` |
@@ -96,7 +98,7 @@ Per-file tests-only numstat：
 0   3   tests/cli_validate_cases.py
 32  180 tests/test_cli_validate_workspace_error_cases.py
 126 316 tests/test_cli_validate_workspace_revision_cases.py
-58  111 tests/test_codex_cli.py
+58  111 historical repo-local Codex transport test (physically retired)
 33  74  tests/test_codex_plugin_installer.py
 13  116 tests/test_codex_plugin_installer_script.py
 0   5   tests/test_critique_policy.py

@@ -10,7 +10,6 @@ from typing import Any, Callable
 from med_autogrant.authoring_executor_parts import (
     _allocate_sequence_ids,
     _build_argument_building_prompt,
-    _build_codex_executor_payload,
     _build_direction_screening_prompt,
     _build_drafting_prompt,
     _build_fit_alignment_prompt,
@@ -28,10 +27,10 @@ from med_autogrant.authoring_executor_parts import (
     _require_nonempty_string,
     _require_nonnegative_int,
     _require_object_list,
-    _run_codex_generation,
+    _run_executor_generation,
     _validate_schema_payload,
 )
-from med_autogrant.codex_cli import read_codex_cli_contract, run_codex_exec
+from opl_framework.executor_client import run_agent_execution_request
 from med_autogrant.schema_loader import SchemaStore
 from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
@@ -43,32 +42,33 @@ from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 
 
-CodexRunner = Callable[..., dict[str, Any]]
+ExecutorRunner = Callable[..., dict[str, Any]]
 
 
 def build_direction_screening_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     known_ids = sorted(_collect_known_ids(document))
     prompt = _build_direction_screening_prompt(
         input_path=input_path,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="direction_screening",
+        executor_runner=executor_runner,
     )
     selected_direction_index = _require_nonnegative_int(
-        codex_payload,
+        domain_payload,
         "selected_direction_index",
         context="direction screening payload",
     )
     raw_directions = _require_object_list(
-        codex_payload,
+        domain_payload,
         "direction_hypotheses",
         context="direction screening payload",
     )
@@ -149,7 +149,7 @@ def build_direction_screening_execution_document(
         "draft_id": None,
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "direction_screening_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "selected_direction_id": selected_direction_id,
             "direction_count": len(normalized_directions),
         },
@@ -161,7 +161,7 @@ def build_question_refinement_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     selected_direction = state.selected_direction
@@ -174,13 +174,14 @@ def build_question_refinement_execution_document(
         selected_direction=selected_direction,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="question_refinement",
+        executor_runner=executor_runner,
     )
     raw_question = _require_mapping(
-        codex_payload,
+        domain_payload,
         "scientific_question_card",
         context="question refinement payload",
     )
@@ -267,7 +268,7 @@ def build_question_refinement_execution_document(
         "draft_id": None,
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "question_refinement_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "selected_direction_id": selected_direction["direction_id"],
             "selected_question_id": question_id,
         },
@@ -279,7 +280,7 @@ def build_argument_building_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     selected_direction = state.selected_direction
@@ -294,13 +295,14 @@ def build_argument_building_execution_document(
         selected_question=selected_question,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="argument_building",
+        executor_runner=executor_runner,
     )
     raw_argument = _require_mapping(
-        codex_payload,
+        domain_payload,
         "argument_chain",
         context="argument building payload",
     )
@@ -364,7 +366,7 @@ def build_argument_building_execution_document(
         "draft_id": None,
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "argument_building_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "selected_question_id": selected_question["question_id"],
             "argument_chain_id": argument_chain_id,
         },
@@ -376,7 +378,7 @@ def build_fit_alignment_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     selected_direction = state.selected_direction
@@ -392,13 +394,14 @@ def build_fit_alignment_execution_document(
         active_argument_chain=active_argument_chain,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="fit_alignment",
+        executor_runner=executor_runner,
     )
     raw_fit_mapping = _require_mapping(
-        codex_payload,
+        domain_payload,
         "applicant_fit_mapping",
         context="fit alignment payload",
     )
@@ -481,7 +484,7 @@ def build_fit_alignment_execution_document(
         "draft_id": None,
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "fit_alignment_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "selected_question_id": selected_question["question_id"],
             "active_fit_mapping_id": fit_mapping_id,
         },
@@ -493,7 +496,7 @@ def build_outline_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     selected_direction = state.selected_direction
@@ -516,12 +519,13 @@ def build_outline_execution_document(
         active_fit_mapping=active_fit_mapping,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="outline",
+        executor_runner=executor_runner,
     )
-    raw_draft = _require_mapping(codex_payload, "application_draft", context="outline payload")
+    raw_draft = _require_mapping(domain_payload, "application_draft", context="outline payload")
     raw_outline = _require_object_list(raw_draft, "outline", context="outline payload.application_draft")
     if not raw_outline:
         raise WorkspaceStateError("outline 需要输出非空提纲。")
@@ -593,7 +597,7 @@ def build_outline_execution_document(
         "draft_id": draft_id,
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "outline_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "active_fit_mapping_id": active_fit_mapping["fit_mapping_id"],
             "draft_id": draft_id,
             "outline_count": len(outline),
@@ -606,7 +610,7 @@ def build_drafting_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
-    codex_runner: CodexRunner = run_codex_exec,
+    executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     selected_direction = state.selected_direction
@@ -632,12 +636,13 @@ def build_drafting_execution_document(
         active_fit_mapping=active_fit_mapping,
         known_ids=known_ids,
     )
-    codex_payload, codex_contract = _run_codex_generation(
+    domain_payload, executor_payload = _run_executor_generation(
         prompt=prompt,
         input_path=input_path,
-        codex_runner=codex_runner,
+        route_id="drafting",
+        executor_runner=executor_runner,
     )
-    raw_draft = _require_mapping(codex_payload, "application_draft", context="drafting payload")
+    raw_draft = _require_mapping(domain_payload, "application_draft", context="drafting payload")
     raw_sections = _require_object_list(raw_draft, "sections", context="drafting payload.application_draft")
     if not raw_sections:
         raise WorkspaceStateError("drafting 需要输出非空正文 sections。")
@@ -699,7 +704,7 @@ def build_drafting_execution_document(
         "draft_id": draft["draft_id"],
         "lifecycle_stage": next_workspace["lifecycle_stage"],
         "drafting_execution": {
-            "executor": _build_codex_executor_payload(codex_contract),
+            "executor": executor_payload,
             "draft_id": draft["draft_id"],
             "version_label": draft["version_label"],
             "section_count": len(sections),

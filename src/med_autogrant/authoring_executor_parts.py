@@ -4,9 +4,12 @@ import json
 import re
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Mapping
 
-from med_autogrant.codex_cli import read_codex_cli_contract
+from med_autogrant.domain_executor_client import (
+    ExecutorRunner,
+    run_domain_executor,
+)
 from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     materialize_workspace_surfaces,
@@ -19,10 +22,11 @@ from med_autogrant.schema_loader import SchemaStore
 def _build_direction_screening_prompt(*, input_path: str | Path, known_ids: list[str]) -> str:
     direction_schema = (SchemaStore().root / "direction-hypothesis.schema.json").resolve()
     return _build_prompt(
+        route_id="direction_screening",
         input_path=input_path,
         schema_paths=[direction_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with keys "selected_direction_index" and "direction_hypotheses".',
+            'domain_output must contain exactly the keys "selected_direction_index" and "direction_hypotheses".',
             '"selected_direction_index" must be a zero-based integer pointing at the chosen mainline direction.',
             '"direction_hypotheses" must be a list of 2 to 5 objects.',
             "Each direction object must include: title, rationale, knowledge_gap_summary, applicant_fit_summary, novelty_angle, risk_summary, required_evidence_ids.",
@@ -47,10 +51,11 @@ def _build_question_refinement_prompt(
 ) -> str:
     question_schema = (SchemaStore().root / "scientific-question-card.schema.json").resolve()
     return _build_prompt(
+        route_id="question_refinement",
         input_path=input_path,
         schema_paths=[question_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with key "scientific_question_card".',
+            'domain_output must contain exactly the key "scientific_question_card".',
             "The card must include: knowledge_boundary, unknown_mechanism, core_question, falsifiable_statement, proposed_breakthrough_angle, why_not_engineering.",
             "Optional fields: phenomenon, subquestions, why_now, linked_evidence_ids.",
         ],
@@ -75,10 +80,11 @@ def _build_argument_building_prompt(
 ) -> str:
     argument_schema = (SchemaStore().root / "argument-chain.schema.json").resolve()
     return _build_prompt(
+        route_id="argument_building",
         input_path=input_path,
         schema_paths=[argument_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with key "argument_chain".',
+            'domain_output must contain exactly the key "argument_chain".',
             "The chain must include: background_claim, field_gap, necessity_claim, uniqueness_claim, route_justification, if_not_done_loss.",
             "Optional fields: non_arbitrary_route_reason, linked_evidence_ids.",
         ],
@@ -104,10 +110,11 @@ def _build_fit_alignment_prompt(
 ) -> str:
     fit_schema = (SchemaStore().root / "applicant-fit-mapping.schema.json").resolve()
     return _build_prompt(
+        route_id="fit_alignment",
         input_path=input_path,
         schema_paths=[fit_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with key "applicant_fit_mapping".',
+            'domain_output must contain exactly the key "applicant_fit_mapping".',
             "The mapping must include: applicant_fit_summary, unique_advantage, methods_readiness, resource_readiness, risk_mitigation.",
             "Optional field: linked_evidence_ids.",
         ],
@@ -133,10 +140,11 @@ def _build_outline_prompt(
 ) -> str:
     draft_schema = (SchemaStore().root / "application-draft.schema.json").resolve()
     return _build_prompt(
+        route_id="outline",
         input_path=input_path,
         schema_paths=[draft_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with key "application_draft".',
+            'domain_output must contain exactly the key "application_draft".',
             'The draft must include "project_title" and a non-empty "outline" list.',
             "Each outline item must include: section_key, section_title, core_claim, linked_object_ids.",
         ],
@@ -165,10 +173,11 @@ def _build_drafting_prompt(
 ) -> str:
     draft_schema = (SchemaStore().root / "application-draft.schema.json").resolve()
     return _build_prompt(
+        route_id="drafting",
         input_path=input_path,
         schema_paths=[draft_schema],
         output_contract_lines=[
-            'Return exactly one JSON object with key "application_draft".',
+            'domain_output must contain exactly the key "application_draft".',
             'The draft must include "project_title" and a non-empty "sections" list.',
             "Each section must include: section_key, section_title, text, linked_object_ids.",
         ],
@@ -189,6 +198,7 @@ def _build_drafting_prompt(
 
 def _build_prompt(
     *,
+    route_id: str,
     input_path: str | Path,
     schema_paths: list[Path],
     output_contract_lines: list[str],
@@ -209,6 +219,12 @@ def _build_prompt(
         [
             "",
             "Output contract:",
+            (
+                '- Return exactly one object shaped as '
+                '{"surface_kind":"domain_stage_closeout_packet",'
+                f'"route_id":"{route_id}","domain_output_kind":"mag_authoring_output",'
+                '"domain_output":{...}}.'
+            ),
             *[f"- {line}" for line in output_contract_lines],
             "",
             "Hard constraints:",
@@ -220,27 +236,22 @@ def _build_prompt(
     )
     return "\n".join(lines)
 
-def _run_codex_generation(
+def _run_executor_generation(
     *,
     prompt: str,
     input_path: str | Path,
-    codex_runner: CodexRunner,
+    route_id: str,
+    executor_runner: ExecutorRunner,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    codex_contract = read_codex_cli_contract()
-    payload = codex_runner(
-        prompt,
-        cwd=Path(input_path).expanduser().resolve().parent,
+    return run_domain_executor(
+        prompt=prompt,
+        input_path=input_path,
+        executor_kind="codex_cli",
+        route_id=route_id,
+        closeout_surface_kind="domain_stage_closeout_packet",
+        domain_output_kind="mag_authoring_output",
+        executor_runner=executor_runner,
     )
-    if not isinstance(payload, dict):
-        raise WorkspaceStateError("Codex authoring pass 返回值必须是 object。")
-    return payload, codex_contract
-
-def _build_codex_executor_payload(codex_contract: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "kind": "codex_cli",
-        "model": codex_contract["model_selection"],
-        "reasoning_effort": codex_contract["reasoning_selection"],
-    }
 
 def _fresh_metadata(document: dict[str, Any]) -> dict[str, Any]:
     source_mode = document.get("mode")

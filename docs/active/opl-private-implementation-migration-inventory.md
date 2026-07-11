@@ -17,8 +17,8 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 | memory accept/reject | minimal authority function | MAG retained |
 | owner receipt signer / typed blocker | minimal authority function | MAG retained |
 | transition oracle | minimal authority function | MAG retained |
-| grant prompt / answer validation / direct CLI-domain handler | refs-only domain adapter | MAG retained；generic executor transport 直接消费 `opl_framework.executor_client` |
-| OPL executor subprocess / timeout / request temp / receipt envelope | OPL Runway | MAG private adapter deleted |
+| grant prompt / typed closeout and answer validation / direct CLI-domain handler | refs-only domain adapter | MAG retained；所有 executor transport直接消费 `opl_framework.executor_client` |
+| Codex/OPL executor subprocess / timeout / request temp / process cleanup / receipt envelope | OPL Runway | MAG private transport全部 deleted |
 | Codex plugin install/update/remove、marketplace/symlink lifecycle | OPL Connect | MAG installer 与 shell wrapper deleted；canonical module id=`medautogrant` |
 | generated product/status/user-loop/workbench | OPL generated surface | MAG private implementations deleted |
 | scheduler/queue/attempt ledger/session/lifecycle transport | OPL platform | MAG private implementations deleted |
@@ -30,7 +30,9 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 
 OPL scanner allowed matches 只能由 compact functional audit 对具体文件声明。该 audit 只枚举八项 authority/refs adapter；declarative pack 不再作为第二份 module inventory：
 
-- `codex_cli.py`
+- `domain_executor_client.py`
+- `authoring_executor.py` / `authoring_executor_parts.py`
+- `critique_executor.py`
 - direct domain handler files
 - `primitives.py`
 - `domain_memory_runtime.py`

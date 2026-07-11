@@ -123,11 +123,8 @@ def test_active_critique_requires_independent_review_evidence_for_ai_backed_stat
 
 
 def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: pytest.MonkeyPatch) -> None:
-    from med_autogrant.critique_executor import (
-        _build_codex_executor_payload,
-        _build_hermes_executor_payload,
-        _normalize_mentor_critique,
-    )
+    from med_autogrant.critique_executor import _normalize_mentor_critique
+    from med_autogrant.domain_executor_client import build_executor_payload
 
     monkeypatch.setattr("med_autogrant.critique_executor._validate_schema_payload", lambda *args, **kwargs: None)
     critique_context = {
@@ -149,8 +146,16 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "verdict": "major_revision",
     }
 
-    codex_executor = _build_codex_executor_payload(
-        {"model_selection": "gpt-5.4", "reasoning_selection": "high"}
+    codex_executor = build_executor_payload(
+        {
+            "surface_kind": "opl_agent_execution_receipt",
+            "executor_kind": "codex_cli",
+            "mode": "structured_call",
+            "session_id": "codex-session-1",
+            "exit_code": 0,
+            "non_equivalence_notice": "codex_cli_first_class_default",
+            "proof": {"model": "gpt-5.4", "reasoning_effort": "high"},
+        }
     )
     codex_critique = _normalize_mentor_critique(
         critique_context=critique_context,
@@ -162,10 +167,10 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
     assert codex_critique["metadata"]["independent_review_evidence"] == {
         "execution_attempt_ref": "draft_artifact::grant-run-1::draft-1",
         "review_attempt_ref": "mentor_critiques::critique-1",
-        "review_receipt_ref": "mentor_critiques::critique-1::metadata.independent_review_evidence",
+        "review_receipt_ref": "opl_agent_execution_receipt::codex-session-1",
         "no_shared_context_verified": True,
         "reviewer_owner": "Codex CLI critique executor",
-        "reviewer_agent_ref": "codex_cli::critique_executor",
+        "reviewer_agent_ref": "codex_cli::codex-session-1",
     }
 
     hermes_proof = {
@@ -177,15 +182,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "provider_reasoning_status": "unproven_custom_chat_completions",
         "event_stream": [{"type": "tool_start", "tool": "read_file"}],
     }
-    hermes_executor = _build_hermes_executor_payload(
-        {
-            "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
-            "model": "gpt-5.4",
-            "provider": "custom",
-            "api_mode": "chat_completions",
-            "reasoning_effort": "xhigh",
-        },
-        hermes_proof,
+    hermes_executor = build_executor_payload(
         {
             "surface_kind": "opl_agent_execution_receipt",
             "executor_kind": "hermes_agent",
@@ -198,6 +195,13 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
             "stderr_preview": "",
             "exit_code": 0,
             "closeout_packet": None,
+            "executor_contract": {
+                "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
+                "model": "gpt-5.4",
+                "provider": "custom",
+                "api_mode": "chat_completions",
+                "reasoning_effort": "xhigh",
+            },
             "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
             "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
             "proof": hermes_proof,
