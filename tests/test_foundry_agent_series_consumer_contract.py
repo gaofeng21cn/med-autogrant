@@ -57,7 +57,19 @@ def test_foundry_series_is_a_thin_current_opl_consumer() -> None:
     }
 
     assert not LEGACY_POLICY_BODY_FIELDS.intersection(series)
-    assert all(value is False for value in series["authority_boundary"].values())
+    assert series["authority_boundary"] == {
+        "opl_can_write_grant_truth": False,
+        "opl_can_write_memory_body": False,
+        "opl_can_authorize_quality_or_export": False,
+        "opl_can_sign_owner_receipt": False,
+        "opl_can_create_typed_blocker": False,
+        "consumer_contract_can_replace_canonical_policy": False,
+        "generated_surface_can_claim_domain_ready": False,
+        "domain_can_write_other_domain_truth": False,
+        "domain_can_write_other_domain_memory_body": False,
+        "domain_can_mutate_other_domain_artifact_body": False,
+        "domain_can_authorize_other_domain_quality_or_export": False,
+    }
 
 
 def test_foundry_series_keeps_mag_domain_authority_as_refs_only_delta() -> None:

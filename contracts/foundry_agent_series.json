@@ -55,6 +55,10 @@
     "opl_can_sign_owner_receipt": false,
     "opl_can_create_typed_blocker": false,
     "consumer_contract_can_replace_canonical_policy": false,
-    "generated_surface_can_claim_domain_ready": false
+    "generated_surface_can_claim_domain_ready": false,
+    "domain_can_write_other_domain_truth": false,
+    "domain_can_write_other_domain_memory_body": false,
+    "domain_can_mutate_other_domain_artifact_body": false,
+    "domain_can_authorize_other_domain_quality_or_export": false
   }
 }
