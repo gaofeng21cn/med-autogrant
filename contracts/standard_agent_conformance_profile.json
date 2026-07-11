@@ -1,0 +1,143 @@
+{
+  "surface_kind": "opl_standard_agent_conformance_profile",
+  "version": "opl.standard-agent-conformance-profile.v1",
+  "profile_id": "mag.standard-agent-conformance.v1",
+  "target_domain_id": "med-autogrant",
+  "golden_path": {
+    "required_stage_ids": [
+      "call_and_candidate_intake",
+      "fundability_strategy",
+      "specific_aims_and_structure",
+      "proposal_authoring",
+      "review_and_rebuttal",
+      "package_and_submit_ready"
+    ],
+    "allowed_stage_ids": [
+      "call_and_candidate_intake",
+      "fundability_strategy",
+      "specific_aims_and_structure",
+      "proposal_authoring",
+      "review_and_rebuttal",
+      "package_and_submit_ready"
+    ],
+    "default_stage_id": "call_and_candidate_intake",
+    "forbidden_owner_tokens": []
+  },
+  "physical_morphology": {
+    "scan_roots": [
+      "agent/",
+      "contracts/",
+      "src/",
+      "runtime/"
+    ],
+    "allowed_residue_prefixes": [
+      "contracts/"
+    ],
+    "required_surface_ids": [
+      "domain_runtime",
+      "product_entry",
+      "status",
+      "user_loop",
+      "domain_handler",
+      "runtime_registration",
+      "control_plane",
+      "lifecycle",
+      "memory",
+      "package",
+      "autonomy_controller",
+      "legacy_runtime_residue"
+    ],
+    "surface_classifications": [
+      {
+        "surface_id": "domain_runtime",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "runtime/authority_functions/"
+        ]
+      },
+      {
+        "surface_id": "product_entry",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/generated_surface_handoff.json"
+        ]
+      },
+      {
+        "surface_id": "status",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/action_catalog.json"
+        ]
+      },
+      {
+        "surface_id": "user_loop",
+        "classification": "opl_generated_surface_descriptor",
+        "source_refs": [
+          "contracts/action_catalog.json"
+        ]
+      },
+      {
+        "surface_id": "domain_handler",
+        "classification": "domain_handler_target",
+        "source_refs": [
+          "src/med_autogrant/product_entry_parts/domain_handler.py"
+        ]
+      },
+      {
+        "surface_id": "runtime_registration",
+        "classification": "declarative_domain_pack",
+        "source_refs": [
+          "contracts/domain_descriptor.json"
+        ]
+      },
+      {
+        "surface_id": "control_plane",
+        "classification": "declarative_domain_pack",
+        "source_refs": [
+          "agent/stages/manifest.json"
+        ]
+      },
+      {
+        "surface_id": "lifecycle",
+        "classification": "provenance_or_retired",
+        "source_refs": [
+          "docs/decisions.md"
+        ]
+      },
+      {
+        "surface_id": "memory",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
+        ]
+      },
+      {
+        "surface_id": "package",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+          "src/med_autogrant/final_package.py"
+        ]
+      },
+      {
+        "surface_id": "autonomy_controller",
+        "classification": "provenance_or_retired",
+        "source_refs": [
+          "docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md"
+        ]
+      },
+      {
+        "surface_id": "legacy_runtime_residue",
+        "classification": "provenance_or_fixture",
+        "source_refs": [
+          "docs/history/"
+        ]
+      }
+    ],
+    "forbidden_name_tokens": [],
+    "required_parity_gates": [
+      "opl_generated_surface_default_caller",
+      "opl_python_executor_client",
+      "mag_no_forbidden_write"
+    ]
+  }
+}

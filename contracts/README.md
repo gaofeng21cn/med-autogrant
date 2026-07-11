@@ -17,6 +17,7 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 - `action_catalog.json`
 - `../agent/stages/manifest.json`
 - `generated_surface_handoff.json`
+- `standard_agent_conformance_profile.json`：MAG-owned golden path 与 physical morphology 声明；OPL 只做通用读取和校验。
 - `opl_agent_package_manifest.json`：声明 OPL Connect 持有 Agent Package/Codex plugin 的 install、update、remove 生命周期；MAG 只提供 carrier source。
 
 OPL Pack 直接从 declarative stage manifest 生成 `family_stage_control_plane`，不在 MAG 跟踪生成快照。这些合同让 OPL 生成或托管 CLI/MCP/skill/product/status/user-loop/workbench caller；OPL 不能写 grant truth、memory/artifact/package body，不能签发 MAG verdict、receipt 或 typed blocker。
