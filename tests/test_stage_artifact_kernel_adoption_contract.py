@@ -73,13 +73,9 @@ def test_state_index_kernel_adoption_is_opl_owned_refs_only_sidecar() -> None:
     }
 
 
-def test_foundry_series_forbids_mag_specific_sqlite_or_state_index_owner_drift() -> None:
+def test_foundry_consumer_does_not_copy_state_index_policy() -> None:
     series = _read_json("contracts/foundry_agent_series.json")
-    profile = series["domain_specific_profile"]
+    adoption = _read_json("contracts/stage_artifact_kernel_adoption.json")
 
-    assert "mag_specific_sqlite_or_state_index_kernel_owner" in profile["forbidden_series_drift"]
-    assert profile["opl_scope"] == "refs_projection_runtime_only"
-    assert profile["series_variation_policy"] == (
-        "MAG differs from MAS/RCA/OMA by grant and fund-material inputs plus grant proposal and package "
-        "outputs, not by lifecycle ownership."
-    )
+    assert "state_index_kernel_adoption" not in series
+    assert adoption["state_index_kernel_adoption"]["state_index_kernel_owner"] == "one-person-lab"

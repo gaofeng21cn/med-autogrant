@@ -173,7 +173,6 @@
   ],
   "bridge_exit_gate": {
     "physical_delete_authorization_refs": [
-      "contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy/physical_delete_required_gates",
       "contracts/stage_run_kernel_profile.json#/legacy_runtime_residue_guard/closeout_gate/physical_delete_requires"
     ],
     "no_forbidden_write_refs": [

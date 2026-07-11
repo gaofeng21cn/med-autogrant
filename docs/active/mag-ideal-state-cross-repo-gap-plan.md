@@ -51,7 +51,7 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 
 ## Final Structural Evidence
 
-- OPL canonical：`104a36d7a50aec237ec6e2340e445f093d4e9184`；local、`origin/main` 与 SSH443 `refs/heads/main` 一致。
+- Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；MAG 只消费 canonical policy export、policy release pin 和 `opl-generated:family_stage_control_plane`，不复制 Foundry policy bodies。
 - OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=10`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
 - OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。
 - OPL full residual：唯一 `system-seed-manifest` 失败在 candidate/base均为相同 `10/11` 与 `2 != 0`，不属于 MAG/Runway候选回归；其余 focused、MAG integration、smoke与静态门通过。
