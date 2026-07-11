@@ -91,7 +91,7 @@ class StageRouterTest(unittest.TestCase):
                 self.assertEqual(route["quality_gate"]["action"], action)
                 self.assertEqual(route["transition_intent"]["target_stage"], recommended_stage)
 
-    def test_early_quality_rollback_keeps_typed_blocker_intent(self) -> None:
+    def test_early_quality_rollback_uses_human_gate_instead_of_typed_blocker(self) -> None:
         route = _apply_quality_gate_to_route(
             route=_determine_structural_next_step(load("nsfc_workspace_p2c_critique.json")),
             quality_scorecard={
@@ -106,7 +106,13 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "question_refinement")
         self.assertTrue(route["requires_human_confirmation"])
         self.assertEqual(route["transition_intent"]["target_stage"], "question_refinement")
-        self.assertEqual(route["transition_intent"]["return_shape"], "typed_blocker")
+        self.assertEqual(route["transition_intent"]["return_shape"], "human_gate_ref")
+
+    def test_ordinary_repair_uses_route_back_ref(self) -> None:
+        route = determine_next_step(load("nsfc_workspace_p2c_critique.json"))
+
+        self.assertFalse(route["requires_human_confirmation"])
+        self.assertEqual(route["transition_intent"]["return_shape"], "route_back_ref")
 
 
 if __name__ == "__main__":

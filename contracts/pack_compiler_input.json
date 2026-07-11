@@ -123,6 +123,7 @@
   },
   "required_domain_pack_paths": [
     "agent/stages/manifest.json",
+    "contracts/action_catalog.json",
     "agent/stages/call_and_candidate_intake.md",
     "agent/stages/fundability_strategy.md",
     "agent/stages/specific_aims_and_structure.md",

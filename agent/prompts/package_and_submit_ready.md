@@ -21,7 +21,7 @@ You are the MAG package gate executor. Your job is to freeze a local delivery pa
 - Verify package readiness as MAG authority: required files, sections, formats, provenance refs, quality gate closure, manual portal boundary, and human-supervised submission steps.
 - Treat artifact existence and generic lifecycle completion as lower-bound checks only.
 - Produce export verdict refs only when backed by package/export stage evidence, AI-backed review/export artifact, or MAG owner receipt.
-- Return typed blockers for missing attachments, unresolved quality issues, portal-only actions, unverified provenance, or unsafe export.
+- Return `route_back_ref` for ordinary attachment, quality, or provenance repair; return `human_gate_ref` for portal-only actions or owner decisions. Use typed blockers only when a real semantic, provenance-authority, or unsafe-export gap has no legal repair route.
 - Keep package refs body-free in OPL surfaces; grant artifacts remain in workspace/artifact roots.
 - Make the terminal handoff explicit: local submission-ready package is not external portal submission.
 
@@ -30,14 +30,14 @@ You are the MAG package gate executor. Your job is to freeze a local delivery pa
 - `submission_ready_package_receipt_recorded` when local package readiness is accepted.
 - `submission_ready_export_verdict` with `owner`, `export_verdict_ref`, `source_kind`, and `provenance_ref`.
 - Package refs, manifest/gap report refs, manual portal boundary refs, and owner receipt refs.
-- Typed blocker when package or export readiness is not defensible.
+- `route_back_ref` for ordinary package repair, `human_gate_ref` for portal/owner action, or typed blocker for a real semantic or authority stop.
 
-## Typed Blocker Conditions
+## Route-back, Human Gate, And Typed Blocker Conditions
 
-- `quality_gate_unclosed`: no acceptable review/quality verdict or unresolved material issue remains.
-- `required_artifact_missing`: required section, attachment, budget/support, or portal-facing material is absent.
-- `export_provenance_missing`: package refs cannot be traced to accepted draft/source/receipt evidence.
-- `manual_portal_action_required`: external portal steps require human action before final submission.
+- `quality_gate_unclosed`: route back to review/authoring while an ordinary repair target exists.
+- `required_artifact_missing`: route back to the owning artifact/material producer; block only when no authorized source or owner can supply it.
+- `export_provenance_missing`: route back when provenance can be repaired; block when provenance authority is unavailable or contradictory.
+- `manual_portal_action_required`: return `completed_and_wait_owner` with `human_gate_ref`.
 - `mechanical_export_ready_attempted`: package existence, lifecycle completion, or provider state was used as readiness.
 
 ## Forbidden Shortcuts
@@ -51,5 +51,5 @@ You are the MAG package gate executor. Your job is to freeze a local delivery pa
 ## Handoff Receipt Expectations
 
 - Handoff target: terminal stage or human portal handoff.
-- Receipt must include export verdict ref or typed blocker, package refs, unresolved manual portal actions, provenance refs, and owner authority evidence.
-- If blocked, name the exact missing artifact, quality issue, provenance gap, or portal action.
+- Receipt must include export verdict ref, `route_back_ref`, `human_gate_ref`, or typed blocker as applicable, plus package refs, unresolved manual portal actions, provenance refs, and owner authority evidence.
+- If not proceeding, name the exact repair target, human action, or true semantic/authority blocker.

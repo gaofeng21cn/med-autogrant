@@ -17,7 +17,7 @@ MAG 已完成 private OPL platform cleanup 的结构收口：私有 standard-pac
 - 八项 minimal MAG authority functions
 - schema-backed grant authoring/package behavior
 
-Stage contract 当前保持 6 个 top-level Stage，不做拆分。Stage Pack v2 的 3 个 mutating action 声明 manifest 对齐的 ordered `stage_route`；2 个 read-only action 不声明执行 route，观察范围由 `allowed_action_refs` 表达。Manifest 的 5 条正常前进边均由 grant transition oracle 覆盖，route-back/self-loop 仍可显式存在。Human gate 通过 OPL 标准 `completed_and_wait_owner` 与 `human_gate_ref` closeout，等待人类决定不再伪装成 typed blocker。
+Stage contract 当前保持 6 个 top-level Stage，不做拆分。Stage Pack v2 的 manifest allow-list、action catalog 与 pack input parity 已由 contract test 固定；3 个 mutating action 声明 manifest 对齐的 ordered `stage_route`，2 个 read-only action 不声明执行 route。Manifest 的 5 条正常前进边均由 grant transition oracle 覆盖，全部 8 条合法 transition 各有唯一且 source-stage 对齐的 fixture。Human decision 使用 `completed_and_wait_owner` 与 `human_gate_ref`，普通 repair/rollback 使用 `route_back_ref`；typed blocker 只保留给真实语义或 authority 缺口。
 
 OPL/App 负责 generated product/status/user-loop/workbench caller。
 

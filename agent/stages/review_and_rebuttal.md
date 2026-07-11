@@ -15,7 +15,8 @@
 ## Exit Conditions
 
 - `grant_review_gate_receipt_recorded` exists with quality verdict refs backed by critique/closure evidence; or
-- A repair blocker records missing critique, unclosed major issue, mechanical quality attempt, claim/source mismatch, or incomplete rebuttal plan; or
+- A `route_back_ref` records an ordinary critique, claim/source, major-issue, or rebuttal repair target; or
+- A typed blocker records a real semantic-evidence or authority gap with no legal repair route; or
 - A MAG owner receipt signs quality gate state.
 
 ## Handoff

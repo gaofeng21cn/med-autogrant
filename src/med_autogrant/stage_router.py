@@ -268,10 +268,9 @@ def _apply_quality_gate_to_route(
         resolved_route["transition_intent"] = {
             **transition_intent,
             "target_stage": resolved_route.get("recommended_stage"),
-            "return_shape": (
-                "typed_blocker"
-                if bool(resolved_route.get("requires_human_confirmation"))
-                else "transition_intent_ref"
+            "return_shape": _transition_return_shape(
+                resolved_route,
+                route_back=gate_action == "rollback_required",
             ),
         }
     return resolved_route
@@ -296,10 +295,33 @@ def _with_transition_oracle_boundary(payload: dict[str, Any]) -> dict[str, Any]:
             "source_stage": current_stage,
             "target_stage": recommended_stage,
             "requires_opl_stage_transition_authority": True,
-            "return_shape": (
-                "typed_blocker" if bool(payload.get("requires_human_confirmation")) else "transition_intent_ref"
+            "return_shape": _transition_return_shape(
+                payload,
+                route_back=_is_repair_route(payload),
             ),
         },
+    }
+
+
+def _transition_return_shape(payload: dict[str, Any], *, route_back: bool) -> str:
+    if bool(payload.get("requires_human_confirmation")):
+        return "human_gate_ref"
+    if route_back:
+        return "route_back_ref"
+    return "transition_intent_ref"
+
+
+def _is_repair_route(payload: dict[str, Any]) -> bool:
+    current_stage = str(payload.get("current_stage") or "")
+    recommended_stage = str(payload.get("recommended_stage") or "")
+    if payload.get("forced_rollback_stage"):
+        return True
+    return current_stage in {"critique", "revision"} and recommended_stage in {
+        "direction_screening",
+        "question_refinement",
+        "argument_building",
+        "fit_alignment",
+        "revision",
     }
 
 

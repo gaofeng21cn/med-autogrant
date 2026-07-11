@@ -32,6 +32,23 @@ def test_manifest_normal_forward_edges_exist_in_transition_oracle() -> None:
     assert manifest_edges <= oracle_edges
 
 
+def test_every_oracle_transition_has_one_matching_fixture() -> None:
+    transitions = {
+        transition["transition_id"]: transition
+        for transition in GRANT_TRANSITION_TABLE
+    }
+    fixtures_by_transition: dict[str, list[dict[str, object]]] = {}
+    for fixture in GRANT_TRANSITION_ORACLE_FIXTURES:
+        fixtures_by_transition.setdefault(fixture["expected_transition_id"], []).append(fixture)
+
+    assert set(fixtures_by_transition) == set(transitions)
+    assert all(len(fixtures) == 1 for fixtures in fixtures_by_transition.values())
+    assert all(
+        fixtures[0]["source_stage_id"] == transitions[transition_id]["from_stage_id"]
+        for transition_id, fixtures in fixtures_by_transition.items()
+    )
+
+
 def test_fundability_success_and_human_gate_closeouts_are_explicit() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     transitions = {
@@ -70,3 +87,8 @@ def test_fundability_success_and_human_gate_closeouts_are_explicit() -> None:
     assert oracle["validation"]["missing_stage_refs"] == []
     assert oracle["validation"]["missing_action_refs"] == []
     assert oracle["validation"]["missing_fixture_transition_refs"] == []
+    assert oracle["validation"]["missing_transition_fixture_refs"] == []
+    assert oracle["validation"]["duplicate_transition_ids"] == []
+    assert oracle["validation"]["duplicate_fixture_ids"] == []
+    assert oracle["validation"]["duplicate_fixture_transition_refs"] == []
+    assert oracle["validation"]["mismatched_fixture_source_refs"] == []

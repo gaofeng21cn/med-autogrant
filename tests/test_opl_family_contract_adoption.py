@@ -44,6 +44,7 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
 def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     action_catalog = _read_json("contracts/action_catalog.json")
+    pack_input = _read_json("contracts/pack_compiler_input.json")
     next_stages = {
         stage["stage_id"]: set(stage["next_stage_refs"])
         for stage in manifest["stages"]
@@ -68,6 +69,25 @@ def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
             if action["action_id"] in stage["allowed_action_refs"]
         }
         for action in action_catalog["actions"]
+    }
+    manifest_action_ids = {
+        action_id
+        for stage in manifest["stages"]
+        for action_id in stage["allowed_action_refs"]
+    }
+    catalog_action_ids = {action["action_id"] for action in action_catalog["actions"]}
+
+    assert manifest_action_ids == catalog_action_ids
+    assert pack_input["source_refs"]["stage_manifest"] == "agent/stages/manifest.json"
+    assert pack_input["source_refs"]["action_catalog"] == "contracts/action_catalog.json"
+    assert {
+        pack_input["source_refs"]["stage_manifest"],
+        pack_input["source_refs"]["action_catalog"],
+    } <= set(pack_input["required_domain_pack_paths"])
+    assert pack_input["standard_stage_pack_conformance"] == {
+        "version": "standard-stage-pack.v2",
+        "required": True,
+        "enforcement_ref": pack_input["source_refs"]["stage_manifest"],
     }
 
     for action in action_catalog["actions"]:

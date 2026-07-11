@@ -186,7 +186,16 @@ def build_mag_grant_transition_oracle(
         for action in family_action_catalog["actions"]
         if isinstance(action, Mapping)
     }
-    transition_ids = {str(transition["transition_id"]) for transition in GRANT_TRANSITION_TABLE}
+    transition_ids = [str(transition["transition_id"]) for transition in GRANT_TRANSITION_TABLE]
+    fixture_ids = [str(fixture["fixture_id"]) for fixture in GRANT_TRANSITION_ORACLE_FIXTURES]
+    transition_by_id = {
+        str(transition["transition_id"]): transition
+        for transition in GRANT_TRANSITION_TABLE
+    }
+    fixture_transition_ids = [
+        str(fixture["expected_transition_id"])
+        for fixture in GRANT_TRANSITION_ORACLE_FIXTURES
+    ]
 
     missing_stage_refs = sorted(
         {
@@ -207,13 +216,53 @@ def build_mag_grant_transition_oracle(
         {
             str(fixture["expected_transition_id"])
             for fixture in GRANT_TRANSITION_ORACLE_FIXTURES
-            if fixture["expected_transition_id"] not in transition_ids
+            if fixture["expected_transition_id"] not in transition_by_id
         }
     )
-    if missing_stage_refs or missing_action_refs or missing_fixture_refs:
+    missing_transition_fixture_refs = sorted(set(transition_ids) - set(fixture_transition_ids))
+    duplicate_transition_ids = sorted(
+        transition_id
+        for transition_id in set(transition_ids)
+        if transition_ids.count(transition_id) > 1
+    )
+    duplicate_fixture_ids = sorted(
+        fixture_id
+        for fixture_id in set(fixture_ids)
+        if fixture_ids.count(fixture_id) > 1
+    )
+    duplicate_fixture_transition_refs = sorted(
+        transition_id
+        for transition_id in set(fixture_transition_ids)
+        if fixture_transition_ids.count(transition_id) > 1
+    )
+    mismatched_fixture_source_refs = sorted(
+        str(fixture["fixture_id"])
+        for fixture in GRANT_TRANSITION_ORACLE_FIXTURES
+        if (
+            (transition := transition_by_id.get(str(fixture["expected_transition_id"])))
+            is not None
+            and fixture["source_stage_id"] != transition["from_stage_id"]
+        )
+    )
+    if (
+        missing_stage_refs
+        or missing_action_refs
+        or missing_fixture_refs
+        or missing_transition_fixture_refs
+        or duplicate_transition_ids
+        or duplicate_fixture_ids
+        or duplicate_fixture_transition_refs
+        or mismatched_fixture_source_refs
+    ):
         raise ValueError(
-            "MAG transition oracle references unresolved stage/action/transition ids: "
-            f"stages={missing_stage_refs}, actions={missing_action_refs}, fixtures={missing_fixture_refs}"
+            "MAG transition oracle parity failed: "
+            f"stages={missing_stage_refs}, actions={missing_action_refs}, "
+            f"fixture_transitions={missing_fixture_refs}, "
+            f"transition_fixtures={missing_transition_fixture_refs}, "
+            f"duplicate_transitions={duplicate_transition_ids}, "
+            f"duplicate_fixtures={duplicate_fixture_ids}, "
+            f"duplicate_fixture_transitions={duplicate_fixture_transition_refs}, "
+            f"fixture_sources={mismatched_fixture_source_refs}"
         )
 
     return {
@@ -251,6 +300,11 @@ def build_mag_grant_transition_oracle(
             "missing_stage_refs": missing_stage_refs,
             "missing_action_refs": missing_action_refs,
             "missing_fixture_transition_refs": missing_fixture_refs,
+            "missing_transition_fixture_refs": missing_transition_fixture_refs,
+            "duplicate_transition_ids": duplicate_transition_ids,
+            "duplicate_fixture_ids": duplicate_fixture_ids,
+            "duplicate_fixture_transition_refs": duplicate_fixture_transition_refs,
+            "mismatched_fixture_source_refs": mismatched_fixture_source_refs,
         },
         "notes": [
             "MAG declares grant transition semantics; OPL may only run the generic transition contract.",

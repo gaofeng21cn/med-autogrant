@@ -55,7 +55,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 - Stage prompts own route, artifact refs, handoff refs, export verdict shape, and blocker enums.
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
-- Package work may proceed only with quality verdict refs or explicit blocker state from the stage.
+- Package work may proceed only with quality verdict refs or an explicit route-back, human-gate, or true blocker state from the stage.
 
 ## Legacy Coverage
 
@@ -65,14 +65,16 @@ This workflow-level skill covers the retired `mag-proposal-section-author`, `mag
 
 Return `typed_blocker` when:
 
-- Accepted aims, section map, reviewable draft refs, source ledger, reviewer concerns, quality gate, or required package refs are missing.
-- Core method, preliminary evidence, citation, institutional input, required source, required attachment, budget/support material, portal slot, or portal-facing artifact is absent.
-- A fatal or high-severity review issue remains unclosed, claims exceed source evidence, or required evidence conflicts with the locked call.
-- Package refs lack provenance to accepted draft/source/receipt evidence.
-- Manual portal action is required before external submission.
+- Required semantic evidence, source truth, package provenance, or MAG authority is unavailable or contradictory, and no legal owner/repair route can produce it.
+- A requested export or package mutation would cross an authority, safety, compliance, or forbidden-write boundary.
+- Locked call truth conflicts with the only available evidence and requires a domain-authority stop rather than ordinary revision.
+
+Return `human_gate_ref` when a portal action, institutional signoff, applicant choice, or other human-only decision is required.
 
 Return `repair_target` when:
 
+- Accepted aims, section map, reviewable draft refs, source ledger, reviewer concerns, quality gate, required package refs, attachments, budget/support material, or provenance can be supplied by an identified owner or earlier stage.
+- A fatal or high-severity review issue remains unclosed but has a concrete proposal/source repair path.
 - Polished prose hides weak claim/source support or missing reviewer logic.
 - Critique is treated as direct prose authority instead of a repair hint verified against accepted strategy, source refs, and funder criteria.
 - Rebuttal answers tone but not substance, lacks concrete proposal deltas, or has unchecked closure criteria.
