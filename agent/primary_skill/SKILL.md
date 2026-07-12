@@ -7,6 +7,8 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 
 OPL canonical agent id 固定为 `mag`。`med-autogrant` 是仓库、Python package、plugin slug 与安装后 skill locator，不是与 `mag` 并存的兼容 alias。
 
+Implementation profile 见 `contracts/pack_compiler_input.json#/implementation_profile`：声明 pack 只使用 Markdown/JSON，Python 只作为声明 source root 下的 domain helper；grant authority 由 pack authority contracts 独立声明。它不拥有 generic runtime、CLI、MCP、product-entry、status 或 workbench。
+
 当 Codex 需要操作医学基金申请主线时，使用这个 app skill。OPL/App 负责 generated product/status/user-loop/workbench caller；MAG repo-local `CLI`、`MedAutoGrantDomainEntry` 与 domain handler 只保留 grant-native action target、authority function 和 schema-backed contract。
 
 ## 核心入口

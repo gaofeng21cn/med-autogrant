@@ -20,6 +20,31 @@ def _read_json(relative_path: str) -> dict[str, object]:
     return json.loads((REPO_ROOT / relative_path).read_text(encoding="utf-8"))
 
 
+def test_pack_compiler_input_declares_python_helper_boundary_without_generic_runtime() -> None:
+    pack_input = _read_json("contracts/pack_compiler_input.json")
+    profile = pack_input["implementation_profile"]
+
+    assert pack_input["canonical_agent_id"] == "mag"
+    assert pack_input["domain_id"] == "med-autogrant"
+    assert profile["profile_id"] == "opl.standard_domain_agent.v1"
+    assert profile["agent_identity"] == "declarative_standard_agent_pack"
+    assert profile["pack_formats"] == ["markdown", "json"]
+    assert profile["generated_surfaces_owner"] == "one-person-lab"
+    helpers = profile["helpers"]
+    assert helpers["optional"] is True
+    assert helpers["language_is_identity"] is False
+    assert helpers["rust_policy"] == "framework_hot_path_only"
+
+    helper_implementations = helpers["entries"]
+    assert {entry["language"] for entry in helper_implementations} == {"python"}
+    assert {entry["role"] for entry in helper_implementations} == {"domain_helper"}
+    for entry in helper_implementations:
+        assert entry["source_roots"]
+        for source_root in entry["source_roots"]:
+            assert source_root.endswith("/"), source_root
+            assert (REPO_ROOT / source_root).is_dir(), source_root
+
+
 def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     authority = manifest["authority_boundary"]

@@ -5,6 +5,29 @@
   "canonical_agent_id": "mag",
   "domain_pack_owner": "med-autogrant",
   "generated_surface_owner": "one-person-lab",
+  "implementation_profile": {
+    "profile_id": "opl.standard_domain_agent.v1",
+    "agent_identity": "declarative_standard_agent_pack",
+    "pack_formats": [
+      "markdown",
+      "json"
+    ],
+    "helpers": {
+      "optional": true,
+      "entries": [
+        {
+          "language": "python",
+          "role": "domain_helper",
+          "source_roots": [
+            "src/med_autogrant/"
+          ]
+        }
+      ],
+      "language_is_identity": false,
+      "rust_policy": "framework_hot_path_only"
+    },
+    "generated_surfaces_owner": "one-person-lab"
+  },
   "canonical_semantic_pack_root": "agent/",
   "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
   "standard_stage_pack_conformance": {
