@@ -7,7 +7,7 @@ Machine boundary: 本文是人读项目概览。机器真相归 `contracts/runti
 
 ## 定位
 
-`Med Auto Grant` 是独立的医学基金申请 domain agent。它的 OPL canonical agent id 与 OPL Agent Package id 都是 `mag`；`med-autogrant` 只作为仓库、Python distribution、plugin/skill 与 OCI carrier locator，`medautogrant` 只作为 module/CLI locator。
+`Med Auto Grant` 是独立的医学基金申请 domain agent。它的 OPL canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；`med-autogrant` 只作为仓库、Python distribution 与 plugin/skill carrier locator，`medautogrant` 只作为 module/CLI locator。
 
 长期形态固定为：
 

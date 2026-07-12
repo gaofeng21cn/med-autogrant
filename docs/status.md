@@ -72,7 +72,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 ## Skill 与安装
 
-`agent/primary_skill/SKILL.md` 是 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical materialized carrier。Canonical agent id 与 OPL Agent Package id 都是 `mag`；安装 locator/skill name 是 `med-autogrant`，module/CLI locator 是 `medautogrant`。这些 locator 不形成兼容 alias 或第二个 package identity。
+`agent/primary_skill/SKILL.md` 是 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical materialized carrier。Canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；安装 locator/skill name 是 `med-autogrant`，module/CLI locator 是 `medautogrant`。这些 locator 不形成兼容 alias、第二个 package identity 或 OCI package coordinate。
 
 ## 验证入口
 
