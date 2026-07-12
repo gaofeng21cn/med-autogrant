@@ -24,13 +24,13 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             (QUESTION_EXAMPLE_PATH, "question_refinement", "argument_building", "forward_progress"),
             (OUTLINE_EXAMPLE_PATH, "outline", "drafting", "forward_progress"),
             (DRAFTING_EXAMPLE_PATH, "drafting", "critique", "forward_progress"),
-            (CRITIQUE_EXAMPLE_PATH, "critique", "argument_building", "forward_progress"),
+            (CRITIQUE_EXAMPLE_PATH, "critique", "revision", "forward_progress"),
             (REVISION_EXAMPLE_PATH, "revision", "critique", "forward_progress"),
             (MAJOR_REFRAME_EXAMPLE_PATH, "critique", "question_refinement", "forward_progress"),
-            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "critique", "forward_progress"),
-            (RE_REVIEW_EXAMPLE_PATH, "critique", "argument_building", "forward_progress"),
+            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "frozen", "freeze_ready"),
+            (RE_REVIEW_EXAMPLE_PATH, "critique", "revision", "forward_progress"),
             (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "rollback_required"),
-            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "critique", "submission_frozen"),
+            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "frozen", "submission_frozen"),
         )
 
         for input_path, stage, recommended_stage, checkpoint in cases:
@@ -59,7 +59,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     "critique_id": "critique-v1",
                     "revision_plan_id": "revision-v1",
                     "execution_status": "planned",
-                    "recommended_next_stage": "argument_building",
+                    "recommended_next_stage": "revision",
                 },
             ),
             (
@@ -78,7 +78,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             ),
             (
                 READY_FOR_SUBMISSION_EXAMPLE_PATH,
-                {"verdict": "ready_for_submission", "recommended_next_stage": "critique"},
+                {"verdict": "ready_for_submission", "recommended_next_stage": "frozen"},
             ),
             (
                 RE_REVIEW_EXAMPLE_PATH,
@@ -103,7 +103,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     "lifecycle_stage": "frozen",
                     "verdict": "ready_for_submission",
                     "presubmission_frozen": True,
-                    "recommended_next_stage": "critique",
+                    "recommended_next_stage": "frozen",
                 },
             ),
         )
@@ -152,7 +152,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(critique["reviewed_revision_plan_id"], reviewed_plan_id)
                     self.assertEqual(critique["draft_status"], "revised")
                     self.assertEqual(critique["draft_version_label"], version)
-                    self.assertEqual(route["route"]["next_step"]["recommended_stage"], "argument_building")
+                    self.assertEqual(route["route"]["next_step"]["recommended_stage"], "critique")
                     self.assertEqual(route["verification_checkpoint"]["checkpoint_status"], "forward_progress")
                     self.assertEqual(
                         route["route"]["critique_summary"]["reviewed_revision_plan_id"],
@@ -168,5 +168,5 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertTrue(summary["gates"]["presubmission_frozen"])
         self.assertEqual(summary["active_draft"]["status"], "frozen")
         self.assertTrue(critique["presubmission_frozen"])
-        self.assertEqual(critique["recommended_next_stage"], "critique")
+        self.assertEqual(critique["recommended_next_stage"], "frozen")
         self.assertTrue(route["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])

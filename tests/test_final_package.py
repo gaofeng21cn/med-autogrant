@@ -29,6 +29,7 @@ def _mutate(payload: dict[str, Any], path: tuple[str | int, ...], value: object)
 class FinalPackageTest(unittest.TestCase):
     def test_final_package_accepts_only_final_gate_states(self) -> None:
         cases = (
+            (FREEZE_READY, "critique", "freeze_ready", "revised", False),
             (FROZEN, "frozen", "submission_frozen", "frozen", True),
         )
         for input_path, lifecycle_stage, checkpoint, draft_status, presubmission_frozen in cases:
@@ -98,7 +99,7 @@ class FinalPackageTest(unittest.TestCase):
                 self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), final_package)
 
     def test_nonfinal_checkpoint_and_output_identity_fail_closed(self) -> None:
-        for input_path in (FORWARD, FREEZE_READY):
+        for input_path in (FORWARD,):
             with self.subTest(input_path=input_path.name), tempfile.TemporaryDirectory() as tmp_dir:
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"

@@ -76,8 +76,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             )
         if verdict in {"major_revision", "minor_revision"}:
             if (
-                stage == "revision"
-                and active_draft["status"] == "revised"
+                active_draft["status"] == "revised"
                 and revision_plan.get("execution_status") == "completed"
             ):
                 return _with_transition_oracle_boundary(
