@@ -68,6 +68,34 @@ class RevisionExecutorTest(unittest.TestCase):
             "revision-v1",
         )
 
+    def test_revision_can_apply_ai_selected_whole_draft_restructure(self) -> None:
+        document = copy.deepcopy(_load(P2C_CRITIQUE_EXAMPLE_PATH))
+        draft = self._active(document, "application_drafts", "active_draft_id", "draft_id")
+        replacement_sections = copy.deepcopy(draft["sections"])
+        replacement_sections.reverse()
+        replacement_sections[0]["text"] = f"{replacement_sections[0]['text']} 全文结构已按独立审阅重新组织。"
+        plan = self._active(document, "revision_plans", "active_revision_plan_id", "revision_plan_id")
+        plan["items"] = [{
+            "item_id": "repair-whole-draft",
+            "priority": "p0",
+            "action_type": "rebuild_cross_section_argument",
+            "target_ref": f"draft:{draft['draft_id']}",
+            "action": "重组全文论证顺序",
+            "done_criteria": "跨章节论证连续",
+            "required_input_ids": [],
+            "mutation_payload": {
+                "operation": "replace_draft_sections",
+                "linked_object_ids": [],
+                "replacement_sections": replacement_sections,
+            },
+        }]
+
+        payload = build_revision_execution_document(document=document)
+        revised = self._active(payload["revised_workspace"], "application_drafts", "active_draft_id", "draft_id")
+        self.assertEqual(revised["sections"][0]["section_key"], replacement_sections[0]["section_key"])
+        self.assertIn("全文结构已按独立审阅重新组织", revised["sections"][0]["text"])
+        self.assertTrue(validate_workspace_document(payload["revised_workspace"]).ok)
+
     def test_revision_gate_and_ai_review_authority_fail_closed(self) -> None:
         no_owner = _load(P2C_CRITIQUE_EXAMPLE_PATH)
         for critique in no_owner["mentor_critiques"]:

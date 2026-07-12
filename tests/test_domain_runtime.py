@@ -110,6 +110,9 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         self.assertTrue(catalog)
         self.assertEqual(catalog_ids, EXPECTED_AUTHOR_SIDE_ROUTE_IDS)
         self.assertEqual({route["route_status"] for route in catalog}, {"landed"})
+        route_commands = {route["route_id"]: route["execution_surface"]["command"] for route in catalog}
+        for route_id in ("direction_screening", "question_refinement", "argument_building", "fit_alignment", "outline", "drafting"):
+            self.assertEqual(route_commands[route_id], "execute-strategy-authoring-pass")
 
     def test_critique_handoff_forwards_explicit_executor_kind(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir, patch.object(

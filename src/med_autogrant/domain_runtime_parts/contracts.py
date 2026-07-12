@@ -218,12 +218,12 @@ def build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, An
 
 
 AUTHOR_SIDE_ROUTE_COMMANDS = {
-    "direction_screening": "execute-direction-screening-pass",
-    "question_refinement": "execute-question-refinement-pass",
-    "argument_building": "execute-argument-building-pass",
-    "fit_alignment": "execute-fit-alignment-pass",
-    "outline": "execute-outline-pass",
-    "drafting": "execute-drafting-pass",
+    "direction_screening": "execute-strategy-authoring-pass",
+    "question_refinement": "execute-strategy-authoring-pass",
+    "argument_building": "execute-strategy-authoring-pass",
+    "fit_alignment": "execute-strategy-authoring-pass",
+    "outline": "execute-strategy-authoring-pass",
+    "drafting": "execute-strategy-authoring-pass",
     "critique": "execute-critique-pass",
     "revision": "execute-revision-pass",
     "frozen": "execute-freeze-pass",
@@ -347,6 +347,7 @@ def build_operator_contract() -> dict[str, Any]:
             "stage-route-report",
         ],
         "canonical_export_surfaces": [
+            "execute-strategy-authoring-pass",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",

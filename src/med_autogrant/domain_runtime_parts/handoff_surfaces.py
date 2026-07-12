@@ -10,6 +10,7 @@ from med_autogrant.authoring_executor import (
     build_fit_alignment_execution_document,
     build_outline_execution_document,
     build_question_refinement_execution_document,
+    build_strategy_authoring_execution_document,
 )
 from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.critique_executor import build_critique_execution_document
@@ -22,6 +23,25 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_artifact_bundle_output,
     _write_revised_workspace_output,
 )
+
+
+def execute_strategy_authoring_pass(
+    self,
+    *,
+    input_path: str | Path,
+    output_path: str | Path,
+) -> dict[str, Any]:
+    execution_document = build_strategy_authoring_execution_document(
+        document=self._load_workspace(input_path),
+        input_path=input_path,
+    )
+    return self._write_authoring_execution_output(
+        command="execute-strategy-authoring-pass",
+        output_path=output_path,
+        execution_document=execution_document,
+        execution_key="strategy_authoring_execution",
+        workspace_key="strategy_authoring_workspace",
+    )
 
 
 def execute_direction_screening_pass(

@@ -96,7 +96,8 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 (
                     "must each be an object with exactly weight, score, judgment",
                     "necessity_scientific_value=60, applicant_fit=30, feasibility=10",
-                    "diagnose necessity and scientific question first",
+                    "do not force your review order from the numeric split",
+                    "smallest coherent repair plan",
                 ),
             ),
             (
@@ -105,6 +106,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                     "policy_id: nih_r21_significance_innovation_v1",
                     "persona role: NIH R21 scientific reviewer",
                     "significance=45, innovation=35, investigator_environment_fit=20",
+                    "inspect the proposal holistically",
                 ),
             ),
         )

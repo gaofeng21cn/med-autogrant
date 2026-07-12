@@ -28,18 +28,49 @@ def _build_direction_screening_prompt(*, input_path: str | Path, known_ids: list
         output_contract_lines=[
             'domain_output must contain exactly the keys "selected_direction_index" and "direction_hypotheses".',
             '"selected_direction_index" must be a zero-based integer pointing at the chosen mainline direction.',
-            '"direction_hypotheses" must be a list of 2 to 5 objects.',
+            '"direction_hypotheses" must be a non-empty list; use multiple candidates only when comparison improves the decision.',
             "Each direction object must include: title, rationale, knowledge_gap_summary, applicant_fit_summary, novelty_angle, risk_summary, required_evidence_ids.",
         ],
         hard_constraints=[
             f"required_evidence_ids may use only these known ids: {json.dumps(known_ids, ensure_ascii=False)}",
             "Choose one direction with the strongest continuity from existing outputs, active projects, and preliminary evidence.",
-            "Novelty must absorb 1-2 hotspots naturally into the mainline instead of packaging buzzwords.",
+            "Novelty must follow from the call, evidence, and applicant advantage instead of packaging buzzwords.",
             "Prefer concrete clinical problems over broad slogans.",
         ],
         quality_goals=[
             "Select a direction with real continuity, not a temporary splice.",
             "Make the selected direction specific enough to support a mechanism-level question next.",
+        ],
+    )
+
+
+def _build_strategy_authoring_prompt(*, input_path: str | Path, known_ids: list[str]) -> str:
+    schema_root = SchemaStore().root
+    return _build_prompt(
+        route_id="strategy_authoring",
+        input_path=input_path,
+        schema_paths=[
+            (schema_root / name).resolve()
+            for name in (
+                "direction-hypothesis.schema.json",
+                "scientific-question-card.schema.json",
+                "argument-chain.schema.json",
+                "applicant-fit-mapping.schema.json",
+                "application-draft.schema.json",
+            )
+        ],
+        output_contract_lines=[
+            "domain_output must contain selected_direction_index, direction_hypotheses, scientific_question_card, argument_chain, applicant_fit_mapping, and application_draft.",
+            "application_draft must contain a non-empty outline and non-empty sections; the other objects follow their attached schemas.",
+        ],
+        hard_constraints=[
+            f"All evidence and linked object refs may use only source ids already known at intake: {json.dumps(known_ids, ensure_ascii=False)}",
+            "Keep the locked funding call, eligibility, source facts, and applicant evidence unchanged.",
+            "Return one mutually coherent strategy and reviewable draft; do not fabricate evidence, citations, capacity, or results.",
+        ],
+        quality_goals=[
+            "Let direction, scientific question, argument, applicant fit, outline, and draft converge together instead of treating route labels as a fixed reasoning sequence.",
+            "Use an outline as a strong planning default while revising it inside this call when drafting exposes a real structural defect.",
         ],
     )
 
@@ -92,11 +123,10 @@ def _build_argument_building_prompt(
             f"selected direction: {selected_direction['title']}",
             f"selected question: {selected_question['core_question']}",
             f"linked_evidence_ids may use only these known ids: {json.dumps(known_ids, ensure_ascii=False)}",
-            "The argument chain must support a 'write significance first, background later' authoring order.",
             "Route justification must explain why the validation loop is not arbitrary.",
         ],
         quality_goals=[
-            "Close the necessity/scientific value mainline before the draft expands.",
+            "Make necessity and scientific value clear enough to guide the draft.",
             "Tie the background, evidence gap, and route design into one coherent chain.",
         ],
     )
@@ -153,12 +183,12 @@ def _build_outline_prompt(
             f"necessity claim: {active_argument_chain['necessity_claim']}",
             f"applicant fit anchor: {active_fit_mapping['applicant_fit_summary']}",
             f"linked_object_ids may use only these known ids: {json.dumps(known_ids, ensure_ascii=False)}",
-            "Order the outline around the mainline: significance / background / preliminary support / research content / technical route / innovation / expected outcomes / timeline as needed.",
+            "Choose and order sections from the locked call and argument needs; do not impose one global section order.",
             "The outline should make later background, pre-experiment, progress, and figure writing straightforward.",
         ],
         quality_goals=[
             "Produce an outline that follows the human writing workflow instead of padding every section up front.",
-            "Keep every section explicitly tied to the frozen question, argument chain, and applicant fit.",
+            "Keep every section explicitly tied to the converged question, argument chain, and applicant fit.",
         ],
     )
 
@@ -187,11 +217,11 @@ def _build_drafting_prompt(
             f"necessity claim: {active_argument_chain['necessity_claim']}",
             f"applicant fit anchor: {active_fit_mapping['applicant_fit_summary']}",
             f"linked_object_ids may use only these known ids: {json.dumps(known_ids, ensure_ascii=False)}",
-            "Draft the sections faithfully from the frozen outline instead of introducing a new structure.",
+            "Use the current outline as the strong default. Revise it when drafting exposes a real structural defect, unless human approval has frozen it.",
             "Background, preliminary evidence, technical route, expected outcomes, progress, and figure-facing cues should all serve the same mainline.",
         ],
         quality_goals=[
-            "Expand the outline into a proposal-facing draft without breaking the frozen question and upstream logic.",
+            "Expand the outline into a proposal-facing draft while preserving evidence and explaining any necessary upstream adjustment.",
             "Keep the section texts concrete, evidence-linked, and ready for critique/revision.",
         ],
     )
@@ -207,9 +237,10 @@ def _build_prompt(
 ) -> str:
     input_file = Path(input_path).expanduser().resolve()
     lines = [
-        "You are executing a MedAutoGrant authoring pass.",
+        "You are executing one part of a MedAutoGrant authoring stage.",
         "Read the workspace JSON and the referenced schema files from disk before you answer.",
         "Do not modify any files. Return JSON only, with no markdown fences.",
+        "Direction, question, argument, and applicant fit are interdependent professional judgments. Reconcile them together and surface a route-back when the current upstream choice no longer holds; route labels do not prescribe your reasoning order or number of iterations.",
         "",
         f"Workspace file: {input_file}",
     ]

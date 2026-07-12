@@ -397,6 +397,7 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'stage-route-report': _render_stage_route_report,
     'build-artifact-bundle': _render_build_artifact_bundle,
     'execute-direction-screening-pass': _render_execute_direction_screening_pass,
+    'execute-strategy-authoring-pass': _render_execute_direction_screening_pass,
     'execute-question-refinement-pass': _render_execute_direction_screening_pass,
     'execute-argument-building-pass': _render_execute_direction_screening_pass,
     'execute-fit-alignment-pass': _render_execute_direction_screening_pass,

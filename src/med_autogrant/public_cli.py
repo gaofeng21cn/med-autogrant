@@ -40,6 +40,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "product-domain-memory-decision": ("authority", "memory-decision"),
     "product-domain-memory-receipt-evidence": ("authority", "memory-receipt-evidence"),
     "product-owner-receipt-evidence": ("authority", "owner-receipt-evidence"),
+    "execute-strategy-authoring-pass": ("pass", "strategy-authoring"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),
     "execute-argument-building-pass": ("pass", "argument-building"),

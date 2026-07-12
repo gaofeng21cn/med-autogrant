@@ -19,6 +19,10 @@ Framework Python helper 由 OPL module workflow 通过 `opl_framework` namespace
 
 MAG 不再内置私有 standard-pack compiler、source scanner、generated product builder 或 consumer-thinning platform。OPL 通过 canonical conformance scanner读取 pack 与 source boundary。
 
+六个 Stage prompt 只保留本 Stage 的目标、好结果、专业依赖、authority/证据边界与 closeout 形状。方向、科学问题、论证与申请人 fit 是同一 grant strategy 内可迭代收敛的专业判断；默认 `execute-strategy-authoring-pass` 在一个 attempt 内用一次 Codex invocation 共同产出 direction/question/argument/fit/outline/draft，再由 deterministic contract projection 物化六个 checkpoint，原子 pass 只用于定点 route-back。receipt 中的 invocation count 只是本次观测 telemetry，不是成功条件或全局调用上限；解析失败、provider/attempt retry、review feedback 与 route-back 仍可触发后续调用。历史 `*_frozen` workspace 字段表示可引用 checkpoint，不规定 Codex 的认知顺序或调用次数。提纲是长文写作的强默认，只有明确人工批准才形成不可静默改写的批准合同。
+
+真实 Codex caller 继续使用 schema-backed closeout packet 和已知 object refs，但不再规定 significance-first 全局写作顺序、固定候选数量或按 rubric 权重遍历的审阅顺序。Critique 必须基于真实 draft 独立完成；revision 后按影响范围复审。Schema 中保留的 profile weight 字段只保证既有 workspace 报告兼容，不作为推理顺序或质量裁决算法。
+
 ## Domain Handler
 
 `domain-handler export` 输出：

@@ -19,6 +19,8 @@ MAG 已完成 private OPL platform cleanup 的结构收口：私有 standard-pac
 
 Stage contract 当前保持 6 个 top-level Stage，不做拆分。Stage Pack v2 的 manifest allow-list、action catalog 与 pack input parity 已由 contract test 固定；3 个 mutating action 声明 manifest 对齐的 ordered `stage_route`，2 个 read-only action 不声明执行 route。Manifest 的 5 条正常前进边均由 grant transition oracle 覆盖，全部 8 条合法 transition 各有唯一且 source-stage 对齐的 fixture。Human decision 使用 `completed_and_wait_owner` 与 `human_gate_ref`，普通 repair/rollback 使用 `route_back_ref`；typed blocker 只保留给真实语义或 authority 缺口。
 
+Prompt/current caller 已按强自主 executor 收口：Stage prompt 删除重复 blocker/禁令剧本；默认 strategy-authoring 在正常 attempt 中通常用一次 Codex invocation 共同收敛 direction/question/argument/fit/outline/draft，六个 checkpoint 只做 deterministic projection、六个原子 pass 只作为定点 route-back。Observed invocation count 不是成功条件或调用上限；失败/反馈仍可经 attempt retry 或 route-back 迭代。候选数量按判断需要、outline 作为条件默认；critique 的权重仅作 profile reporting，不规定审阅顺序。专业硬依赖仍保留为 call/eligibility -> strategy basis、draft -> independent review -> revision -> risk-matched re-review，以及 MAG package authority -> fresh package proof -> human portal gate。
+
 OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 `contracts/standard_agent_conformance_profile.json` 现由 MAG 声明六阶段 ordinary golden path、唯一默认阶段 `call_and_candidate_intake`、12 项 physical morphology 分类，以及 generated default caller / OPL Python executor client / no-forbidden-write parity gates。OPL conformance 只通用读取该 profile，不再内置 MAG stage 或 morphology 分支。

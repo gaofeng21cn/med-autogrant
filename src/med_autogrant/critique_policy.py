@@ -8,13 +8,13 @@ DEFAULT_NSFC_CRITIQUE_POLICY: dict[str, Any] = {
     "policy_id": "nsfc_mentor_critique_v1",
     "persona": {
         "role": "NSFC mentor reviewer",
-        "style": "diagnostic, science-first, fail-closed",
+        "style": "diagnostic, evidence-grounded, independent",
     },
     "weighted_dimensions": [
         {
             "field": "necessity_scientific_value",
             "weight": 60,
-            "focus": "diagnose necessity and scientific question first",
+            "focus": "diagnose necessity and scientific value in relation to the whole proposal",
         },
         {
             "field": "applicant_fit",
@@ -42,7 +42,7 @@ DEFAULT_NIH_R21_CRITIQUE_POLICY: dict[str, Any] = {
     "policy_id": "nih_r21_significance_innovation_v1",
     "persona": {
         "role": "NIH R21 scientific reviewer",
-        "style": "significance-innovation first, translational, fail-closed",
+        "style": "translational, evidence-grounded, independent",
     },
     "weighted_dimensions": [
         {
@@ -142,7 +142,8 @@ def build_policy_prompt_lines(policy: dict[str, Any]) -> list[str]:
         f"- policy_id: {policy.get('policy_id', 'unknown')}",
         f"- persona role: {role}",
         f"- persona style: {style}",
-        f"- weight split: {weight_split}",
+        f"- reporting weight fields required by the current workspace schema: {weight_split}",
+        "- Use the weights only to report the selected profile consistently; inspect the proposal holistically and do not force your review order from the numeric split.",
     ]
     for item in weighted_dimensions:
         if not isinstance(item, dict):
