@@ -16,6 +16,7 @@ This projection does not create a second truth source. OPL owns the shared princ
 | `domain_intake_mapping` | Domain intake mapping | `domain_intake` is an owner-handoff pattern mapped to MAG `call_and_candidate_intake`, not an independent Skill. |
 | `workspace_source_intake_shell` | Workspace/source shell | OPL owns generic locator and refs-only source intake transport; MAG owns grant source semantics, eligibility, and owner route decisions. |
 | `owner_delta_progress` | Owner-delta progress | Progress is measured by proposal deltas, owner receipts, route-back refs, typed blockers, human gates, or handoff packets. |
+| `quality_budget_progress_first` | Quality-budget progress first | A readable grant artifact advances with `completed_with_quality_debt` when review/repair budget is exhausted; debt blocks quality/export/submission claims, not stage transition. |
 | `parallel_executor_autonomy` | Bounded executor autonomy | Executors may choose order, tools, substitutions, and safe parallelism inside declared authority and permission boundaries. |
 | `module_organization` | Module organization | OPL brand modules hold framework primitives; MAG is a declarative domain pack plus minimal authority functions. |
 

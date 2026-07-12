@@ -244,22 +244,18 @@ def _apply_quality_gate_to_route(
     gate_stage = str(quality_gate.get("recommended_stage") or "").strip()
     route_stage = str(resolved_route.get("recommended_stage") or "").strip()
 
-    if gate_action == "rollback_required" and gate_stage and gate_stage != route_stage:
-        resolved_route["recommended_stage"] = gate_stage
-        resolved_route["reason"] = (
-            f"{resolved_route.get('reason') or ''} 质量 gate 要求回退：{gate_reason}".strip()
-        )
-        resolved_route["actions"] = _build_forced_rollback_actions(gate_stage)
-        resolved_route["requires_human_confirmation"] = gate_stage in {
-            "direction_screening",
-            "question_refinement",
+    if gate_action in {"rollback_required", "continue"} and gate_reason:
+        resolved_route["quality_debt"] = {
+            "status": "open",
+            "debt_code": f"quality_gate_{gate_action}",
+            "reason": gate_reason,
+            "recommended_repair_stage": gate_stage or None,
+            "blocks_stage_transition": False,
+            "blocks_quality_export_or_ready_claims": True,
         }
-    elif gate_action == "continue" and route_stage in {"frozen", "ready_for_submission"} and gate_stage:
-        resolved_route["recommended_stage"] = gate_stage
         resolved_route["reason"] = (
-            f"{resolved_route.get('reason') or ''} 质量 gate 暂不允许停止：{gate_reason}".strip()
+            f"{resolved_route.get('reason') or ''} 当前质量缺口已登记为非阻断债务：{gate_reason}".strip()
         )
-        resolved_route["actions"] = [gate_reason]
     elif gate_action == "ready_for_submission" and gate_reason:
         resolved_route["reason"] = f"{resolved_route.get('reason') or ''} {gate_reason}".strip()
 
@@ -270,7 +266,7 @@ def _apply_quality_gate_to_route(
             "target_stage": resolved_route.get("recommended_stage"),
             "return_shape": _transition_return_shape(
                 resolved_route,
-                route_back=gate_action == "rollback_required",
+                route_back=_is_repair_route(resolved_route),
             ),
         }
     return resolved_route

@@ -20,7 +20,12 @@ def test_stage_run_profile_keeps_mag_thin_and_opl_hosted() -> None:
     admission = profile["default_entry_admission_policy"]
 
     assert profile["kernel_role"] == "minimal_state_shell_not_domain_controller_system"
-    assert profile["transition_authority"]["terminal_transition_authority"] == "owner_receipt_or_typed_blocker"
+    assert (
+        profile["transition_authority"]["terminal_transition_authority"]
+        == "consumable_artifact_progress_or_owner_answer_or_hard_stop"
+    )
+    assert profile["transition_authority"]["quality_budget_exhaustion_blocks_transition"] is False
+    assert profile["transition_authority"]["owner_receipt_required_for_quality_or_ready_claim"] is True
     assert profile["authority_boundary"]["opl_can_write_domain_truth"] is False
     assert profile["authority_boundary"]["opl_can_sign_domain_owner_receipt"] is False
     assert thinning["opl_hosted_runtime_owner"] == "one-person-lab"

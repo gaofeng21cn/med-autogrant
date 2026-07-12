@@ -99,6 +99,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "owner_receipt_ref",
         "receipt_requirement": "intake_handoff_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "call_intake_incomplete",
     },
     {
         "transition_id": "fundability_strategy_accepted_to_specific_aims",
@@ -109,6 +111,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "owner_receipt_ref",
         "receipt_requirement": "fundability_strategy_handoff_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "fundability_strategy_not_accepted",
     },
     {
         "transition_id": "fundability_human_decision_to_human_gate",
@@ -118,6 +122,7 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "owner_action": "open_grant_user_loop",
         "return_shape": "human_gate_ref",
         "receipt_requirement": "human_gate_receipt",
+        "guard_kind": "hard",
     },
     {
         "transition_id": "specific_aims_accepted_to_proposal_authoring",
@@ -128,6 +133,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "owner_receipt_ref",
         "receipt_requirement": "specific_aims_handoff_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "specific_aims_or_structure_not_accepted",
     },
     {
         "transition_id": "proposal_draft_complete_to_review",
@@ -138,6 +145,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "owner_receipt_ref",
         "receipt_requirement": "draft_review_handoff_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "proposal_draft_reviewability_gap",
     },
     {
         "transition_id": "review_blocked_to_proposal_repair",
@@ -148,6 +157,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "route_back_ref",
         "receipt_requirement": "repair_target_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "review_repair_budget_open",
     },
     {
         "transition_id": "review_closed_to_package_and_submit_ready",
@@ -158,6 +169,8 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "return_shape": "owner_receipt_ref",
         "receipt_requirement": "quality_closure_receipt",
         "blocked_shape": "typed_blocker_ref",
+        "guard_kind": "quality_budget",
+        "quality_debt_code": "review_quality_not_closed",
     },
     {
         "transition_id": "package_ready_to_portal_human_gate",
@@ -167,6 +180,7 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
         "owner_action": "open_grant_user_loop",
         "return_shape": "human_gate_ref",
         "receipt_requirement": "human_gate_receipt",
+        "guard_kind": "hard",
     },
 )
 
@@ -310,6 +324,7 @@ def build_mag_grant_transition_oracle(
             "MAG declares grant transition semantics; OPL may only run the generic transition contract.",
             "Transition closeout uses OPL standard owner_receipt_ref, typed_blocker_ref, human_gate_ref, or route_back_ref fields.",
             "Human decisions return human_gate_ref; typed blockers are reserved for real semantic or authority gaps.",
+            "Quality guards are budget gates: a consumable artifact advances with completed_with_quality_debt when they remain unsatisfied.",
             "Provider completion must not be treated as fundability, quality, or export readiness.",
         ],
     }

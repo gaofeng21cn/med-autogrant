@@ -47,18 +47,18 @@ class StageRouterTest(unittest.TestCase):
             (load("nsfc_workspace_p2b_fit_alignment.json"), "fit_alignment", "outline", {}),
             (load("nsfc_workspace_p2b_outline.json"), "outline", "drafting", {}),
             (load("nsfc_workspace_p2c_drafting.json"), "drafting", "critique", {}),
-            (load("nsfc_workspace_p2c_critique.json"), "critique", "argument_building", {}),
+            (load("nsfc_workspace_p2c_critique.json"), "critique", "revision", {}),
             (minimal, "critique", "revision", {}),
             (major_reframe, "critique", "question_refinement", {}),
             (forced_direction, "critique", "direction_screening", {"forced_rollback_stage": "direction_screening"}),
             (forced_question, "critique", "question_refinement", {"forced_rollback_stage": "question_refinement"}),
             (minor_revision, "critique", "revision", {}),
-            (load("nsfc_workspace_p3a_ready_for_submission.json"), "critique", "critique", {}),
+            (load("nsfc_workspace_p3a_ready_for_submission.json"), "critique", "frozen", {}),
             (load("nsfc_workspace_p2c_revision.json"), "revision", "critique", {}),
-            (load("nsfc_workspace_p3b_re_review_major_revision.json"), "critique", "argument_building", {}),
+            (load("nsfc_workspace_p3b_re_review_major_revision.json"), "critique", "revision", {}),
             (forced_rollback, "critique", "argument_building", {"forced_rollback_stage": "argument_building"}),
             (forced_fit, "critique", "fit_alignment", {"forced_rollback_stage": "fit_alignment"}),
-            (load("nsfc_workspace_p3c_presubmission_frozen.json"), "frozen", "critique", {"presubmission_frozen": True}),
+            (load("nsfc_workspace_p3c_presubmission_frozen.json"), "frozen", "frozen", {"presubmission_frozen": True}),
         )
 
         for document, current_stage, recommended_stage, extra in cases:
@@ -78,20 +78,22 @@ class StageRouterTest(unittest.TestCase):
         self.assertFalse(route["authority_boundary"]["mag_writes_stage_terminal_state"])
         self.assertTrue(route["transition_intent"]["requires_opl_stage_transition_authority"])
 
-    def test_quality_gate_routes_remain_fail_closed(self) -> None:
+    def test_quality_gate_routes_record_non_blocking_debt(self) -> None:
         for name, recommended_stage, action in (
-            ("nsfc_workspace_p2c_critique.json", "argument_building", "rollback_required"),
-            ("nsfc_workspace_p3a_ready_for_submission.json", "critique", "continue"),
-            ("nsfc_workspace_p3b_re_review_major_revision.json", "argument_building", "rollback_required"),
-            ("nsfc_workspace_p3c_presubmission_frozen.json", "critique", "continue"),
+            ("nsfc_workspace_p2c_critique.json", "revision", "rollback_required"),
+            ("nsfc_workspace_p3a_ready_for_submission.json", "frozen", "continue"),
+            ("nsfc_workspace_p3b_re_review_major_revision.json", "revision", "rollback_required"),
+            ("nsfc_workspace_p3c_presubmission_frozen.json", "frozen", "continue"),
         ):
             with self.subTest(example=name):
                 route = determine_next_step(load(name))
                 self.assertEqual(route["recommended_stage"], recommended_stage)
                 self.assertEqual(route["quality_gate"]["action"], action)
                 self.assertEqual(route["transition_intent"]["target_stage"], recommended_stage)
+                self.assertFalse(route["quality_debt"]["blocks_stage_transition"])
+                self.assertTrue(route["quality_debt"]["blocks_quality_export_or_ready_claims"])
 
-    def test_early_quality_rollback_uses_human_gate_instead_of_typed_blocker(self) -> None:
+    def test_early_quality_rollback_is_advisory_debt_not_a_human_gate(self) -> None:
         route = _apply_quality_gate_to_route(
             route=_determine_structural_next_step(load("nsfc_workspace_p2c_critique.json")),
             quality_scorecard={
@@ -103,10 +105,12 @@ class StageRouterTest(unittest.TestCase):
             },
         )
 
-        self.assertEqual(route["recommended_stage"], "question_refinement")
-        self.assertTrue(route["requires_human_confirmation"])
-        self.assertEqual(route["transition_intent"]["target_stage"], "question_refinement")
-        self.assertEqual(route["transition_intent"]["return_shape"], "human_gate_ref")
+        self.assertEqual(route["recommended_stage"], "revision")
+        self.assertFalse(route["requires_human_confirmation"])
+        self.assertEqual(route["transition_intent"]["target_stage"], "revision")
+        self.assertEqual(route["transition_intent"]["return_shape"], "route_back_ref")
+        self.assertEqual(route["quality_debt"]["recommended_repair_stage"], "question_refinement")
+        self.assertFalse(route["quality_debt"]["blocks_stage_transition"])
 
     def test_ordinary_repair_uses_route_back_ref(self) -> None:
         route = determine_next_step(load("nsfc_workspace_p2c_critique.json"))

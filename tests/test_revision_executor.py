@@ -49,7 +49,7 @@ class RevisionExecutorTest(unittest.TestCase):
             self.assertTrue(validate_workspace_document(workspace).ok)
             self.assertEqual(
                 build_stage_route_report(workspace)["route"]["next_step"]["recommended_stage"],
-                "argument_building",
+                "revision",
             )
 
     def test_rereview_preserves_completed_revision_evidence(self) -> None:
