@@ -60,12 +60,6 @@
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "target_role": "opl_hosted_surface"
-    },
-    {
-      "surface_id": "functional_harness_cases",
-      "owner": "one-person-lab",
-      "status": "descriptor_source_available",
-      "target_role": "opl_hosted_surface"
     }
   ],
   "domain_handler_targets": {

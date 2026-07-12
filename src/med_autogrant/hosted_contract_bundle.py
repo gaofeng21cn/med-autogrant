@@ -50,7 +50,7 @@ def build_hosted_contract_bundle_document(
                 "build-final-package",
                 "build-submission-ready-package",
                 "owner_receipt_contract",
-                "grant_transition_oracle",
+                "ai_route_policy",
             ],
         },
         "operator_contract": operator_contract,

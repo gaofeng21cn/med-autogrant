@@ -8,7 +8,6 @@
     "package_authority",
     "grant_memory_accept_reject",
     "owner_receipt_signing",
-    "grant_transition_oracle",
     "grant_native_helper"
   ],
   "forbidden_private_surface_classes": [

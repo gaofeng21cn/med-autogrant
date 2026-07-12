@@ -52,7 +52,7 @@ class GrantQualityScorecardTest(unittest.TestCase):
         scorecard = build_grant_quality_scorecard(document)
 
         self.assertEqual(scorecard["overall_status"], "blocked")
-        self.assertEqual(scorecard["loop_gate"]["action"], "rollback_required")
+        self.assertEqual(scorecard["loop_gate"]["action"], "route_back_recommended")
         self.assertEqual(scorecard["loop_gate"]["recommended_stage"], "argument_building")
         self.assertGreater(scorecard["overall_score"], 0)
         self.assertLessEqual(scorecard["overall_score"], 85)

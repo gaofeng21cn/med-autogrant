@@ -42,7 +42,29 @@ def select_project_profile(selection_input: dict[str, Any]) -> dict[str, Any]:
             compatible_candidates.append(candidate)
 
     if not compatible_candidates:
-        raise ValueError("未找到兼容的 project profile preset；selector fail-closed。")
+        return {
+            "surface_kind": "project_profile_selection",
+            "selection_version": 1,
+            "selection_input_id": selection_input["selection_input_id"],
+            "selection_summary": {
+                "decision": "completed_with_quality_debt",
+                "selected_profile_preset_id": None,
+                "selected_funding_opportunity_id": None,
+                "reason_codes": ["no_compatible_project_profile_preset"],
+                "evaluated_profile_preset_count": len(preset_registry),
+                "evaluated_funding_opportunity_count": len(funding_opportunity_pool),
+                "next_stage_may_start": True,
+                "route_back_selection_owner": "codex_cli",
+            },
+            "recommended_project_profile": None,
+            "recommended_funding_opportunity": None,
+            "candidate_profiles": candidate_profiles,
+            "quality_debt": {
+                "code": "no_compatible_project_profile_preset",
+                "blocks_stage_transition": False,
+                "blocks_fundability_submission_export_or_ready_claims": True,
+            },
+        }
 
     compatible_candidates.sort(
         key=lambda item: (
@@ -76,6 +98,22 @@ def select_project_profile(selection_input: dict[str, Any]) -> dict[str, Any]:
 def build_initialized_intake_workspace(selection_input: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     selection = select_project_profile(selection_input)
     selection_input_id = _normalize_string(selection_input["selection_input_id"])
+    if selection["selection_summary"]["decision"] == "completed_with_quality_debt":
+        return {
+            "grant_run_id": f"grant-run-{selection_input_id}-001",
+            "workspace_id": selection_input_id,
+            "mode": _normalize_string(selection_input.get("mode")) or "auto",
+            "lifecycle_stage": "input_intake",
+            "applicant_profile": copy.deepcopy(selection_input["applicant_profile"]),
+            "track_record": copy.deepcopy(selection_input["track_record"]),
+            "active_project_set": copy.deepcopy(selection_input["active_project_set"]),
+            "preliminary_evidence_pack": copy.deepcopy(selection_input["preliminary_evidence_pack"]),
+            "project_profile": {},
+            "funding_opportunity_brief": {},
+            "status": "completed_with_quality_debt",
+            "quality_debt": copy.deepcopy(selection["quality_debt"]),
+            "next_stage_may_start": True,
+        }, selection
     funding_brief = copy.deepcopy(selection["recommended_funding_opportunity"])
     project_profile = copy.deepcopy(selection["recommended_project_profile"])
     workspace = {

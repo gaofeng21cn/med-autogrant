@@ -41,7 +41,7 @@ OPL 只能持有 refs、descriptor、generated surface、routing shell、ledger 
 MAG 必须保留：
 
 - funding call 解释、profile/task lock、fundability strategy、specific aims 和 proposal route truth；
-- grant stage pack、prompt/skill、policy table、transition oracle、quality/review/export gate；
+- grant stage pack、prompt/skill、AI route policy、quality/review/export gate；
 - grant strategy memory body、accept/reject decision、writeback receipt 和 owner boundary；
 - submission-ready package、manual portal boundary、package/export authority 和 owner receipt；
 - typed blocker、safe action refs、no-forbidden-write guard 和 MAG domain projection refs；

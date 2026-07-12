@@ -29,7 +29,7 @@ Declarative Grant Pack
 
 MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic scheduler、daemon、lifecycle owner、queue、attempt ledger、generic state-machine runner、workspace/source intake shell、memory locator、artifact/package lifecycle、observability、App/workbench runtime，或手写 generic CLI/product-entry/product-sidecar/status wrapper。
 
-只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer、grant transition oracle 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG。
+只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG；语义 route 由 Codex CLI 选择。
 
 理想物理源码形态应直接体现这条分层：`agent/` 是 Declarative Grant Pack；`contracts/` 是 pack compiler、stage/action/memory/artifact/receipt、handoff 和 evidence request 的机器面；`src/med_autogrant/**` 只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product-entry`、`domain-handler`、`status/user-loop`、`domain_runtime_parts`、`runtime_registration`、`lifecycle`、`memory receipt projection`、`package lifecycle`、`observability` 或 `human workbench / scheduler` 这类路径即使仍在 active source 中，也必须让读者看到它们只是 OPL generated/hosted surface target 或 grant authority refs，不是 MAG 私有 runtime platform。旧 product-sidecar、local journal、attempt ledger、repo-owned scheduler daemon、Hermes/Gateway/local-manager probe、flat alias 和 compatibility facade 不属于理想源码形态。
 
@@ -39,7 +39,7 @@ MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic
    用户和 Codex 看到的单一领域入口，展示 status、user loop、workspace progress、direct entry、质量状态和交付状态。
 
 2. `MAG Domain Agent Package`
-   grant-domain 专业包，提供 stage pack、prompt/skill、route truth、quality gate、domain transition oracle、memory policy、artifact locator contract、submission/export authority、receipt schemas、policy tables 和 authority function manifest。
+   grant-domain 专业包，提供 stage pack、prompt/skill、declared-stage AI route policy、quality gate、memory policy、artifact locator contract、submission/export authority、receipt schemas、policy tables和 authority function manifest。
 
 3. `OPL Framework Hosted Path`
    family-level runtime，提供 stage attempt ledger、typed queue、provider-backed runtime、resume/human gate、receipt、retry/dead-letter、workspace/artifact lifecycle、operator projection 和 App 投影协议。
@@ -140,7 +140,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 
 - 已退役 / history-only：local runtime journal、attempt ledger、repo scheduler、upstream Hermes probe、Gateway/local-manager default path、flat alias、facade patch bridge 和 compatibility aggregate test。
 - OPL-owned generated/hosted target：product-entry、status/user-loop、runtime lifecycle、workbench、continuous reconciliation 与 observability。MAG 只保留 direct domain handler、八项 authority function 和必要 refs-only grant adapter。
-- MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、grant transition oracle、owner receipt signer、typed blocker 和 grant-native helper。
+- MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、owner receipt signer、typed blocker 和 grant-native helper。
 
 具体日期的 cleanup audit、stale worktree 判断、receipt refs 和 lane closeout 进入 history/provenance；当前状态和剩余证据门回到 `docs/status.md`、active gap plan 与机器合同。
 

@@ -25,7 +25,7 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 | 10 | 删除 runtime consumer-thinning/functional-closure自审计层 | done | 100% | OPL conformance/CI持有静态审计；MAG runtime不再投影自审计产品面 |
 | 11 | 删除 MAG 私有 product/status/user-loop/runtime/workbench平台面 | done | 100% | direct domain handler + OPL generated/hosted handoff |
 | 12 | 删除私有 OPL pack compiler与tracked generated aggregate | done | 100% | `agent/`/root contracts是声明源；OPL Pack生成 family stage plane |
-| 13 | 将 cycle/rollback/resume/dispatch/output编排迁入 OPL StageRun | done | 100% | MAG只保留 selector、quality、transition oracle与 authority receipt |
+| 13 | 将 cycle/rollback/resume/dispatch/output编排迁入 OPL StageRun | done | 100% | MAG只保留 selector、quality 与 authority receipt；Codex 选择语义 route |
 | 14 | 将全部 executor transport 上收到 OPL Python client | done | 100% | authoring/critique 的 `codex_cli` 与 `hermes_agent` 均调用 `opl_framework.executor_client.run_agent_execution_request`；repo-local Codex/OPL subprocess、adapter 和 default command 已删除 |
 | 15 | 将 Codex plugin 生命周期统一到 OPL Connect | done | 100% | canonical `opl connect install/update/remove --module medautogrant`；本地 installer/symlink/marketplace mutation 已删除 |
 | 16 | 关闭 6 个 generated default-caller retirement tails | done | 100% | 4 个 physically absent surface 声明 retired；`cli/domain_handler` 保留为 authority adapter 并提供 keep/no-write/provenance refs |

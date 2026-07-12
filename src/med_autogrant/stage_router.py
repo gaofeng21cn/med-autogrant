@@ -3,15 +3,40 @@ from __future__ import annotations
 from typing import Any
 
 from med_autogrant.grant_quality import build_grant_quality_scorecard
-from med_autogrant.opl_execution_boundary import build_stage_transition_authority_boundary
+from med_autogrant.opl_execution_boundary import build_ai_route_boundary
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 
 
 def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
+    try:
+        structural_route = _determine_structural_next_step(document)
+    except WorkspaceStateError as error:
+        current_stage = str(document.get("lifecycle_stage") or "call_and_candidate_intake")
+        return _with_ai_route_context(
+            {
+                "grant_run_id": document.get("grant_run_id"),
+                "workspace_id": document.get("workspace_id"),
+                "current_stage": current_stage,
+                "recommended_stage": current_stage,
+                "reason": "Workspace validation findings are preserved as Codex input; they do not block stage progress.",
+                "actions": ["Continue from the readable workspace content and repair structure within the quality budget."],
+                "requires_human_confirmation": False,
+                "quality_debt": {
+                    "status": "open",
+                    "debt_code": "workspace_projection_invalid",
+                    "findings": [
+                        {"path": item.path, "message": item.message}
+                        for item in error.errors
+                    ],
+                    "blocks_stage_transition": False,
+                    "blocks_quality_export_or_ready_claims": True,
+                },
+            }
+        )
     return _apply_quality_gate_to_route(
-        route=_determine_structural_next_step(document),
+        route=structural_route,
         quality_scorecard=build_grant_quality_scorecard(document),
     )
 
@@ -45,7 +70,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
         forced_rollback_stage = critique.get("forced_rollback_stage")
         forced_rollback_reason = critique.get("forced_rollback_reason")
         if forced_rollback_stage is not None:
-            return _with_transition_oracle_boundary(
+            return _with_ai_route_context(
                 {
                 **identity,
                 "current_stage": stage,
@@ -61,7 +86,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 }
             )
         if verdict == "major_reframe":
-            return _with_transition_oracle_boundary(
+            return _with_ai_route_context(
                 {
                 **identity,
                 "current_stage": stage,
@@ -80,7 +105,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 and active_draft["status"] == "revised"
                 and revision_plan.get("execution_status") == "completed"
             ):
-                return _with_transition_oracle_boundary(
+                return _with_ai_route_context(
                     {
                     **identity,
                     "current_stage": stage,
@@ -93,7 +118,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     "requires_human_confirmation": False,
                     }
                 )
-            return _with_transition_oracle_boundary(
+            return _with_ai_route_context(
                 {
                 **identity,
                 "current_stage": stage,
@@ -107,7 +132,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 }
             )
         if verdict == "ready_for_submission":
-            return _with_transition_oracle_boundary(
+            return _with_ai_route_context(
                 {
                 **identity,
                 "current_stage": stage,
@@ -122,7 +147,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             )
 
     if not gates["direction_frozen"]:
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -135,7 +160,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if not gates["scientific_question_frozen"]:
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -148,7 +173,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if not gates["argument_chain_frozen"]:
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -161,7 +186,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if not gates["fit_alignment_frozen"]:
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -175,7 +200,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if not gates["outline_frozen"]:
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -188,7 +213,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if stage == "outline":
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -202,7 +227,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         )
     if stage == "drafting":
-        return _with_transition_oracle_boundary(
+        return _with_ai_route_context(
             {
             **identity,
             "current_stage": stage,
@@ -214,7 +239,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             "requires_human_confirmation": False,
             }
         )
-    return _with_transition_oracle_boundary(
+    return _with_ai_route_context(
         {
         **identity,
         "current_stage": stage,
@@ -244,7 +269,7 @@ def _apply_quality_gate_to_route(
     gate_stage = str(quality_gate.get("recommended_stage") or "").strip()
     route_stage = str(resolved_route.get("recommended_stage") or "").strip()
 
-    if gate_action in {"rollback_required", "continue"} and gate_reason:
+    if gate_action in {"route_back_recommended", "continue"} and gate_reason:
         resolved_route["quality_debt"] = {
             "status": "open",
             "debt_code": f"quality_gate_{gate_action}",
@@ -259,68 +284,31 @@ def _apply_quality_gate_to_route(
     elif gate_action == "ready_for_submission" and gate_reason:
         resolved_route["reason"] = f"{resolved_route.get('reason') or ''} {gate_reason}".strip()
 
-    transition_intent = resolved_route.get("transition_intent")
-    if isinstance(transition_intent, dict):
-        resolved_route["transition_intent"] = {
-            **transition_intent,
-            "target_stage": resolved_route.get("recommended_stage"),
-            "return_shape": _transition_return_shape(
-                resolved_route,
-                route_back=_is_repair_route(resolved_route),
-            ),
-        }
     return resolved_route
 
 
-def _with_transition_oracle_boundary(payload: dict[str, Any]) -> dict[str, Any]:
+def _with_ai_route_context(payload: dict[str, Any]) -> dict[str, Any]:
     current_stage = str(payload.get("current_stage") or "")
     recommended_stage = str(payload.get("recommended_stage") or "")
     return {
-        "surface_kind": "mag_stage_transition_oracle_recommendation",
+        "surface_kind": "mag_ai_route_context",
         **payload,
         "current_stage_role": "workspace_lifecycle_observation",
-        "recommended_stage_role": "transition_intent_recommendation",
-        "stage_transition_authority": "one-person-lab",
-        "authority_boundary": build_stage_transition_authority_boundary(
+        "recommended_stage_role": "non_authoritative_repair_hint",
+        "semantic_route_owner": "codex_cli",
+        "authority_boundary": build_ai_route_boundary(
             surface_id="mag.next-step",
-            mag_role="transition_oracle_recommendation_only",
+            mag_role="route_context_projection_only",
         ),
-        "transition_intent": {
-            "surface_kind": "mag_stage_transition_intent_recommendation",
-            "intent_kind": "domain_route_recommendation",
-            "source_stage": current_stage,
-            "target_stage": recommended_stage,
-            "requires_opl_stage_transition_authority": True,
-            "return_shape": _transition_return_shape(
-                payload,
-                route_back=_is_repair_route(payload),
-            ),
+        "ai_route_policy": {
+            "semantic_route_owner": "codex_cli",
+            "declared_stage_scope_only": True,
+            "program_recommendation_can_block_or_select_route": False,
+            "advance_repeat_skip_or_route_back_allowed": True,
+            "suggested_source_stage": current_stage,
+            "suggested_target_stage": recommended_stage,
         },
     }
-
-
-def _transition_return_shape(payload: dict[str, Any], *, route_back: bool) -> str:
-    if bool(payload.get("requires_human_confirmation")):
-        return "human_gate_ref"
-    if route_back:
-        return "route_back_ref"
-    return "transition_intent_ref"
-
-
-def _is_repair_route(payload: dict[str, Any]) -> bool:
-    current_stage = str(payload.get("current_stage") or "")
-    recommended_stage = str(payload.get("recommended_stage") or "")
-    if payload.get("forced_rollback_stage"):
-        return True
-    return current_stage in {"critique", "revision"} and recommended_stage in {
-        "direction_screening",
-        "question_refinement",
-        "argument_building",
-        "fit_alignment",
-        "revision",
-    }
-
-
 def _build_forced_rollback_actions(target_stage: str) -> list[str]:
     if target_stage == "direction_screening":
         return [

@@ -68,21 +68,41 @@ class RevisionExecutorTest(unittest.TestCase):
             "revision-v1",
         )
 
-    def test_revision_gate_and_ai_review_authority_fail_closed(self) -> None:
+    def test_missing_ai_review_owner_is_quality_context_not_progression_gate(self) -> None:
         no_owner = _load(P2C_CRITIQUE_EXAMPLE_PATH)
         for critique in no_owner["mentor_critiques"]:
             critique.get("metadata", {}).pop("owner", None)
 
+        payload = build_revision_execution_document(document=no_owner)
+        self.assertEqual(payload["ai_review_provenance"]["assessment_owner"], "projection_only")
+        self.assertTrue(payload["ai_review_provenance"]["ai_reviewer_required"])
+        self.assertEqual(payload["revised_workspace"]["lifecycle_stage"], "critique")
+        self.assertEqual(payload["revision_execution"]["active_revision_plan_id"], "revision-v1")
+
+    def test_route_mismatch_returns_quality_debt_without_blocking_next_stage(self) -> None:
         cases = (
-            (no_owner, "AI reviewer-backed critique"),
             (_load(FORCED_ROLLBACK_EXAMPLE_PATH), "forced_rollback_stage"),
-            (_load(PRESUBMISSION_FROZEN_EXAMPLE_PATH), "presubmission_frozen"),
             (_load(READY_FOR_SUBMISSION_EXAMPLE_PATH), "major_revision / minor_revision"),
         )
-        for document, message in cases:
-            with self.subTest(message=message):
-                with self.assertRaisesRegex(WorkspaceStateError, message):
-                    build_revision_execution_document(document=document)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            for index, (document, message) in enumerate(cases):
+                with self.subTest(message=message):
+                    payload = build_revision_execution_payload(
+                        document,
+                        output_path=Path(tmp_dir) / f"route-mismatch-{index}.json",
+                    )
+                    self.assertEqual(payload["status"], "completed_with_quality_debt")
+                    self.assertTrue(payload["next_stage_may_start"])
+                    self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
+                    self.assertIn(message, payload["quality_debt"]["detail"])
+
+    def test_presubmission_frozen_remains_irreversible_write_guard(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with self.assertRaisesRegex(WorkspaceStateError, "presubmission_frozen"):
+                build_revision_execution_payload(
+                    _load(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+                    output_path=Path(tmp_dir) / "frozen.json",
+                )
 
     def test_revision_mutation_contract_fails_closed(self) -> None:
         cases = (

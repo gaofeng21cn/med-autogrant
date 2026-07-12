@@ -61,18 +61,19 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
     assert "mag_owner_typed_blocker" in verdict["properties"]["source_kind"]["enum"]
 
 
-def test_revision_executor_only_applies_ai_authored_mutation_payload() -> None:
-    from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
-    from med_autogrant.workspace import WorkspaceStateError
+def test_revision_quality_context_keeps_missing_ai_review_as_nonblocking_debt() -> None:
+    from med_autogrant.ai_first_boundaries import active_ai_backed_critique_quality_context
 
-    with pytest.raises(WorkspaceStateError, match="AI reviewer-backed critique is required"):
-        require_active_ai_backed_critique(
-            {
-                "current_selection": {"active_revision_plan_id": "revision-plan-1"},
-                "revision_plans": [{"revision_plan_id": "revision-plan-1", "critique_id": "critique-1"}],
-                "mentor_critiques": [{"critique_id": "critique-1", "metadata": {"owner": "projection"}}],
-            }
-        )
+    context = active_ai_backed_critique_quality_context(
+        {
+            "current_selection": {"active_revision_plan_id": "revision-plan-1"},
+            "revision_plans": [{"revision_plan_id": "revision-plan-1", "critique_id": "critique-1"}],
+            "mentor_critiques": [{"critique_id": "critique-1", "metadata": {"owner": "projection"}}],
+        }
+    )
+    assert context["assessment_owner"] == "projection_only"
+    assert context["ai_reviewer_required"] is True
+    assert context["ai_reviewer_blocker_reason"]
 
 
 def test_active_critique_requires_independent_review_evidence_for_ai_backed_status() -> None:

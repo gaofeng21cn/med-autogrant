@@ -69,27 +69,28 @@ class StageRouterTest(unittest.TestCase):
                 for key, expected in extra.items():
                     self.assertEqual(route[key], expected)
 
-    def test_route_is_recommendation_without_mag_transition_authority(self) -> None:
+    def test_route_context_is_non_authoritative_codex_input(self) -> None:
         route = determine_next_step(load("nsfc_workspace_p2a_input_intake.json"))
 
-        self.assertEqual(route["surface_kind"], "mag_stage_transition_oracle_recommendation")
-        self.assertEqual(route["stage_transition_authority"], "one-person-lab")
+        self.assertEqual(route["surface_kind"], "mag_ai_route_context")
+        self.assertEqual(route["semantic_route_owner"], "codex_cli")
         self.assertFalse(route["authority_boundary"]["mag_writes_stage_current_pointer"])
         self.assertFalse(route["authority_boundary"]["mag_writes_stage_terminal_state"])
-        self.assertTrue(route["transition_intent"]["requires_opl_stage_transition_authority"])
+        self.assertFalse(route["ai_route_policy"]["program_recommendation_can_block_or_select_route"])
+        self.assertFalse(route["authority_boundary"]["framework_can_accept_reject_or_override_codex_route"])
 
     def test_quality_gate_routes_record_non_blocking_debt(self) -> None:
         for name, recommended_stage, action in (
-            ("nsfc_workspace_p2c_critique.json", "revision", "rollback_required"),
+            ("nsfc_workspace_p2c_critique.json", "revision", "route_back_recommended"),
             ("nsfc_workspace_p3a_ready_for_submission.json", "frozen", "continue"),
-            ("nsfc_workspace_p3b_re_review_major_revision.json", "revision", "rollback_required"),
+            ("nsfc_workspace_p3b_re_review_major_revision.json", "revision", "route_back_recommended"),
             ("nsfc_workspace_p3c_presubmission_frozen.json", "frozen", "continue"),
         ):
             with self.subTest(example=name):
                 route = determine_next_step(load(name))
                 self.assertEqual(route["recommended_stage"], recommended_stage)
                 self.assertEqual(route["quality_gate"]["action"], action)
-                self.assertEqual(route["transition_intent"]["target_stage"], recommended_stage)
+                self.assertEqual(route["ai_route_policy"]["suggested_target_stage"], recommended_stage)
                 self.assertFalse(route["quality_debt"]["blocks_stage_transition"])
                 self.assertTrue(route["quality_debt"]["blocks_quality_export_or_ready_claims"])
 
@@ -98,7 +99,7 @@ class StageRouterTest(unittest.TestCase):
             route=_determine_structural_next_step(load("nsfc_workspace_p2c_critique.json")),
             quality_scorecard={
                 "loop_gate": {
-                    "action": "rollback_required",
+                    "action": "route_back_recommended",
                     "recommended_stage": "question_refinement",
                     "reason": "rebuild question",
                 }
@@ -107,16 +108,16 @@ class StageRouterTest(unittest.TestCase):
 
         self.assertEqual(route["recommended_stage"], "revision")
         self.assertFalse(route["requires_human_confirmation"])
-        self.assertEqual(route["transition_intent"]["target_stage"], "revision")
-        self.assertEqual(route["transition_intent"]["return_shape"], "route_back_ref")
+        self.assertEqual(route["ai_route_policy"]["suggested_target_stage"], "revision")
+        self.assertFalse(route["ai_route_policy"]["program_recommendation_can_block_or_select_route"])
         self.assertEqual(route["quality_debt"]["recommended_repair_stage"], "question_refinement")
         self.assertFalse(route["quality_debt"]["blocks_stage_transition"])
 
-    def test_ordinary_repair_uses_route_back_ref(self) -> None:
+    def test_ordinary_repair_is_a_nonblocking_codex_route_hint(self) -> None:
         route = determine_next_step(load("nsfc_workspace_p2c_critique.json"))
 
         self.assertFalse(route["requires_human_confirmation"])
-        self.assertEqual(route["transition_intent"]["return_shape"], "route_back_ref")
+        self.assertTrue(route["ai_route_policy"]["advance_repeat_skip_or_route_back_allowed"])
 
 
 if __name__ == "__main__":

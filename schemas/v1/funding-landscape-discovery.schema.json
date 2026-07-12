@@ -70,11 +70,14 @@
         "blocked_by_rules_count",
         "source_receipt_count",
         "applied_filters",
-        "required_input_fields"
+        "required_input_fields",
+        "next_stage_may_start",
+        "route_back_selection_owner",
+        "quality_debt"
       ],
       "properties": {
         "decision": {
-          "const": "discovered"
+          "enum": ["discovered", "completed_with_quality_debt"]
         },
         "discovery_source": {
           "type": "string",
@@ -108,6 +111,26 @@
         },
         "required_input_fields": {
           "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "next_stage_may_start": {
+          "const": true
+        },
+        "route_back_selection_owner": {
+          "const": "codex_cli"
+        },
+        "quality_debt": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "blocks_stage_transition",
+            "blocks_fundability_submission_export_or_ready_claims"
+          ],
+          "properties": {
+            "code": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+            "blocks_stage_transition": {"const": false},
+            "blocks_fundability_submission_export_or_ready_claims": {"const": true}
+          }
         }
       }
     }
@@ -149,7 +172,7 @@
     },
     "candidate_count": {
       "type": "integer",
-      "minimum": 1
+      "minimum": 0
     },
     "source_receipts": {
       "type": "array",

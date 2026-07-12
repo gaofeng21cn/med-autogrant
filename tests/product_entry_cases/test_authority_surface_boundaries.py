@@ -12,12 +12,11 @@ AUTHORITY_IDS = {
     "package_authority",
     "memory_accept_reject",
     "owner_receipt_signer",
-    "grant_transition_oracle",
     "grant_native_helper",
 }
 
 
-def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
+def test_functional_audit_keeps_seven_distinct_authority_ids() -> None:
     audit = json.loads(
         (REPO_ROOT / "contracts" / "functional_privatization_audit.json").read_text(
             encoding="utf-8"
@@ -80,7 +79,7 @@ def test_functional_audit_keeps_eight_distinct_authority_ids() -> None:
     assert native_helper["bridge_exit_gate"]["provenance_refs"]
 
 
-def test_pack_compiler_uses_the_same_eight_authority_ids() -> None:
+def test_pack_compiler_uses_the_same_seven_authority_ids() -> None:
     pack = json.loads(
         (REPO_ROOT / "contracts" / "pack_compiler_input.json").read_text(encoding="utf-8")
     )

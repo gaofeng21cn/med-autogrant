@@ -155,9 +155,6 @@ def discover_funding_landscape(
         else:
             blocked_count += 1
 
-    if not matched:
-        raise ValueError("未发现兼容的 funding opportunities；discovery fail-closed。")
-
     matched.sort(key=lambda item: (item["funder"], item["program_family"], item["brief_id"]))
     applied_filters: dict[str, list[str]] = {}
     if include_funders is not None:
@@ -186,7 +183,7 @@ def discover_funding_landscape(
         "candidate_count": len(matched),
         "source_receipts": source_receipts,
         "discovery_summary": {
-            "decision": "discovered",
+            "decision": "discovered" if matched else "completed_with_quality_debt",
             "discovery_source": discovery_source,
             "evaluated_catalog_count": len(catalog),
             "post_filter_catalog_count": len(catalog_filtered),
@@ -194,6 +191,17 @@ def discover_funding_landscape(
             "source_receipt_count": len(source_entries),
             "applied_filters": applied_filters,
             "required_input_fields": list(REQUIRED_DISCOVERY_INPUT_FIELDS),
+            "next_stage_may_start": True,
+            "route_back_selection_owner": "codex_cli",
+            "quality_debt": (
+                None
+                if matched
+                else {
+                    "code": "no_compatible_funding_opportunity",
+                    "blocks_stage_transition": False,
+                    "blocks_fundability_submission_export_or_ready_claims": True,
+                }
+            ),
         },
     }
 

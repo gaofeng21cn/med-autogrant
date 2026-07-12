@@ -200,11 +200,33 @@ def execute_critique_pass(
     output_path: str | Path,
     executor_kind: str | None = None,
 ) -> dict[str, Any]:
-    critique_document = build_critique_execution_document(
-        document=self._load_workspace(input_path),
-        input_path=input_path,
-        executor_kind=executor_kind,
-    )
+    source_document = self._load_workspace(input_path)
+    try:
+        critique_document = build_critique_execution_document(
+            document=source_document,
+            input_path=input_path,
+            executor_kind=executor_kind,
+        )
+    except WorkspaceStateError as error:
+        return {
+            "ok": True,
+            "command": "execute-critique-pass",
+            "status": "completed_with_quality_debt",
+            "grant_run_id": source_document.get("grant_run_id"),
+            "workspace_id": source_document.get("workspace_id"),
+            "lifecycle_stage": source_document.get("lifecycle_stage"),
+            "source_workspace_preserved": True,
+            "output_path": None,
+            "quality_debt": {
+                "code": "critique_executor_or_output_shape_gap",
+                "detail": str(error),
+                "blocks_stage_transition": False,
+                "blocks_quality_submission_export_or_ready_claims": True,
+            },
+            "next_stage_may_start": True,
+            "route_back_selection_owner": "codex_cli",
+            "recommended_route_back_stage": source_document.get("lifecycle_stage"),
+        }
     resolved_output_path = Path(output_path).expanduser().resolve()
     _guard_critique_output_identity(
         resolved_output_path,

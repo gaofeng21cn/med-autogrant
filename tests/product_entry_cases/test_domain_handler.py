@@ -21,7 +21,7 @@ def _write_task(tmp_path: Path, payload: dict[str, object]) -> Path:
     return task_path
 
 
-def test_domain_handler_export_is_direct_and_keeps_eight_authority_targets() -> None:
+def test_domain_handler_export_is_direct_and_keeps_seven_authority_targets() -> None:
     payload = build_domain_handler_export(input_path=CRITIQUE_EXAMPLE_PATH)
     export = payload["domain_handler_export"]
 
@@ -36,9 +36,9 @@ def test_domain_handler_export_is_direct_and_keeps_eight_authority_targets() -> 
         "package_authority",
         "memory_accept_reject",
         "owner_receipt_signer",
-        "grant_transition_oracle",
         "grant_native_helper",
     }
+    assert export["ai_route_policy_ref"].endswith("stage_control_plane_parts/ai_route_policy.py")
     assert export["allowed_dispatch_actions"] == [
         "domain-memory/decide",
         "domain-memory/propose",

@@ -176,7 +176,7 @@
         "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
       ],
       "current_ref_is_success_evidence": false,
-      "required_evidence": "Sustained OPL/App/operator closeout or release/default-caller consumption of MAG package refs, quality refs, transition oracle refs, manual portal boundary, and safe action refs."
+      "required_evidence": "Sustained OPL/App/operator closeout or release/default-caller consumption of MAG package refs, quality refs, AI route-policy refs, manual portal boundary, and safe action refs."
     },
     {
       "prerequisite_id": "temporal_provider_long_soak_window_evidence",

@@ -8,7 +8,7 @@ DEFAULT_NSFC_CRITIQUE_POLICY: dict[str, Any] = {
     "policy_id": "nsfc_mentor_critique_v1",
     "persona": {
         "role": "NSFC mentor reviewer",
-        "style": "diagnostic, science-first, fail-closed",
+        "style": "diagnostic, science-first, claim-strict",
     },
     "weighted_dimensions": [
         {
@@ -42,7 +42,7 @@ DEFAULT_NIH_R21_CRITIQUE_POLICY: dict[str, Any] = {
     "policy_id": "nih_r21_significance_innovation_v1",
     "persona": {
         "role": "NIH R21 scientific reviewer",
-        "style": "significance-innovation first, translational, fail-closed",
+        "style": "significance-innovation first, translational, claim-strict",
     },
     "weighted_dimensions": [
         {

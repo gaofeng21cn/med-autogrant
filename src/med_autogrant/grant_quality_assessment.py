@@ -794,7 +794,7 @@ def _build_loop_gate(
         recommended_stage = blocker.get("rollback_stage") or "revision"
         reason = blocker["blocking_issues"][0]
         return {
-            "action": "rollback_required",
+            "action": "route_back_recommended",
             "recommended_stage": recommended_stage,
             "reason": reason,
         }

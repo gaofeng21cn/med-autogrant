@@ -119,10 +119,13 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "nih_r21_translational_family_v1",
         )
 
-    def test_selector_fail_closed_when_no_compatible_preset_exists(self) -> None:
+    def test_selector_preserves_incompatible_candidates_as_quality_debt(self) -> None:
         selection_input = self._selection_input_with_brief(EU_HORIZON_BRIEF)
-        with self.assertRaisesRegex(ValueError, "未找到兼容的 project profile preset"):
-            select_project_profile(selection_input)
+        result = select_project_profile(selection_input)
+        self.assertEqual(result["selection_summary"]["decision"], "completed_with_quality_debt")
+        self.assertTrue(result["selection_summary"]["next_stage_may_start"])
+        self.assertIsNone(result["recommended_project_profile"])
+        self.assertFalse(result["quality_debt"]["blocks_stage_transition"])
 
     def test_registry_exposes_common_grammar_and_non_nsfc_placeholder_contract(self) -> None:
         preset_ids = {preset["preset_id"] for preset in iter_project_profile_presets()}

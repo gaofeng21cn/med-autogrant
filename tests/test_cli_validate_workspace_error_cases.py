@@ -27,20 +27,31 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["errors"][0]["path"], error_path)
         self.assertTrue(payload["error"])
 
-    def test_workspace_read_surfaces_fail_closed_for_invalid_revisions(self) -> None:
+    def test_invalid_revisions_remain_readable_for_route_progress(self) -> None:
         empty_revision = self.write_invalid_workspace()
         outline_critique = self.write_outline_only_critique_workspace()
         outline_revision = self.write_revision_outline_workspace()
-        cases = (
+        hard_read_cases = (
             ("summarize", empty_revision, "summarize-workspace", "critique", "revision_plans"),
-            ("next-step", empty_revision, "next-step", "critique", "revision_plans"),
             ("critique-summary", empty_revision, "critique-summary", "critique", "revision_plans"),
-            ("route-report", outline_critique, "stage-route-report", "critique", "application_drafts.status"),
-            ("next-step", outline_revision, "next-step", "revision", "application_drafts.status"),
         )
-        for case in cases:
+        for case in hard_read_cases:
             with self.subTest(command=case[0], stage=case[3]):
                 self.assert_workspace_error(*case)
+
+        for command, input_path in (
+            ("next-step", empty_revision),
+            ("route-report", outline_critique),
+            ("next-step", outline_revision),
+        ):
+            with self.subTest(command=command):
+                payload = self.run_workspace_json(command, input_path)
+                if command == "route-report":
+                    self.assertEqual(payload["checkpoint_status"], "completed_with_quality_debt")
+                    self.assertEqual(payload["semantic_route_owner"], "codex_cli")
+                else:
+                    self.assertEqual(payload["surface_kind"], "mag_ai_route_context")
+                    self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
 
     def test_completed_revision_requires_revised_draft_status(self) -> None:
         invalid_path = self.write_revision_completed_without_revised_workspace()

@@ -25,7 +25,7 @@
         "terminal_stage_refs": [
           "review_and_rebuttal"
         ],
-        "route_policy": "ordered_stage_attempts_no_skip"
+        "route_policy": "ai_selected_progress_route"
       },
       "source_command": {
         "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
@@ -193,7 +193,7 @@
         "terminal_stage_refs": [
           "proposal_authoring"
         ],
-        "route_policy": "ordered_stage_attempts_no_skip"
+        "route_policy": "ai_selected_progress_route"
       },
       "source_command": {
         "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
@@ -259,7 +259,7 @@
         "terminal_stage_refs": [
           "package_and_submit_ready"
         ],
-        "route_policy": "ordered_stage_attempts_no_skip"
+        "route_policy": "ai_selected_progress_route"
       },
       "source_command": {
         "command": "opl://generated-surfaces/mag/build-submission-ready-package --input <input_path> --output-dir <output_dir> --format json",

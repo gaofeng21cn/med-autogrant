@@ -156,7 +156,7 @@
     "opl_can_claim_domain_ready": false,
     "opl_can_claim_artifact_ready": false,
     "strategy_refs_completeness_is_launch_hard_gate": false,
-    "independent_gate_receipt_required_for_quality_progression": true,
+    "independent_gate_receipt_required_for_quality_or_ready_claim": true,
     "same_attempt_self_review_can_close_quality_gate": false
   },
   "adoption_policy": {

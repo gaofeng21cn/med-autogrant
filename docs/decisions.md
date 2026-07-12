@@ -15,7 +15,7 @@ Repo-local domain handler 保留 export 与 dispatch 两个薄入口。Dispatch 
 
 ## D3 八项 Authority ID
 
-Fundability、quality、export、package、memory、owner receipt、transition oracle、grant-native helper 分开建模，不用一个笼统 helper 或 merged verdict 代替。
+Fundability、quality、export、package、memory、owner receipt 与 grant-native helper 分开建模；Codex CLI 独占语义 route 选择，程序只投影 declared-stage scope 和质量债。
 
 ## D4 OPL canonical currentness
 
@@ -41,6 +41,6 @@ OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarat
 
 MAG 不声明、不安装、不锁定 OPL Framework implementation。OPL module workflow 在 checkout 维护 `src/opl_framework` carrier；MAG 只通过该 namespace 消费 Framework helper。
 
-## D10 Transition runner locator
+## D10 Codex route 与 OPL transport 边界
 
-Transition oracle 中的 `runner_contract_ref` 是 OPL-owned external locator，不要求 MAG 仓内存在同路径文件。MAG 不复制 runner contract，也不重新实现 cycle、rollback、dispatch、replay 或 output orchestration；这些行为由 OPL StageRun owner验证。
+Codex CLI 独占 semantic stage route；OPL StageRun 只运输 attempt、artifact、identity/currentness 与 passive projection refs。MAG 不保留 transition oracle、cycle reducer、静态 rollback table 或 output orchestration，也不允许 OPL accept/reject/rank/override Codex route。

@@ -29,7 +29,6 @@ AUTHORITY_FUNCTION_REFS = {
     "package_authority": "src/med_autogrant/final_package.py",
     "memory_accept_reject": "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
     "owner_receipt_signer": "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
-    "grant_transition_oracle": "src/med_autogrant/stage_control_plane_parts/transition_oracle.py",
     "grant_native_helper": "src/med_autogrant/product_entry_parts/domain_handler.py",
 }
 
@@ -82,6 +81,7 @@ def build_domain_handler_export(
             {"authority_id": authority_id, "ref": ref}
             for authority_id, ref in AUTHORITY_FUNCTION_REFS.items()
         ],
+        "ai_route_policy_ref": "src/med_autogrant/stage_control_plane_parts/ai_route_policy.py",
         "allowed_dispatch_actions": sorted(ALLOWED_ACTIONS),
         "generated_surface_handoff_ref": "contracts/generated_surface_handoff.json",
         "caller_boundary": {

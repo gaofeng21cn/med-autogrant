@@ -9,7 +9,7 @@ This gate keeps MAG domain authority separate from OPL provider/runtime authorit
 - Grant truth, funding-call interpretation, applicant/task lock, aims route, and proposal body truth.
 - Fundability, authoring quality, export/package verdicts, and reviewer-style closure.
 - Grant strategy memory body, accept/reject decision, and writeback receipt.
-- Package authority, owner receipts, transition oracle semantics, typed blockers, safe action refs, and grant-native helpers.
+- Package authority, owner receipts, typed blockers, safe action refs, and grant-native helpers. Semantic route selection belongs only to Codex CLI.
 
 ## OPL-Owned Authority
 

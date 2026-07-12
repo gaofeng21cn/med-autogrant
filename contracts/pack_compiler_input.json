@@ -179,7 +179,6 @@
     "package_authority",
     "memory_accept_reject",
     "owner_receipt_signer",
-    "grant_transition_oracle",
     "grant_native_helper"
   ],
   "declarative_domain_pack": [

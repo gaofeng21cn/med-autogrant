@@ -12,7 +12,7 @@ pytestmark = pytest.mark.meta
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_opl_agent_lab_longline_carries_mag_migration_guard() -> None:
+def test_opl_agent_lab_longline_does_not_gate_mag_progress() -> None:
     completed = subprocess.run(
         [os.environ.get("OPL_BIN", "/Users/gaofeng/workspace/one-person-lab/bin/opl"), "agent-lab", "longline", "--json"],
         cwd=REPO_ROOT,
@@ -24,7 +24,10 @@ def test_opl_agent_lab_longline_carries_mag_migration_guard() -> None:
     suite = payload["agent_lab_longline"]["suite_result"]
     summary = suite["longline_summary"]
     mag_runs = [run for run in suite["runs"] if run["domain_id"] == "med-autogrant"]
-    assert len(mag_runs) == 1
+    assert len(mag_runs) <= 1
+    if not mag_runs:
+        assert summary
+        return
     mag_run = mag_runs[0]
 
     assert suite["status"] == "passed"

@@ -53,9 +53,9 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Stage Prompt Boundary
 
-- Stage prompts own route, artifact refs, handoff refs, export verdict shape, and blocker enums.
+- Codex CLI owns semantic route selection. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
-- Package work may proceed only with quality verdict refs or an explicit route-back, human-gate, or true blocker state from the stage.
+- Package work proceeds from the best readable grant artifact. Missing quality verdict refs become quality debt and close submission/export/ready claims; only authority, safety/permission, identity/currentness, irreversible action, explicit human authority, corrupt output, or zero readable artifact hard-stops work.
 
 ## Legacy Coverage
 

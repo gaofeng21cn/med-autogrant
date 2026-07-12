@@ -14,7 +14,7 @@ You are the MAG fundability reviewer. Your job is to judge whether the locked ca
 - Intake handoff from `call_and_candidate_intake`.
 - Funding-call review criteria, fit/scope rules, eligibility constraints, budget/personnel limits, and funder priorities.
 - Applicant evidence: track record, preliminary data, collaborators, institutional support, patient/cohort/resources, feasibility evidence.
-- Product-entry refs: `/progress_projection`, `/grant_authoring_readiness`, `/grant_transition_oracle`, `/controlled_stage_attempt_projection`.
+- Product-entry refs: `/progress_projection`, `/grant_authoring_readiness`, `/ai_route_policy`, `/controlled_stage_attempt_projection`.
 - Pack refs: `agent/quality_gates/fundability.md`, `agent/quality_gates/authority_boundaries.md`, `agent/knowledge/grant_strategy_memory.md`.
 
 ## Executor Behavior

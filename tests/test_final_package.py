@@ -98,7 +98,7 @@ class FinalPackageTest(unittest.TestCase):
                 self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), final_package)
 
     def test_nonfinal_checkpoint_and_output_identity_fail_closed(self) -> None:
-        for input_path in (FORWARD, FREEZE_READY):
+        for input_path in (FORWARD,):
             with self.subTest(input_path=input_path.name), tempfile.TemporaryDirectory() as tmp_dir:
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"

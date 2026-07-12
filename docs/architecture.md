@@ -52,15 +52,9 @@ MAG 不再内置私有 standard-pack compiler、source scanner、generated produ
 | `package_authority` | final package body 与 identity authority |
 | `memory_accept_reject` | grant strategy memory 提案接受/拒绝 |
 | `owner_receipt_signer` | domain owner receipt / typed blocker / no-regression evidence |
-| `grant_transition_oracle` | grant stage transition recommendation |
-| `grant_native_helper` | 无法声明化的 grant-native prompt、typed closeout/answer validation、direct CLI/domain-handler adapter；任何 executor transport 均不在本仓 |
+| `grant_native_helper` | 无法声明化的 grant-native prompt、typed closeout/answer validation、direct CLI/domain-handler adapter；validation finding 是 Codex input/质量债，不是 stage progression 控制面；任何 executor transport 均不在本仓 |
 
-这八项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。
-
-`grant_transition_oracle` 返回的 `runner_contract_ref` 指向 OPL-owned
-`contracts/opl-framework/family-transition-runner-contract.json`。这是跨仓 owner locator，
-不是 MAG 应复制或本地解析的 contract；MAG 只生成 grant-native transition recommendation，
-OPL StageRun 持有 cycle、rollback、dispatch、replay 与 output orchestration。
+这七项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。`ai_route_policy` 只投影 declared stage/action scope；Codex CLI 独占语义 route 选择，OPL StageRun 只持有 transport 与 attempt lifecycle。
 
 ## OPL-owned Surfaces
 

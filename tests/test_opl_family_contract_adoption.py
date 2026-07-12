@@ -125,7 +125,7 @@ def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
         optional = route["optional_stage_refs"]
         routed_stages = required + optional
 
-        assert route["route_policy"] == "ordered_stage_attempts_no_skip"
+        assert route["route_policy"] == "ai_selected_progress_route"
         assert required and route["entry_stage_ref"] == required[0]
         assert len(routed_stages) == len(set(routed_stages))
         assert set(routed_stages) == expected_stages_by_action[action["action_id"]]

@@ -80,7 +80,12 @@ fi
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPYCACHEPREFIX="${PYTHONPYCACHEPREFIX:-${tmp_root}/pycache}"
 export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-${tmp_root}/venv}"
-export PYTHONPATH="${repo_root}/src${PYTHONPATH:+:${PYTHONPATH}}"
+framework_root="${OPL_FRAMEWORK_ROOT:-${OPL_OWNER_REPO_ROOT:-}}"
+framework_python=""
+if [[ -n "${framework_root}" && -d "${framework_root}/python" ]]; then
+  framework_python=":${framework_root}/python"
+fi
+export PYTHONPATH="${repo_root}/src${framework_python}${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} -p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache"
 
 entrypoint_bin="${tmp_root}/bin"

@@ -2,39 +2,56 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.opl_execution_boundary import build_stage_transition_authority_boundary
+from med_autogrant.opl_execution_boundary import build_ai_route_boundary
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
     build_critique_summary,
     summarize_workspace_document,
 )
-from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 
 
 def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
     validation = validate_workspace_document(document)
-    if not validation.ok:
-        first = validation.errors[0]
-        raise WorkspaceStateError(
-            f"{first.path}: {first.message}",
-            errors=validation.errors,
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-
     validation_payload = validation.to_dict(document)
-    summary = summarize_workspace_document(document)
+    summary = summarize_workspace_document(document) if validation.ok else {
+        "grant_run_id": document.get("grant_run_id"),
+        "workspace_id": document.get("workspace_id"),
+        "lifecycle_stage": document.get("lifecycle_stage"),
+        "readable_partial_workspace": True,
+        "validation_findings": validation_payload["errors"],
+    }
     next_step = determine_next_step(document)
     route: dict[str, Any] = {
         "validate_workspace": validation_payload,
         "summarize_workspace": summary,
         "next_step": next_step,
-        "transition_oracle": next_step,
+        "ai_route_context": next_step,
     }
+    if not validation.ok:
+        return {
+            "ok": True,
+            "surface_kind": "mag_stage_route_recommendation_report",
+            "grant_run_id": document.get("grant_run_id"),
+            "workspace_id": document.get("workspace_id"),
+            "lifecycle_stage": document.get("lifecycle_stage"),
+            "lifecycle_stage_role": "readable_partial_workspace_observation",
+            "semantic_route_owner": "codex_cli",
+            "authority_boundary": build_ai_route_boundary(
+                surface_id="mag.stage-route-report",
+                mag_role="route_context_projection_only",
+            ),
+            "route": route,
+            "checkpoint_status": "completed_with_quality_debt",
+            "checkpoint_status_role": "diagnostic_never_blocks_stage_transition",
+            "verification_checkpoint": {
+                "checkpoint_status": "completed_with_quality_debt",
+                "quality_debt": next_step.get("quality_debt"),
+                "blocks_stage_transition": False,
+            },
+        }
     critique_summary: dict[str, Any] | None = None
-    if document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
+    if validation.ok and document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
         critique_summary = build_critique_summary(document)
         critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
         route["critique_summary"] = critique_summary
@@ -52,10 +69,10 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
         "lifecycle_stage_role": "workspace_lifecycle_observation",
-        "stage_transition_authority": "one-person-lab",
-        "authority_boundary": build_stage_transition_authority_boundary(
+        "semantic_route_owner": "codex_cli",
+        "authority_boundary": build_ai_route_boundary(
             surface_id="mag.stage-route-report",
-            mag_role="route_checkpoint_projection_only",
+            mag_role="route_context_projection_only",
         ),
         "route": route,
         "checkpoint_status": verification_checkpoint["checkpoint_status"],
@@ -89,7 +106,7 @@ def build_verification_checkpoint(
     if presubmission_frozen:
         checkpoint_status = "submission_frozen"
     elif forced_rollback_stage:
-        checkpoint_status = "rollback_required"
+        checkpoint_status = "route_back_recommended"
     elif is_freeze_ready_checkpoint(
         summary=summary,
         next_step=next_step,

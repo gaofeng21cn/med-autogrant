@@ -77,7 +77,7 @@
             "build-final-package",
             "build-submission-ready-package",
             "owner_receipt_contract",
-            "grant_transition_oracle"
+            "ai_route_policy"
           ]
         }
       }

@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
+from med_autogrant.ai_first_boundaries import active_ai_backed_critique_quality_context
 from med_autogrant.domain_runtime_parts.io import (
     _guard_revision_output_identity,
     _write_revised_workspace_output,
@@ -31,7 +31,7 @@ def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, 
     active_draft = context.active_draft
 
     _validate_execution_preconditions(document=document, critique=critique, revision_plan=revision_plan)
-    ai_review_provenance = require_active_ai_backed_critique(document)
+    ai_review_provenance = active_ai_backed_critique_quality_context(document)
 
     section_index = _index_by_section_key(active_draft.get("sections"), scope_name="ApplicationDraft.sections")
     outline_index = _index_by_section_key(active_draft.get("outline"), scope_name="ApplicationDraft.outline")
@@ -102,7 +102,31 @@ def build_revision_execution_payload(
     *,
     output_path: str | Path,
 ) -> dict[str, Any]:
-    revision_document = build_revision_execution_document(document=document)
+    try:
+        revision_document = build_revision_execution_document(document=document)
+    except WorkspaceStateError as error:
+        presubmission_frozen = bool(document.get("gates", {}).get("presubmission_frozen"))
+        if presubmission_frozen:
+            raise
+        return {
+            "ok": True,
+            "command": "execute-revision-pass",
+            "status": "completed_with_quality_debt",
+            "grant_run_id": document.get("grant_run_id"),
+            "workspace_id": document.get("workspace_id"),
+            "lifecycle_stage": document.get("lifecycle_stage"),
+            "source_workspace_preserved": True,
+            "output_path": None,
+            "quality_debt": {
+                "code": "revision_helper_precondition_or_validation_gap",
+                "detail": str(error),
+                "blocks_stage_transition": False,
+                "blocks_quality_submission_export_or_ready_claims": True,
+            },
+            "next_stage_may_start": True,
+            "route_back_selection_owner": "codex_cli",
+            "recommended_route_back_stage": document.get("lifecycle_stage"),
+        }
     resolved_output_path = Path(output_path).expanduser().resolve()
     _guard_output_identity(
         resolved_output_path,
@@ -135,7 +159,7 @@ def _validate_execution_preconditions(
     verdict = critique.get("verdict")
     if critique.get("forced_rollback_stage"):
         raise WorkspaceStateError(
-            "forced_rollback_stage 非空时 execute-revision-pass 必须 fail-closed。",
+            "forced_rollback_stage 非空时当前 helper 只返回质量债与 Codex route-back 建议。",
             errors=[],
             grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),

@@ -73,7 +73,7 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
             "funding_opportunity_pool": [item],
         }
 
-    def test_filter_and_incompatible_hint_fail_closed(self) -> None:
+    def test_filter_and_incompatible_hint_preserve_negative_discovery_progress(self) -> None:
         filtered_input = self.base_input()
         filtered_input["include_funders"] = ["NSFC"]
         filtered = discover_funding_landscape(filtered_input)
@@ -84,8 +84,11 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
 
         incompatible = self.base_input()
         incompatible["rough_direction_hint"] = "天体物理黑洞并合引力波信号处理"
-        with self.assertRaisesRegex(ValueError, "fail-closed"):
-            discover_funding_landscape(incompatible)
+        negative = discover_funding_landscape(incompatible)
+        self.assertEqual(negative["candidate_count"], 0)
+        self.assertEqual(negative["discovery_summary"]["decision"], "completed_with_quality_debt")
+        self.assertTrue(negative["discovery_summary"]["next_stage_may_start"])
+        self.assertFalse(negative["discovery_summary"]["quality_debt"]["blocks_stage_transition"])
 
     def test_default_discovery_keeps_multiple_funders_and_provenance(self) -> None:
         result = discover_funding_landscape(self.base_input())
