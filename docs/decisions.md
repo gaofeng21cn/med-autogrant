@@ -48,3 +48,7 @@ Transition oracle 中的 `runner_contract_ref` 是 OPL-owned external locator，
 ## D11 Prompt 保留专业依赖，不规定认知配方
 
 Call/eligibility、证据与 claim、独立复审、package authority 和 human submission gate 的因果顺序继续明确。方向、问题、论证、申请人 fit、章节组织和修订范围由 Codex 在这些依赖内迭代判断；Stage prompt、rubric weight、route label 与历史 checkpoint 字段不能冻结工具顺序、推理顺序、候选数量或 section-by-section 修订策略。
+
+## D12 Standard Agent Interface 归 domain descriptor
+
+MAG workspace locator/topology、domain-handler dispatch argv、progress alias 与 routing signal 只在 `contracts/domain_descriptor.json#/standard_agent_interface` 声明，OPL 通过 current package source 托管消费。MAG 不恢复 product status/manifest materializer；这两个 command template 固定为 `null`，generated surface 继续归 OPL。
