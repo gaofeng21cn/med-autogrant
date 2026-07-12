@@ -1,7 +1,7 @@
 {
   "surface_kind": "opl_agent_package_manifest.v1",
-  "agent_id": "med-autogrant",
-  "package_id": "med-autogrant",
+  "agent_id": "mag",
+  "package_id": "mag",
   "display_name": "Med Auto Grant",
   "publisher": "one-person-lab",
   "version": "0.1.0",

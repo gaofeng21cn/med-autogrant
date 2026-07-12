@@ -68,6 +68,20 @@ def test_codex_plugin_lifecycle_is_owned_by_opl_connect() -> None:
     assert all(not path.exists() for path in REPO_LOCAL_INSTALLER_PATHS)
 
 
+def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
+    pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+
+    assert package_manifest["agent_id"] == "mag"
+    assert package_manifest["package_id"] == "mag"
+    assert package_manifest["version"] == pyproject_data["project"]["version"]
+    assert package_manifest["codex_surface"]["plugin_id"] == "med-autogrant"
+    assert package_manifest["lifecycle"]["module_id"] == "medautogrant"
+    assert package_manifest["distribution_payload"]["payload_ref"].endswith(
+        "/opl-agent-med-autogrant:latest"
+    )
+
+
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
     metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")

@@ -7,7 +7,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 
 ## 身份与入口
 
-- OPL canonical agent id 是 `mag`；`med-autogrant` 是 repo/package/plugin/skill locator。
+- OPL canonical agent id 与 OPL Agent Package id 都是 `mag`；`med-autogrant` 是 repo、Python distribution、plugin/skill 与 OCI carrier locator，`medautogrant` 是 module/CLI locator。载体名不得注册为第二个 package identity。
 - 正式 repo-local entry 是 `medautogrant` CLI、`MedAutoGrantDomainEntry` 和 direct domain handler。
 - `MCP` 仍是 `descriptor_only=true`、`public_runtime=false` 的协议投影，不是当前 public runtime。
 - 不恢复 `mag` console script、旧 flat command、wrapper、facade 或 compatibility alias。
