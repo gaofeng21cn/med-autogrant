@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
-from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 from med_autogrant.workspace_types import WorkspaceStateError
+
+if TYPE_CHECKING:
+    from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
 
 class MedAutoGrantDomainEntry:
@@ -15,7 +17,7 @@ class MedAutoGrantDomainEntry:
         *,
         runtime: MagDomainRuntime | None = None,
     ) -> None:
-        self._runtime = runtime or MagDomainRuntime()
+        self._runtime = runtime or _build_runtime()
 
     def dispatch(self, request: Mapping[str, Any]) -> dict[str, Any]:
         command = _require_command(request)
@@ -55,6 +57,12 @@ def _require_command(request: Mapping[str, Any]) -> str:
     if not isinstance(command, str) or not command.strip():
         raise WorkspaceStateError("domain entry request 缺少 command。")
     return command
+
+
+def _build_runtime() -> MagDomainRuntime:
+    from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
+
+    return MagDomainRuntime()
 
 
 def _has_structured_value(value: Any) -> bool:
