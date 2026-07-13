@@ -93,3 +93,9 @@ MAG 只跟踪 `plugins/med-autogrant/` carrier source 和 `contracts/opl_agent_p
 必须满足 overall structural status passed、source `matched_source_behavior_count=0`、blockers empty；allowed matches 只能是逐文件 authority/adapter 覆盖。
 
 这不证明 live grant progress、owner acceptance、quality/export ready、submission human gate、provider long soak 或 production readiness。对应真相继续归 live progress contract、workspace artifacts 和 owner receipts。
+
+## Stage Review 与 Meta Review
+
+MAG 绑定 `official_high_value_knowledge_deliverable.v1`。每个 AI producer Stage 在同一 StageRun 下使用相互隔离的 producer、reviewer、repairer、re-reviewer Attempts；每个 Attempt 对应新的 Codex thread。同一 thread 内的写后检查只是 `in_thread_refinement`，缺 typed closeout 时的 resume 也只补协议，二者都不能产生 Review receipt。
+
+`review_and_rebuttal` 保留稳定 Stage ID，但承担独立 Grant Meta Review：它只消费 exact artifact/hash、Stage Review receipts、call/source/rubric 与必要 lineage，输出整体 verdict 和 defect-owner route-back，不在 Review Stage 内改写 proposal。可消费 artifact 在三轮质量预算耗尽后带质量债推进；债务继续阻止 quality、export、submission 和 ready 声明。

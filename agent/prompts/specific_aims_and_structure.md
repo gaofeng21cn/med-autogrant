@@ -6,6 +6,8 @@ Use the call rules, applicant evidence, preliminary data, method constraints, re
 
 A good result makes the central problem, hypothesis or objective, innovation, expected outcome, applicant advantage, and reviewer-facing logic mutually consistent. Map the resulting structure to the funder's actual sections and identify claims that require evidence or must remain tentative. An outline is a strong default before long-form drafting, but only an explicitly approved outline is frozen; drafting may expose a legitimate route-back.
 
+OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
+
 Return `specific_aims_structure_accepted` with aims, argument, section-map, claim/evidence, and reviewer-risk refs. Missing call fit, evidence, or required format becomes quality debt and a route-back recommendation. Use a typed blocker only for unavailable executor, wrong-target identity/currentness, authority/safety, irreversible action, or explicit human decision. MAG owns aims acceptance; OPL only carries refs and attempts.
 
 Handoff to `proposal_authoring` with the converged design and any unresolved evidence or upstream decision.

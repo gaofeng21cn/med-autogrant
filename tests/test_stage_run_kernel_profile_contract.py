@@ -99,7 +99,7 @@ def test_controlled_canary_keeps_strategy_refs_body_free() -> None:
         "reflection",
         "ranking",
         "revision",
-        "meta_review",
+        "strategy_retrospective",
     ]
     assert canary["surface_kind"] == "opl_stage_run_controlled_canary_evidence"
     assert canary["version"] == "stage-run-controlled-canary.v1"
@@ -113,7 +113,7 @@ def test_controlled_canary_keeps_strategy_refs_body_free() -> None:
         "grounded_reflection",
         "comparative_selection",
         "evolution_and_revision",
-        "meta_review_learning",
+        "strategy_retrospective",
         "independent_quality_gate",
     }
     assert all(trace["refs"] for trace in canary["strategy_trace"].values())
@@ -122,7 +122,7 @@ def test_controlled_canary_keeps_strategy_refs_body_free() -> None:
         "reflection_review_ref",
         "ranking_selection_ref",
         "revision_lineage_ref",
-        "meta_review_ref",
+        "strategy_retrospective_ref",
         "independent_gate_ref",
     }
     assert all(canary["role_artifact_refs"].values())

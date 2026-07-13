@@ -165,7 +165,7 @@
     "route_is_not_stage_strategy": true,
     "stage_attempt_is_required_for_execution": true,
     "candidate_pool_is_stage_internal_artifact": true,
-    "meta_review_updates_are_proposals_until_owner_acceptance": true
+    "strategy_retrospective_updates_are_proposals_until_owner_acceptance": true
   },
   "stage_strategy_refs": [
     "call_fit_candidate_generation",

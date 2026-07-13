@@ -33,11 +33,11 @@
       ],
       "evidence_role": "revision_and_evolution_lineage_refs"
     },
-    "meta_review_learning": {
+    "strategy_retrospective": {
       "refs": [
-        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/meta-review-learning"
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/strategy-retrospective"
       ],
-      "evidence_role": "meta_review_learning_refs"
+      "evidence_role": "strategy_retrospective_refs"
     },
     "independent_quality_gate": {
       "refs": [
@@ -51,7 +51,7 @@
     "reflection_review_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/reflection-review",
     "ranking_selection_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/ranking-selection",
     "revision_lineage_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/revision-lineage",
-    "meta_review_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/meta-review",
+    "strategy_retrospective_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/strategy-retrospective",
     "independent_gate_ref": "gate-ref:mag/stage-run-canary/specific_aims_and_structure/independent-fundability-review-gate"
   },
   "closeout": {

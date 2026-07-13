@@ -8,6 +8,8 @@ The current outline is a strong default, not an AI-imposed permanent freeze. Pre
 
 A good result is concrete, evidence-linked, internally coherent, formatted for the call, and candid about unresolved gaps. Keep grant bodies in the workspace/artifact root and body-free refs in OPL surfaces.
 
+OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
+
 Return `proposal_draft_reviewable` with draft, section, claim/source, evidence-gap, and critique-target refs. Missing core source or format feasibility becomes quality debt or a no-output diagnostic and may route back. Use a typed blocker only for authority/safety, forbidden fabrication, unavailable executor, wrong-target identity/currentness, irreversible action, or explicit human decision. Do not infer quality from section counts, schema completion, or polished prose.
 
 Handoff the actual draft to `review_and_rebuttal` for independent review.

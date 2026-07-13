@@ -48,3 +48,5 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - Live progress、quality/export、human gate、long soak、owner acceptance 与 production status 必须由对应 live/readback/receipt 证明。
 - Production acceptance contract 是 provenance，不是 live closing ref；`domain_owned_closing_ref` 为空时不得写成完成。
 - 文档、focused tests、conformance pass 和 refs-only ledger 不能单独支撑 readiness claim。
+- 正式 Stage Review 必须来自新的 StageAttempt 和新的 executor session；producer self-check、same-thread resume 或无 exact artifact hash 的记录不能算 Review。
+- `review_and_rebuttal` Meta Review 不继承上游生成对话，也不内联修稿；它必须把缺陷路由到最早能关闭根因的 Stage，并在新 generation 后重新审查。

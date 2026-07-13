@@ -244,16 +244,16 @@
       "reflection",
       "ranking",
       "revision",
-      "meta_review"
+      "strategy_retrospective"
     ],
     "canary": {
       "controlled_evidence_ref": "contracts/stage_run_canary_evidence.json",
-      "candidate_reflection_ranking_revision_meta_review_are_not_workflow_steps": true,
+      "candidate_reflection_ranking_revision_strategy_retrospective_are_not_workflow_steps": true,
       "candidate_pool_is_stage_internal_artifact": true,
       "reflection_is_stage_internal_evidence_ref": true,
       "ranking_is_stage_internal_evidence_ref": true,
       "revision_is_stage_internal_strategy_or_domain_stage_ref": true,
-      "meta_review_is_stage_internal_evidence_ref": true
+      "strategy_retrospective_is_stage_internal_evidence_ref": true
     }
   },
   "projection_boundary": {

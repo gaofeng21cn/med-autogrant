@@ -6,6 +6,8 @@ Read the call, portal instructions, eligibility and deadline constraints, applic
 
 A good result gives later stages traceable refs for the call identity, review criteria, required sections and attachments, eligibility, budget/personnel limits, applicant strengths, source gaps, and the questions that fundability review must resolve. Use `mag-strategy-intake-specialist` when the intake requires specialist judgment.
 
+OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
+
 Return `call_candidate_intake_ready` with body-free handoff refs when the evidence is usable. Missing call identity, eligibility, or required source material becomes an evidence-gap diagnostic and does not block the next stage. Return a typed blocker only for wrong-target identity/currentness, unavailable executor, authority/safety, irreversible action, or explicit human decision. Do not issue fundability, quality, package, or submission verdicts here, and keep grant bodies and receipt instances outside repo source and OPL runtime state.
 
 Handoff to `fundability_strategy` with sources read, unresolved gaps, call-lock status, and the next professional questions.

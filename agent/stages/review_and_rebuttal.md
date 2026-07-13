@@ -1,4 +1,4 @@
-# Review And Rebuttal Policy
+# Grant Meta Review Policy
 
 ## Entry Conditions
 
@@ -8,9 +8,9 @@
 
 ## Stage Work
 
-- Run reviewer-style critique, issue severity mapping, repair planning, and post-revision closure review.
+- Run a context-isolated whole-grant critique in a new StageRun/Attempt and map each defect to its earliest owning Stage.
 - Produce or update issue matrix, closure dossier, quality-diff refs, and residual risk refs.
-- Map rebuttal-style concerns to proposal deltas and closure criteria when reviewer feedback exists.
+- Return route-back and closure criteria; do not mutate proposal artifacts inside this Stage.
 
 ## Exit Conditions
 
@@ -28,6 +28,7 @@
 ## Independent Review And Gate Expectation
 
 - Independent review is mandatory for quality readiness unless a receipt explains an equivalent reviewer artifact.
+- The meta reviewer cannot inherit or resume an author, repairer, or prior reviewer thread; same-thread refinement is not Review.
 - Required gates: `quality`, `fundability`, and `authority_boundaries`.
 - Scorecards and quality-diff reports organize evidence; they do not independently decide ready.
 
