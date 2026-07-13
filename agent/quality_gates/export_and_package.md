@@ -30,15 +30,17 @@ This gate decides whether MAG can produce a local submission-ready package and e
 
 - `submission_ready_export_verdict` with `owner`, `export_verdict_ref`, `source_kind`, and `provenance_ref`; or
 - `submission_ready_package_receipt_recorded` with package refs and manual portal boundary; or
-- Typed blocker with exact missing artifact, quality issue, provenance gap, or portal action.
+- A candidate package or no-output diagnostic with exact missing artifact, quality issue, provenance gap, or manual portal action.
 
-## Blocker Shapes
+## Quality-Debt And Human-Gate Shapes
 
 - `quality_gate_unclosed`.
 - `required_artifact_missing`.
 - `export_provenance_missing`.
 - `manual_portal_action_required`.
 - `mechanical_export_ready_attempted`.
+
+Missing artifacts, quality debt, or provenance gaps close submission-ready/export-ready claims but do not block stage transition. Manual portal action is an explicit human gate. Typed blockers are reserved for unavailable executors, wrong-target identity/currentness, authority/safety/permission/credential boundaries, irreversible actions, or explicit human decisions.
 
 ## Pass Condition
 

@@ -28,10 +28,10 @@ This gate decides whether the proposal draft has passed independent reviewer-sty
 ## Required Output
 
 - `quality_verdict_ref` with critique refs, closure state, residual risk, and owner/provenance refs; or
-- Typed blocker with exact unclosed issues; or
+- A quality-debt or no-output diagnostic with exact unclosed issues and route-back/repair refs; or
 - MAG owner receipt ref accepting quality state.
 
-## Blocker Shapes
+## Quality-Debt Shapes
 
 - `review_artifact_missing`.
 - `major_issue_unclosed`.
@@ -39,6 +39,8 @@ This gate decides whether the proposal draft has passed independent reviewer-sty
 - `claim_source_mismatch`.
 - `rebuttal_plan_incomplete`.
 
+Typed blockers are reserved for unavailable executors, wrong-target identity/currentness, authority/safety/permission/credential boundaries, irreversible actions, or explicit human decisions. Unclosed review issues block quality-ready and package-ready claims, not stage transition.
+
 ## Pass Condition
 
-An independent reviewer could inspect the refs and understand why each material weakness is closed or why the stage remains blocked.
+An independent reviewer could inspect the refs and understand why each material weakness is closed or carried forward as explicit quality debt.

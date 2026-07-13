@@ -45,7 +45,7 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             },
             "governance_policy": {
                 "default_tranche": "direction_screening_to_argument_closure",
-                "preferred_stop_target": "fit_alignment_locked_before_outline",
+                "quality_checkpoint_hint": "fit_alignment_locked_before_outline",
                 "quality_bar": {
                     "minimum_score": 85,
                     "blocker_policy": "zero_blocking_issues_required",
@@ -55,9 +55,9 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "applicant_track_record_fit",
                     ),
                 },
-                "rollback_bias": {
-                    "default_rollback_stage": "argument_building",
-                    "trigger_mode": "mechanism_first_strict",
+                "route_back_advisory": {
+                    "suggested_route_back_stage": "argument_building",
+                    "advisory_trigger": "mechanism_first_strict",
                 },
                 "evidence_escalation_policy": {
                     "trigger": "mechanistic_claim_without_preliminary_support",
@@ -68,10 +68,10 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "preliminary_result",
                     ),
                 },
-                "controller_defaults": {
-                    "target_status": "submission_grade_candidate",
-                    "require_zero_blockers": True,
-                    "require_zero_evidence_gaps": True,
+                "ready_claim_policy": {
+                    "target_claim": "submission_grade_candidate",
+                    "requires_zero_blockers_for_claim": True,
+                    "requires_zero_evidence_gaps_for_claim": True,
                     "acceptance_criteria": (
                         "scientific_question_and_argument_chain_closed",
                         "applicant_fit_and_mechanistic_support_locked",
@@ -132,7 +132,7 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             },
             "governance_policy": {
                 "default_tranche": "aims_significance_innovation_loop",
-                "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+                "quality_checkpoint_hint": "ready_for_submission_after_significance_innovation_lock",
                 "quality_bar": {
                     "minimum_score": 78,
                     "blocker_policy": "critical_blockers_must_close",
@@ -142,9 +142,9 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "approach_feasibility",
                     ),
                 },
-                "rollback_bias": {
-                    "default_rollback_stage": "fit_alignment",
-                    "trigger_mode": "innovation_gap_sensitive",
+                "route_back_advisory": {
+                    "suggested_route_back_stage": "fit_alignment",
+                    "advisory_trigger": "innovation_gap_sensitive",
                 },
                 "evidence_escalation_policy": {
                     "trigger": "significance_or_innovation_claim_unbounded",
@@ -154,10 +154,10 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "preliminary_result",
                     ),
                 },
-                "controller_defaults": {
-                    "target_status": "near_submission_candidate",
-                    "require_zero_blockers": True,
-                    "require_zero_evidence_gaps": False,
+                "ready_claim_policy": {
+                    "target_claim": "near_submission_candidate",
+                    "requires_zero_blockers_for_claim": True,
+                    "requires_zero_evidence_gaps_for_claim": False,
                     "acceptance_criteria": (
                         "significance_and_innovation_risks_closed",
                         "exploratory_aims_and_translational_anchor_locked",
@@ -223,7 +223,7 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             },
             "governance_policy": {
                 "default_tranche": "discovery_framing_first",
-                "preferred_stop_target": "transformative_hypothesis_locked",
+                "quality_checkpoint_hint": "transformative_hypothesis_locked",
                 "quality_bar": {
                     "minimum_score": 80,
                     "blocker_policy": "transformative_value_and_execution_risk_balanced",
@@ -232,9 +232,9 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "execution_readiness",
                     ),
                 },
-                "rollback_bias": {
-                    "default_rollback_stage": "question_refinement",
-                    "trigger_mode": "novelty_execution_balance",
+                "route_back_advisory": {
+                    "suggested_route_back_stage": "question_refinement",
+                    "advisory_trigger": "novelty_execution_balance",
                 },
                 "evidence_escalation_policy": {
                     "trigger": "high_risk_claim_without_milestone_anchor",
@@ -244,10 +244,10 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "project",
                     ),
                 },
-                "controller_defaults": {
-                    "target_status": "near_submission_candidate",
-                    "require_zero_blockers": True,
-                    "require_zero_evidence_gaps": False,
+                "ready_claim_policy": {
+                    "target_claim": "near_submission_candidate",
+                    "requires_zero_blockers_for_claim": True,
+                    "requires_zero_evidence_gaps_for_claim": False,
                     "acceptance_criteria": (
                         "transformative_value_case_closed",
                         "milestone_and_execution_risks_bounded",
@@ -299,7 +299,7 @@ _FAMILY_PROFILE_PLACEHOLDERS: tuple[dict[str, Any], ...] = (
             },
             "governance_policy": {
                 "default_tranche": "discovery_framing_first",
-                "preferred_stop_target": "transformative_hypothesis_locked",
+                "quality_checkpoint_hint": "transformative_hypothesis_locked",
                 "quality_bar": {
                     "minimum_score": 80,
                     "blocker_policy": "transformative_value_and_execution_risk_balanced",
@@ -308,9 +308,9 @@ _FAMILY_PROFILE_PLACEHOLDERS: tuple[dict[str, Any], ...] = (
                         "execution_readiness",
                     ),
                 },
-                "rollback_bias": {
-                    "default_rollback_stage": "question_refinement",
-                    "trigger_mode": "novelty_execution_balance",
+                "route_back_advisory": {
+                    "suggested_route_back_stage": "question_refinement",
+                    "advisory_trigger": "novelty_execution_balance",
                 },
                 "evidence_escalation_policy": {
                     "trigger": "high_risk_claim_without_milestone_anchor",
@@ -320,10 +320,10 @@ _FAMILY_PROFILE_PLACEHOLDERS: tuple[dict[str, Any], ...] = (
                         "project",
                     ),
                 },
-                "controller_defaults": {
-                    "target_status": "near_submission_candidate",
-                    "require_zero_blockers": True,
-                    "require_zero_evidence_gaps": False,
+                "ready_claim_policy": {
+                    "target_claim": "near_submission_candidate",
+                    "requires_zero_blockers_for_claim": True,
+                    "requires_zero_evidence_gaps_for_claim": False,
                     "acceptance_criteria": (
                         "transformative_value_case_closed",
                         "milestone_and_execution_risks_bounded",

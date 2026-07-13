@@ -117,10 +117,10 @@ class WorkspaceSummaryTest(unittest.TestCase):
                     ],
                     "project_profile.grant_family_grammar.governance_policy.default_tranche": "aims_significance_innovation_loop",
                     "project_profile.grant_family_grammar.governance_policy.quality_bar.minimum_score": 78,
-                    "project_profile.grant_family_grammar.governance_policy.controller_defaults.target_status": "near_submission_candidate",
+                    "project_profile.grant_family_grammar.governance_policy.ready_claim_policy.target_claim": "near_submission_candidate",
                     "project_profile.family_grammar_trace.family_id": "nih_r21_translational_family_v1",
                     "project_profile.family_grammar_trace.review_grammar.review_focus": "significance_and_innovation_weighted_review",
-                    "project_profile.family_grammar_trace.governance_policy.rollback_bias.default_rollback_stage": "fit_alignment",
+                    "project_profile.family_grammar_trace.governance_policy.route_back_advisory.suggested_route_back_stage": "fit_alignment",
                 },
             ),
         )

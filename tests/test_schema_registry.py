@@ -107,7 +107,7 @@ class SchemaRegistryTest(unittest.TestCase):
             (
                 "common.schema.json",
                 "projectProfileFamilyGovernancePolicy",
-                {"default_tranche", "quality_bar", "rollback_bias", "controller_defaults"},
+                {"default_tranche", "quality_bar", "route_back_advisory", "ready_claim_policy"},
             ),
         )
         for schema_name, definition, required_fields in cases:

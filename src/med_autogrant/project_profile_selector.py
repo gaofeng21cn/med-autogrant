@@ -267,10 +267,10 @@ def _build_family_grammar_trace(preset: dict[str, Any]) -> dict[str, Any]:
 def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any]:
     quality_bar = governance_policy["quality_bar"]
     evidence_escalation_policy = governance_policy["evidence_escalation_policy"]
-    controller_defaults = governance_policy["controller_defaults"]
+    ready_claim_policy = governance_policy["ready_claim_policy"]
     return {
         "default_tranche": _normalize_string(governance_policy["default_tranche"]),
-        "preferred_stop_target": _normalize_string(governance_policy["preferred_stop_target"]),
+        "quality_checkpoint_hint": _normalize_string(governance_policy["quality_checkpoint_hint"]),
         "quality_bar": {
             "minimum_score": int(quality_bar["minimum_score"]),
             "blocker_policy": _normalize_string(quality_bar["blocker_policy"]),
@@ -280,9 +280,13 @@ def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any
                 if _normalize_string(item)
             ],
         },
-        "rollback_bias": {
-            "default_rollback_stage": _normalize_string(governance_policy["rollback_bias"]["default_rollback_stage"]),
-            "trigger_mode": _normalize_string(governance_policy["rollback_bias"]["trigger_mode"]),
+        "route_back_advisory": {
+            "suggested_route_back_stage": _normalize_string(
+                governance_policy["route_back_advisory"]["suggested_route_back_stage"]
+            ),
+            "advisory_trigger": _normalize_string(governance_policy["route_back_advisory"]["advisory_trigger"]),
+            "route_selection_owner": "codex_cli",
+            "binding": False,
         },
         "evidence_escalation_policy": {
             "trigger": _normalize_string(evidence_escalation_policy["trigger"]),
@@ -293,13 +297,18 @@ def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any
                 if _normalize_string(item)
             ],
         },
-        "controller_defaults": {
-            "target_status": _normalize_string(controller_defaults["target_status"]),
-            "require_zero_blockers": bool(controller_defaults["require_zero_blockers"]),
-            "require_zero_evidence_gaps": bool(controller_defaults["require_zero_evidence_gaps"]),
+        "ready_claim_policy": {
+            "target_claim": _normalize_string(ready_claim_policy["target_claim"]),
+            "requires_zero_blockers_for_claim": bool(
+                ready_claim_policy["requires_zero_blockers_for_claim"]
+            ),
+            "requires_zero_evidence_gaps_for_claim": bool(
+                ready_claim_policy["requires_zero_evidence_gaps_for_claim"]
+            ),
+            "blocks_stage_transition": False,
             "acceptance_criteria": [
                 _normalize_string(item)
-                for item in controller_defaults.get("acceptance_criteria", [])
+                for item in ready_claim_policy.get("acceptance_criteria", [])
                 if _normalize_string(item)
             ],
         },

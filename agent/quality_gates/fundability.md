@@ -30,16 +30,18 @@ This gate decides whether the locked grant task is competitively fundable enough
 ## Required Output
 
 - `fundability_verdict_ref` with owner, source refs, evidence summary, risk ranking, and proceed/repair/stop state; or
-- Typed blocker with exact missing evidence or fatal fit issue; or
+- A quality-debt or no-output diagnostic with exact missing evidence, rejected fit, or route-back recommendation; or
 - MAG owner receipt ref accepting the state.
 
-## Blocker Shapes
+## Quality-Debt Shapes
 
 - `fundability_evidence_insufficient`.
 - `call_fit_rejected`.
 - `fatal_review_risk`.
 - `strategy_memory_conflict`.
 - `mechanical_ready_attempted`.
+
+Typed blockers are reserved for unavailable executors, wrong-target identity/currentness, authority/safety/permission/credential boundaries, irreversible actions, or explicit human decisions. A rejected or weak call fit is a domain result and route-back input, not a stage-transition blocker.
 
 ## Pass Condition
 

@@ -647,19 +647,27 @@
         }
       }
     },
-    "projectProfileFamilyGovernanceRollbackBias": {
+    "projectProfileFamilyGovernanceRouteBackAdvisory": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "default_rollback_stage",
-        "trigger_mode"
+        "suggested_route_back_stage",
+        "advisory_trigger",
+        "route_selection_owner",
+        "binding"
       ],
       "properties": {
-        "default_rollback_stage": {
+        "suggested_route_back_stage": {
           "$ref": "#/$defs/nonEmptyString"
         },
-        "trigger_mode": {
+        "advisory_trigger": {
           "$ref": "#/$defs/nonEmptyString"
+        },
+        "route_selection_owner": {
+          "const": "codex_cli"
+        },
+        "binding": {
+          "const": false
         }
       }
     },
@@ -687,27 +695,31 @@
         }
       }
     },
-    "projectProfileFamilyGovernanceControllerDefaults": {
+    "projectProfileFamilyGovernanceReadyClaimPolicy": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "target_status",
-        "require_zero_blockers",
-        "require_zero_evidence_gaps"
+        "target_claim",
+        "requires_zero_blockers_for_claim",
+        "requires_zero_evidence_gaps_for_claim",
+        "blocks_stage_transition"
       ],
       "properties": {
-        "target_status": {
+        "target_claim": {
           "type": "string",
           "enum": [
             "submission_grade_candidate",
             "near_submission_candidate"
           ]
         },
-        "require_zero_blockers": {
+        "requires_zero_blockers_for_claim": {
           "type": "boolean"
         },
-        "require_zero_evidence_gaps": {
+        "requires_zero_evidence_gaps_for_claim": {
           "type": "boolean"
+        },
+        "blocks_stage_transition": {
+          "const": false
         },
         "acceptance_criteria": {
           "$ref": "#/$defs/stringList"
@@ -719,30 +731,30 @@
       "additionalProperties": false,
       "required": [
         "default_tranche",
-        "preferred_stop_target",
+        "quality_checkpoint_hint",
         "quality_bar",
-        "rollback_bias",
+        "route_back_advisory",
         "evidence_escalation_policy",
-        "controller_defaults"
+        "ready_claim_policy"
       ],
       "properties": {
         "default_tranche": {
           "$ref": "#/$defs/nonEmptyString"
         },
-        "preferred_stop_target": {
+        "quality_checkpoint_hint": {
           "$ref": "#/$defs/nonEmptyString"
         },
         "quality_bar": {
           "$ref": "#/$defs/projectProfileFamilyGovernanceQualityBar"
         },
-        "rollback_bias": {
-          "$ref": "#/$defs/projectProfileFamilyGovernanceRollbackBias"
+        "route_back_advisory": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceRouteBackAdvisory"
         },
         "evidence_escalation_policy": {
           "$ref": "#/$defs/projectProfileFamilyGovernanceEvidenceEscalationPolicy"
         },
-        "controller_defaults": {
-          "$ref": "#/$defs/projectProfileFamilyGovernanceControllerDefaults"
+        "ready_claim_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceReadyClaimPolicy"
         }
       }
     },

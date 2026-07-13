@@ -1,6 +1,23 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from med_autogrant.stage_control_plane_parts.ai_route_policy import build_mag_ai_route_policy
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_stage_manifest_gives_codex_unrestricted_declared_stage_routing() -> None:
+    manifest = json.loads((REPO_ROOT / "agent/stages/manifest.json").read_text(encoding="utf-8"))
+    policy = manifest["progress_first_policy"]
+    assert policy["route_selection_owner"] == "codex_cli"
+    assert policy["codex_may_advance_skip_repeat_reverse_or_route_back"] is True
+    assert policy["any_declared_stage_may_start_from_any_prior_stage_result"] is True
+    assert policy["declared_requires_are_quality_context_not_launch_gates"] is True
+    assert policy["next_stage_refs_are_recommendations_not_constraints"] is True
+    assert policy["no_output_or_failure_diagnostic_advances_stage"] is True
 
 
 def test_ai_route_policy_projects_declared_scope_without_program_route_authority() -> None:

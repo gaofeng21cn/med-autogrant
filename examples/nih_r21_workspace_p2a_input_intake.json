@@ -165,7 +165,7 @@
       },
       "governance_policy": {
         "default_tranche": "aims_significance_innovation_loop",
-        "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+        "quality_checkpoint_hint": "ready_for_submission_after_significance_innovation_lock",
         "quality_bar": {
           "minimum_score": 78,
           "blocker_policy": "critical_blockers_must_close",
@@ -175,9 +175,11 @@
             "approach_feasibility"
           ]
         },
-        "rollback_bias": {
-          "default_rollback_stage": "fit_alignment",
-          "trigger_mode": "innovation_gap_sensitive"
+        "route_back_advisory": {
+          "suggested_route_back_stage": "fit_alignment",
+          "advisory_trigger": "innovation_gap_sensitive",
+          "route_selection_owner": "codex_cli",
+          "binding": false
         },
         "evidence_escalation_policy": {
           "trigger": "significance_or_innovation_claim_unbounded",
@@ -187,10 +189,11 @@
             "preliminary_result"
           ]
         },
-        "controller_defaults": {
-          "target_status": "near_submission_candidate",
-          "require_zero_blockers": true,
-          "require_zero_evidence_gaps": false,
+        "ready_claim_policy": {
+          "target_claim": "near_submission_candidate",
+          "requires_zero_blockers_for_claim": true,
+          "requires_zero_evidence_gaps_for_claim": false,
+          "blocks_stage_transition": false,
           "acceptance_criteria": [
             "significance_and_innovation_risks_closed",
             "exploratory_aims_and_translational_anchor_locked"
@@ -247,7 +250,7 @@
       },
       "governance_policy": {
         "default_tranche": "aims_significance_innovation_loop",
-        "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+        "quality_checkpoint_hint": "ready_for_submission_after_significance_innovation_lock",
         "quality_bar": {
           "minimum_score": 78,
           "blocker_policy": "critical_blockers_must_close",
@@ -257,9 +260,11 @@
             "approach_feasibility"
           ]
         },
-        "rollback_bias": {
-          "default_rollback_stage": "fit_alignment",
-          "trigger_mode": "innovation_gap_sensitive"
+        "route_back_advisory": {
+          "suggested_route_back_stage": "fit_alignment",
+          "advisory_trigger": "innovation_gap_sensitive",
+          "route_selection_owner": "codex_cli",
+          "binding": false
         },
         "evidence_escalation_policy": {
           "trigger": "significance_or_innovation_claim_unbounded",
@@ -269,10 +274,11 @@
             "preliminary_result"
           ]
         },
-        "controller_defaults": {
-          "target_status": "near_submission_candidate",
-          "require_zero_blockers": true,
-          "require_zero_evidence_gaps": false,
+        "ready_claim_policy": {
+          "target_claim": "near_submission_candidate",
+          "requires_zero_blockers_for_claim": true,
+          "requires_zero_evidence_gaps_for_claim": false,
+          "blocks_stage_transition": false,
           "acceptance_criteria": [
             "significance_and_innovation_risks_closed",
             "exploratory_aims_and_translational_anchor_locked"

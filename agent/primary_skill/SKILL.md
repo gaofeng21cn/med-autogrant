@@ -42,7 +42,8 @@ Codex 可以前进、重复当前 stage，或回到 call intake、fundability st
 specific aims、proposal authoring、review/package 等任一 declared stage；静态
 transition table、schema、normalizer、validator 或 receipt 缺口无权否决该路由。
 质量债只关闭 fundable、grant-ready、submission-ready、export-ready、accepted
-与 production-ready 声明。只有零可消费 artifact、损坏不可读、权限/安全、
+与 production-ready 声明。零、损坏或不可读 artifact 物化 no-output/failure
+diagnostic 并继续；只有 executor unavailable、权限/安全/authority、wrong-target
 identity/currentness、不可逆 portal/write 操作或明确 owner/human authority 才能硬停。
 
 - OPL/Temporal 持有任务运行驻留、stage attempt lifecycle、queue/wakeup、retry/resume、attempt ledger、generated caller 与 App/workbench shell。

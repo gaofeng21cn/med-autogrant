@@ -21,7 +21,7 @@ This gate ensures grant strategy memory and owner receipts remain MAG-owned, bod
 ## Required Checks
 
 - Any memory used by a stage is cited by body-free ref and classified as accepted, rejected, stale, conflicting, or pending.
-- Any stage handoff or authority action has a receipt ref or typed blocker.
+- Any authority action has its required receipt ref or a real hard-boundary typed blocker. An ordinary stage handoff missing a receipt records quality debt and continues with the available artifact or a no-output diagnostic.
 - Receipt refs include owner, action/blocker kind, source refs, provenance, and next-stage effect.
 
 ## Blocker Shapes
@@ -29,7 +29,7 @@ This gate ensures grant strategy memory and owner receipts remain MAG-owned, bod
 - `memory_body_exposed`: output leaks body-bearing memory into repo source or OPL surface.
 - `memory_accept_reject_missing`: memory is used without MAG accept/reject state.
 - `memory_authority_overclaim`: memory refs are used as a fundability scorer, route controller, export/submission gate, or package readiness authority.
-- `receipt_ref_missing`: handoff or authority action lacks owner receipt or typed blocker.
+- `receipt_ref_missing`: handoff lacks an expected receipt and must close stronger claims; an authority action without its mandatory receipt remains unauthorized.
 - `receipt_claims_ready_mechanically`: receipt tries to declare verdict from runtime state.
 
 ## Pass Condition
@@ -39,5 +39,5 @@ Memory and receipts remain refs-first, MAG-owned, and limited to evidence/proven
 ## Reviewer Checklist
 
 - Can the next executor see which memory refs were accepted, rejected, stale, conflicting, or pending?
-- Does every handoff-critical decision have a receipt ref or typed blocker?
+- Does every handoff-critical decision have a receipt ref, quality-debt diagnostic, route-back, human gate, or true hard-boundary typed blocker?
 - Are receipt claims limited to authority acceptance rather than hidden readiness verdicts?

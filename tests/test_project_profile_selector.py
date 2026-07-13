@@ -68,7 +68,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         grammar = result["recommended_project_profile"]["grant_family_grammar"]
         self.assertEqual(grammar["family_id"], "wellcome_discovery_family_v1")
         self.assertEqual(grammar["review_grammar"]["review_focus"], "transformative_potential_and_execution_readiness")
-        self.assertEqual(grammar["governance_policy"]["controller_defaults"]["target_status"], "near_submission_candidate")
+        self.assertEqual(grammar["governance_policy"]["ready_claim_policy"]["target_claim"], "near_submission_candidate")
         workspace, _selection = build_initialized_intake_workspace(selection_input)
         self.assertEqual(
             workspace["project_profile"]["grant_family_grammar"]["family_id"],
@@ -102,7 +102,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "aims_significance_innovation_loop",
         )
         self.assertEqual(
-            grammar["governance_policy"]["preferred_stop_target"],
+            grammar["governance_policy"]["quality_checkpoint_hint"],
             "ready_for_submission_after_significance_innovation_lock",
         )
         self.assertEqual(
@@ -110,9 +110,15 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             78,
         )
         self.assertEqual(
-            grammar["governance_policy"]["controller_defaults"]["target_status"],
+            grammar["governance_policy"]["ready_claim_policy"]["target_claim"],
             "near_submission_candidate",
         )
+        self.assertFalse(grammar["governance_policy"]["ready_claim_policy"]["blocks_stage_transition"])
+        self.assertEqual(
+            grammar["governance_policy"]["route_back_advisory"]["route_selection_owner"],
+            "codex_cli",
+        )
+        self.assertFalse(grammar["governance_policy"]["route_back_advisory"]["binding"])
         workspace, _selection = build_initialized_intake_workspace(selection_input)
         self.assertEqual(
             workspace["project_profile"]["grant_family_grammar"]["family_id"],
@@ -196,7 +202,7 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "significance_and_innovation_claims_require_direct_grounding",
         )
         self.assertEqual(
-            family_trace["governance_policy"]["rollback_bias"]["default_rollback_stage"],
+            family_trace["governance_policy"]["route_back_advisory"]["suggested_route_back_stage"],
             "fit_alignment",
         )
         self.assertEqual(
@@ -221,15 +227,15 @@ class ProjectProfileSelectorTest(unittest.TestCase):
 
         self.assertEqual(nsfc_policy["default_tranche"], "direction_screening_to_argument_closure")
         self.assertEqual(nih_policy["default_tranche"], "aims_significance_innovation_loop")
-        self.assertEqual(nsfc_policy["preferred_stop_target"], "fit_alignment_locked_before_outline")
+        self.assertEqual(nsfc_policy["quality_checkpoint_hint"], "fit_alignment_locked_before_outline")
         self.assertEqual(
-            nih_policy["preferred_stop_target"],
+            nih_policy["quality_checkpoint_hint"],
             "ready_for_submission_after_significance_innovation_lock",
         )
-        self.assertEqual(nsfc_policy["rollback_bias"]["default_rollback_stage"], "argument_building")
-        self.assertEqual(nih_policy["rollback_bias"]["default_rollback_stage"], "fit_alignment")
-        self.assertEqual(nsfc_policy["controller_defaults"]["target_status"], "submission_grade_candidate")
-        self.assertEqual(nih_policy["controller_defaults"]["target_status"], "near_submission_candidate")
+        self.assertEqual(nsfc_policy["route_back_advisory"]["suggested_route_back_stage"], "argument_building")
+        self.assertEqual(nih_policy["route_back_advisory"]["suggested_route_back_stage"], "fit_alignment")
+        self.assertEqual(nsfc_policy["ready_claim_policy"]["target_claim"], "submission_grade_candidate")
+        self.assertEqual(nih_policy["ready_claim_policy"]["target_claim"], "near_submission_candidate")
         self.assertGreater(
             nsfc_policy["quality_bar"]["minimum_score"],
             nih_policy["quality_bar"]["minimum_score"],
