@@ -29,7 +29,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             (MAJOR_REFRAME_EXAMPLE_PATH, "critique", "question_refinement", "forward_progress"),
             (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "frozen", "freeze_ready"),
             (RE_REVIEW_EXAMPLE_PATH, "critique", "revision", "forward_progress"),
-            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "rollback_required"),
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "route_back_recommended"),
             (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "frozen", "submission_frozen"),
         )
 

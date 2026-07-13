@@ -51,30 +51,58 @@ class SubmissionReadyPackageTest(unittest.TestCase):
             self.assertIn("## 研究方案", package["submission_dossier"]["final_draft_markdown"])
             self.assertEqual(json.loads(paths["submission_ready_package"].read_text(encoding="utf-8")), package)
 
-    def test_incomplete_materials_and_missing_owner_export_verdict_fail_closed(self) -> None:
+    def test_incomplete_materials_record_quality_debt_without_submission_ready_claim(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
-            cases = (
-                (FROZEN, "missing_mandatory_sections"),
-                (self._complete_workspace(tmp_root, include_export_verdict=False), "missing_submission_ready_export_verdict"),
+            output_dir = tmp_root / "submission-ready"
+            payload = run_json_cli(
+                "package",
+                "submission-ready",
+                "--input",
+                str(self._workspace_with_export_verdict(tmp_root)),
+                "--output-dir",
+                str(output_dir),
+                "--format",
+                "json",
             )
-            for index, (input_path, error) in enumerate(cases):
-                with self.subTest(error=error):
-                    output_dir = tmp_root / f"submission-ready-{index}"
-                    exit_code, stdout, stderr = run_cli(
-                        "package",
-                        "submission-ready",
-                        "--input",
-                        str(input_path),
-                        "--output-dir",
-                        str(output_dir),
-                        "--format",
-                        "json",
-                    )
-                    self.assertEqual(exit_code, 1)
-                    self.assertEqual(stderr, "")
-                    self.assertIn(error, json.loads(stdout)["error"])
-                    self.assertFalse(output_dir.exists())
+            package = payload["submission_ready_package"]
+            issue_ids = {issue["issue_id"] for issue in package["blocking_issues"]}
+
+            self.assertFalse(package["submission_ready"])
+            self.assertEqual(package["readiness_verdict"], "blocked")
+            self.assertIn("missing_mandatory_sections", issue_ids)
+            self.assertTrue(output_dir.exists())
+
+    def test_missing_owner_export_verdict_fails_closed_before_writing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_root = Path(tmp_dir)
+            output_dir = tmp_root / "submission-ready"
+            exit_code, stdout, stderr = run_cli(
+                "package",
+                "submission-ready",
+                "--input",
+                str(self._complete_workspace(tmp_root, include_export_verdict=False)),
+                "--output-dir",
+                str(output_dir),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            self.assertIn(
+                "submission_ready_export_verdict: must be one of: object",
+                json.loads(stdout)["error"],
+            )
+            self.assertFalse(output_dir.exists())
+
+    @staticmethod
+    def _workspace_with_export_verdict(tmp_root: Path) -> Path:
+        workspace = deepcopy(json.loads(FROZEN.read_text(encoding="utf-8")))
+        workspace["submission_ready_export_verdict"] = EXPORT_VERDICT
+        output_path = tmp_root / "incomplete-with-export-verdict.json"
+        output_path.write_text(json.dumps(workspace, ensure_ascii=False), encoding="utf-8")
+        return output_path
 
     @staticmethod
     def _complete_workspace(tmp_root: Path, *, include_export_verdict: bool) -> Path:
