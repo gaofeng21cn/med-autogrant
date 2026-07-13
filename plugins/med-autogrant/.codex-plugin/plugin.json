@@ -1,6 +1,6 @@
 {
   "name": "med-autogrant",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Codex plugin shell for the Med Auto Grant grant-authoring domain app.",
   "author": {
     "name": "Gao Feng",
