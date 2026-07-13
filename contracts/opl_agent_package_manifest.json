@@ -34,12 +34,12 @@
     "user_install_action_count": 1
   },
   "lifecycle": {
-    "owner": "opl_connect",
+    "owner": "opl_packages",
     "module_id": "medautogrant",
     "commands": {
-      "install": "opl connect install --module medautogrant",
-      "update": "opl connect update --module medautogrant",
-      "remove": "opl connect remove --module medautogrant"
+      "install": "opl packages install mag",
+      "update": "opl packages update mag",
+      "uninstall": "opl packages uninstall mag"
     },
     "repo_local_installer_allowed": false,
     "repo_local_marketplace_mutation_allowed": false,

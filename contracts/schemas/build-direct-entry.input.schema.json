@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-person-lab.local/contracts/med-autogrant/actions/build-direct-entry.input.schema.json",
+  "title": "Build MAG direct entry input",
+  "description": "Inputs accepted by the OPL-hosted MAG proposal-authoring direct-entry action.",
+  "type": "object",
+  "required": [
+    "input_path",
+    "task_intent"
+  ],
+  "properties": {
+    "input_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_intent": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

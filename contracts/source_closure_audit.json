@@ -1,0 +1,98 @@
+{
+  "surface_kind": "standard_agent_source_closure_audit",
+  "version": "standard-agent-source-closure-audit.v1",
+  "entries": [
+    {
+      "file": "scripts/line_budget.py",
+      "symbol": "main",
+      "source_digest": "sha256:fa52c3aed8f3caea8a6c4c02863bf5ac04e68c1090b2c5c96b6749654b693e14",
+      "allowed_effects": [
+        "process_spawn"
+      ],
+      "role": "developer_tool",
+      "allowed_targets": [
+        "git"
+      ]
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_hosted_contract_bundle_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_artifact_bundle_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_revised_workspace_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_final_package_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_submission_ready_package_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/domain_runtime_parts/io.py",
+      "symbol": "_write_json_output",
+      "source_digest": "sha256:db9920493a179e40b725a0b1fe65d3a2c3e5be57d2d81002d63d4e07accef7f8",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+      "symbol": "write_domain_memory_receipt_evidence",
+      "source_digest": "sha256:b04cfccc3f84b3c2e1d66c74c52498036d95e047751e68f36ac850fd6579b5f3",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    },
+    {
+      "file": "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
+      "symbol": "write_receipt",
+      "source_digest": "sha256:32af2d65aaadb67e327338c366c121d25786cbac60c77424c9a0d3a359b232d3",
+      "allowed_effects": [
+        "filesystem_write"
+      ],
+      "role": "minimal_authority_function",
+      "allowed_targets": []
+    }
+  ]
+}

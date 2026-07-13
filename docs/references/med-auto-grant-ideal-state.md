@@ -139,7 +139,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 目标态只保留稳定分类，不保存某次 fresh audit 的完整 receipt 清单：
 
 - 已退役 / history-only：local runtime journal、attempt ledger、repo scheduler、upstream Hermes probe、Gateway/local-manager default path、flat alias、facade patch bridge 和 compatibility aggregate test。
-- OPL-owned generated/hosted target：product-entry、status/user-loop、runtime lifecycle、workbench、continuous reconciliation 与 observability。MAG 只保留 direct domain handler、八项 authority function 和必要 refs-only grant adapter。
+- OPL-owned generated/hosted target：product-entry、status/user-loop、runtime lifecycle、workbench、continuous reconciliation 与 observability。MAG 只保留 direct domain handler、七项 authority function 和必要 refs-only grant adapter。
 - MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、owner receipt signer、typed blocker 和 grant-native helper。
 
 具体日期的 cleanup audit、stale worktree 判断、receipt refs 和 lane closeout 进入 history/provenance；当前状态和剩余证据门回到 `docs/status.md`、active gap plan 与机器合同。

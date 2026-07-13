@@ -12,7 +12,7 @@ MAG retained product boundary：
 - workspace route/quality behavior
 - authoring/revision/package action
 - direct domain handler
-- eight authority functions
+- seven authority functions
 - owner receipt / typed blocker refs
 
 Product UI、status read model 或 generated caller不能写 grant truth、签 receipt、生成 verdict或声明 readiness。

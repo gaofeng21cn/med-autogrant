@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -12,14 +12,16 @@ from med_autogrant.workspace import WorkspaceStateError
 
 def test_domain_entry_dispatches_declared_runtime_target() -> None:
     runtime = Mock()
-    runtime.grant_quality_scorecard.return_value = {"ok": True}
-
-    payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-        {"command": "grant-quality-scorecard", "input_path": "/tmp/workspace.json"}
-    )
+    with patch(
+        "med_autogrant.domain_entry.grant_quality_scorecard",
+        return_value={"ok": True},
+    ) as target:
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {"command": "grant-quality-scorecard", "input_path": "/tmp/workspace.json"}
+        )
 
     assert payload == {"command": "grant-quality-scorecard", "ok": True}
-    runtime.grant_quality_scorecard.assert_called_once_with(input_path="/tmp/workspace.json")
+    target.assert_called_once_with(runtime, input_path="/tmp/workspace.json")
 
 
 def test_domain_entry_rejects_missing_required_field() -> None:
@@ -34,6 +36,7 @@ def test_domain_entry_contract_uses_command_catalog_as_single_source() -> None:
     commands = {item["command"]: item for item in contract["command_contracts"]}
 
     assert set(commands) == set(SERVICE_SAFE_DOMAIN_COMMANDS)
+    assert all(not hasattr(spec, "runtime_method") for spec in SERVICE_SAFE_DOMAIN_COMMANDS.values())
     assert contract["domain_agent_entry_spec"]["agent_id"] == "mag"
     assert "execute-critique-revision-loop" not in commands
     assert "execute-authoring-mainline-loop" not in commands

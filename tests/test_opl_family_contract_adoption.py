@@ -66,7 +66,7 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
     assert not (REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py").exists()
 
 
-def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
+def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     action_catalog = _read_json("contracts/action_catalog.json")
     pack_input = _read_json("contracts/pack_compiler_input.json")
@@ -102,9 +102,31 @@ def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
     }
     catalog_action_ids = {action["action_id"] for action in action_catalog["actions"]}
 
+    assert set(action_catalog) == {
+        "surface_kind",
+        "version",
+        "catalog_id",
+        "target_domain_id",
+        "owner",
+        "authority_boundary",
+        "actions",
+        "notes",
+    }
+    assert action_catalog["version"] == "family-action-catalog.v2"
+    assert catalog_action_ids == {
+        "open_grant_user_loop",
+        "build_direct_entry",
+        "build_submission_ready_package",
+    }
     assert manifest_action_ids == catalog_action_ids
     assert pack_input["source_refs"]["stage_manifest"] == "agent/stages/manifest.json"
     assert pack_input["source_refs"]["action_catalog"] == "contracts/action_catalog.json"
+    assert pack_input["source_refs"]["domain_handler_registry_source_ref"] == (
+        "contracts/domain_handler_registry.json"
+    )
+    assert pack_input["source_refs"]["source_closure_audit_source_ref"] == (
+        "contracts/source_closure_audit.json"
+    )
     assert {
         pack_input["source_refs"]["stage_manifest"],
         pack_input["source_refs"]["action_catalog"],
@@ -116,9 +138,47 @@ def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
     }
 
     for action in action_catalog["actions"]:
-        if action["effect"] == "read_only":
-            assert "stage_route" not in action
-            continue
+        assert set(action) == {
+            "action_id",
+            "title",
+            "summary",
+            "owner",
+            "effect",
+            "execution_binding",
+            "input_schema_ref",
+            "output_schema_ref",
+            "required_fields",
+            "optional_fields",
+            "workspace_locator_fields",
+            "human_gate_ids",
+            "stage_route",
+            "supported_surfaces",
+            "authority_boundary",
+        }
+        assert action["effect"] == "mutating"
+        assert action["execution_binding"] == {
+            "kind": "stage_binding",
+            "stage_manifest_ref": "agent/stages/manifest.json",
+        }
+        assert set(action["supported_surfaces"]) == {
+            "cli",
+            "mcp",
+            "skill",
+            "product_entry",
+            "openai",
+            "ai_sdk",
+        }
+        assert all(
+            "command" not in descriptor
+            for descriptor in action["supported_surfaces"].values()
+            if descriptor is not None
+        )
+        input_schema = _read_json(action["input_schema_ref"])
+        assert input_schema["additionalProperties"] is False
+        assert input_schema["required"] == action["required_fields"]
+        assert set(input_schema["properties"]) == set(
+            action["required_fields"] + action["optional_fields"]
+        )
 
         route = action["stage_route"]
         required = route["required_stage_refs"]
@@ -132,6 +192,88 @@ def test_mutating_action_stage_routes_match_manifest_action_coverage() -> None:
         assert set(route["terminal_stage_refs"]) <= set(routed_stages)
         assert all(target in next_stages[source] for source, target in zip(required, required[1:]))
         assert all(reachable(required[0], stage_id) for stage_id in optional)
+
+
+def test_hosted_action_registry_and_source_closure_contracts_are_closed() -> None:
+    descriptor = _read_json("contracts/domain_descriptor.json")
+    registry = _read_json("contracts/domain_handler_registry.json")
+    source_audit = _read_json("contracts/source_closure_audit.json")
+
+    assert registry == {
+        "surface_kind": "domain_handler_registry",
+        "version": "domain-handler-registry.v1",
+        "handlers": [],
+    }
+    assert set(source_audit) == {"surface_kind", "version", "entries"}
+    assert source_audit["surface_kind"] == "standard_agent_source_closure_audit"
+    assert source_audit["version"] == "standard-agent-source-closure-audit.v1"
+    entries = source_audit["entries"]
+    expected_entries = {
+        ("scripts/line_budget.py", "main"): (
+            "developer_tool",
+            ("process_spawn",),
+            ("git",),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_hosted_contract_bundle_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_artifact_bundle_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_revised_workspace_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_final_package_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_submission_ready_package_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_json_output"): (
+            "minimal_authority_function",
+            ("filesystem_write",),
+            (),
+        ),
+        (
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+            "write_domain_memory_receipt_evidence",
+        ): ("minimal_authority_function", ("filesystem_write",), ()),
+        (
+            "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
+            "write_receipt",
+        ): ("minimal_authority_function", ("filesystem_write",), ()),
+    }
+    assert len(entries) == len(expected_entries)
+    for entry in entries:
+        key = (entry["file"], entry["symbol"])
+        assert key in expected_entries
+        expected_role, expected_effects, expected_targets = expected_entries[key]
+        assert entry["role"] == expected_role
+        assert tuple(entry["allowed_effects"]) == expected_effects
+        assert tuple(entry["allowed_targets"]) == expected_targets
+        assert entry["source_digest"].startswith("sha256:")
+        assert len(entry["source_digest"]) == len("sha256:") + 64
+    assert descriptor["standard_contract_refs"]["domain_handler_registry"] == (
+        "contracts/domain_handler_registry.json"
+    )
+    assert descriptor["standard_contract_refs"]["source_closure_audit"] == (
+        "contracts/source_closure_audit.json"
+    )
+
+    interface = descriptor["standard_agent_interface"]
+    assert "entry_command_template" not in interface["workspace_binding"]
+    assert "manifest_command_template" not in interface["workspace_binding"]
+    assert "dispatch_command" not in interface["runtime"]
 
 
 def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> None:

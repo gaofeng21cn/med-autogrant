@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import copy
 import unittest
+from unittest.mock import patch
 
 from med_autogrant.funding_landscape_discovery import (  # noqa: E402
     OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
     OFFICIAL_NSFC_GUIDE_LIST_URL,
     OFFICIAL_NSFC_MEDICAL_GUIDE_URL,
+    _fetch_url_text,
     build_funding_landscape_cache,
     build_funding_landscape_diff_report,
     discover_funding_landscape,
@@ -160,4 +162,28 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
         self.assertEqual(
             next(item["brief_id"] for item in diff["changes"] if item["change_status"] == "withdrawn_or_not_listed"),
             "nih-r21-pa-24-001",
+        )
+
+    def test_official_fetch_delegates_transport_to_opl_with_exact_policy(self) -> None:
+        with patch(
+            "med_autogrant.funding_landscape_discovery.fetch_source_text",
+            return_value="official source",
+        ) as fetch_text:
+            result = _fetch_url_text(OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL)
+
+        self.assertEqual(result, "official source")
+        fetch_text.assert_called_once_with(
+            OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
+            allowed_urls=(
+                OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
+                OFFICIAL_NSFC_GUIDE_LIST_URL,
+                OFFICIAL_NSFC_MEDICAL_GUIDE_URL,
+            ),
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (compatible; MedAutoGrant/1.0; "
+                    "+https://www.nsfc.gov.cn/)"
+                )
+            },
+            timeout=20,
         )

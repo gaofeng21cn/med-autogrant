@@ -10,9 +10,11 @@ LEGACY_STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane
 LEGACY_STAGE_COMPILER_PATH = REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py"
 FIXED_OPL_CONTRACTS = {
     "action_catalog.json": "family_action_catalog",
+    "domain_handler_registry.json": "domain_handler_registry",
     "pack_compiler_input.json": "opl_domain_pack_compiler_input",
     "generated_surface_handoff.json": "opl_generated_surface_handoff",
     "functional_privatization_audit.json": "functional_privatization_audit",
+    "source_closure_audit.json": "standard_agent_source_closure_audit",
 }
 
 
