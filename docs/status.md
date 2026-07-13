@@ -54,7 +54,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 ## Structural Closeout
 
-- Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；`contracts/foundry_agent_series.json` 只保留 MAG identity/domain delta、canonical policy refs 和 `opl-generated:family_stage_control_plane` locator，不复制 OPL policy body。
+- Foundry consumer ABI基线：OPL `ddcc3242adac530b03f0a66bfe27a6a83bd835b5`、policy bundle `sha256:2abdcbe6e7c238dfc0bcbff2251fb0eda505647927446a6fbf47ae8b28253415`；`contracts/foundry_agent_series.json` 只保留 MAG identity/domain delta、canonical policy refs 和 `opl-generated:family_stage_control_plane` locator，不复制 OPL policy body。
 - OPL StageRun 持有 cycle、rollback、resume、dispatch、attempt ledger 与 output orchestration；MAG 只返回 domain refs、verdict、typed blocker 与 owner receipt。
 - Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=9`。
 - Allowed matches只覆盖 typed executor closeout adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 repo-local executor transport、unclassified generic behavior或 active private generic residue。

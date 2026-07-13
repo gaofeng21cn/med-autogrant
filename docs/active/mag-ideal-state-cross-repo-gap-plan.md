@@ -56,7 +56,7 @@ Machine boundary: 本文是人读完成度索引。机器真相归 current-progr
 
 - 2026-07-11 boundary convergence：OPL default-caller readback 为 `8/8` retirement gates closed、active deletion worklist `0`、retired default surface `4`，`cli/domain_handler` owner decision 为 `keep_as_authority_adapter_ref`；OPL conformance 继续满足 structural passed、matched generic behavior `0`、active private generic residue `0`。
 - MAG authoring/critique 全部使用 OPL Python `executor_client`；fresh full 为 `170 passed + 231 subtests`，production source executor transport 扫描为 `0`。这只证明结构与行为兼容，不代表 live grant、provider long-soak 或 production readiness。
-- Foundry consumer ABI基线：OPL `45eff07ab2a3db722c05cf64b50bab4597ac76c8`；MAG 只消费 canonical policy export、policy release pin 和 `opl-generated:family_stage_control_plane`，不复制 Foundry policy bodies。
+- Foundry consumer ABI基线：OPL `ddcc3242adac530b03f0a66bfe27a6a83bd835b5`、policy bundle `sha256:2abdcbe6e7c238dfc0bcbff2251fb0eda505647927446a6fbf47ae8b28253415`；MAG 只消费 canonical policy export、policy release pin 和 `opl-generated:family_stage_control_plane`，不复制 Foundry policy bodies。
 - OPL conformance：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=9`、`unclassified_generic_behavior_count=0`、`active_private_generic_residue_count=0`。
 - OPL route/Runway：action route与 refs-only `domain_output` ABI已进入 canonical main；真实 OMA create -> fixture-run -> query保留 selected action/route、object metadata与 output ref，OPL不读取 domain output body。
 - OPL full residual：唯一 `system-seed-manifest` 失败在 candidate/base均为相同 `10/11` 与 `2 != 0`，不属于 MAG/Runway候选回归；其余 focused、MAG integration、smoke与静态门通过。
