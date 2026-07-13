@@ -47,7 +47,7 @@ def test_line_budget_script_fails_for_new_oversized_tracked_files(tmp_path: Path
     assert "tmp_line_budget_case.py" in result.stdout
 
 
-def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
+def test_default_verify_collects_line_budget_in_fast_lane_once() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     verify_script = (repo_root / "scripts" / "verify.sh").read_text(encoding="utf-8")
     makefile = (repo_root / "Makefile").read_text(encoding="utf-8")
@@ -55,12 +55,11 @@ def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
     assert "python scripts/line_budget.py" not in verify_script
     assert 'lane="${1:-fast}"' in verify_script
     assert 'exec make "test-${lane}"' in verify_script
-    assert "$(MAKE) test-line-budget" in makefile
+    assert 'test-fast:\n\t$(PYTEST_CLEAN) -q -m "not meta and not regression"' in makefile
+    assert "test-line-budget:\n\t$(PYTHON_CLEAN) scripts/line_budget.py" in makefile
     assert "test-line-budget-strict:" in makefile
     assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" not in makefile
-    assert makefile.index("$(MAKE) test-line-budget") < makefile.index(
-        "$(PYTEST_CLEAN)"
-    )
+    assert "test-fast:\n\t$(MAKE) test-line-budget" not in makefile
 
 
 def test_line_budget_argparse_help_exposes_single_budget_gate() -> None:

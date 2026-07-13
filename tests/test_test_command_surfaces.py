@@ -36,8 +36,19 @@ def _tracked_files() -> set[str]:
 
 
 def test_makefile_lanes_route_to_repo_native_checks() -> None:
+    fast = _make_dry_run("test-fast")
+    meta = _make_dry_run("test-meta")
     structure = _make_dry_run("test-structure")
     structure_strict = _make_dry_run("test-structure-strict")
+
+    assert fast.count("run-pytest-clean.sh") == 1
+    assert 'not meta and not regression' in fast
+    assert "test-line-budget" not in fast
+    assert "test-cli-smoke" not in fast
+
+    assert "scripts/repo-hygiene.sh --fix" not in meta
+    assert "scripts/repo-hygiene.sh" in meta
+    assert "scripts/check_descriptor_contracts.py" in meta
 
     assert "scripts/check_descriptor_contracts.py" in structure
     assert "run-structural-quality-gate" not in structure

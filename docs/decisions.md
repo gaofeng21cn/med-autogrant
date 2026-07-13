@@ -52,3 +52,7 @@ Call/eligibility、证据与 claim、独立复审、package authority 和 human 
 ## D12 Standard Agent Interface 归 domain descriptor
 
 MAG workspace locator/topology、domain-handler dispatch argv、progress alias 与 routing signal 只在 `contracts/domain_descriptor.json#/standard_agent_interface` 声明，OPL 通过 current package source 托管消费。MAG 不恢复 product status/manifest materializer；这两个 command template 固定为 `null`，generated surface 继续归 OPL。
+
+## D13 默认验证只做一次 pytest 收集
+
+默认 `test-fast` 通过一个 marker 选择执行一次 pytest；line-budget 与 smoke case 保留在同一选集中，不再作为前置 pytest lane 重复启动。`test-meta` 只读检查 repository hygiene；任何 `--fix` 只允许通过显式 cleanup/fix 入口触发。

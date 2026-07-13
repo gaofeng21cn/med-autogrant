@@ -6,8 +6,6 @@ PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 test: test-fast
 
 test-fast:
-	$(MAKE) test-line-budget
-	$(MAKE) test-cli-smoke
 	$(PYTEST_CLEAN) -q -m "not meta and not regression"
 
 test-line-budget:
@@ -24,7 +22,6 @@ test-family:
 	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py -q
 
 test-meta:
-	./scripts/repo-hygiene.sh --fix
 	./scripts/repo-hygiene.sh
 	$(MAKE) test-descriptor-contracts
 	$(PYTEST_CLEAN) -q -m meta
