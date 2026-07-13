@@ -74,12 +74,9 @@ def test_domain_descriptor_declares_the_opl_hosted_standard_interface() -> None:
             "default_project_id": "grant-001",
             "required_locator_fields": ["input_path"],
             "optional_locator_fields": [],
-            "entry_command_template": None,
-            "manifest_command_template": None,
         },
         "runtime": {
             "runtime_domain_id": "medautogrant",
-            "dispatch_command": ["medautogrant", "domain-handler", "dispatch"],
             "registration_ref": (
                 "contracts/generated_surface_handoff.json#/domain_handler_targets"
             ),

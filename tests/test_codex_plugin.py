@@ -50,17 +50,17 @@ def test_repo_does_not_track_repo_local_codex_marketplace() -> None:
     assert not MARKETPLACE_PATH.exists()
 
 
-def test_codex_plugin_lifecycle_is_owned_by_opl_connect() -> None:
+def test_agent_package_lifecycle_is_owned_by_opl_packages() -> None:
     package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     lifecycle = package_manifest["lifecycle"]
 
     assert lifecycle == {
-        "owner": "opl_connect",
+        "owner": "opl_packages",
         "module_id": "medautogrant",
         "commands": {
-            "install": "opl connect install --module medautogrant",
-            "update": "opl connect update --module medautogrant",
-            "remove": "opl connect remove --module medautogrant",
+            "install": "opl packages install mag",
+            "update": "opl packages update mag",
+            "uninstall": "opl packages uninstall mag",
         },
         "repo_local_installer_allowed": False,
         "repo_local_marketplace_mutation_allowed": False,
@@ -110,8 +110,14 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     assert PRIMARY_SKILL_PATH.read_bytes() == PLUGIN_SKILL_PATH.read_bytes()
 
     for action in action_catalog["actions"]:
-        assert action["authority_boundary"]["descriptor_only"] is True
-        assert action["authority_boundary"]["public_runtime"] is False
+        assert action["execution_binding"] == {
+            "kind": "stage_binding",
+            "stage_manifest_ref": "agent/stages/manifest.json",
+        }
+        assert action["authority_boundary"]["domain_truth_owner"] == "med-autogrant"
+        assert action["authority_boundary"]["opl_role"] == "projection_consumer_only"
+        assert action["authority_boundary"]["write_policy"] == "no_domain_truth_writes"
+        assert action["authority_boundary"]["opl_can_write_domain_truth"] is False
         assert action["supported_surfaces"]["mcp"]["descriptor_only"] is True
         assert action["supported_surfaces"]["mcp"]["public_runtime"] is False
 

@@ -41,7 +41,6 @@ def add_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     *,
     name: str,
-    handler: Any,
     help_text: str,
     required_fields: tuple[str, ...] = (),
     optional_fields: tuple[str, ...] = (),
@@ -69,7 +68,6 @@ def add_command(
         dest="format",
         help="Alias for --format json.",
     )
-    command.set_defaults(handler=handler)
 
 
 def _add_field(container: Any, field: str, *, required: bool) -> None:

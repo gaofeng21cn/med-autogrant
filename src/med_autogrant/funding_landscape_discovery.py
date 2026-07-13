@@ -5,7 +5,8 @@ import html
 import re
 from datetime import UTC, datetime
 from typing import Any, Callable
-from urllib.request import Request, urlopen
+
+from opl_framework.source_transport import fetch_text as fetch_source_text
 
 FetchText = Callable[[str], str]
 
@@ -772,14 +773,18 @@ def _build_provenance_records(
 
 
 def _fetch_url_text(url: str) -> str:
-    request = Request(
+    return fetch_source_text(
         url,
+        allowed_urls=(
+            OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
+            OFFICIAL_NSFC_GUIDE_LIST_URL,
+            OFFICIAL_NSFC_MEDICAL_GUIDE_URL,
+        ),
         headers={
             "User-Agent": "Mozilla/5.0 (compatible; MedAutoGrant/1.0; +https://www.nsfc.gov.cn/)",
         },
+        timeout=20,
     )
-    with urlopen(request, timeout=20) as response:
-        return response.read().decode("utf-8", errors="ignore")
 
 
 def _fresh_metadata() -> dict[str, str]:

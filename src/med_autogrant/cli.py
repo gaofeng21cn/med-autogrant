@@ -4,7 +4,8 @@ import argparse
 import json
 import sys
 
-from med_autogrant.cli_parts import handlers, parser_adders
+from med_autogrant.cli_parts import parser_adders
+from med_autogrant.cli_parts.handlers import DIRECT_CLI_COMMANDS, dispatch_cli_command
 from med_autogrant.cli_rendering_parts import _render_text
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.public_cli import (
@@ -21,7 +22,7 @@ RETIRED_FLAT_COMMANDS = frozenset(INTERNAL_TO_PUBLIC_COMMAND)
 
 
 def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, object]:
-    input_path = getattr(args, "input_path", None)
+    input_path = vars(args).get("input_path")
     if not input_path:
         return {}
     try:
@@ -99,7 +100,6 @@ def build_parser() -> argparse.ArgumentParser:
             parser_adders.add_command(
                 subparsers,
                 name=name,
-                handler=handlers.handle_domain_command,
                 help_text=domain_spec.help_text,
                 required_fields=domain_spec.required_fields,
                 optional_fields=domain_spec.optional_fields,
@@ -107,11 +107,10 @@ def build_parser() -> argparse.ArgumentParser:
             )
             continue
 
-        direct_spec = handlers.DIRECT_CLI_COMMANDS[name]
+        direct_spec = DIRECT_CLI_COMMANDS[name]
         parser_adders.add_command(
             subparsers,
             name=name,
-            handler=handlers.handle_direct_command,
             help_text=direct_spec.help_text,
             required_fields=direct_spec.required_fields,
             optional_fields=direct_spec.optional_fields,
@@ -194,7 +193,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(resolved_argv)
     try:
-        payload = args.handler(args)
+        payload = dispatch_cli_command(args)
     except WorkspaceError as exc:
         if args.format == "json":
             workspace_context = _extract_workspace_context_for_error(args)

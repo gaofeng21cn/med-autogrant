@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import json
-from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 TARGET_DOMAIN_ID = "med-autogrant"
@@ -83,14 +81,6 @@ def _read_nonempty_string_list(value: Any, *, context: str) -> list[str]:
     if not isinstance(value, list):
         raise WorkspaceStateError(f"{context} 缺少合法字段: workspace_alerts")
     return [item for item in value if isinstance(item, str) and item.strip()]
-
-
-def _write_product_entry_output(output_path: Path, product_entry: dict[str, Any]) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        output_path.write_text(json.dumps(product_entry, ensure_ascii=False, indent=2), encoding="utf-8")
-    except OSError as exc:
-        raise WorkspaceFileError(f"写入 product entry 输出失败: {output_path}") from exc
 
 
 def _require_matching_top_level_identity(

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.domain_entry import MedAutoGrantDomainEntry
+from med_autogrant.domain_entry import dispatch_domain_request
 from med_autogrant.product_entry_parts.domain_handler_contract import (
     ALLOWED_ACTIONS,
     DOMAIN_HANDLER_ADAPTER_ID,
@@ -38,7 +38,7 @@ def build_domain_handler_export(
     input_path: str | Path,
 ) -> dict[str, Any]:
     resolved_input_path = Path(input_path).expanduser().resolve()
-    route_report = MedAutoGrantDomainEntry().dispatch(
+    route_report = dispatch_domain_request(
         {"command": "stage-route-report", "input_path": str(resolved_input_path)}
     )
     verification_checkpoint = _require_mapping(

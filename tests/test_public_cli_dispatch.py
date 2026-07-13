@@ -53,9 +53,9 @@ class PublicCliDispatchTest(unittest.TestCase):
 
             for argv, expected_request in cases:
                 with self.subTest(command=expected_request["command"]), patch(
-                    "med_autogrant.domain_entry.MedAutoGrantDomainEntry"
-                ) as entry_class:
-                    entry_class.return_value.dispatch.return_value = {
+                    "med_autogrant.cli_parts.handlers.dispatch_domain_request"
+                ) as dispatch:
+                    dispatch.return_value = {
                         "ok": True,
                         "command": expected_request["command"],
                     }
@@ -63,7 +63,7 @@ class PublicCliDispatchTest(unittest.TestCase):
 
                     self.assertEqual((exit_code, stderr), (0, ""))
                     self.assertEqual(json.loads(stdout)["command"], expected_request["command"])
-                    entry_class.return_value.dispatch.assert_called_once_with(expected_request)
+                    dispatch.assert_called_once_with(expected_request)
 
     def test_discover_funding_public_cli_smoke(self) -> None:
         exit_code, stdout, stderr = run_cli(

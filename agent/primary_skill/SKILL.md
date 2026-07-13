@@ -30,7 +30,7 @@ Domain handler dispatch 只允许三项 MAG-owned action：
 - `domain-memory/decide`
 - `stage-attempt/closeout`
 
-其 export 返回 body-free workspace identity/locator，并携带 action catalog、stage control plane、owner receipt contract、三项 allowed action、八项 minimal authority refs、generated-surface handoff ref，以及 caller/false-authority boundary；不包含 grant、memory、artifact 或 package body，也不是 scheduler、queue、session、status 或 workbench runtime。
+其 export 返回 body-free workspace identity/locator，并携带 action catalog、stage control plane、owner receipt contract、三项 allowed action、七项 minimal authority refs、generated-surface handoff ref，以及 caller/false-authority boundary；不包含 grant、memory、artifact 或 package body，也不是 scheduler、queue、session、status 或 workbench runtime。
 
 ## OPL 边界
 
