@@ -8,7 +8,7 @@ This knowledge boundary defines what MAG owner receipts prove during Codex-first
 
 - A MAG-owned stage action, blocker, handoff, no-regression result, memory decision, lifecycle ref, safe action, or package ref was accepted by the domain authority boundary.
 - The output has an owner, source refs, provenance, timestamp/runtime evidence ref, and next-stage effect.
-- A typed blocker is legitimate and should stop or redirect a stage.
+- A typed blocker is legitimate only for a real hard boundary; ordinary quality gaps use diagnostics and route recommendations.
 
 ## What Receipts Cannot Prove
 
@@ -36,7 +36,7 @@ This knowledge boundary defines what MAG owner receipts prove during Codex-first
 
 ## Blocker Expectations
 
-If a receipt is missing, malformed, body-bearing, or mechanically claims readiness, the stage must return a typed blocker rather than proceed.
+If a receipt is missing, malformed, body-bearing, or mechanically claims readiness, reject the ready claim, record quality debt, and proceed with a diagnostic. Use a typed blocker only when the defect creates wrong-target, authority, safety, irreversible-action, unavailable-executor, or explicit human-decision risk.
 
 ## Review Questions
 

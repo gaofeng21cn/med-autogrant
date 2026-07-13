@@ -15,7 +15,7 @@
 ## Exit Conditions
 
 - `proposal_draft_reviewable` exists with draft refs and critique targets; or
-- A typed blocker records missing accepted structure, required source, format conflict, artifact authority issue, or unsupported claim pressure; or
+- A quality-debt diagnostic records missing accepted structure, required source, format conflict, or unsupported claim pressure; a typed blocker is reserved for artifact authority or another real hard boundary; or
 - A MAG owner receipt signs draft/ref acceptance.
 
 ## Handoff

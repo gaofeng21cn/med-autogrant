@@ -20,6 +20,12 @@ from med_autogrant.authoring_executor import (  # noqa: E402
     build_freeze_execution_document,
     build_outline_execution_document,
     build_question_refinement_execution_document,
+    build_strategy_authoring_execution_document,
+)
+from med_autogrant.authoring_executor_parts import (  # noqa: E402
+    _build_argument_building_prompt,
+    _build_direction_screening_prompt,
+    _build_drafting_prompt,
 )
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
 from opl_framework.executor_client import run_agent_execution_request  # noqa: E402
@@ -72,6 +78,76 @@ def _rewind_critique(
 
 
 class AuthoringExecutorTest(unittest.TestCase):
+    def test_strategy_authoring_projects_six_checkpoints_from_one_observed_default_invocation(self) -> None:
+        canonical = _load(CRITIQUE_EXAMPLE_PATH)
+        direction = copy.deepcopy(canonical["direction_hypotheses"][0])
+        direction["required_evidence_ids"] = []
+        question = copy.deepcopy(canonical["scientific_question_cards"][0])
+        question["linked_evidence_ids"] = []
+        argument = copy.deepcopy(canonical["argument_chains"][0])
+        argument["linked_evidence_ids"] = []
+        fit = copy.deepcopy(canonical["applicant_fit_mappings"][0])
+        fit["linked_evidence_ids"] = []
+        draft = copy.deepcopy(canonical["application_drafts"][0])
+        for item in [*draft["outline"], *draft["sections"]]:
+            item["linked_object_ids"] = []
+        response = {
+            "selected_direction_index": 0,
+            "direction_hypotheses": [direction],
+            "scientific_question_card": question,
+            "argument_chain": argument,
+            "applicant_fit_mapping": fit,
+            "application_draft": draft,
+        }
+        calls = []
+
+        def executor_runner(request: dict[str, Any], *, timeout_seconds: float) -> dict[str, Any]:
+            calls.append((request, timeout_seconds))
+            return _executor_receipt("strategy_authoring", response)
+
+        payload = build_strategy_authoring_execution_document(
+            document=_load(INPUT_EXAMPLE_PATH),
+            input_path=INPUT_EXAMPLE_PATH,
+            executor_runner=executor_runner,
+        )
+
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(payload["lifecycle_stage"], "drafting")
+        execution = payload["strategy_authoring_execution"]
+        self.assertEqual(execution["observed_codex_invocation_count"], 1)
+        self.assertFalse(execution["invocation_count_is_success_condition"])
+        self.assertEqual(execution["checkpoint_projection_mode"], "deterministic_contract_projection")
+        self.assertTrue(execution["attempt_retry_and_route_back_allowed"])
+        self.assertEqual(
+            payload["strategy_authoring_execution"]["checkpoint_routes"],
+            ["direction_screening", "question_refinement", "argument_building", "fit_alignment", "outline", "drafting"],
+        )
+        self.assertTrue(validate_workspace_document(payload["strategy_authoring_workspace"]).ok)
+
+    def test_authoring_prompts_keep_dependencies_without_fixed_cognitive_recipe(self) -> None:
+        canonical = _load(CRITIQUE_EXAMPLE_PATH)
+        direction_prompt = _build_direction_screening_prompt(input_path=INPUT_EXAMPLE_PATH, known_ids=[])
+        argument_prompt = _build_argument_building_prompt(
+            input_path=QUESTION_EXAMPLE_PATH,
+            selected_direction=canonical["direction_hypotheses"][0],
+            selected_question=canonical["scientific_question_cards"][0],
+            known_ids=[],
+        )
+        drafting_prompt = _build_drafting_prompt(
+            input_path=CRITIQUE_EXAMPLE_PATH,
+            active_draft=canonical["application_drafts"][0],
+            selected_question=canonical["scientific_question_cards"][0],
+            active_argument_chain=canonical["argument_chains"][0],
+            active_fit_mapping=canonical["applicant_fit_mappings"][0],
+            known_ids=[],
+        )
+
+        self.assertIn("use multiple candidates only when comparison improves the decision", direction_prompt)
+        self.assertNotIn("2 to 5 objects", direction_prompt)
+        self.assertIn("interdependent professional judgments", argument_prompt)
+        self.assertNotIn("write significance first", argument_prompt)
+        self.assertIn("unless human approval has frozen it", drafting_prompt)
+
     def test_authoring_stages_materialize_only_their_domain_delta(self) -> None:
         canonical = _load(CRITIQUE_EXAMPLE_PATH)
         direction = copy.deepcopy(canonical["direction_hypotheses"][0])

@@ -18,7 +18,7 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 - Fundability may accept, reject, or mark memory stale based on current call fit and reviewer risk.
 - Aims and authoring may use accepted memory as strategy guidance, never as substitute evidence.
 - Review may use memory to detect repeated weaknesses or prior closure patterns.
-- Missing strategy memory does not block ordinary stage work by default. Memory conflict becomes a hard blocker only when it conflicts with the locked call, eligibility, current source evidence, owner receipt, or explicit owner gate.
+- Missing or conflicting strategy memory never blocks ordinary stage work. Record it as stale/rejected context; only a wrong-target identity/currentness, authority/safety, irreversible action, or explicit owner gate can hard-stop.
 
 ## Accept/Reject Standard
 

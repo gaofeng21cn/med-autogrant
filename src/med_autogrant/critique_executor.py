@@ -29,12 +29,7 @@ SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     HERMES_AGENT_EXECUTOR_KIND,
 )
 
-EXECUTABLE_REVISION_ACTION_TYPES = (
-    "rebuild_argument",
-    "add_evidence",
-    "rewrite_section",
-    "tighten_fit",
-)
+EXECUTABLE_REVISION_OPERATIONS = ("replace_draft_section", "replace_draft_sections")
 
 
 def build_critique_execution_document(
@@ -271,11 +266,10 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             f"- current draft version_label is {context['draft_version_label']}",
             f"- allowed draft section keys: {json.dumps(context['section_keys'], ensure_ascii=False)}",
             f"- known object ids for required_input_ids / linked_object_ids: {json.dumps(context['known_ids'], ensure_ascii=False)}",
-            "- use only executable revision actions: rebuild_argument, add_evidence, rewrite_section, tighten_fit",
-            "- every revision item must target an existing section via target_ref=section:<section_key>",
-            "- every revision item must include mutation_payload.operation=replace_draft_section",
-            "- every mutation_payload.linked_object_ids must cover required_input_ids and use only known ids",
-            f"- mentor critique weights must be {weight_split}",
+            "- choose repair actions and scope from the actual diagnosis; cross-section restructuring and upstream route-back are allowed when the argument cannot be repaired locally",
+            "- target_ref and required_input_ids must make every proposed repair traceable to the affected artifact and known evidence",
+            "- every planned repair needs a directly applicable mutation_payload; choose section scope or whole-draft sections scope from the diagnosis and attached schema",
+            f"- preserve these profile reporting weights in the schema fields: {weight_split}",
             (
                 f"- mentor_critique.{weighted_score_fields} must each be "
                 "an object with exactly weight, score, judgment"
@@ -292,8 +286,8 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             ),
             "",
             "Quality goal:",
-            "- produce a mentor-style critique that sharpens necessity/scientific value, applicant fit, and feasibility",
-            "- produce a revision plan that is directly executable by the deterministic section-level revision pass",
+            "- produce an independent reviewer judgment over the whole proposal, not a weighted checklist traversal",
+            "- produce the smallest coherent repair plan; prefer cross-section coherence over a fixed mutation taxonomy",
         ]
     )
 
@@ -460,27 +454,18 @@ def _validate_revision_item(
             lifecycle_stage=lifecycle_stage,
         )
     action_type = item.get("action_type")
-    if action_type not in EXECUTABLE_REVISION_ACTION_TYPES:
+    if not isinstance(action_type, str) or not action_type.strip():
         raise WorkspaceStateError(
-            f"critique pass 只允许输出可执行 revision action_type，收到 {action_type!r}。",
+            "critique pass 的 revision item.action_type 必须为非空专业修订标签。",
             errors=[],
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
     target_ref = item.get("target_ref")
-    if not isinstance(target_ref, str) or not target_ref.startswith("section:"):
+    if not isinstance(target_ref, str) or not target_ref.strip():
         raise WorkspaceStateError(
-            "critique pass 的 revision item.target_ref 必须形如 section:<section_key>。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    section_key = target_ref.split(":", 1)[1]
-    if section_key not in section_keys:
-        raise WorkspaceStateError(
-            f"critique pass 不能把 revision item 指向不存在的 section: {section_key}",
+            "critique pass 的 revision item.target_ref 必须为非空 artifact ref。",
             errors=[],
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
@@ -495,22 +480,31 @@ def _validate_revision_item(
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
-    if mutation_payload.get("operation") != "replace_draft_section":
+    operation = mutation_payload.get("operation")
+    if operation not in EXECUTABLE_REVISION_OPERATIONS:
         raise WorkspaceStateError(
-            "critique pass 的 mutation_payload.operation 必须为 replace_draft_section。",
+            f"critique pass 的 mutation_payload.operation 必须属于 {EXECUTABLE_REVISION_OPERATIONS}。",
             errors=[],
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
-    if mutation_payload.get("target_section_key") != section_key:
-        raise WorkspaceStateError(
-            "critique pass 的 mutation_payload.target_section_key 必须与 target_ref 一致。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
+    if operation == "replace_draft_section":
+        if not target_ref.startswith("section:"):
+            raise WorkspaceStateError("section repair 的 target_ref 必须形如 section:<section_key>。")
+        section_key = target_ref.split(":", 1)[1]
+        if section_key not in section_keys:
+            raise WorkspaceStateError(f"critique pass 不能把 revision item 指向不存在的 section: {section_key}")
+        if mutation_payload.get("target_section_key") != section_key:
+            raise WorkspaceStateError("mutation_payload.target_section_key 必须与 section target_ref 一致。")
+        if not isinstance(mutation_payload.get("replacement_text"), str) or not mutation_payload["replacement_text"].strip():
+            raise WorkspaceStateError("section repair 必须提供 replacement_text。")
+    else:
+        if not target_ref.startswith("draft:"):
+            raise WorkspaceStateError("whole-draft repair 的 target_ref 必须形如 draft:<draft_id>。")
+        replacement_sections = mutation_payload.get("replacement_sections")
+        if not isinstance(replacement_sections, list) or not replacement_sections:
+            raise WorkspaceStateError("whole-draft repair 必须提供非空 replacement_sections。")
     linked_object_ids = mutation_payload.get("linked_object_ids")
     required_input_ids = item.get("required_input_ids")
     if not isinstance(linked_object_ids, list) or not isinstance(required_input_ids, list):

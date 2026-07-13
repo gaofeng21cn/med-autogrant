@@ -149,6 +149,7 @@
         },
         "canonical_export_surfaces": {
           "const": [
+            "execute-strategy-authoring-pass",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",
@@ -375,6 +376,7 @@
             "next-step",
             "critique-summary",
             "stage-route-report",
+            "execute-strategy-authoring-pass",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",

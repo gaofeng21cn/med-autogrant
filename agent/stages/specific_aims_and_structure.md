@@ -15,7 +15,7 @@
 ## Exit Conditions
 
 - `specific_aims_structure_accepted` exists with aims/structure refs; or
-- A repair blocker records missing fundability handoff, route conflict, unsupported core claim, incomplete section map, or unmitigated review risk; or
+- A quality-debt diagnostic and route-back recommendation records missing fundability handoff, route conflict, unsupported core claim, incomplete section map, or unmitigated review risk; or
 - A MAG owner receipt signs aims acceptance.
 
 ## Handoff

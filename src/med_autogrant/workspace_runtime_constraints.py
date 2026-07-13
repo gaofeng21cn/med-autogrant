@@ -145,11 +145,11 @@ def _validate_direction_count(
     if not requirements.direction_count:
         return
     direction_count = len(document.get("direction_hypotheses", []))
-    if direction_count < 2 or direction_count > 5:
+    if direction_count < 1:
         issues.append(
             ValidationIssue(
                 path="direction_hypotheses",
-                message="P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。",
+                message="P2.A 方向阶段必须保留至少一个可论证 DirectionHypothesis。",
             )
         )
 

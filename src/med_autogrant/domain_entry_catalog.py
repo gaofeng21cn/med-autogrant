@@ -70,6 +70,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "stage-route-report": DomainEntryCommandSpec(
         "stage_route_report", ("input_path",), help_text="按固定 stage route 聚合输出当前 workspace 状态。"
     ),
+    "execute-strategy-authoring-pass": DomainEntryCommandSpec(
+        "execute_strategy_authoring_pass",
+        ("input_path", "output_path"),
+        help_text="默认 attempt 用一次 Codex 调用共同收敛方向、问题、论证、fit、提纲与 reviewable draft；失败或反馈仍可重试或 route back。",
+    ),
     "execute-direction-screening-pass": DomainEntryCommandSpec(
         "execute_direction_screening_pass",
         ("input_path", "output_path"),
@@ -114,7 +119,7 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "execute-revision-pass": DomainEntryCommandSpec(
         "execute_revision_pass",
         ("input_path", "output_path"),
-        help_text="按冻结的 section-level deterministic contract 执行 revision pass。",
+        help_text="应用 AI 明确给出的局部或 whole-draft revision mutation。",
     ),
     "execute-freeze-pass": DomainEntryCommandSpec(
         "execute_freeze_pass",

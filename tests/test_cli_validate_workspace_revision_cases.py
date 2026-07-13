@@ -29,7 +29,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             (MAJOR_REFRAME_EXAMPLE_PATH, "critique", "question_refinement", "forward_progress"),
             (READY_FOR_SUBMISSION_EXAMPLE_PATH, "critique", "frozen", "freeze_ready"),
             (RE_REVIEW_EXAMPLE_PATH, "critique", "revision", "forward_progress"),
-            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "route_back_recommended"),
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "critique", "argument_building", "rollback_required"),
             (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen", "frozen", "submission_frozen"),
         )
 
@@ -39,7 +39,6 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                 self.assertTrue(payload["ok"])
                 self.assertEqual(payload["lifecycle_stage"], stage)
                 self.assertEqual(payload["route"]["next_step"]["recommended_stage"], recommended_stage)
-                self.assertEqual(payload["semantic_route_owner"], "codex_cli")
                 self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], checkpoint)
 
         rereview = self.run_workspace_json("route-report", RE_REVIEW_EXAMPLE_PATH)
@@ -153,12 +152,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(critique["reviewed_revision_plan_id"], reviewed_plan_id)
                     self.assertEqual(critique["draft_status"], "revised")
                     self.assertEqual(critique["draft_version_label"], version)
-                    self.assertEqual(route["semantic_route_owner"], "codex_cli")
-                    self.assertTrue(
-                        route["route"]["next_step"]["ai_route_policy"][
-                            "advance_repeat_skip_or_route_back_allowed"
-                        ]
-                    )
+                    self.assertEqual(route["route"]["next_step"]["recommended_stage"], "critique")
                     self.assertEqual(route["verification_checkpoint"]["checkpoint_status"], "forward_progress")
                     self.assertEqual(
                         route["route"]["critique_summary"]["reviewed_revision_plan_id"],

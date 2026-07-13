@@ -16,7 +16,7 @@
 
 - `grant_review_gate_receipt_recorded` exists with quality verdict refs backed by critique/closure evidence; or
 - A `route_back_ref` records an ordinary critique, claim/source, major-issue, or rebuttal repair target; or
-- A typed blocker records a real semantic-evidence or authority gap with no legal repair route; or
+- A quality-debt diagnostic records semantic-evidence gaps and may recommend route-back; a typed blocker is reserved for a real authority, safety, identity, irreversible-action, executor, or human-decision boundary; or
 - A MAG owner receipt signs quality gate state.
 
 ## Handoff

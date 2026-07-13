@@ -29,6 +29,7 @@ def _mutate(payload: dict[str, Any], path: tuple[str | int, ...], value: object)
 class FinalPackageTest(unittest.TestCase):
     def test_final_package_accepts_only_final_gate_states(self) -> None:
         cases = (
+            (FREEZE_READY, "critique", "freeze_ready", "revised", False),
             (FROZEN, "frozen", "submission_frozen", "frozen", True),
         )
         for input_path, lifecycle_stage, checkpoint, draft_status, presubmission_frozen in cases:
@@ -97,13 +98,22 @@ class FinalPackageTest(unittest.TestCase):
                 )
                 self.assertEqual(json.loads(package_path.read_text(encoding="utf-8")), final_package)
 
-    def test_nonfinal_checkpoint_and_output_identity_fail_closed(self) -> None:
+    def test_nonfinal_checkpoint_materializes_quality_debt_but_identity_mismatch_fails_closed(self) -> None:
         for input_path in (FORWARD,):
             with self.subTest(input_path=input_path.name), tempfile.TemporaryDirectory() as tmp_dir:
                 bundle_path = Path(tmp_dir) / "bundle.json"
                 package_path = Path(tmp_dir) / "final.json"
                 self._build_bundle(input_path, bundle_path)
-                self._assert_failure(input_path, bundle_path, package_path, "checkpoint_status")
+                payload = self._build_final(input_path, bundle_path, package_path)
+                self.assertTrue(payload["ok"])
+                self.assertEqual(payload["status"], "completed_with_quality_debt")
+                self.assertTrue(payload["next_stage_may_start"])
+                self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
+                self.assertIn(
+                    "checkpoint_status_not_final",
+                    " ".join(payload["quality_debt"]["reasons"]),
+                )
+                self.assertTrue(package_path.exists())
 
         for field in ("grant_run_id", "workspace_id", "draft_id"):
             with self.subTest(output_identity_field=field), tempfile.TemporaryDirectory() as tmp_dir:

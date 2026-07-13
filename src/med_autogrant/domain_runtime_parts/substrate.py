@@ -80,6 +80,7 @@ class MagDomainRuntime:
     build_hosted_contract_bundle = package_surface.build_hosted_contract_bundle
     build_submission_ready_package = package_surface.build_submission_ready_package
     execute_direction_screening_pass = handoff_surfaces.execute_direction_screening_pass
+    execute_strategy_authoring_pass = handoff_surfaces.execute_strategy_authoring_pass
     execute_question_refinement_pass = handoff_surfaces.execute_question_refinement_pass
     execute_argument_building_pass = handoff_surfaces.execute_argument_building_pass
     execute_fit_alignment_pass = handoff_surfaces.execute_fit_alignment_pass

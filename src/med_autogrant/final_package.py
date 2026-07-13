@@ -12,7 +12,6 @@ from med_autogrant.domain_runtime_parts.io import (
 )
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.workspace_projection_parts import _require_workspace_context
-from med_autogrant.workspace_types import WorkspaceStateError
 
 
 FINAL_PACKAGE_VERSION = 1
@@ -32,27 +31,19 @@ def build_final_package_document(
     route_report = build_stage_route_report(document)
     verification_checkpoint = route_report["verification_checkpoint"]
     checkpoint_status = verification_checkpoint["checkpoint_status"]
-    if checkpoint_status not in ALLOWED_CHECKPOINT_STATUSES:
-        raise WorkspaceStateError(
-            (
-                "checkpoint_status 必须为 freeze_ready 或 submission_frozen，"
-                f"当前为 {checkpoint_status}。"
-            ),
-            errors=[],
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-
     draft_status = active_draft.get("status")
-    if draft_status not in {"revised", "frozen"}:
-        raise WorkspaceStateError(
-            "final package 只允许基于 revised / frozen 的 active draft 构建。",
-            errors=[],
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
+    quality_debt_reasons = [
+        *(
+            [f"checkpoint_status_not_final:{checkpoint_status}"]
+            if checkpoint_status not in ALLOWED_CHECKPOINT_STATUSES
+            else []
+        ),
+        *(
+            [f"active_draft_not_revised_or_frozen:{draft_status}"]
+            if draft_status not in {"revised", "frozen"}
+            else []
+        ),
+    ]
 
     return {
         "package_version": FINAL_PACKAGE_VERSION,
@@ -61,6 +52,23 @@ def build_final_package_document(
         "workspace_id": document["workspace_id"],
         "draft_id": active_draft["draft_id"],
         "lifecycle_stage": document["lifecycle_stage"],
+        "status": (
+            "completed_with_quality_debt"
+            if quality_debt_reasons
+            else "completed"
+        ),
+        "quality_debt": (
+            {
+                "status": "recorded_non_blocking",
+                "reasons": quality_debt_reasons,
+                "blocks_stage_transition": False,
+                "blocks_submission_ready_claim": True,
+                "next_stage_may_start": True,
+                "semantic_route_owner": "codex_cli",
+            }
+            if quality_debt_reasons
+            else None
+        ),
         "freeze_manifest": {
             "draft_version_label": active_draft["version_label"],
             "draft_status": draft_status,

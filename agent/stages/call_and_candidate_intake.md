@@ -15,7 +15,7 @@
 ## Exit Conditions
 
 - `call_candidate_intake_ready` exists with source refs sufficient for fundability review; or
-- A typed blocker records missing call identity, eligibility, source material, conflicting constraints, or forbidden write pressure; or
+- A quality-debt diagnostic records missing call identity, eligibility, source material, or conflicting constraints; a typed blocker is reserved for forbidden write or another real hard boundary; or
 - A MAG owner receipt signs the accepted intake state.
 
 ## Handoff

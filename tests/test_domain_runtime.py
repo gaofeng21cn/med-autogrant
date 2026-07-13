@@ -11,6 +11,7 @@ from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime  # noq
 from med_autogrant.domain_runtime_parts.contracts import build_executor_routing_contract  # noqa: E402
 import med_autogrant.domain_runtime_parts.handoff_surfaces as handoff_surfaces  # noqa: E402
 from support.cli import run_cli  # noqa: E402
+from med_autogrant.workspace_types import WorkspaceStateError  # noqa: E402
 
 
 EXAMPLES = REPO_ROOT / "examples"
@@ -110,6 +111,9 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         self.assertTrue(catalog)
         self.assertEqual(catalog_ids, EXPECTED_AUTHOR_SIDE_ROUTE_IDS)
         self.assertEqual({route["route_status"] for route in catalog}, {"landed"})
+        route_commands = {route["route_id"]: route["execution_surface"]["command"] for route in catalog}
+        for route_id in ("direction_screening", "question_refinement", "argument_building", "fit_alignment", "outline", "drafting"):
+            self.assertEqual(route_commands[route_id], "execute-strategy-authoring-pass")
 
     def test_critique_handoff_forwards_explicit_executor_kind(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir, patch.object(
@@ -136,6 +140,23 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             )
 
         self.assertEqual(build_document.call_args.kwargs["executor_kind"], "hermes_agent")
+
+    def test_authoring_precondition_failure_becomes_progress_diagnostic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir, patch.object(
+            handoff_surfaces,
+            "build_direction_screening_execution_document",
+            side_effect=WorkspaceStateError("no candidate was produced"),
+        ):
+            result = MagDomainRuntime().execute_direction_screening_pass(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+                output_path=str(Path(tmp_dir) / "direction.json"),
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["status"], "completed_with_quality_debt")
+        self.assertTrue(result["next_stage_may_start"])
+        self.assertFalse(result["quality_debt"]["blocks_stage_transition"])
+        self.assertEqual(result["semantic_route_owner"], "codex_cli")
 
 
 if __name__ == "__main__":

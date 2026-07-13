@@ -16,6 +16,7 @@ PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agen
 PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
 PACKAGE_MANIFEST_PATH = REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
+OFFICIAL_PACKAGE_REPOSITORY = "ghcr.io/gaofeng21cn/one-person-lab-packages/mag"
 REPO_LOCAL_INSTALLER_PATHS = (
     REPO_ROOT / "scripts" / "install-codex-plugin.sh",
     REPO_ROOT / "src" / "med_autogrant" / "codex_plugin_installer.py",
@@ -66,6 +67,23 @@ def test_codex_plugin_lifecycle_is_owned_by_opl_connect() -> None:
         "repo_local_user_symlink_mutation_allowed": False,
     }
     assert all(not path.exists() for path in REPO_LOCAL_INSTALLER_PATHS)
+
+
+def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
+    pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+
+    assert package_manifest["agent_id"] == "mag"
+    assert package_manifest["package_id"] == "mag"
+    assert package_manifest["version"] == pyproject_data["project"]["version"]
+    assert package_manifest["codex_surface"]["plugin_id"] == "med-autogrant"
+    assert package_manifest["lifecycle"]["module_id"] == "medautogrant"
+    distribution_payload = package_manifest["distribution_payload"]
+    expected_latest_ref = f"{OFFICIAL_PACKAGE_REPOSITORY}:latest"
+    assert distribution_payload["payload_ref"] == expected_latest_ref
+    assert distribution_payload["oci_ref"] == expected_latest_ref
+    assert distribution_payload["immutable_tag"] == package_manifest["version"]
+    assert "opl-agent-med-autogrant" not in json.dumps(package_manifest)
 
 
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:

@@ -101,8 +101,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             )
         if verdict in {"major_revision", "minor_revision"}:
             if (
-                stage == "revision"
-                and active_draft["status"] == "revised"
+                active_draft["status"] == "revised"
                 and revision_plan.get("execution_status") == "completed"
             ):
                 return _with_ai_route_context(
@@ -152,7 +151,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             **identity,
             "current_stage": stage,
             "recommended_stage": "direction_screening",
-            "reason": "方向尚未冻结，不能继续向下游阶段推进。",
+            "reason": "方向尚未冻结；建议 Codex 优先补齐方向判断，也可携带当前草稿与该质量债推进其他 declared stage。",
             "actions": [
                 "筛选并冻结唯一主方向。",
             ],
@@ -205,7 +204,7 @@ def _determine_structural_next_step(document: dict[str, Any]) -> dict[str, Any]:
             **identity,
             "current_stage": stage,
             "recommended_stage": "outline",
-            "reason": "提纲尚未冻结，不能直接进入稳定 drafting/critique 闭环。",
+            "reason": "提纲尚未冻结；建议 Codex 优先补齐提纲，也可携带当前草稿与该质量债推进其他 declared stage。",
             "actions": [
                 "冻结章节提纲及每节核心论点。",
             ],

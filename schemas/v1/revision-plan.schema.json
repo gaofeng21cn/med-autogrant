@@ -67,15 +67,7 @@
             ]
           },
           "action_type": {
-            "type": "string",
-            "enum": [
-              "reframe_question",
-              "rebuild_argument",
-              "add_evidence",
-              "rewrite_section",
-              "tighten_fit",
-              "format_cleanup"
-            ]
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
           },
           "target_ref": {
             "type": "string"
@@ -94,15 +86,14 @@
             "additionalProperties": false,
             "required": [
               "operation",
-              "target_section_key",
-              "replacement_text",
               "linked_object_ids"
             ],
             "properties": {
               "operation": {
                 "type": "string",
                 "enum": [
-                  "replace_draft_section"
+                  "replace_draft_section",
+                  "replace_draft_sections"
                 ]
               },
               "target_section_key": {
@@ -116,6 +107,36 @@
               },
               "linked_object_ids": {
                 "$ref": "common.schema.json#/$defs/stringList"
+              },
+              "replacement_sections": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["section_key", "section_title", "text", "linked_object_ids"],
+                  "properties": {
+                    "section_key": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "section_title": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "text": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "linked_object_ids": { "$ref": "common.schema.json#/$defs/stringList" }
+                  }
+                }
+              },
+              "replacement_outline": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["section_key", "section_title", "core_claim", "linked_object_ids"],
+                  "properties": {
+                    "section_key": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "section_title": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "core_claim": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "linked_object_ids": { "$ref": "common.schema.json#/$defs/stringList" }
+                  }
+                }
               }
             }
           }

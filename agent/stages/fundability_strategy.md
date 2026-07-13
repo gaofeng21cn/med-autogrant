@@ -15,7 +15,7 @@
 ## Exit Conditions
 
 - `fundability_strategy_gate_recorded` exists with an AI-backed fundability verdict ref; or
-- A typed blocker records insufficient evidence, rejected call fit, fatal reviewer risk, memory conflict, or mechanical-ready attempt; or
+- A quality-debt diagnostic records insufficient evidence, rejected call fit, reviewer risk, memory conflict, or mechanical-ready attempts; a typed blocker is reserved for a real hard boundary; or
 - A human-only funder-fit or applicant decision returns `completed_and_wait_owner` with `human_gate_ref`, not a typed blocker; or
 - A MAG owner receipt signs a proceed/repair/stop state.
 

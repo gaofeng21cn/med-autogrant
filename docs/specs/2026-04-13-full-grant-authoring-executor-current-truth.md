@@ -30,6 +30,7 @@ Last reviewed: `2026-06-12`
 
 当前 route contract / product entry / hosted contract bundle 共享的 landed command catalog 现在至少包括：
 
+- `direction_screening -> execute-strategy-authoring-pass`（默认；当前 attempt 通常一次 Codex 共同收敛到 reviewable draft，失败/反馈可重试或 route back）
 - `direction_screening -> execute-direction-screening-pass`
 - `question_refinement -> execute-question-refinement-pass`
 - `argument_building -> execute-argument-building-pass`
@@ -95,9 +96,11 @@ Last reviewed: `2026-06-12`
   - `executor.kind = codex_cli`
   - `model / reasoning_effort` 默认继续继承本机 Codex 默认
 - `revision`
-  - 当前仍是 repo-side deterministic section-level revision contract
+  - 当前 deterministic handler 只应用 AI 已明确给出的局部或 whole-draft mutation，不选择修订范围或认知顺序
 - `frozen`
   - 当前是 deterministic domain freeze pass
+
+前六个原子 pass 继续作为定点 route-back/diagnostic surface；默认 route command 是 `execute-strategy-authoring-pass`，一个正常 attempt 通常由一次 Codex invocation 同时生成 direction/question/argument/fit/outline/draft，再以 deterministic contract projection 物化六个 schema-backed checkpoint。observed invocation count 只是 receipt telemetry，不是成功条件或调用上限；解析失败、provider/attempt retry、review feedback 与 route-back 可以产生后续 invocation。六个 checkpoint 不重新触发六次模型 micro-pass。
 
 因此当前 landed 的是“完整可执行 route truth”，不是“所有单步都已经迁成 `hermes_agent` 非默认 executor lane”。
 

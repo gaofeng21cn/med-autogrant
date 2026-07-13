@@ -15,13 +15,7 @@ from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
-ALLOWED_ACTION_TYPES = {
-    "rebuild_argument",
-    "rewrite_section",
-    "add_evidence",
-    "tighten_fit",
-}
-ALLOWED_MUTATION_OPERATION = "replace_draft_section"
+ALLOWED_MUTATION_OPERATIONS = {"replace_draft_section", "replace_draft_sections"}
 
 
 def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, Any]:
@@ -50,17 +44,22 @@ def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, 
 
     applied_section_keys: list[str] = []
     for executable_item in executable_items:
-        target_section_key = executable_item["target_section_key"]
         mutation_payload = executable_item["mutation_payload"]
+        if mutation_payload["operation"] == "replace_draft_sections":
+            revised_draft["sections"] = deepcopy(mutation_payload["replacement_sections"])
+            if mutation_payload.get("replacement_outline"):
+                revised_draft["outline"] = deepcopy(mutation_payload["replacement_outline"])
+            applied_section_keys.extend(section["section_key"] for section in revised_draft["sections"])
+            continue
+
+        target_section_key = executable_item["target_section_key"]
         section = _resolve_section(revised_draft, target_section_key)
         section["text"] = mutation_payload["replacement_text"]
         section["linked_object_ids"] = list(mutation_payload["linked_object_ids"])
-
         outline_item = _resolve_outline_item(revised_draft, target_section_key)
         if outline_item is not None:
             outline_item["core_claim"] = mutation_payload["replacement_core_claim"]
             outline_item["linked_object_ids"] = list(mutation_payload["linked_object_ids"])
-
         applied_section_keys.append(target_section_key)
 
     comparison_summary = _build_comparison_summary(
@@ -137,7 +136,7 @@ def build_revision_execution_payload(
         lifecycle_stage=revision_document["lifecycle_stage"],
     )
     _write_workspace(resolved_output_path, revision_document["revised_workspace"])
-    return {
+    payload = {
         "ok": True,
         "command": "execute-revision-pass",
         "grant_run_id": revision_document["grant_run_id"],
@@ -146,8 +145,23 @@ def build_revision_execution_payload(
         "lifecycle_stage": revision_document["lifecycle_stage"],
         "output_path": str(resolved_output_path),
         "revision_execution": revision_document["revision_execution"],
+        "ai_review_provenance": revision_document["ai_review_provenance"],
         "revised_workspace": revision_document["revised_workspace"],
     }
+    if revision_document["ai_review_provenance"]["ai_reviewer_required"]:
+        payload.update({
+            "status": "completed_with_quality_debt",
+            "quality_debt": {
+                "code": "independent_ai_review_evidence_missing",
+                "detail": revision_document["ai_review_provenance"]["ai_reviewer_blocker_reason"],
+                "blocks_stage_transition": False,
+                "blocks_quality_submission_export_or_ready_claims": True,
+            },
+            "next_stage_may_start": True,
+            "route_back_selection_owner": "codex_cli",
+            "recommended_route_back_stage": "critique",
+        })
+    return payload
 
 
 def _validate_execution_preconditions(
@@ -239,28 +253,15 @@ def _collect_executable_items(
             raise WorkspaceStateError("RevisionPlan.items[] 中存在非 object item，无法执行 deterministic mutation。")
 
         action_type = item.get("action_type")
-        if action_type not in ALLOWED_ACTION_TYPES:
+        if not isinstance(action_type, str) or not action_type.strip():
             raise WorkspaceStateError(
-                f"item {item.get('item_id')} 的 action_type={action_type} 不属于 section-level executable subset。"
+                f"item {item.get('item_id')} 的 action_type 必须为非空专业修订标签。"
             )
 
         target_ref = item.get("target_ref")
-        if not isinstance(target_ref, str) or not target_ref.startswith("section:"):
+        if not isinstance(target_ref, str) or not target_ref.strip():
             raise WorkspaceStateError(
-                f"item {item.get('item_id')} 的 target_ref 必须形如 section:<section_key>。"
-            )
-        target_section_key = target_ref.split(":", 1)[1]
-        if not target_section_key:
-            raise WorkspaceStateError(
-                f"item {item.get('item_id')} 的 target_ref 必须显式携带非空 section_key。"
-            )
-        if target_section_key in seen_section_keys:
-            raise WorkspaceStateError(
-                f"发现 duplicate target section: {target_section_key}。"
-            )
-        if target_section_key not in section_index:
-            raise WorkspaceStateError(
-                f"target section 不存在: {target_section_key}。"
+                f"item {item.get('item_id')} 的 target_ref 必须为非空 artifact ref。"
             )
 
         mutation_payload = item.get("mutation_payload")
@@ -268,10 +269,43 @@ def _collect_executable_items(
             raise WorkspaceStateError(
                 f"item {item.get('item_id')} 缺少 mutation_payload，无法执行 deterministic mutation。"
             )
-        if mutation_payload.get("operation") != ALLOWED_MUTATION_OPERATION:
+        operation = mutation_payload.get("operation")
+        if operation not in ALLOWED_MUTATION_OPERATIONS:
             raise WorkspaceStateError(
-                f"item {item.get('item_id')} 的 mutation_payload.operation 必须为 {ALLOWED_MUTATION_OPERATION}。"
+                f"item {item.get('item_id')} 的 mutation_payload.operation 必须属于 {sorted(ALLOWED_MUTATION_OPERATIONS)}。"
             )
+
+        if operation == "replace_draft_sections":
+            if not target_ref.startswith("draft:"):
+                raise WorkspaceStateError("replace_draft_sections 的 target_ref 必须形如 draft:<draft_id>。")
+            replacement_sections = mutation_payload.get("replacement_sections")
+            if not isinstance(replacement_sections, list) or not replacement_sections:
+                raise WorkspaceStateError("replace_draft_sections 必须提供非空 replacement_sections。")
+            if len(items) != 1:
+                raise WorkspaceStateError("whole-draft repair 必须作为唯一 mutation item，避免与局部替换产生顺序歧义。")
+            for replacement in replacement_sections:
+                if not isinstance(replacement, dict):
+                    raise WorkspaceStateError("replacement_sections 必须是 object 列表。")
+                for field in ("section_key", "section_title", "text"):
+                    if not isinstance(replacement.get(field), str) or not replacement[field].strip():
+                        raise WorkspaceStateError(f"replacement_sections.{field} 必须为非空字符串。")
+                replacement_ids = replacement.get("linked_object_ids")
+                if not isinstance(replacement_ids, list) or any(ref_id not in known_ids for ref_id in replacement_ids):
+                    raise WorkspaceStateError("replacement_sections.linked_object_ids 必须只引用已知对象。")
+            executable_items.append({
+                "item_id": item.get("item_id"),
+                "target_section_key": None,
+                "mutation_payload": mutation_payload,
+            })
+            continue
+
+        if not target_ref.startswith("section:"):
+            raise WorkspaceStateError(f"item {item.get('item_id')} 的 target_ref 必须形如 section:<section_key>。")
+        target_section_key = target_ref.split(":", 1)[1]
+        if not target_section_key or target_section_key not in section_index:
+            raise WorkspaceStateError(f"target section 不存在: {target_section_key}。")
+        if target_section_key in seen_section_keys:
+            raise WorkspaceStateError(f"发现 duplicate target section: {target_section_key}。")
         if mutation_payload.get("target_section_key") != target_section_key:
             raise WorkspaceStateError(
                 f"item {item.get('item_id')} 的 target_ref 与 mutation_payload.target_section_key 必须一致。"

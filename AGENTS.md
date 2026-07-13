@@ -13,7 +13,7 @@
 - `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，Agent executor 是 stage 内最小执行单位；`Codex CLI` 是当前第一公民 executor，其他 executor adapter 只能显式接入且不承诺行为效果等价。MAG 持有 grant truth、fundability/quality/export verdict、route owner、package authority、grant strategy memory accept/reject authority 和 owner receipt；通用 runtime、queue、attempt ledger、state-machine runner、workspace/source intake shell、memory locator、package/artifact lifecycle、quality/readiness projection 与 App/workbench shell 归 OPL Framework / shared family layer。
 - MAG 的理想形态是标准 OPL Agent：`Declarative Grant Pack + OPL generated/hosted surfaces + minimal authority functions`。当前仓内已存在的 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入；不能因为已有 active caller 就写成长期合理私有平台。
 - `agent/primary_skill/SKILL.md` 是标准 OPL Agent 的 canonical rich primary skill；`plugins/<agent>/skills/<agent>/SKILL.md` 是 Codex plugin 安装要求的 materialized full-skill carrier mirror。该关系以 `contracts/capability_map.json` 中的 `carrier_projection_contract` 为机器权威；两者字节相同表示同步健康，不表示应删除重复，mirror 漂移才是问题。
-- OPL canonical id 固定为 `mag`；`med-autogrant`、包名和 plugin slug 只作为 repo/package/carrier locator，不改变 domain canonical id。
+- OPL canonical agent id 与 OPL Agent Package id 都固定为 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`。`med-autogrant` 仅作为 repo、Python distribution 与 plugin/skill carrier locator，`medautogrant` 仅作为 module/CLI locator；这些载体名不得形成第二个 package identity 或 OCI package coordinate。
 - 文档和开发计划先设理想态，再找差距；差距不是妥协清单。为了标准 OPL Agent 目标态，可以革命式重构 MAG 并完全抛弃旧模块、旧接口、旧测试、旧目录和旧文案，不以兼容为理由保留历史污染面。
 
 ## 工作原则

@@ -17,7 +17,7 @@
 - `submission_ready_package_receipt_recorded` exists with export verdict ref and package refs; or
 - `completed_and_wait_owner` records a required human portal action with `human_gate_ref`; or
 - A `route_back_ref` records an ordinary quality, artifact, or provenance repair target; or
-- A typed blocker records a real semantic, provenance-authority, or unsafe-export gap with no legal repair route; or
+- A quality-debt diagnostic records semantic or provenance gaps; a typed blocker is reserved for unsafe export, authority, wrong-target identity/currentness, irreversible action, unavailable executor, or explicit human decision; or
 - A MAG owner receipt signs terminal package/export state.
 
 ## Handoff

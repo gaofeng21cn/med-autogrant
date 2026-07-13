@@ -39,6 +39,7 @@ def test_domain_entry_contract_uses_command_catalog_as_single_source() -> None:
     assert "execute-authoring-mainline-loop" not in commands
     assert {
         "execute-direction-screening-pass",
+        "execute-strategy-authoring-pass",
         "execute-question-refinement-pass",
         "execute-argument-building-pass",
         "execute-fit-alignment-pass",

@@ -49,7 +49,7 @@ class RevisionExecutorTest(unittest.TestCase):
             self.assertTrue(validate_workspace_document(workspace).ok)
             self.assertEqual(
                 build_stage_route_report(workspace)["route"]["next_step"]["recommended_stage"],
-                "revision",
+                "critique",
             )
 
     def test_rereview_preserves_completed_revision_evidence(self) -> None:
@@ -68,40 +68,72 @@ class RevisionExecutorTest(unittest.TestCase):
             "revision-v1",
         )
 
-    def test_missing_ai_review_owner_is_quality_context_not_progression_gate(self) -> None:
+    def test_revision_can_apply_ai_selected_whole_draft_restructure(self) -> None:
+        document = copy.deepcopy(_load(P2C_CRITIQUE_EXAMPLE_PATH))
+        draft = self._active(document, "application_drafts", "active_draft_id", "draft_id")
+        replacement_sections = copy.deepcopy(draft["sections"])
+        replacement_sections.reverse()
+        replacement_sections[0]["text"] = f"{replacement_sections[0]['text']} 全文结构已按独立审阅重新组织。"
+        plan = self._active(document, "revision_plans", "active_revision_plan_id", "revision_plan_id")
+        plan["items"] = [{
+            "item_id": "repair-whole-draft",
+            "priority": "p0",
+            "action_type": "rebuild_cross_section_argument",
+            "target_ref": f"draft:{draft['draft_id']}",
+            "action": "重组全文论证顺序",
+            "done_criteria": "跨章节论证连续",
+            "required_input_ids": [],
+            "mutation_payload": {
+                "operation": "replace_draft_sections",
+                "linked_object_ids": [],
+                "replacement_sections": replacement_sections,
+            },
+        }]
+
+        payload = build_revision_execution_document(document=document)
+        revised = self._active(payload["revised_workspace"], "application_drafts", "active_draft_id", "draft_id")
+        self.assertEqual(revised["sections"][0]["section_key"], replacement_sections[0]["section_key"])
+        self.assertIn("全文结构已按独立审阅重新组织", revised["sections"][0]["text"])
+        self.assertTrue(validate_workspace_document(payload["revised_workspace"]).ok)
+
+    def test_revision_quality_gaps_materialize_debt_and_allow_progress(self) -> None:
         no_owner = _load(P2C_CRITIQUE_EXAMPLE_PATH)
         for critique in no_owner["mentor_critiques"]:
             critique.get("metadata", {}).pop("owner", None)
 
-        payload = build_revision_execution_document(document=no_owner)
-        self.assertEqual(payload["ai_review_provenance"]["assessment_owner"], "projection_only")
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            payload = build_revision_execution_payload(
+                no_owner,
+                output_path=Path(tmp_dir) / "revised-workspace.json",
+            )
+        self.assertTrue(payload["ok"])
         self.assertTrue(payload["ai_review_provenance"]["ai_reviewer_required"])
-        self.assertEqual(payload["revised_workspace"]["lifecycle_stage"], "critique")
-        self.assertEqual(payload["revision_execution"]["active_revision_plan_id"], "revision-v1")
+        self.assertIsNotNone(payload["output_path"])
 
-    def test_route_mismatch_returns_quality_debt_without_blocking_next_stage(self) -> None:
         cases = (
             (_load(FORCED_ROLLBACK_EXAMPLE_PATH), "forced_rollback_stage"),
             (_load(READY_FOR_SUBMISSION_EXAMPLE_PATH), "major_revision / minor_revision"),
         )
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            for index, (document, message) in enumerate(cases):
-                with self.subTest(message=message):
+        for document, message in cases:
+            with self.subTest(message=message):
+                with tempfile.TemporaryDirectory() as tmp_dir:
                     payload = build_revision_execution_payload(
                         document,
-                        output_path=Path(tmp_dir) / f"route-mismatch-{index}.json",
+                        output_path=Path(tmp_dir) / "revised-workspace.json",
                     )
-                    self.assertEqual(payload["status"], "completed_with_quality_debt")
-                    self.assertTrue(payload["next_stage_may_start"])
-                    self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
-                    self.assertIn(message, payload["quality_debt"]["detail"])
+                self.assertTrue(payload["ok"])
+                self.assertEqual(payload["status"], "completed_with_quality_debt")
+                self.assertIn(message, payload["quality_debt"]["detail"])
+                self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
+                self.assertTrue(payload["next_stage_may_start"])
+                self.assertEqual(payload["route_back_selection_owner"], "codex_cli")
 
-    def test_presubmission_frozen_remains_irreversible_write_guard(self) -> None:
+    def test_presubmission_freeze_remains_an_irreversible_write_guard(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             with self.assertRaisesRegex(WorkspaceStateError, "presubmission_frozen"):
                 build_revision_execution_payload(
                     _load(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-                    output_path=Path(tmp_dir) / "frozen.json",
+                    output_path=Path(tmp_dir) / "revised-workspace.json",
                 )
 
     def test_revision_mutation_contract_fails_closed(self) -> None:

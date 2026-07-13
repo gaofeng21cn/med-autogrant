@@ -10,7 +10,6 @@ from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_do
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.workspace_projection_parts import _require_workspace_context
-from med_autogrant.workspace_types import WorkspaceStateError
 
 from med_autogrant.domain_runtime_parts.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
@@ -94,6 +93,9 @@ def build_final_package(
     _write_final_package_output(resolved_output_path, final_package)
     return {
         "ok": True,
+        "status": final_package.get("status", "completed"),
+        "next_stage_may_start": True,
+        "quality_debt": final_package.get("quality_debt"),
         "command": "build-final-package",
         "grant_run_id": final_package["grant_run_id"],
         "workspace_id": final_package["workspace_id"],
@@ -151,19 +153,6 @@ def build_submission_ready_package(
         hosted_contract_bundle=hosted_contract_bundle,
         program_id=program_id,
     )
-    if not submission_ready_package["submission_ready"]:
-        issue_ids = [
-            item["issue_id"]
-            for item in submission_ready_package["blocking_issues"]
-            if isinstance(item, dict) and isinstance(item.get("issue_id"), str)
-        ]
-        raise WorkspaceStateError(
-            f"submission ready package blocked: {', '.join(issue_ids)}",
-            errors=[],
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
     _validate_contract_schema(
         submission_ready_package,
         schema_file=SUBMISSION_READY_PACKAGE_SCHEMA_FILE,
@@ -214,6 +203,27 @@ def build_submission_ready_package(
     _write_submission_ready_package_output(submission_ready_package_path, submission_ready_package)
     return {
         "ok": True,
+        "status": (
+            "completed"
+            if submission_ready_package["submission_ready"]
+            else "completed_with_quality_debt"
+        ),
+        "next_stage_may_start": True,
+        "quality_debt": (
+            None
+            if submission_ready_package["submission_ready"]
+            else {
+                "status": "recorded_non_blocking",
+                "reasons": [
+                    item["issue_id"]
+                    for item in submission_ready_package["blocking_issues"]
+                    if isinstance(item, dict) and isinstance(item.get("issue_id"), str)
+                ],
+                "blocks_stage_transition": False,
+                "blocks_submission_ready_claim": True,
+                "semantic_route_owner": "codex_cli",
+            }
+        ),
         "command": "build-submission-ready-package",
         "grant_run_id": final_package["grant_run_id"],
         "workspace_id": final_package["workspace_id"],

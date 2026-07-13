@@ -216,6 +216,8 @@ def _assert_hosted_authoring_contract(
         list(AUTHOR_SIDE_ROUTE_IDS),
     )
     route_catalog = {route["route_id"]: route for route in authoring_contract["author_side_route_catalog"]}
+    test_case.assertEqual(route_catalog["direction_screening"]["execution_surface"]["command"], "execute-strategy-authoring-pass")
+    test_case.assertEqual(route_catalog["drafting"]["execution_surface"]["command"], "execute-strategy-authoring-pass")
     test_case.assertEqual(route_catalog["critique"]["route_status"], "landed")
     test_case.assertEqual(route_catalog["critique"]["handoff_contract_kind"], "service-safe-domain-entry-command")
     test_case.assertEqual(route_catalog["critique"]["execution_surface"]["command"], "execute-critique-pass")

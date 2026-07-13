@@ -201,18 +201,11 @@ def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str)
 
 
 def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
-    refs: dict[str, Any] = {
+    return {
         "ai_route_policy_ref": _optional_nonempty_string(task.get("ai_route_policy_ref"))
         or "/product_entry_manifest/ai_route_policy",
         "domain_handler_stage_attempt_closeout_action": "stage-attempt/closeout",
     }
-    transition_id = _optional_nonempty_string(task.get("transition_id"))
-    if transition_id is not None:
-        refs["transition_id"] = transition_id
-    oracle_fixture_id = _optional_nonempty_string(task.get("oracle_fixture_id"))
-    if oracle_fixture_id is not None:
-        refs["oracle_fixture_id"] = oracle_fixture_id
-    return refs
 
 
 def _stage_attempt_receipt_refs(receipt: Mapping[str, Any]) -> dict[str, Any]:

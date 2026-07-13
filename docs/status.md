@@ -17,7 +17,11 @@ MAG 已完成 private OPL platform cleanup 的结构收口：私有 standard-pac
 - 八项 minimal MAG authority functions
 - schema-backed grant authoring/package behavior
 
-Stage contract 当前保持 6 个 top-level Stage。3 个 mutating action 使用 `ai_selected_progress_route`，2 个 read-only action 不声明执行 route。Codex 可在任一 declared stage 间前进、重复、跳过或 route-back；静态 transition table/oracle 已退役。Human decision 使用 `human_gate_ref`；普通 repair、review finding、阴性结果与 rollback 都是可消费进度和质量债。
+OPL hosted interface 已由 `contracts/domain_descriptor.json#/standard_agent_interface` 声明：grant workspace topology、`input_path` locator、domain-handler dispatch argv、progress alias 和 routing signal 归 MAG descriptor；product status/manifest 继续由 OPL generated surface 承担。该接口落地只关闭结构/功能边界，不声明任何 live grant、quality、export、submission 或 production readiness。
+
+Stage contract 当前保持 6 个 top-level Stage，不做拆分。Stage Pack v2 的 manifest allow-list、action catalog 与 pack input parity 已由 contract test 固定；3 个 mutating action 声明 manifest 对齐的 ordered `stage_route`，2 个 read-only action 不声明执行 route。Manifest 的 5 条正常前进边均由 grant transition oracle 覆盖，全部 8 条合法 transition 各有唯一且 source-stage 对齐的 fixture。Human decision 使用 `completed_and_wait_owner` 与 `human_gate_ref`，普通 repair/rollback 使用 `route_back_ref`；typed blocker 只保留给真实语义或 authority 缺口。
+
+Prompt/current caller 已按强自主 executor 收口：Stage prompt 删除重复 blocker/禁令剧本；默认 strategy-authoring 在正常 attempt 中通常用一次 Codex invocation 共同收敛 direction/question/argument/fit/outline/draft，六个 checkpoint 只做 deterministic projection、六个原子 pass 只作为定点 route-back。Observed invocation count 不是成功条件或调用上限；失败/反馈仍可经 attempt retry 或 route-back 迭代。候选数量按判断需要、outline 作为条件默认；critique 的权重仅作 profile reporting，不规定审阅顺序。专业硬依赖仍保留为 call/eligibility -> strategy basis、draft -> independent review -> revision -> risk-matched re-review，以及 MAG package authority -> fresh package proof -> human portal gate。
 
 OPL/App 负责 generated product/status/user-loop/workbench caller。
 
@@ -72,7 +76,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 ## Skill 与安装
 
-`agent/primary_skill/SKILL.md` 是 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical materialized carrier。Canonical agent id 是 `mag`，安装 locator/skill name 是 `med-autogrant`；两者不是兼容 alias 关系。
+`agent/primary_skill/SKILL.md` 是 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical materialized carrier。Canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；安装 locator/skill name 是 `med-autogrant`，module/CLI locator 是 `medautogrant`。这些 locator 不形成兼容 alias、第二个 package identity 或 OCI package coordinate。
 
 ## 验证入口
 

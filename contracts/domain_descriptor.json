@@ -12,6 +12,59 @@
   "generated_surface_owner": "one-person-lab",
   "package_role": "opl_standard_domain_agent",
   "schema_version": 1,
+  "standard_agent_interface": {
+    "version": "opl_standard_agent_interface.v1",
+    "workspace_binding": {
+      "locator_surface_kind": "med_autogrant_workspace_input",
+      "default_profile_id": "one_off",
+      "workspace_kind": "grant_authoring_workspace",
+      "project_kind": "grant_project",
+      "project_collection_label": "deliverables",
+      "default_workspace_id": "grant-workspace",
+      "default_project_id": "grant-001",
+      "required_locator_fields": [
+        "input_path"
+      ],
+      "optional_locator_fields": [],
+      "entry_command_template": null,
+      "manifest_command_template": null
+    },
+    "runtime": {
+      "runtime_domain_id": "medautogrant",
+      "dispatch_command": [
+        "medautogrant",
+        "domain-handler",
+        "dispatch"
+      ],
+      "registration_ref": "contracts/generated_surface_handoff.json#/domain_handler_targets"
+    },
+    "progress": {
+      "deliverable_delta_aliases": [
+        "grant_work_progress"
+      ],
+      "platform_delta_aliases": [
+        "platform_evidence_progress"
+      ]
+    },
+    "routing": {
+      "explicit_aliases": [
+        "mag",
+        "medautogrant",
+        "med-autogrant",
+        "grant"
+      ],
+      "workstream_ids": [
+        "grant_ops"
+      ],
+      "intent_signals": [
+        "grant",
+        "proposal",
+        "fundability",
+        "grant_application"
+      ],
+      "ambiguity_policy": "require_explicit_workstream"
+    }
+  },
   "standard_contract_refs": {
     "action_catalog": "contracts/action_catalog.json",
     "agent_lab_handoff": "contracts/agent_lab_handoff.json",

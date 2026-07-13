@@ -186,10 +186,10 @@ class WorkspaceSummaryTest(unittest.TestCase):
 
         cases = (
             (
-                "direction_screening_min_candidates",
+                "direction_screening_requires_candidate",
                 DIRECTION_EXAMPLE_PATH,
-                lambda document: document.__setitem__("direction_hypotheses", [document["direction_hypotheses"][0]]),
-                ("direction_hypotheses", "P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。"),
+                lambda document: document.__setitem__("direction_hypotheses", []),
+                ("direction_hypotheses", "P2.A 方向阶段必须保留至少一个可论证 DirectionHypothesis。"),
             ),
             (
                 "fit_alignment_active_mapping",
