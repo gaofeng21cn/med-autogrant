@@ -375,6 +375,8 @@ def _render_build_submission_ready_package(payload: dict[str, Any]) -> str:
         f"lifecycle_stage: {payload['lifecycle_stage']}",
         f"output_dir: {payload['output_dir']}",
         f"readiness_verdict: {submission_ready_package['readiness_verdict']}",
+        f"handoff_review_status: {submission_ready_package['handoff_review']['status']}",
+        f"submission_ready: {str(submission_ready_package['submission_ready']).lower()}",
         f"blocking_issue_count: {submission_ready_package['audit_summary']['blocking_issue_count']}",
     ]
     return "\n".join(lines)

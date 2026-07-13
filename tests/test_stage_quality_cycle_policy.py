@@ -26,7 +26,10 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert attempt_contract["same_thread_resume_consumes_quality_budget"] is False
     assert set(attempt_contract["role_prompt_refs"]) == {"producer", "reviewer", "repairer", "re_reviewer"}
     assert attempt_contract["required_role_output_ref_fields"]["reviewer"] == [
-        "finding_refs", "repair_map_refs", "reviewed_artifact_hashes"
+        "finding_refs", "reviewed_artifact_hashes"
+    ]
+    assert attempt_contract["required_role_output_ref_fields"]["repairer"] == [
+        "repair_map_refs", "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs"
     ]
     assert "re_review_closure_refs" in attempt_contract["required_role_output_ref_fields"]["re_reviewer"]
 
@@ -52,7 +55,7 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
             "controller_creates_next_attempt", "attempt_is_not_sub_stage",
         }
         assert all(policy["attempt_boundary"].values())
-        if stage_id not in {"review_and_rebuttal", "package_and_submit_ready"}:
+        if stage_id != "review_and_rebuttal":
             assert policy["formal_review"]["required"] is True
             assert policy["formal_review"]["max_repair_rounds"] == 3
 
@@ -80,6 +83,58 @@ def test_mag_meta_review_is_independent_and_routes_to_defect_owner() -> None:
     prompt = (ROOT / "agent/prompts/review_and_rebuttal.md").read_text(encoding="utf-8")
     assert "Do not edit the proposal inside this Meta Review Stage" in prompt
     assert "producer_conversation_history" in meta["forbidden_inputs"]
+
+
+def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> None:
+    manifest = read_json("agent/stages/manifest.json")
+    profile = read_json("contracts/stage_quality_cycle_policy.json")
+    stages = {stage["stage_id"]: stage for stage in manifest["stages"]}
+    package_stage = stages["package_and_submit_ready"]
+    package_policy = profile["stages"]["package_and_submit_ready"]
+
+    assert package_stage["handoff_review_boundary"] == {
+        "artifact_effect": "new_or_transformed_reviewable_bytes",
+        "freezes_canonical_artifact_bytes": True,
+        "issues_quality_export_publication_or_ready_claim": True,
+        "downstream_owner_retains_acceptance": True,
+    }
+    assert package_policy["in_thread_refinement"] == {"allowed": False, "authoritative": False}
+    assert package_policy["formal_review"] == {
+        "required": True,
+        "risk_tier": "high",
+        "review_depth": "full",
+        "context_isolation_required": True,
+        "max_repair_rounds": 3,
+    }
+
+    prompt = (ROOT / package_stage["prompt_ref"]).read_text(encoding="utf-8")
+    roles = (ROOT / "agent/prompts/stage-quality-cycle-roles.md").read_text(encoding="utf-8")
+    for artifact in (
+        "artifact-bundle.json",
+        "final-package.json",
+        "hosted-contract-bundle.json",
+        "submission-ready-package.json",
+    ):
+        assert artifact in prompt
+    assert "Only a terminal reviewer or re-reviewer returns `route_impact.stage_route_decision`" in prompt
+    assert "repair only assembly, manifest, or provenance projection" in roles
+    for finding_field in ("finding_id", "severity", "required", "evidence_refs", "repair_expectation"):
+        assert f"`{finding_field}`" in roles
+    assert "Do not produce a repair map" in roles
+    assert "repair map keyed by `finding_id`" in roles
+    assert "repairer cannot close findings or make a terminal Stage judgment" in roles
+    assert "route_impact.stage_route_decision" in roles
+    assert "route_impact.stage_route_recommendation" in roles
+    assert "repair_required" in roles
+    assert "StageRunController materializes the Review receipt" in roles
+    for legacy_field in (
+        "route_back_stage_ref",
+        "selected_next_stage_ref",
+        "next_stage_ref",
+        "workflow_complete",
+    ):
+        assert f"legacy `{legacy_field}`" in roles or f"`{legacy_field}`" in roles
+    assert "No Attempt directly materializes the authoritative receipt" in prompt
 
 
 def test_quality_policy_does_not_define_nested_stage_or_owner_graphs() -> None:

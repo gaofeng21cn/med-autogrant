@@ -59,6 +59,17 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
     assert "Codex CLI critique executor" in verdict["properties"]["owner"]["enum"]
     assert "mag_owner_receipt" in verdict["properties"]["source_kind"]["enum"]
     assert "mag_owner_typed_blocker" in verdict["properties"]["source_kind"]["enum"]
+    assert submission_ready_schema["properties"]["readiness_verdict"]["enum"] == [
+        "candidate_ready_for_review",
+        "candidate_blocked",
+    ]
+    assert submission_ready_schema["properties"]["submission_ready"] == {"const": False}
+    handoff_review = submission_ready_schema["$defs"]["handoffReview"]
+    assert handoff_review["properties"]["ready_claim_authorized"] == {"const": False}
+    assert handoff_review["properties"]["decisive_attempt_roles"]["const"] == [
+        "reviewer",
+        "re_reviewer",
+    ]
 
 
 def test_revision_quality_context_keeps_missing_ai_review_as_nonblocking_debt() -> None:

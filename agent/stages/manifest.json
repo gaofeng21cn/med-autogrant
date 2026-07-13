@@ -128,6 +128,12 @@
       "requires": ["grant_review_gate_receipt_recorded"],
       "ensures": ["submission_ready_package_receipt_recorded"],
       "next_stage_refs": [],
+      "handoff_review_boundary": {
+        "artifact_effect": "new_or_transformed_reviewable_bytes",
+        "freezes_canonical_artifact_bytes": true,
+        "issues_quality_export_publication_or_ready_claim": true,
+        "downstream_owner_retains_acceptance": true
+      },
       "trust_lane": "human_gate"
     }
   ],

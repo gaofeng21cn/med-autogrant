@@ -205,13 +205,13 @@ def build_submission_ready_package(
         "ok": True,
         "status": (
             "completed"
-            if submission_ready_package["submission_ready"]
+            if submission_ready_package["readiness_verdict"] == "candidate_ready_for_review"
             else "completed_with_quality_debt"
         ),
         "next_stage_may_start": True,
         "quality_debt": (
             None
-            if submission_ready_package["submission_ready"]
+            if submission_ready_package["readiness_verdict"] == "candidate_ready_for_review"
             else {
                 "status": "recorded_non_blocking",
                 "reasons": [
@@ -229,6 +229,8 @@ def build_submission_ready_package(
         "workspace_id": final_package["workspace_id"],
         "draft_id": final_package["draft_id"],
         "lifecycle_stage": final_package["lifecycle_stage"],
+        "terminal_ready_claim_authorized": False,
+        "next_quality_attempt_role": "reviewer",
         "output_dir": str(resolved_output_dir),
         "output_paths": {
             "artifact_bundle": str(artifact_bundle_path),

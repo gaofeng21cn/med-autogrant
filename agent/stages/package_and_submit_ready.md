@@ -10,11 +10,13 @@
 
 - Verify local submission-ready package refs, required sections, attachments, provenance, quality closure, export constraints, and manual portal boundary.
 - Materialize package refs only through MAG owner authority.
+- Bind exact refs and hashes for all four final package artifacts, then require a fresh reviewer over those bytes before projecting terminal `submission_ready`.
+- Keep local repair to assembly, manifest, and provenance projection; route upstream content, evidence, quality-closure, attachment-owner, or export-verdict defects to their earliest owning Stage.
 - Return exact blockers for real artifact, quality, provenance, or authority gaps; use `human_gate_ref` for human portal actions.
 
 ## Exit Conditions
 
-- `submission_ready_package_receipt_recorded` exists with export verdict ref and package refs; or
+- The StageRunController has materialized `submission_ready_package_receipt_recorded` from a terminal fresh reviewer/re-reviewer closeout bound to the current export verdict and package refs; or
 - `completed_and_wait_owner` records a required human portal action with `human_gate_ref`; or
 - A `route_back_ref` records an ordinary quality, artifact, or provenance repair target; or
 - A quality-debt diagnostic records semantic or provenance gaps; a typed blocker is reserved for unsafe export, authority, wrong-target identity/currentness, irreversible action, unavailable executor, or explicit human decision; or
@@ -29,9 +31,10 @@
 
 ## Independent Review And Gate Expectation
 
-- Independent gate must confirm that quality closure, package completeness, provenance, and portal boundary are all explicit.
+- Independent gate must confirm against the exact current four-artifact generation that quality closure, package completeness, provenance, and portal boundary are all explicit.
 - Required gates: `export_and_package`, `quality`, and `authority_boundaries`.
-- Package existence, lifecycle completion, or provider completion cannot declare submission-ready export.
+- Package existence, lifecycle completion, provider completion, producer self-check, or helper success cannot declare submission-ready export; only reviewer/re-reviewer closeout can project the terminal Stage claim.
+- Producer, repairer, and `repair_required` reviewer/re-reviewer closeouts may only recommend a declared route. Only the terminal reviewer/re-reviewer supplies `route_impact.stage_route_decision`; no Attempt creates the authoritative Review receipt itself.
 
 ## OPL Role Boundary
 

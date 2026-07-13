@@ -10,6 +10,9 @@ SUBMISSION_READY_PACKAGE_VERSION = 1
 SUBMISSION_READY_PACKAGE_KIND = "submission_ready_package"
 AUTOMATION_SCOPE = "local_submission_package"
 MAG_EXPORT_VERDICT_OWNER = "med-autogrant"
+CANDIDATE_READY_FOR_REVIEW = "candidate_ready_for_review"
+CANDIDATE_BLOCKED = "candidate_blocked"
+HANDOFF_REVIEW_STATUS = "pending_fresh_review"
 SUBMISSION_READY_EXPORT_VERDICT_STATES = frozenset({"submission_ready", "blocked"})
 SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS = frozenset(
     {
@@ -90,7 +93,7 @@ def build_submission_ready_package_document(
                 "submission_ready_export_verdict 未授权 submission_ready。",
             )
         )
-    submission_ready = (
+    candidate_ready_for_review = (
         mechanical_package_completeness["passed"]
         and submission_ready_export_verdict is not None
         and submission_ready_export_verdict["verdict_state"] == "submission_ready"
@@ -106,10 +109,16 @@ def build_submission_ready_package_document(
         "program_id": program_id,
         "lifecycle_stage": final_package["lifecycle_stage"],
         "automation_scope": AUTOMATION_SCOPE,
-        "readiness_verdict": "submission_ready" if submission_ready else "blocked",
+        "readiness_verdict": CANDIDATE_READY_FOR_REVIEW if candidate_ready_for_review else CANDIDATE_BLOCKED,
         "fully_automatic": False,
-        "submission_ready": submission_ready,
+        "submission_ready": False,
         "external_submission_performed": False,
+        "handoff_review": {
+            "status": HANDOFF_REVIEW_STATUS,
+            "exact_artifact_hashes_required": True,
+            "ready_claim_authorized": False,
+            "decisive_attempt_roles": ["reviewer", "re_reviewer"],
+        },
         "mechanical_package_completeness": mechanical_package_completeness,
         "submission_ready_export_verdict": submission_ready_export_verdict,
         "audit_summary": {

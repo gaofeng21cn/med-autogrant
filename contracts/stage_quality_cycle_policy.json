@@ -21,8 +21,8 @@
     },
     "required_role_output_ref_fields": {
       "producer": ["artifact_refs", "artifact_hashes", "source_refs", "lineage_refs"],
-      "reviewer": ["finding_refs", "repair_map_refs", "reviewed_artifact_hashes"],
-      "repairer": ["repaired_artifact_refs", "repaired_artifact_hashes", "repair_delta_refs", "lineage_refs"],
+      "reviewer": ["finding_refs", "reviewed_artifact_hashes"],
+      "repairer": ["repair_map_refs", "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs"],
       "re_reviewer": ["re_review_closure_refs", "remaining_quality_debt_refs", "reviewed_artifact_hashes"]
     }
   },
@@ -201,11 +201,11 @@
       ],
       "in_thread_refinement": {"allowed": false, "authoritative": false},
       "formal_review": {
-        "required": false,
+        "required": true,
         "risk_tier": "high",
         "review_depth": "full",
         "context_isolation_required": true,
-        "max_repair_rounds": 0
+        "max_repair_rounds": 3
       },
       "budget_exhaustion": "complete_with_quality_debt_if_consumable",
       "attempt_boundary": {

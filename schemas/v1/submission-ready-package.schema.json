@@ -53,6 +53,33 @@
         }
       }
     },
+    "handoffReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "exact_artifact_hashes_required",
+        "ready_claim_authorized",
+        "decisive_attempt_roles"
+      ],
+      "properties": {
+        "status": {
+          "const": "pending_fresh_review"
+        },
+        "exact_artifact_hashes_required": {
+          "const": true
+        },
+        "ready_claim_authorized": {
+          "const": false
+        },
+        "decisive_attempt_roles": {
+          "const": [
+            "reviewer",
+            "re_reviewer"
+          ]
+        }
+      }
+    },
     "submissionReadyExportVerdict": {
       "type": "object",
       "additionalProperties": false,
@@ -288,6 +315,7 @@
     "fully_automatic",
     "submission_ready",
     "external_submission_performed",
+    "handoff_review",
     "mechanical_package_completeness",
     "submission_ready_export_verdict",
     "audit_summary",
@@ -324,18 +352,21 @@
     "readiness_verdict": {
       "type": "string",
       "enum": [
-        "submission_ready",
-        "blocked"
+        "candidate_ready_for_review",
+        "candidate_blocked"
       ]
     },
     "fully_automatic": {
       "type": "boolean"
     },
     "submission_ready": {
-      "type": "boolean"
+      "const": false
     },
     "external_submission_performed": {
       "const": false
+    },
+    "handoff_review": {
+      "$ref": "#/$defs/handoffReview"
     },
     "mechanical_package_completeness": {
       "$ref": "#/$defs/mechanicalPackageCompleteness"

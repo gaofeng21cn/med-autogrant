@@ -21,7 +21,7 @@ EXPORT_VERDICT = {
 
 
 class SubmissionReadyPackageTest(unittest.TestCase):
-    def test_submission_ready_is_the_complete_package_integration_owner(self) -> None:
+    def test_complete_package_is_a_review_pending_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             workspace_path = self._complete_workspace(tmp_root, include_export_verdict=True)
@@ -41,13 +41,22 @@ class SubmissionReadyPackageTest(unittest.TestCase):
 
             package = payload["submission_ready_package"]
             self.assertEqual(package["package_kind"], "submission_ready_package")
-            self.assertEqual(package["readiness_verdict"], "submission_ready")
-            self.assertTrue(package["submission_ready"])
+            self.assertEqual(package["readiness_verdict"], "candidate_ready_for_review")
+            self.assertFalse(package["submission_ready"])
             self.assertFalse(package["fully_automatic"])
             self.assertFalse(package["external_submission_performed"])
+            self.assertEqual(package["handoff_review"], {
+                "status": "pending_fresh_review",
+                "exact_artifact_hashes_required": True,
+                "ready_claim_authorized": False,
+                "decisive_attempt_roles": ["reviewer", "re_reviewer"],
+            })
             self.assertEqual(package["submission_ready_export_verdict"], EXPORT_VERDICT)
             self.assertEqual(package["mechanical_package_completeness"]["status"], "passed")
             self.assertEqual(package["audit_summary"]["blocking_issue_count"], 0)
+            self.assertEqual(payload["status"], "completed")
+            self.assertFalse(payload["terminal_ready_claim_authorized"])
+            self.assertEqual(payload["next_quality_attempt_role"], "reviewer")
             self.assertIn("## 研究方案", package["submission_dossier"]["final_draft_markdown"])
             self.assertEqual(json.loads(paths["submission_ready_package"].read_text(encoding="utf-8")), package)
 
@@ -69,9 +78,30 @@ class SubmissionReadyPackageTest(unittest.TestCase):
             issue_ids = {issue["issue_id"] for issue in package["blocking_issues"]}
 
             self.assertFalse(package["submission_ready"])
-            self.assertEqual(package["readiness_verdict"], "blocked")
+            self.assertEqual(package["readiness_verdict"], "candidate_blocked")
+            self.assertFalse(package["handoff_review"]["ready_claim_authorized"])
             self.assertIn("missing_mandatory_sections", issue_ids)
             self.assertTrue(output_dir.exists())
+
+    def test_text_output_cannot_present_producer_package_as_submission_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_root = Path(tmp_dir)
+            exit_code, stdout, stderr = run_cli(
+                "package",
+                "submission-ready",
+                "--input",
+                str(self._complete_workspace(tmp_root, include_export_verdict=True)),
+                "--output-dir",
+                str(tmp_root / "submission-ready"),
+                "--format",
+                "text",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            self.assertIn("readiness_verdict: candidate_ready_for_review", stdout)
+            self.assertIn("handoff_review_status: pending_fresh_review", stdout)
+            self.assertIn("submission_ready: false", stdout)
 
     def test_missing_owner_export_verdict_fails_closed_before_writing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
