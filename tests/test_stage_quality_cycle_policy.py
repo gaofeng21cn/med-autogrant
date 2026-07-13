@@ -196,6 +196,41 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "submission_ready_package_receipt_recorded" not in json.dumps(manifest)
 
 
+def test_quality_role_prompt_terminalizes_final_budget_without_routing_hard_boundaries() -> None:
+    roles = (ROOT / "agent/prompts/stage-quality-cycle-roles.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "`repair_budget_remaining`" in roles
+    assert "another repair round remains" in roles
+    assert "returns outcome `repair_required`" in roles
+    assert "controller creates the next fresh repairer Attempt" in roles
+    assert "This branch is non-terminal" in roles
+
+    assert "`final_budget_consumable`" in roles
+    assert "no repair round remains" in roles
+    assert "Required findings keep outcome `repair_required`" in roles
+    assert "do not relabel them `quality_debt`" in roles
+    assert "exactly one `route_impact.stage_route_decision`" in roles
+    assert "remaining required finding refs and quality-debt refs" in roles
+    assert "controller classifies this branch as `terminal_quality_debt`" in roles
+    assert "projects `completed_with_quality_debt`" in roles
+    assert "Use outcome `quality_debt` only when no required finding remains" in roles
+
+    assert "`hard_boundary_or_zero_artifact`" in roles
+    assert "zero consumable exact artifact is not a Stage-routing judgment" in roles
+    assert "return neither `route_impact.stage_route_decision` nor " in roles
+    assert "`route_impact.stage_route_recommendation`" in roles
+    assert "zero consumable artifact uses `blocked`" in roles
+    assert "terminalizes the StageRun as blocked or human-gated" in roles
+    assert "A progress-terminal reviewer returns `route_impact.stage_route_decision`" in roles
+    assert "a hard-boundary reviewer returns no route output" in roles
+
+    assert "repairer cannot close findings or make a terminal Stage judgment" in roles
+    assert "it must never return `stage_route_decision`" in roles
+    assert "Under `hard_boundary_or_zero_artifact`, return no route output" in roles
+
+
 def test_quality_policy_does_not_define_nested_stage_or_owner_graphs() -> None:
     profile = read_json("contracts/stage_quality_cycle_policy.json")
     forbidden = {
