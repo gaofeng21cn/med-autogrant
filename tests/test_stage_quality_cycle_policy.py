@@ -28,17 +28,38 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert attempt_contract["same_thread_resume_role"] == "protocol_closeout_resume"
     assert attempt_contract["same_thread_resume_counts_as_review"] is False
     assert attempt_contract["same_thread_resume_consumes_quality_budget"] is False
+    assert attempt_contract["attempt_output_contract"] == {
+        "envelope_path": "route_impact.stage_quality_cycle",
+        "outcome_field": "outcome",
+        "outcome_required_for_roles": ["reviewer", "re_reviewer"],
+        "outcome_values": [
+            "pass", "repair_required", "quality_debt", "blocked", "human_gate",
+        ],
+        "attempts_must_not_emit_receipt_verdict": True,
+        "receipt_materializer_owner": "opl_stage_run_controller",
+        "review_receipt_verdict_mapping": {
+            "pass": "pass",
+            "repair_required": "repair_required",
+            "quality_debt": "quality_debt",
+            "blocked": "hard_stop",
+            "human_gate": "hard_stop",
+        },
+    }
     assert set(attempt_contract["role_prompt_refs"]) == {"producer", "reviewer", "repairer", "re_reviewer"}
     assert attempt_contract["required_role_output_ref_fields"]["reviewer"] == [
-        "finding_refs", "verdict", "evidence_refs", "acceptance_criteria_refs"
+        "route_impact.stage_quality_cycle.outcome", "finding_refs", "evidence_refs",
+        "acceptance_criteria_refs",
     ]
     assert attempt_contract["required_role_output_ref_fields"]["repairer"] == [
         "repaired_artifact_refs", "repaired_artifact_hashes", "repair_map_refs",
         "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs",
     ]
     assert attempt_contract["required_role_output_ref_fields"]["re_reviewer"] == [
-        "re_review_closure_refs", "verdict", "evidence_refs", "remaining_quality_debt_refs"
+        "route_impact.stage_quality_cycle.outcome", "re_review_closure_refs",
+        "evidence_refs", "remaining_quality_debt_refs",
     ]
+    assert "verdict" not in attempt_contract["required_role_output_ref_fields"]["reviewer"]
+    assert "verdict" not in attempt_contract["required_role_output_ref_fields"]["re_reviewer"]
     assert "repair_map_refs" not in attempt_contract["required_role_output_ref_fields"]["reviewer"]
     assert "review_receipt_refs" not in attempt_contract["required_role_output_ref_fields"]["reviewer"]
     assert "review_receipt_refs" not in attempt_contract["required_role_output_ref_fields"]["re_reviewer"]
@@ -148,6 +169,10 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "route_impact.stage_route_recommendation" in roles
     assert "repair_required" in roles
     assert "StageRunController materializes only the exact-hash-bound `opl_stage_review_receipt`" in roles
+    assert "`route_impact.stage_quality_cycle.outcome`" in roles
+    for outcome in ("pass", "repair_required", "quality_debt", "blocked", "human_gate"):
+        assert f"`{outcome}`" in roles
+    assert "`hard_stop` is never an Attempt outcome" in roles
     for closure_status in ("closed", "partially_closed", "still_open"):
         assert f"`{closure_status}`" in roles
     for repair_trigger in (
