@@ -50,5 +50,6 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - 文档、focused tests、conformance pass 和 refs-only ledger 不能单独支撑 readiness claim。
 - 正式 Stage Review 必须来自新的 StageAttempt 和新的 executor session；producer self-check、same-thread resume 或无 exact artifact hash 的记录不能算 Review。
 - `review_and_rebuttal` Meta Review 不继承上游生成对话，也不内联修稿；它必须把缺陷路由到最早能关闭根因的 Stage，并在新 generation 后重新审查。
-- `package_and_submit_ready` 必须把四个 canonical package artifacts 的 exact refs/hash 交给 fresh Reviewer；producer/helper 结果不能投影 terminal `submission_ready`。本 Stage 只修 assembly、manifest 与 provenance projection，其余缺陷 route-back，外部 portal acceptance 保持 human-owned。
+- `package_and_submit_ready` 必须把四个 canonical package artifacts 的 exact refs/hash 交给 fresh Reviewer；producer/helper 结果固定为 `submission_ready=false` 候选，不能投影 terminal `submission_ready`。本 Stage 只修 assembly、manifest 与 provenance projection，其余缺陷 route-back，外部 portal acceptance 保持 human-owned。
+- StageRunController 只能物化 exact-hash-bound `opl_stage_review_receipt`。任何本地 submission-ready 投影必须同时消费该 receipt 与 MAG-owned export/owner verdict；reviewer 与 OPL 均不得签 MAG owner receipt 或授权 export/submission readiness。
 - Formal Review StageRun 中只有 terminal reviewer/re-reviewer 能输出 `route_impact.stage_route_decision`；producer、repairer 与 repair-required reviewer/re-reviewer 只能输出 `stage_route_recommendation`。Attempt 不直接物化 Review receipt，旧 route closeout 字段不得使用。

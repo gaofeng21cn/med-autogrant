@@ -4,6 +4,7 @@
   "domain_id": "med-autogrant",
   "owner": "med-autogrant",
   "framework_contract_ref": "contracts/opl-framework/stage-quality-cycle-contract.json",
+  "route_selection_contract_ref": "contracts/opl-framework/stage-quality-cycle-contract.json#/cross_stage_route_selection",
   "quality_governance_profile_ref": "contracts/opl-framework/official-knowledge-deliverable-quality-profile.json",
   "review_attempt_contract": {
     "attempt_roles": ["producer", "reviewer", "repairer", "re_reviewer"],
@@ -21,9 +22,9 @@
     },
     "required_role_output_ref_fields": {
       "producer": ["artifact_refs", "artifact_hashes", "source_refs", "lineage_refs"],
-      "reviewer": ["finding_refs", "reviewed_artifact_hashes"],
-      "repairer": ["repair_map_refs", "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs"],
-      "re_reviewer": ["re_review_closure_refs", "remaining_quality_debt_refs", "reviewed_artifact_hashes"]
+      "reviewer": ["finding_refs", "verdict", "evidence_refs", "acceptance_criteria_refs"],
+      "repairer": ["repaired_artifact_refs", "repaired_artifact_hashes", "repair_map_refs", "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs"],
+      "re_reviewer": ["re_review_closure_refs", "verdict", "evidence_refs", "remaining_quality_debt_refs"]
     }
   },
   "stages": {
@@ -199,7 +200,7 @@
         "agent/quality_gates/quality.md",
         "agent/quality_gates/authority_boundaries.md"
       ],
-      "in_thread_refinement": {"allowed": false, "authoritative": false},
+      "in_thread_refinement": {"allowed": true, "authoritative": false},
       "formal_review": {
         "required": true,
         "risk_tier": "high",
@@ -221,7 +222,9 @@
     "attempt_role": "producer",
     "stage_prompt_ref": "agent/prompts/review_and_rebuttal.md",
     "professional_review_mode": "multi_axis_executor_managed",
-    "required_output_ref_fields": ["finding_refs", "defect_owner_route_back_refs", "closure_criteria_refs", "remaining_quality_debt_refs"],
+    "required_output_ref_fields": ["finding_refs", "route_decision_evidence_refs", "closure_criteria_refs", "remaining_quality_debt_refs"],
+    "terminal_route_output": "route_impact.stage_route_decision",
+    "terminal_route_owner": "producer",
     "independent_stage_run_required": true,
     "new_execution_session_required": true,
     "no_context_inheritance": true,

@@ -18,7 +18,8 @@ This knowledge boundary defines the MAG package authority surface for local subm
 
 ## Package Gate Requirements
 
-- Quality verdict or review gate receipt exists.
+- An exact-byte `opl_stage_review_receipt` exists for the current package generation.
+- A MAG-owned export/owner verdict consumes that receipt before local submission-ready projection.
 - Required sections, attachments, budget/support material, and portal-facing files are present by ref.
 - Package refs trace to accepted draft/source/owner receipt evidence.
 - Manual portal actions are listed explicitly and not silently claimed complete.
@@ -32,8 +33,8 @@ This knowledge boundary defines the MAG package authority surface for local subm
 
 ## Receipt Expectations
 
-- `submission_ready_export_verdict` must include `owner`, `export_verdict_ref`, `source_kind`, and `provenance_ref`.
-- Package receipts must name package refs, quality gate state, unresolved portal actions, blocker state, and owner authority evidence.
+- `submission_ready_export_verdict` must be MAG-owned and include `owner`, `export_verdict_ref`, `source_kind`, and `provenance_ref`.
+- Package receipts must name the exact-byte `opl_stage_review_receipt`, package refs, quality gate state, unresolved portal actions, blocker state, and owner authority evidence.
 - Blocked packages must name the exact missing artifact, unresolved issue, provenance gap, or human action.
 
 ## Review Questions

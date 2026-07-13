@@ -8,6 +8,18 @@
     "no_regression_evidence"
   ],
   "receipt_instance_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+  "local_submission_ready_projection_contract": {
+    "owner": "med-autogrant",
+    "requirement_mode": "all_of",
+    "required_input_ref_kinds": [
+      "opl_stage_review_receipt",
+      "submission_ready_export_verdict"
+    ],
+    "review_receipt_must_match_current_package_hashes": true,
+    "owner_evidence_must_reference_required_inputs": true,
+    "opl_can_authorize_local_readiness": false,
+    "external_portal_acceptance": "separate_human_gate"
+  },
   "forbidden_claims": [
     "opl_authorized_domain_ready",
     "opl_authorized_quality_or_export_verdict",

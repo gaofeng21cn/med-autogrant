@@ -87,4 +87,4 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 测试通过和 structural conformance 只证明对应 gate 通过，不提升 readiness。
 
-当前 declarative pack 已声明独立上下文 Stage Review 与 `review_and_rebuttal` Grant Meta Review 合同。该状态只表示 domain policy 已落盘；真实 Review receipt、route-back generation、owner acceptance 与 live ready 仍需 OPL runtime/owner evidence。
+当前 declarative pack 已声明独立上下文 Stage Review 与 `review_and_rebuttal` Grant Meta Review 合同。`package_and_submit_ready` 的 producer bytes 固定为 review-pending candidate；真实本地 readiness 同时要求 exact-byte `opl_stage_review_receipt` 与 MAG-owned export/owner verdict。该状态只表示 domain policy 已落盘；真实 Review receipt、route-back generation、owner acceptance 与 live ready 仍需 OPL runtime/owner evidence。

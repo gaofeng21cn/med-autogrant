@@ -60,7 +60,13 @@
         "status",
         "exact_artifact_hashes_required",
         "ready_claim_authorized",
-        "decisive_attempt_roles"
+        "decisive_attempt_roles",
+        "review_receipt_surface_kind",
+        "review_receipt_materializer",
+        "local_readiness_authority_owner",
+        "local_readiness_requirement_mode",
+        "local_readiness_contract_ref",
+        "local_readiness_required_ref_kinds"
       ],
       "properties": {
         "status": {
@@ -76,6 +82,27 @@
           "const": [
             "reviewer",
             "re_reviewer"
+          ]
+        },
+        "review_receipt_surface_kind": {
+          "const": "opl_stage_review_receipt"
+        },
+        "review_receipt_materializer": {
+          "const": "opl_stage_run_controller"
+        },
+        "local_readiness_authority_owner": {
+          "const": "med-autogrant"
+        },
+        "local_readiness_requirement_mode": {
+          "const": "all_of"
+        },
+        "local_readiness_contract_ref": {
+          "const": "contracts/owner_receipt_contract.json#/local_submission_ready_projection_contract"
+        },
+        "local_readiness_required_ref_kinds": {
+          "const": [
+            "opl_stage_review_receipt",
+            "submission_ready_export_verdict"
           ]
         }
       }
@@ -102,28 +129,41 @@
           ]
         },
         "owner": {
-          "type": "string",
-          "enum": [
-            "med-autogrant",
-            "Codex CLI critique executor",
-            "OPL executor adapter critique receipt owner"
-          ]
+          "const": "med-autogrant"
         },
         "source_kind": {
           "type": "string",
           "enum": [
             "mag_owner_receipt",
             "mag_owner_export_artifact",
-            "mag_owner_typed_blocker",
-            "ai_backed_reviewer_artifact",
-            "ai_backed_export_artifact",
-            "ai_backed_export_receipt"
+            "mag_owner_typed_blocker"
           ]
         },
         "provenance_ref": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_kind": {
+                "const": "mag_owner_typed_blocker"
+              }
+            },
+            "required": [
+              "source_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verdict_state": {
+                "const": "blocked"
+              }
+            }
+          }
+        }
+      ]
     },
     "auditSummary": {
       "type": "object",

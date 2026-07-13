@@ -50,6 +50,18 @@ class SubmissionReadyPackageTest(unittest.TestCase):
                 "exact_artifact_hashes_required": True,
                 "ready_claim_authorized": False,
                 "decisive_attempt_roles": ["reviewer", "re_reviewer"],
+                "review_receipt_surface_kind": "opl_stage_review_receipt",
+                "review_receipt_materializer": "opl_stage_run_controller",
+                "local_readiness_authority_owner": "med-autogrant",
+                "local_readiness_requirement_mode": "all_of",
+                "local_readiness_contract_ref": (
+                    "contracts/owner_receipt_contract.json"
+                    "#/local_submission_ready_projection_contract"
+                ),
+                "local_readiness_required_ref_kinds": [
+                    "opl_stage_review_receipt",
+                    "submission_ready_export_verdict",
+                ],
             })
             self.assertEqual(package["submission_ready_export_verdict"], EXPORT_VERDICT)
             self.assertEqual(package["mechanical_package_completeness"]["status"], "passed")
@@ -125,6 +137,40 @@ class SubmissionReadyPackageTest(unittest.TestCase):
                 json.loads(stdout)["error"],
             )
             self.assertFalse(output_dir.exists())
+
+    def test_non_mag_export_verdict_cannot_authorize_local_readiness(self) -> None:
+        from med_autogrant.submission_ready import (
+            SubmissionReadyExportVerdictError,
+            normalize_submission_ready_export_verdict,
+        )
+
+        with self.assertRaisesRegex(SubmissionReadyExportVerdictError, "owner must be med-autogrant"):
+            normalize_submission_ready_export_verdict(
+                {
+                    "export_verdict_ref": "reviewer://export-verdict",
+                    "verdict_state": "submission_ready",
+                    "owner": "Codex CLI critique executor",
+                    "source_kind": "ai_backed_export_receipt",
+                    "provenance_ref": "runtime://reviewer/export-verdict.json",
+                }
+            )
+
+    def test_typed_blocker_cannot_claim_submission_ready(self) -> None:
+        from med_autogrant.submission_ready import (
+            SubmissionReadyExportVerdictError,
+            normalize_submission_ready_export_verdict,
+        )
+
+        with self.assertRaisesRegex(SubmissionReadyExportVerdictError, "requires verdict_state=blocked"):
+            normalize_submission_ready_export_verdict(
+                {
+                    "export_verdict_ref": "mag-blocker://submission-ready/export",
+                    "verdict_state": "submission_ready",
+                    "owner": "med-autogrant",
+                    "source_kind": "mag_owner_typed_blocker",
+                    "provenance_ref": "runtime://mag/blockers/export.json",
+                }
+            )
 
     @staticmethod
     def _workspace_with_export_verdict(tmp_root: Path) -> Path:

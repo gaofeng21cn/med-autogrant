@@ -40,7 +40,7 @@ def test_scorecard_and_dossier_schemas_require_ai_reviewer_provenance() -> None:
     assert "ai_reviewer_blocker_reason" in summary_required
 
 
-def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
+def test_submission_ready_schema_requires_exact_review_receipt_and_mag_owner_verdict() -> None:
     submission_ready_schema = json.loads(_read("schemas/v1/submission-ready-package.schema.json"))
 
     required = submission_ready_schema["required"]
@@ -55,10 +55,20 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
         "source_kind",
         "provenance_ref",
     ]
-    assert "med-autogrant" in verdict["properties"]["owner"]["enum"]
-    assert "Codex CLI critique executor" in verdict["properties"]["owner"]["enum"]
+    assert verdict["properties"]["owner"] == {"const": "med-autogrant"}
     assert "mag_owner_receipt" in verdict["properties"]["source_kind"]["enum"]
     assert "mag_owner_typed_blocker" in verdict["properties"]["source_kind"]["enum"]
+    assert all(
+        source_kind.startswith("mag_owner_")
+        for source_kind in verdict["properties"]["source_kind"]["enum"]
+    )
+    typed_blocker_rule = verdict["allOf"][0]
+    assert typed_blocker_rule["if"]["properties"]["source_kind"] == {
+        "const": "mag_owner_typed_blocker"
+    }
+    assert typed_blocker_rule["then"]["properties"]["verdict_state"] == {
+        "const": "blocked"
+    }
     assert submission_ready_schema["properties"]["readiness_verdict"]["enum"] == [
         "candidate_ready_for_review",
         "candidate_blocked",
@@ -70,6 +80,63 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
         "reviewer",
         "re_reviewer",
     ]
+    assert handoff_review["properties"]["review_receipt_surface_kind"] == {
+        "const": "opl_stage_review_receipt"
+    }
+    assert handoff_review["properties"]["review_receipt_materializer"] == {
+        "const": "opl_stage_run_controller"
+    }
+    assert handoff_review["properties"]["local_readiness_authority_owner"] == {
+        "const": "med-autogrant"
+    }
+    assert handoff_review["properties"]["local_readiness_requirement_mode"] == {
+        "const": "all_of"
+    }
+    assert handoff_review["properties"]["local_readiness_contract_ref"] == {
+        "const": (
+            "contracts/owner_receipt_contract.json"
+            "#/local_submission_ready_projection_contract"
+        )
+    }
+    assert handoff_review["properties"]["local_readiness_required_ref_kinds"]["const"] == [
+        "opl_stage_review_receipt",
+        "submission_ready_export_verdict",
+    ]
+
+    receipt_bundle_schema = json.loads(_read("schemas/v1/codex-stage-execution-receipt-bundle.schema.json"))
+    authority = receipt_bundle_schema["$defs"]["authorityBoundary"]
+    for field in (
+        "review_receipt_surface_kind",
+        "review_receipt_materializer",
+        "review_receipt_authorizes_local_readiness",
+        "local_readiness_authority_owner",
+        "local_readiness_requirement_mode",
+        "local_readiness_contract_ref",
+        "local_readiness_required_ref_kinds",
+    ):
+        assert field in authority["required"]
+    assert authority["properties"]["review_receipt_authorizes_local_readiness"] == {
+        "const": False
+    }
+    assert authority["properties"]["local_readiness_required_ref_kinds"]["const"] == [
+        "opl_stage_review_receipt",
+        "submission_ready_export_verdict",
+    ]
+
+    owner_receipt_contract = json.loads(_read("contracts/owner_receipt_contract.json"))
+    local_readiness = owner_receipt_contract["local_submission_ready_projection_contract"]
+    assert local_readiness == {
+        "owner": "med-autogrant",
+        "requirement_mode": "all_of",
+        "required_input_ref_kinds": [
+            "opl_stage_review_receipt",
+            "submission_ready_export_verdict",
+        ],
+        "review_receipt_must_match_current_package_hashes": True,
+        "owner_evidence_must_reference_required_inputs": True,
+        "opl_can_authorize_local_readiness": False,
+        "external_portal_acceptance": "separate_human_gate",
+    }
 
 
 def test_revision_quality_context_keeps_missing_ai_review_as_nonblocking_debt() -> None:

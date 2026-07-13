@@ -126,7 +126,11 @@
       "quality_gate_refs": ["agent/quality_gates/export_and_package.md", "agent/quality_gates/quality.md", "agent/quality_gates/authority_boundaries.md"],
       "allowed_action_refs": ["build_submission_ready_package", "inspect_progress"],
       "requires": ["grant_review_gate_receipt_recorded"],
-      "ensures": ["submission_ready_package_receipt_recorded"],
+      "ensures": [
+        "submission_ready_package_candidate_ref_recorded",
+        "opl_stage_review_receipt_ref_recorded",
+        "mag_submission_ready_export_verdict_or_owner_receipt_ref_recorded"
+      ],
       "next_stage_refs": [],
       "handoff_review_boundary": {
         "artifact_effect": "new_or_transformed_reviewable_bytes",

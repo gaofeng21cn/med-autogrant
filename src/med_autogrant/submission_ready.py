@@ -3,9 +3,6 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
-from med_autogrant.ai_first_boundaries import AI_REVIEWER_BACKED_OWNERS
-
-
 SUBMISSION_READY_PACKAGE_VERSION = 1
 SUBMISSION_READY_PACKAGE_KIND = "submission_ready_package"
 AUTOMATION_SCOPE = "local_submission_package"
@@ -13,19 +10,23 @@ MAG_EXPORT_VERDICT_OWNER = "med-autogrant"
 CANDIDATE_READY_FOR_REVIEW = "candidate_ready_for_review"
 CANDIDATE_BLOCKED = "candidate_blocked"
 HANDOFF_REVIEW_STATUS = "pending_fresh_review"
+OPL_STAGE_REVIEW_RECEIPT_KIND = "opl_stage_review_receipt"
+OPL_STAGE_REVIEW_RECEIPT_MATERIALIZER = "opl_stage_run_controller"
+LOCAL_READINESS_REQUIREMENT_MODE = "all_of"
+LOCAL_READINESS_CONTRACT_REF = (
+    "contracts/owner_receipt_contract.json#/local_submission_ready_projection_contract"
+)
+LOCAL_READINESS_REQUIRED_REF_KINDS = [
+    OPL_STAGE_REVIEW_RECEIPT_KIND,
+    "submission_ready_export_verdict",
+]
 SUBMISSION_READY_EXPORT_VERDICT_STATES = frozenset({"submission_ready", "blocked"})
 SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS = frozenset(
     {
         "mag_owner_receipt",
         "mag_owner_export_artifact",
         "mag_owner_typed_blocker",
-        "ai_backed_reviewer_artifact",
-        "ai_backed_export_artifact",
-        "ai_backed_export_receipt",
     }
-)
-SUBMISSION_READY_EXPORT_VERDICT_OWNERS = frozenset(
-    {MAG_EXPORT_VERDICT_OWNER, *AI_REVIEWER_BACKED_OWNERS}
 )
 
 
@@ -118,6 +119,12 @@ def build_submission_ready_package_document(
             "exact_artifact_hashes_required": True,
             "ready_claim_authorized": False,
             "decisive_attempt_roles": ["reviewer", "re_reviewer"],
+            "review_receipt_surface_kind": OPL_STAGE_REVIEW_RECEIPT_KIND,
+            "review_receipt_materializer": OPL_STAGE_REVIEW_RECEIPT_MATERIALIZER,
+            "local_readiness_authority_owner": MAG_EXPORT_VERDICT_OWNER,
+            "local_readiness_requirement_mode": LOCAL_READINESS_REQUIREMENT_MODE,
+            "local_readiness_contract_ref": LOCAL_READINESS_CONTRACT_REF,
+            "local_readiness_required_ref_kinds": list(LOCAL_READINESS_REQUIRED_REF_KINDS),
         },
         "mechanical_package_completeness": mechanical_package_completeness,
         "submission_ready_export_verdict": submission_ready_export_verdict,
@@ -168,7 +175,7 @@ def normalize_submission_ready_export_verdict(
 ) -> dict[str, str]:
     if not isinstance(value, dict):
         raise SubmissionReadyExportVerdictError(
-            f"{context} requires a MAG owner or AI-backed export verdict with provenance."
+            f"{context} requires a MAG-owned export verdict with provenance."
         )
     export_verdict_ref = _require_nonempty_string(
         value.get("export_verdict_ref"),
@@ -195,19 +202,19 @@ def normalize_submission_ready_export_verdict(
         raise SubmissionReadyExportVerdictError(
             f"{context}.verdict_state must be submission_ready or blocked."
         )
-    if owner not in SUBMISSION_READY_EXPORT_VERDICT_OWNERS:
+    if owner != MAG_EXPORT_VERDICT_OWNER:
         raise SubmissionReadyExportVerdictError(
-            f"{context}.owner must be med-autogrant or an AI-backed reviewer/export owner."
+            f"{context}.owner must be med-autogrant."
         )
     if source_kind not in SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS:
         raise SubmissionReadyExportVerdictError(f"{context}.source_kind is not an allowed export verdict source.")
-    if owner == MAG_EXPORT_VERDICT_OWNER and not source_kind.startswith("mag_owner_"):
+    if not source_kind.startswith("mag_owner_"):
         raise SubmissionReadyExportVerdictError(
-            f"{context}.source_kind must be MAG-owned when owner is med-autogrant."
+            f"{context}.source_kind must be MAG-owned."
         )
-    if owner != MAG_EXPORT_VERDICT_OWNER and not source_kind.startswith("ai_backed_"):
+    if source_kind == "mag_owner_typed_blocker" and verdict_state != "blocked":
         raise SubmissionReadyExportVerdictError(
-            f"{context}.source_kind must be AI-backed when owner is an AI reviewer/export artifact."
+            f"{context}.mag_owner_typed_blocker requires verdict_state=blocked."
         )
     return {
         "export_verdict_ref": export_verdict_ref,

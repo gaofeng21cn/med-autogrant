@@ -164,6 +164,13 @@
         "can_write_memory_body",
         "execution_receipt_refs_equal_quality_ready",
         "review_receipt_refs_equal_quality_ready",
+        "review_receipt_surface_kind",
+        "review_receipt_materializer",
+        "review_receipt_authorizes_local_readiness",
+        "local_readiness_authority_owner",
+        "local_readiness_requirement_mode",
+        "local_readiness_contract_ref",
+        "local_readiness_required_ref_kinds",
         "can_declare_fundability_ready",
         "can_declare_quality_ready",
         "can_declare_export_ready",
@@ -193,6 +200,30 @@
         },
         "review_receipt_refs_equal_quality_ready": {
           "const": false
+        },
+        "review_receipt_surface_kind": {
+          "const": "opl_stage_review_receipt"
+        },
+        "review_receipt_materializer": {
+          "const": "opl_stage_run_controller"
+        },
+        "review_receipt_authorizes_local_readiness": {
+          "const": false
+        },
+        "local_readiness_authority_owner": {
+          "const": "med-autogrant"
+        },
+        "local_readiness_requirement_mode": {
+          "const": "all_of"
+        },
+        "local_readiness_contract_ref": {
+          "const": "contracts/owner_receipt_contract.json#/local_submission_ready_projection_contract"
+        },
+        "local_readiness_required_ref_kinds": {
+          "const": [
+            "opl_stage_review_receipt",
+            "submission_ready_export_verdict"
+          ]
         },
         "can_declare_fundability_ready": {
           "const": false

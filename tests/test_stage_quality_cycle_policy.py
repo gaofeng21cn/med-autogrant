@@ -16,6 +16,10 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert manifest["quality_governance_profile_ref"] == "contracts/opl-framework/official-knowledge-deliverable-quality-profile.json"
     assert manifest["meta_review_policy_ref"] == "contracts/stage_quality_cycle_policy.json#/meta_review_policy"
     assert profile["framework_contract_ref"] == "contracts/opl-framework/stage-quality-cycle-contract.json"
+    assert profile["route_selection_contract_ref"] == (
+        "contracts/opl-framework/stage-quality-cycle-contract.json"
+        "#/cross_stage_route_selection"
+    )
     attempt_contract = profile["review_attempt_contract"]
     assert attempt_contract["attempt_roles"] == ["producer", "reviewer", "repairer", "re_reviewer"]
     assert attempt_contract["new_stage_attempt_per_role"] is True
@@ -26,12 +30,18 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert attempt_contract["same_thread_resume_consumes_quality_budget"] is False
     assert set(attempt_contract["role_prompt_refs"]) == {"producer", "reviewer", "repairer", "re_reviewer"}
     assert attempt_contract["required_role_output_ref_fields"]["reviewer"] == [
-        "finding_refs", "reviewed_artifact_hashes"
+        "finding_refs", "verdict", "evidence_refs", "acceptance_criteria_refs"
     ]
     assert attempt_contract["required_role_output_ref_fields"]["repairer"] == [
-        "repair_map_refs", "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs"
+        "repaired_artifact_refs", "repaired_artifact_hashes", "repair_map_refs",
+        "changed_artifact_refs", "changed_artifact_hashes", "lineage_refs",
     ]
-    assert "re_review_closure_refs" in attempt_contract["required_role_output_ref_fields"]["re_reviewer"]
+    assert attempt_contract["required_role_output_ref_fields"]["re_reviewer"] == [
+        "re_review_closure_refs", "verdict", "evidence_refs", "remaining_quality_debt_refs"
+    ]
+    assert "repair_map_refs" not in attempt_contract["required_role_output_ref_fields"]["reviewer"]
+    assert "review_receipt_refs" not in attempt_contract["required_role_output_ref_fields"]["reviewer"]
+    assert "review_receipt_refs" not in attempt_contract["required_role_output_ref_fields"]["re_reviewer"]
 
     manifest_stages = {stage["stage_id"]: stage for stage in manifest["stages"]}
     assert set(profile["stages"]) == set(manifest_stages)
@@ -74,6 +84,9 @@ def test_mag_meta_review_is_independent_and_routes_to_defect_owner() -> None:
     assert meta["new_execution_session_required"] is True
     assert meta["no_context_inheritance"] is True
     assert meta["max_route_back_rounds"] == 3
+    assert meta["terminal_route_output"] == "route_impact.stage_route_decision"
+    assert meta["terminal_route_owner"] == "producer"
+    assert "route_decision_evidence_refs" in meta["required_output_ref_fields"]
     assert meta["defect_owner_route_back"]["stage_refs"] == [
         "call_and_candidate_intake",
         "fundability_strategy",
@@ -82,6 +95,8 @@ def test_mag_meta_review_is_independent_and_routes_to_defect_owner() -> None:
     ]
     prompt = (ROOT / "agent/prompts/review_and_rebuttal.md").read_text(encoding="utf-8")
     assert "Do not edit the proposal inside this Meta Review Stage" in prompt
+    assert "decisive cross-Stage route owner" in prompt
+    assert "`route_impact.stage_route_decision`" in prompt
     assert "producer_conversation_history" in meta["forbidden_inputs"]
 
 
@@ -98,7 +113,12 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "issues_quality_export_publication_or_ready_claim": True,
         "downstream_owner_retains_acceptance": True,
     }
-    assert package_policy["in_thread_refinement"] == {"allowed": False, "authoritative": False}
+    assert package_stage["ensures"] == [
+        "submission_ready_package_candidate_ref_recorded",
+        "opl_stage_review_receipt_ref_recorded",
+        "mag_submission_ready_export_verdict_or_owner_receipt_ref_recorded",
+    ]
+    assert package_policy["in_thread_refinement"] == {"allowed": True, "authoritative": False}
     assert package_policy["formal_review"] == {
         "required": True,
         "risk_tier": "high",
@@ -120,13 +140,24 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "repair only assembly, manifest, or provenance projection" in roles
     for finding_field in ("finding_id", "severity", "required", "evidence_refs", "repair_expectation"):
         assert f"`{finding_field}`" in roles
-    assert "Do not produce a repair map" in roles
-    assert "repair map keyed by `finding_id`" in roles
+    assert "acceptance-criteria refs" in roles
+    assert "Do not create a Review receipt or repair map" in roles
+    assert "repair map keyed by every accepted `finding_id`" in roles
     assert "repairer cannot close findings or make a terminal Stage judgment" in roles
     assert "route_impact.stage_route_decision" in roles
     assert "route_impact.stage_route_recommendation" in roles
     assert "repair_required" in roles
-    assert "StageRunController materializes the Review receipt" in roles
+    assert "StageRunController materializes only the exact-hash-bound `opl_stage_review_receipt`" in roles
+    for closure_status in ("closed", "partially_closed", "still_open"):
+        assert f"`{closure_status}`" in roles
+    for repair_trigger in (
+        "required_finding_not_closed",
+        "repair_regression",
+        "critical_new_finding",
+    ):
+        assert f"`{repair_trigger}`" in roles
+    assert "`optional_observation` or quality debt without reopening the loop" in roles
+    assert "cannot create a Review receipt or a ready verdict" in roles
     for legacy_field in (
         "route_back_stage_ref",
         "selected_next_stage_ref",
@@ -134,12 +165,24 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "workflow_complete",
     ):
         assert f"legacy `{legacy_field}`" in roles or f"`{legacy_field}`" in roles
-    assert "No Attempt directly materializes the authoritative receipt" in prompt
+    assert "materializes only the exact-hash-bound `opl_stage_review_receipt`" in prompt
+    assert "Neither the reviewer Attempt nor OPL signs the MAG owner receipt" in prompt
+    assert "submission_ready_package_receipt_recorded" not in prompt
+    assert "submission_ready_package_receipt_recorded" not in json.dumps(manifest)
 
 
 def test_quality_policy_does_not_define_nested_stage_or_owner_graphs() -> None:
     profile = read_json("contracts/stage_quality_cycle_policy.json")
-    forbidden = {"next_stage", "requires", "ensures", "stage_route", "sub_stage_graph", "independent_owner"}
+    forbidden = {
+        "next_stage_refs",
+        "requires",
+        "ensures",
+        "stage_route",
+        "sub_stage_graph",
+        "independent_owner",
+        "stage_current_pointer",
+        "stage_transition_authority",
+    }
 
     def walk(value: object) -> None:
         if isinstance(value, dict):
