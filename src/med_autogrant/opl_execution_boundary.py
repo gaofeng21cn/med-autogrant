@@ -21,8 +21,8 @@ def build_ai_route_boundary(
     return {
         "surface_kind": "mag_ai_route_boundary",
         "surface_id": surface_id,
-        "semantic_route_owner": "codex_cli",
-        "semantic_route_owner_role": "single_ai_control_plane",
+        "semantic_route_owner": "decisive_codex_attempt",
+        "semantic_route_owner_role": "decisive_attempt_only",
         "mag_role": mag_role,
         "mag_writes_stage_current_pointer": False,
         "mag_writes_stage_terminal_state": False,

@@ -190,7 +190,7 @@ def _stage_progress_diagnostic(
             "blocks_quality_submission_export_or_ready_claims": True,
         },
         "next_stage_may_start": True,
-        "semantic_route_owner": "codex_cli",
+        "semantic_route_owner": "decisive_codex_attempt",
         "recommended_route_back_stage": document.get("lifecycle_stage"),
     }
 

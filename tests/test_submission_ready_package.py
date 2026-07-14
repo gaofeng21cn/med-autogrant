@@ -93,6 +93,10 @@ class SubmissionReadyPackageTest(unittest.TestCase):
             self.assertEqual(package["readiness_verdict"], "candidate_blocked")
             self.assertFalse(package["handoff_review"]["ready_claim_authorized"])
             self.assertIn("missing_mandatory_sections", issue_ids)
+            self.assertEqual(
+                payload["quality_debt"]["semantic_route_owner"],
+                "decisive_codex_attempt",
+            )
             self.assertTrue(output_dir.exists())
 
     def test_text_output_cannot_present_producer_package_as_submission_ready(self) -> None:

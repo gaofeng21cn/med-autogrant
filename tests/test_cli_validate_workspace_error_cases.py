@@ -48,7 +48,10 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
                 payload = self.run_workspace_json(command, input_path)
                 if command == "route-report":
                     self.assertEqual(payload["checkpoint_status"], "completed_with_quality_debt")
-                    self.assertEqual(payload["semantic_route_owner"], "codex_cli")
+                    self.assertEqual(
+                        payload["semantic_route_owner"],
+                        "decisive_codex_attempt",
+                    )
                 else:
                     self.assertEqual(payload["surface_kind"], "mag_ai_route_context")
                     self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])

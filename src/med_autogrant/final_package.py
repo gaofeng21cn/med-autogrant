@@ -64,7 +64,7 @@ def build_final_package_document(
                 "blocks_stage_transition": False,
                 "blocks_submission_ready_claim": True,
                 "next_stage_may_start": True,
-                "semantic_route_owner": "codex_cli",
+                "semantic_route_owner": "decisive_codex_attempt",
             }
             if quality_debt_reasons
             else None

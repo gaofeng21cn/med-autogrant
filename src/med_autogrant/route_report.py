@@ -36,7 +36,7 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
             "workspace_id": document.get("workspace_id"),
             "lifecycle_stage": document.get("lifecycle_stage"),
             "lifecycle_stage_role": "readable_partial_workspace_observation",
-            "semantic_route_owner": "codex_cli",
+            "semantic_route_owner": "decisive_codex_attempt",
             "authority_boundary": build_ai_route_boundary(
                 surface_id="mag.stage-route-report",
                 mag_role="route_context_projection_only",
@@ -69,7 +69,7 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
         "lifecycle_stage_role": "workspace_lifecycle_observation",
-        "semantic_route_owner": "codex_cli",
+        "semantic_route_owner": "decisive_codex_attempt",
         "authority_boundary": build_ai_route_boundary(
             surface_id="mag.stage-route-report",
             mag_role="route_context_projection_only",

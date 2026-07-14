@@ -73,7 +73,19 @@ class StageRouterTest(unittest.TestCase):
         route = determine_next_step(load("nsfc_workspace_p2a_input_intake.json"))
 
         self.assertEqual(route["surface_kind"], "mag_ai_route_context")
-        self.assertEqual(route["semantic_route_owner"], "codex_cli")
+        self.assertEqual(route["semantic_route_owner"], "decisive_codex_attempt")
+        self.assertEqual(
+            route["authority_boundary"]["semantic_route_owner"],
+            "decisive_codex_attempt",
+        )
+        self.assertEqual(
+            route["authority_boundary"]["semantic_route_owner_role"],
+            "decisive_attempt_only",
+        )
+        self.assertEqual(
+            route["ai_route_policy"]["semantic_route_owner"],
+            "decisive_codex_attempt",
+        )
         self.assertFalse(route["authority_boundary"]["mag_writes_stage_current_pointer"])
         self.assertFalse(route["authority_boundary"]["mag_writes_stage_terminal_state"])
         self.assertFalse(route["ai_route_policy"]["program_recommendation_can_block_or_select_route"])

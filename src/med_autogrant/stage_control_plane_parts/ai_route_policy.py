@@ -27,7 +27,7 @@ def build_mag_ai_route_policy(
         "version": "mag-ai-selected-progress-route-policy.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
-        "semantic_route_owner": "codex_cli",
+        "semantic_route_owner": "decisive_codex_attempt",
         "route_policy": "ai_selected_progress_route",
         "declared_stage_ids": declared_stage_ids,
         "declared_action_ids": declared_action_ids,
@@ -47,7 +47,7 @@ def build_mag_ai_route_policy(
         "authority_boundary": {
             "opl_role": "transport_and_declared_stage_scope_only",
             "mag_role": "grant_truth_and_claim_authority_only",
-            "codex_cli_role": "semantic_route_selection",
+            "decisive_codex_attempt_role": "semantic_route_decision",
             "opl_can_select_or_reject_semantic_route": False,
             "mag_static_program_can_select_or_reject_semantic_route": False,
             "opl_can_write_grant_truth": False,

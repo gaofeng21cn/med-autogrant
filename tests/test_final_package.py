@@ -109,6 +109,10 @@ class FinalPackageTest(unittest.TestCase):
                 self.assertEqual(payload["status"], "completed_with_quality_debt")
                 self.assertTrue(payload["next_stage_may_start"])
                 self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
+                self.assertEqual(
+                    payload["quality_debt"]["semantic_route_owner"],
+                    "decisive_codex_attempt",
+                )
                 self.assertIn(
                     "checkpoint_status_not_final",
                     " ".join(payload["quality_debt"]["reasons"]),
