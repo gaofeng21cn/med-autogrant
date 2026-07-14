@@ -6,6 +6,23 @@
   "framework_contract_ref": "contracts/opl-framework/stage-quality-cycle-contract.json",
   "route_selection_contract_ref": "contracts/opl-framework/stage-quality-cycle-contract.json#/cross_stage_route_selection",
   "quality_governance_profile_ref": "contracts/opl-framework/official-knowledge-deliverable-quality-profile.json",
+  "cross_stage_route_selection": {
+    "semantic_route_decision_owner": "decisive_codex_attempt",
+    "stage_transition_materialization_owner": "opl_stage_run_controller",
+    "primary_only_decisive_attempt_role": "producer",
+    "formal_review_decisive_attempt_roles": ["reviewer", "re_reviewer"],
+    "producer_can_be_decisive_attempt_in_formal_review": false,
+    "repairer_can_be_decisive_attempt": false,
+    "producer_or_repairer_may_return_terminal_route_decision": false,
+    "same_stage_repair_required_with_budget_remaining_continues_quality_loop": true,
+    "repair_required_review_or_re_review_may_select_cross_stage_route_back_before_budget_exhaustion": true,
+    "repair_required_cross_stage_route_back_requires_target_different_from_current_stage": true,
+    "cross_stage_route_back_requires_narrowest_canonical_owner_stage": true,
+    "repair_required_review_or_re_review_may_select_other_terminal_route_before_budget_exhaustion": false,
+    "repair_required_review_or_re_review_may_select_terminal_route_after_budget_exhaustion": true,
+    "repair_budget_exhaustion_terminal_status": "completed_with_quality_debt",
+    "hard_stop_or_zero_consumable_artifact_route_output": "none"
+  },
   "review_attempt_contract": {
     "attempt_roles": ["producer", "reviewer", "repairer", "re_reviewer"],
     "new_stage_attempt_per_role": true,
@@ -14,17 +31,7 @@
     "same_thread_resume_role": "protocol_closeout_resume",
     "same_thread_resume_counts_as_review": false,
     "same_thread_resume_consumes_quality_budget": false,
-    "route_authority_contract": {
-      "semantic_route_decision_owner": "decisive_codex_attempt",
-      "stage_transition_materialization_owner": "opl_stage_run_controller",
-      "primary_only_decisive_attempt_role": "producer",
-      "formal_review_decisive_attempt_roles": ["reviewer", "re_reviewer"],
-      "repairer_can_be_decisive_attempt": false,
-      "repair_required_with_budget_remaining_route_output": "route_impact.stage_route_recommendation",
-      "repair_required_without_budget_and_consumable_artifact_route_output": "route_impact.stage_route_decision",
-      "repair_budget_exhaustion_terminal_status": "completed_with_quality_debt",
-      "hard_stop_or_zero_consumable_artifact_route_output": "none"
-    },
+    "route_authority_contract_ref": "#/cross_stage_route_selection",
     "attempt_output_contract": {
       "envelope_path": "route_impact.stage_quality_cycle",
       "outcome_field": "outcome",

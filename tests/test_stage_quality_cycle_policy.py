@@ -28,21 +28,43 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert attempt_contract["same_thread_resume_role"] == "protocol_closeout_resume"
     assert attempt_contract["same_thread_resume_counts_as_review"] is False
     assert attempt_contract["same_thread_resume_consumes_quality_budget"] is False
-    assert attempt_contract["route_authority_contract"] == {
-        "semantic_route_decision_owner": "decisive_codex_attempt",
-        "stage_transition_materialization_owner": "opl_stage_run_controller",
-        "primary_only_decisive_attempt_role": "producer",
-        "formal_review_decisive_attempt_roles": ["reviewer", "re_reviewer"],
-        "repairer_can_be_decisive_attempt": False,
-        "repair_required_with_budget_remaining_route_output": (
-            "route_impact.stage_route_recommendation"
-        ),
-        "repair_required_without_budget_and_consumable_artifact_route_output": (
-            "route_impact.stage_route_decision"
-        ),
-        "repair_budget_exhaustion_terminal_status": "completed_with_quality_debt",
-        "hard_stop_or_zero_consumable_artifact_route_output": "none",
-    }
+    assert attempt_contract["route_authority_contract_ref"] == (
+        "#/cross_stage_route_selection"
+    )
+    route = profile["cross_stage_route_selection"]
+    assert route["semantic_route_decision_owner"] == "decisive_codex_attempt"
+    assert route["stage_transition_materialization_owner"] == (
+        "opl_stage_run_controller"
+    )
+    assert route["primary_only_decisive_attempt_role"] == "producer"
+    assert route["formal_review_decisive_attempt_roles"] == ["reviewer", "re_reviewer"]
+    assert route["producer_can_be_decisive_attempt_in_formal_review"] is False
+    assert route["repairer_can_be_decisive_attempt"] is False
+    assert route["producer_or_repairer_may_return_terminal_route_decision"] is False
+    assert route[
+        "same_stage_repair_required_with_budget_remaining_continues_quality_loop"
+    ] is True
+    assert route[
+        "repair_required_review_or_re_review_may_select_cross_stage_route_back_before_budget_exhaustion"
+    ] is True
+    assert route[
+        "repair_required_cross_stage_route_back_requires_target_different_from_current_stage"
+    ] is True
+    assert route[
+        "cross_stage_route_back_requires_narrowest_canonical_owner_stage"
+    ] is True
+    assert route[
+        "repair_required_review_or_re_review_may_select_other_terminal_route_before_budget_exhaustion"
+    ] is False
+    assert route[
+        "repair_required_review_or_re_review_may_select_terminal_route_after_budget_exhaustion"
+    ] is True
+    assert route["repair_budget_exhaustion_terminal_status"] == (
+        "completed_with_quality_debt"
+    )
+    assert route["hard_stop_or_zero_consumable_artifact_route_output"] == "none"
+    assert "repair_required_with_budget_remaining_route_output" not in json.dumps(profile)
+
     assert attempt_contract["attempt_output_contract"] == {
         "envelope_path": "route_impact.stage_quality_cycle",
         "outcome_field": "outcome",
@@ -172,8 +194,9 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "submission-ready-package.json",
     ):
         assert artifact in prompt
-    assert "While repair budget remains" in prompt
-    assert "may only recommend a route" in prompt
+    assert "`same_stage_repair_required`" in prompt
+    assert "`cross_stage_route_back_before_budget_exhaustion`" in prompt
+    assert "no other terminal route is allowed before budget exhaustion" in prompt
     assert "repair only assembly, manifest, or provenance projection" in roles
     for finding_field in ("finding_id", "severity", "required", "evidence_refs", "repair_expectation"):
         assert f"`{finding_field}`" in roles
@@ -217,16 +240,31 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "submission_ready_package_receipt_recorded" not in json.dumps(manifest)
 
 
-def test_quality_role_prompt_terminalizes_final_budget_without_routing_hard_boundaries() -> None:
+def test_quality_role_prompt_routes_only_cross_stage_findings_before_exhaustion() -> None:
     roles = (ROOT / "agent/prompts/stage-quality-cycle-roles.md").read_text(
         encoding="utf-8"
     )
+    reviewer = roles.split("## Reviewer", 1)[1].split("## Repairer", 1)[0]
+    re_reviewer = roles.split("## Re Reviewer", 1)[1]
 
-    assert "`repair_budget_remaining`" in roles
+    assert roles.count("`same_stage_repair_required`") >= 3
     assert "another repair round remains" in roles
     assert "returns outcome `repair_required`" in roles
     assert "controller creates the next fresh repairer Attempt" in roles
     assert "This branch is non-terminal" in roles
+
+    assert roles.count("`cross_stage_route_back_before_budget_exhaustion`") >= 3
+    assert "narrowest canonical owner of required work is a different declared Stage" in roles
+    assert "outcome `repair_required` plus exactly one" in roles
+    assert "`decision_kind=route_back`" in roles
+    assert "`target_stage_id` different from the current Stage" in roles
+    assert "only terminal route allowed before repair-budget exhaustion" in roles
+    for decisive_review_section in (reviewer, re_reviewer):
+        assert "`same_stage_repair_required`" in decisive_review_section
+        assert (
+            "`cross_stage_route_back_before_budget_exhaustion`"
+            in decisive_review_section
+        )
 
     assert "`final_budget_consumable`" in roles
     assert "no repair round remains" in roles
@@ -244,8 +282,7 @@ def test_quality_role_prompt_terminalizes_final_budget_without_routing_hard_boun
     assert "`route_impact.stage_route_recommendation`" in roles
     assert "zero consumable artifact uses `blocked`" in roles
     assert "terminalizes the StageRun as blocked or human-gated" in roles
-    assert "A progress-terminal reviewer returns `route_impact.stage_route_decision`" in roles
-    assert "a hard-boundary reviewer returns no route output" in roles
+    assert "A hard-boundary reviewer returns no route output" in roles
 
     assert "repairer cannot close findings or make a terminal Stage judgment" in roles
     assert "it must never return `stage_route_decision`" in roles
