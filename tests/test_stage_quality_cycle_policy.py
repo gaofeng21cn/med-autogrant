@@ -40,7 +40,7 @@ def test_mag_declares_isolated_stage_review_for_every_ai_producer() -> None:
     assert route["formal_review_decisive_attempt_roles"] == ["reviewer", "re_reviewer"]
     assert route["producer_can_be_decisive_attempt_in_formal_review"] is False
     assert route["repairer_can_be_decisive_attempt"] is False
-    assert route["producer_or_repairer_may_return_terminal_route_decision"] is False
+    assert "producer_or_repairer_may_return_terminal_route_decision" not in route
     assert route[
         "same_stage_repair_required_with_budget_remaining_continues_quality_loop"
     ] is True
