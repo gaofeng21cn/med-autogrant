@@ -10,14 +10,19 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _assert_progress_first_route_policy(policy: dict[str, object]) -> None:
-    assert policy["route_selection_owner"] == "codex_cli"
+    assert policy["semantic_route_decision_owner"] == "decisive_codex_attempt"
+    assert policy["stage_transition_materialization_owner"] == "opl_stage_run_controller"
+    assert policy["primary_only_decisive_attempt_role"] == "producer"
+    assert policy["formal_review_decisive_attempt_roles"] == ["reviewer", "re_reviewer"]
+    assert policy["repairer_can_be_decisive_attempt"] is False
+    assert "route_selection_owner" not in policy
     assert policy["codex_may_advance_skip_repeat_reverse_or_route_back"] is True
     assert policy["any_declared_stage_may_start_from_any_prior_stage_result"] is True
     assert policy["declared_requires_are_quality_context_not_launch_gates"] is True
     assert policy["next_stage_refs_are_recommendations_not_constraints"] is True
 
 
-def test_stage_manifest_gives_codex_unrestricted_declared_stage_routing() -> None:
+def test_stage_manifest_splits_semantic_route_decision_from_transition_materialization() -> None:
     manifest = json.loads((REPO_ROOT / "agent/stages/manifest.json").read_text(encoding="utf-8"))
     policy = manifest["progress_first_policy"]
     _assert_progress_first_route_policy(policy)
@@ -28,7 +33,10 @@ def test_stage_operating_principles_match_progress_first_route_policy() -> None:
     principles = json.loads(
         (REPO_ROOT / "contracts/stage_operating_principles.json").read_text(encoding="utf-8")
     )
-    _assert_progress_first_route_policy(principles["speed_policy"])
+    policy = principles["speed_policy"]
+    _assert_progress_first_route_policy(policy)
+    assert policy["decisive_codex_attempt_is_single_semantic_control_plane"] is True
+    assert "codex_cli_is_single_semantic_control_plane" not in policy
 
 
 def test_ai_route_policy_projects_declared_scope_without_program_route_authority() -> None:

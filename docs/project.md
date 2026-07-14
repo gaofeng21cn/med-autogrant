@@ -13,7 +13,7 @@ Machine boundary: 本文是人读项目概览。机器真相归 `contracts/runti
 
 `Declarative Grant Pack + OPL generated/hosted surfaces + minimal MAG authority functions`
 
-OPL/Temporal 持有 generic runtime、stage attempt lifecycle、queue/wakeup、retry/resume、attempt ledger、generated caller 与 App/workbench shell。MAG 持有 grant truth、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、typed blocker与 grant-native helper；Codex CLI 持有语义 route 选择。
+OPL/Temporal 持有 generic runtime、stage attempt lifecycle、queue/wakeup、retry/resume、attempt ledger、generated caller 与 App/workbench shell。MAG 持有 grant truth、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、typed blocker与 grant-native helper。领域语义 route 由 `semantic_route_decision_owner=decisive_codex_attempt` 给出；`stage_transition_materialization_owner=opl_stage_run_controller` 只校验并物化该决定，不取得 grant-semantic approval authority。
 
 ## 当前入口
 

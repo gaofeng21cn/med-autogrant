@@ -27,7 +27,7 @@ MAG 不再提供 `execute-grant-autonomy-controller` 公共 facade、runtime met
 
 当前 autonomy 边界固定为：
 
-- OPL 持有 stage residency、attempt ledger、budget/retry/resume、queue 与 stage transport；Codex CLI 持有语义 stage route；
+- OPL 持有 stage residency、attempt ledger、budget/retry/resume、queue 与 stage transport；decisive Codex Attempt 持有语义 stage route，OPL StageRun controller 只物化 transition；
 - MAG 只执行 grant-native pass、quality/fundability/export/package authority 与 memory/receipt authority target；
 - repo-local `critique-revision-loop` 与 `authoring-mainline-loop` 已物理退役；OPL StageRun/Runway 通过声明化 stage manifest 调用 MAG single-pass handlers，并持有 owner chain、cycle/rollback/exhaustion 与 output-dir 编排；
 - stage closeout 只返回 MAG owner receipt、typed blocker 或 no-regression evidence ref；

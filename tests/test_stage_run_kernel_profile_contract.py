@@ -21,7 +21,9 @@ def test_stage_run_profile_keeps_mag_thin_and_opl_hosted() -> None:
 
     assert profile["kernel_role"] == "minimal_state_shell_not_domain_controller_system"
     route_policy = profile["codex_semantic_route_policy"]
-    assert route_policy["semantic_owner"] == "codex_cli"
+    assert route_policy["semantic_route_decision_owner"] == "decisive_codex_attempt"
+    assert route_policy["stage_transition_materialization_owner"] == "opl_stage_run_controller"
+    assert "semantic_owner" not in route_policy
     assert route_policy["readable_artifact_allows_any_declared_stage"] is True
     assert route_policy["quality_budget_exhaustion_blocks_route"] is False
     assert route_policy["owner_receipt_required_for_quality_or_ready_claim"] is True

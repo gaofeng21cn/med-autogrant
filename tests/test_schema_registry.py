@@ -115,3 +115,28 @@ class SchemaRegistryTest(unittest.TestCase):
                 schema = _load(schema_name)
                 surface = schema if definition is None else schema["$defs"][definition]
                 self.assertTrue(required_fields <= set(surface["required"]))
+
+    def test_project_profile_route_advisory_uses_standard_route_owner_split(self) -> None:
+        advisory = _load("common.schema.json")["$defs"][
+            "projectProfileFamilyGovernanceRouteBackAdvisory"
+        ]
+
+        self.assertEqual(
+            set(advisory["required"]),
+            {
+                "suggested_route_back_stage",
+                "advisory_trigger",
+                "semantic_route_decision_owner",
+                "stage_transition_materialization_owner",
+                "binding",
+            },
+        )
+        self.assertEqual(
+            advisory["properties"]["semantic_route_decision_owner"]["const"],
+            "decisive_codex_attempt",
+        )
+        self.assertEqual(
+            advisory["properties"]["stage_transition_materialization_owner"]["const"],
+            "opl_stage_run_controller",
+        )
+        self.assertNotIn("route_selection_owner", advisory["properties"])

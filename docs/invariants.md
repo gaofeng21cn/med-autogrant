@@ -19,7 +19,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - OPL/provider completion、schema completeness、generated surface、测试或 package 文件存在都不能替代 MAG verdict、receipt 或 human gate。
 - Owner receipt class 固定为 `domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
 - Domain handler dispatch 只允许三项 action；新增 action 必须先证明属于 MAG authority，而非 generic platform shell。
-- `agent/stages/manifest.json` 只声明 stage scope；Codex CLI 选择前进、重复、跳过或 route-back 到任一 declared stage。静态 transition table、oracle fixture 或 program guard 不得成为 route authority。
+- `agent/stages/manifest.json` 只声明 stage scope。`semantic_route_decision_owner=decisive_codex_attempt` 选择前进、重复、跳过或 route-back 到任一 declared stage；`stage_transition_materialization_owner=opl_stage_run_controller` 只校验并物化 transition。静态 transition table、oracle fixture、program guard 或 controller 不得成为 grant-semantic route authority。
 - Stage Pack v2 的 manifest allow-list、closed action catalog 与 pack input 必须保持 parity。每个 public hosted action 必须使用 exact `stage_binding`，其 `stage_route` 精确覆盖 manifest 中声明该 action 的 Stage，并按 `next_stage_refs` 排序；progress/cockpit 观察面归 OPL generated read model，不得作为 MAG read-only action 回流 Stage allow-list。
 - Human gate closeout 使用 OPL 标准 `completed_and_wait_owner` + `human_gate_ref`；`typed_blocker_ref` 只用于真实语义或 authority 缺口，不能包装等待人类决定或 portal 操作。
 - Workspace route recommendation 同样遵守该语义：人工决定返回 `human_gate_ref`，普通 repair/rollback 返回 `route_back_ref`。
@@ -57,4 +57,4 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - `package_and_submit_ready` 必须把四个 canonical package artifacts 的 exact refs/hash 交给 fresh Reviewer；producer/helper 结果固定为 `submission_ready=false` 候选，不能投影 terminal `submission_ready`。本 Stage 只修 assembly、manifest 与 provenance projection，其余缺陷 route-back，外部 portal acceptance 保持 human-owned。
 - StageRunController 只能物化 exact-hash-bound `opl_stage_review_receipt`。任何本地 submission-ready 投影必须同时消费该 receipt 与 MAG-owned export/owner verdict；reviewer 与 OPL 均不得签 MAG owner receipt 或授权 export/submission readiness。
 - Reviewer 与 re-reviewer Attempt 只通过 `route_impact.stage_quality_cycle.outcome` 返回 `pass|repair_required|quality_debt|blocked|human_gate`。Attempt 不得输出 receipt `verdict`；StageRunController 将前三者同名映射，并将 `blocked|human_gate` 映射为 receipt `hard_stop`。
-- Formal Review StageRun 中只有 terminal reviewer/re-reviewer 能输出 `route_impact.stage_route_decision`；producer、repairer 与 repair-required reviewer/re-reviewer 只能输出 `stage_route_recommendation`。Attempt 不直接物化 Review receipt，旧 route closeout 字段不得使用。
+- Formal Review StageRun 中只有 terminal reviewer/re-reviewer 能输出 `route_impact.stage_route_decision`；producer、repairer 与 repair budget 尚存时的 `repair_required` reviewer/re-reviewer 只能输出 `stage_route_recommendation`。预算耗尽且 exact artifact 可消费时，`repair_required` reviewer/re-reviewer 是 terminal decisive Attempt；hard boundary 或零可消费 artifact 不输出 route。Attempt 不直接物化 transition 或 Review receipt，旧 route closeout 字段不得使用。

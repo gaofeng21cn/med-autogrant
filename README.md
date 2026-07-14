@@ -114,7 +114,7 @@ You can start with prompts like:
   <summary><strong>Technical OPL / executor boundary</strong></summary>
 
 - `OPL` can host MAG as an external domain agent and provide stage scheduling, wakeups, handoffs, receipts, retries, and projections.
-- MAG keeps the grant-facing authority: grant truth, fundability and writing-quality judgment, route ownership, and submission/export authority.
+- MAG keeps the grant-facing authority: grant truth, fundability and writing-quality judgment, route evidence and constraints, and submission/export authority. A decisive Codex Attempt supplies the semantic Stage route; the OPL StageRun controller only validates and materializes that transition.
 - `Codex CLI` is the current first-class executor; Hermes-Agent, Claude Code, and similar executors are explicit opt-in adapters with auditable receipts.
 - The full technical boundary, current entry matrix, contract refs, and proof surfaces are maintained in the [Docs Guide](./docs/README.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 

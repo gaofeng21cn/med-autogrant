@@ -17,7 +17,7 @@ Machine boundary: 本文是人读 inventory。机器分类归 `contracts/functio
 | final package authority | minimal authority function | MAG retained |
 | memory accept/reject | minimal authority function | MAG retained |
 | owner receipt signer / typed blocker | minimal authority function | MAG retained |
-| AI route policy | declarative declared-stage scope | Codex-owned semantic route; no MAG program authority |
+| AI route policy | declarative declared-stage scope | decisive Codex Attempt owns semantic route decision；OPL StageRun controller 只校验并物化 transition；MAG 无 program authority |
 | grant prompt / typed closeout and answer validation / direct CLI-domain handler | refs-only domain adapter | MAG retained；所有 executor transport直接消费 `opl_framework.executor_client` |
 | Codex/OPL executor subprocess / timeout / request temp / process cleanup / receipt envelope | OPL Runway | MAG private transport全部 deleted |
 | HTTPS source transport / redirect、timeout、decode与 policy enforcement | OPL Framework `source_transport` | MAG只保留 3 个官方 URL exact allowlist、User-Agent 与 funding HTML解析语义；`urllib` transport已删除 |

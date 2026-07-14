@@ -53,7 +53,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Stage Prompt Boundary
 
-- Codex CLI owns semantic route selection. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.
+- The decisive Codex Attempt owns semantic route selection. The OPL StageRun controller only validates and materializes the transition. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
 - Package work proceeds from the best readable grant artifact. Missing quality verdict refs, corrupt output, or zero readable output become quality debt plus a consumable diagnostic and close submission/export/ready claims without stopping the next stage; only authority, safety/permission, identity/currentness, unavailable executor, irreversible action, or explicit human authority hard-stops work.
 

@@ -38,7 +38,7 @@ MAG 只有一个语义控制面：Codex CLI。任何可读 grant 草稿、fundab
 判断、review finding、阴性结果、部分 package 或 diagnostic 都是 progress，
 可直接作为下一 declared stage 的输入。retry、review、repair 次数只代表质量
 预算；预算用尽时保留最佳 artifact 并以 `completed_with_quality_debt` 推进。
-Codex 可以前进、重复当前 stage，或回到 call intake、fundability strategy、
+Decisive Codex Attempt 可以前进、重复当前 stage，或回到 call intake、fundability strategy、
 specific aims、proposal authoring、review/package 等任一 declared stage；静态
 transition table、schema、normalizer、validator 或 receipt 缺口无权否决该路由。
 质量债只关闭 fundable、grant-ready、submission-ready、export-ready、accepted
@@ -47,7 +47,7 @@ diagnostic 并继续；只有 executor unavailable、权限/安全/authority、w
 identity/currentness、不可逆 portal/write 操作或明确 owner/human authority 才能硬停。
 
 - OPL/Temporal 持有任务运行驻留、stage attempt lifecycle、queue/wakeup、retry/resume、attempt ledger、generated caller 与 App/workbench shell。
-- MAG 持有 grant truth、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、typed blocker 与 grant-native helper；Codex CLI 独占语义 route 选择。
+- MAG 持有 grant truth、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、typed blocker 与 grant-native helper；decisive Codex Attempt 给出语义 route，OPL StageRun controller 只校验并物化 transition。
 - OPL generated surface、provider completion、schema completeness或测试通过都不能声明 grant-ready、submission-ready 或 production-ready。
 - 当前 MCP 仍满足 `descriptor_only=true`、`public_runtime=false`；不能写成 public MCP runtime 已落地。
 

@@ -114,7 +114,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
   <summary><strong>技术层 OPL / executor 边界</strong></summary>
 
 - `OPL` 可以把 MAG 作为外部领域智能体托管，并提供阶段调度、唤醒、队列、交接、回执、重试和投影。
-- MAG 保留基金侧权威：正文真相、可资助性和写作质量判断、route ownership，以及 submission/export authority。
+- MAG 保留基金侧权威：正文真相、可资助性和写作质量判断、route evidence/constraints，以及 submission/export authority。Decisive Codex Attempt 给出语义 Stage route；OPL StageRun controller 只校验并物化 transition。
 - `Codex CLI` 是当前第一公民 executor；Hermes-Agent、Claude Code 等其他 executor 是显式 opt-in adapter，必须产出可审计回执。
 - 完整技术边界、当前入口矩阵、合同 refs 与 proof surfaces 由 [文档索引](./docs/README.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 和 [合同说明](./contracts/README.md) 维护。
 

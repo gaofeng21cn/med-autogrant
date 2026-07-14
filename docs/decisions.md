@@ -63,7 +63,7 @@ MAG workspace locator/topology、runtime domain identity/registration ref、prog
 
 ## D15 最终 package bytes 必须在冻结后独立复审
 
-`package_and_submit_ready` 会在 Grant Meta Review 之后生成或转换四个 canonical package artifacts，并可支撑本地 submission-ready claim，因此不是纯 refs-only handoff。Producer 必须绑定同 generation 的四份 exact refs/hash，且其 package JSON 始终保持 `submission_ready=false`；producer、repairer 和 repair-required reviewer/re-reviewer 只能返回 `route_impact.stage_route_recommendation`，terminal Reviewer/Re-reviewer 才返回 `route_impact.stage_route_decision`。Reviewer closeout 只提供审阅字段，StageRunController 只能物化 exact-hash-bound `opl_stage_review_receipt`；最终本地 readiness 必须同时消费该 receipt 与 MAG-owned export/owner verdict，OPL 和 reviewer 都不能签 MAG owner receipt。本 Stage repair 只处理 assembly、manifest 和 provenance projection；上游内容、证据、质量闭环、附件 owner 或 export-verdict 缺陷必须 route-back。外部 portal acceptance 继续由下游 human owner 持有。
+`package_and_submit_ready` 会在 Grant Meta Review 之后生成或转换四个 canonical package artifacts，并可支撑本地 submission-ready claim，因此不是纯 refs-only handoff。Producer 必须绑定同 generation 的四份 exact refs/hash，且其 package JSON 始终保持 `submission_ready=false`；producer 与 repairer 只能返回 `route_impact.stage_route_recommendation`。`repair_required` reviewer/re-reviewer 在 repair budget 尚存时也只 recommendation；预算耗尽且 exact package bytes 可消费时，它保留 `repair_required` outcome、成为 terminal decisive Attempt并返回 `route_impact.stage_route_decision`，controller 投影 `completed_with_quality_debt`。Reviewer closeout 只提供审阅字段，StageRunController 只能物化 exact-hash-bound `opl_stage_review_receipt`；最终本地 readiness 必须同时消费该 receipt 与 MAG-owned export/owner verdict，OPL 和 reviewer 都不能签 MAG owner receipt。本 Stage repair 只处理 assembly、manifest 和 provenance projection；上游内容、证据、质量闭环、附件 owner 或 export-verdict 缺陷必须 route-back。外部 portal acceptance 继续由下游 human owner 持有。
 
 ## D16 Hosted action 与 package lifecycle 归 OPL
 
@@ -76,3 +76,7 @@ Command specs 只声明 parser 字段和帮助信息，不承载 callable、meth
 ## D18 Source transport 归 OPL
 
 通用 HTTPS request、exact URL/origin policy、redirect enforcement、timeout、header validation、decode 与 transport error wrapping 由 `opl_framework.source_transport` 持有。MAG 只声明 NIH/NSFC 三个官方 URL allowlist、funding-specific User-Agent、HTML 解析和 domain provenance；不得恢复 repo-local `urllib` transport、fallback downloader 或第二套网络策略。
+
+## D19 语义 route 与 transition 物化分权
+
+所有 active Stage policy、StageRun profile 和 route advisory 统一声明 `semantic_route_decision_owner=decisive_codex_attempt` 与 `stage_transition_materialization_owner=opl_stage_run_controller`。Primary-only Stage 的 producer、Formal Review 的 terminal reviewer/re-reviewer 可以成为 decisive Attempt；repairer 永不 decisive。Controller 只能校验 decisive Attempt 的 route shape、evidence 与 declared target 后物化 transition，不拥有 grant-semantic approval authority；旧 `semantic_owner`、`route_selection_owner` 和把 `codex_cli` 同时写成语义与 transition owner 的合同已退役。

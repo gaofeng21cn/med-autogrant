@@ -4,7 +4,7 @@ The Stage manifest main prompt defines the professional task and its quality rub
 
 ## Route Contract
 
-Every route output lives under `route_impact`. A progress-terminal decisive Attempt returns exactly one `stage_route_decision`; a non-decisive Attempt may return at most one `stage_route_recommendation`. Both use `decision_kind=advance|skip|repeat|reverse|route_back|complete`, a declared `target_stage_id` except for `complete`, and non-empty `evidence_refs`; a recommendation also includes `reason`. Never return both, and never use legacy `route_back_stage_ref`, `selected_next_stage_ref`, `next_stage_ref`, or `workflow_complete` fields.
+Every route output lives under `route_impact`. The semantic route decision owner is `semantic_route_decision_owner=decisive_codex_attempt`; the controller is only `stage_transition_materialization_owner=opl_stage_run_controller`. A progress-terminal decisive Attempt returns exactly one `stage_route_decision`; a non-decisive Attempt may return at most one `stage_route_recommendation`. Both use `decision_kind=advance|skip|repeat|reverse|route_back|complete`, a declared `target_stage_id` except for `complete`, and non-empty `evidence_refs`; a recommendation also includes `reason`. Never return both, and never use legacy `route_back_stage_ref`, `selected_next_stage_ref`, `next_stage_ref`, or `workflow_complete` fields. Attempts do not update the current pointer or materialize a transition.
 
 ## Quality Budget and Hard Boundaries
 

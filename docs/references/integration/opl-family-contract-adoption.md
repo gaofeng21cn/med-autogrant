@@ -11,7 +11,7 @@ Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts
 
 ## Runtime Attempt Projection
 
-OPL 直接持有 runtime attempt、retry/resume、queue、reconciliation 与 stage transport；Codex CLI 独占语义 stage route。MAG 通过 current-program、stage pack、domain handler、workspace refs 和 owner receipt / typed blocker refs 提供领域输入与 closeout；仓内不再维护私有 autonomy controller、attempt projection、transition oracle 或 runtime-control facade。
+OPL 直接持有 runtime attempt、retry/resume、queue、reconciliation 与 stage transport；decisive Codex Attempt 给出语义 stage route，OPL StageRun controller 只校验并物化 transition。MAG 通过 current-program、stage pack、domain handler、workspace refs 和 owner receipt / typed blocker refs 提供领域输入与 closeout；仓内不再维护私有 autonomy controller、attempt projection、transition oracle 或 runtime-control facade。
 
 OPL 只能读取、索引、排队、唤醒、回执和投影；grant truth、authoring outputs、quality/fundability/export/package authority 与 workspace body write authority 继续由 MAG 持有。
 

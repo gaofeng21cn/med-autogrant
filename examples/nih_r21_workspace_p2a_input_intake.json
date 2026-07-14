@@ -178,7 +178,8 @@
         "route_back_advisory": {
           "suggested_route_back_stage": "fit_alignment",
           "advisory_trigger": "innovation_gap_sensitive",
-          "route_selection_owner": "codex_cli",
+          "semantic_route_decision_owner": "decisive_codex_attempt",
+          "stage_transition_materialization_owner": "opl_stage_run_controller",
           "binding": false
         },
         "evidence_escalation_policy": {
@@ -263,7 +264,8 @@
         "route_back_advisory": {
           "suggested_route_back_stage": "fit_alignment",
           "advisory_trigger": "innovation_gap_sensitive",
-          "route_selection_owner": "codex_cli",
+          "semantic_route_decision_owner": "decisive_codex_attempt",
+          "stage_transition_materialization_owner": "opl_stage_run_controller",
           "binding": false
         },
         "evidence_escalation_policy": {

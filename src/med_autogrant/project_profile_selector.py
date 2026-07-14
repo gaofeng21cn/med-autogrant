@@ -285,7 +285,8 @@ def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any
                 governance_policy["route_back_advisory"]["suggested_route_back_stage"]
             ),
             "advisory_trigger": _normalize_string(governance_policy["route_back_advisory"]["advisory_trigger"]),
-            "route_selection_owner": "codex_cli",
+            "semantic_route_decision_owner": "decisive_codex_attempt",
+            "stage_transition_materialization_owner": "opl_stage_run_controller",
             "binding": False,
         },
         "evidence_escalation_policy": {

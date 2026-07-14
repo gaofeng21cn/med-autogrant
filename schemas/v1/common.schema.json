@@ -653,7 +653,8 @@
       "required": [
         "suggested_route_back_stage",
         "advisory_trigger",
-        "route_selection_owner",
+        "semantic_route_decision_owner",
+        "stage_transition_materialization_owner",
         "binding"
       ],
       "properties": {
@@ -663,8 +664,11 @@
         "advisory_trigger": {
           "$ref": "#/$defs/nonEmptyString"
         },
-        "route_selection_owner": {
-          "const": "codex_cli"
+        "semantic_route_decision_owner": {
+          "const": "decisive_codex_attempt"
+        },
+        "stage_transition_materialization_owner": {
+          "const": "opl_stage_run_controller"
         },
         "binding": {
           "const": false

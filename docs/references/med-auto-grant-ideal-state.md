@@ -29,7 +29,7 @@ Declarative Grant Pack
 
 MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic scheduler、daemon、lifecycle owner、queue、attempt ledger、generic state-machine runner、workspace/source intake shell、memory locator、artifact/package lifecycle、observability、App/workbench runtime，或手写 generic CLI/product-entry/product-sidecar/status wrapper。
 
-只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG；语义 route 由 Codex CLI 选择。
+只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG；语义 route 由 decisive Codex Attempt 给出，OPL StageRun controller 只校验并物化 transition。
 
 理想物理源码形态应直接体现这条分层：`agent/` 是 Declarative Grant Pack；`contracts/` 是 pack compiler、stage/action/memory/artifact/receipt、handoff 和 evidence request 的机器面；`src/med_autogrant/**` 只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product-entry`、`domain-handler`、`status/user-loop`、`domain_runtime_parts`、`runtime_registration`、`lifecycle`、`memory receipt projection`、`package lifecycle`、`observability` 或 `human workbench / scheduler` 这类路径即使仍在 active source 中，也必须让读者看到它们只是 OPL generated/hosted surface target 或 grant authority refs，不是 MAG 私有 runtime platform。旧 product-sidecar、local journal、attempt ledger、repo-owned scheduler daemon、Hermes/Gateway/local-manager probe、flat alias 和 compatibility facade 不属于理想源码形态。
 

@@ -66,7 +66,7 @@ Repo-local CLI 的 command specs 只声明 help、required/optional/exclusive fi
 | `owner_receipt_signer` | domain owner receipt / typed blocker / no-regression evidence |
 | `grant_native_helper` | 无法声明化的 grant-native prompt、typed closeout/answer validation、direct CLI/domain-handler adapter；validation finding 是 Codex input/质量债，不是 stage progression 控制面；任何 executor transport 均不在本仓 |
 
-这七项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。`ai_route_policy` 只投影 declared stage/action scope；Codex CLI 独占语义 route 选择，OPL StageRun 只持有 transport 与 attempt lifecycle。
+这七项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。`ai_route_policy` 只投影 declared stage/action scope；`semantic_route_decision_owner=decisive_codex_attempt` 负责语义 route，`stage_transition_materialization_owner=opl_stage_run_controller` 只校验角色、shape 与 declared target 并物化 transition。
 
 ## OPL-owned Surfaces
 
@@ -110,7 +110,7 @@ MAG 只跟踪 `plugins/med-autogrant/` carrier source 和 `contracts/opl_agent_p
 
 MAG 绑定 `official_high_value_knowledge_deliverable.v1`。每个 AI producer Stage 在同一 StageRun 下使用相互隔离的 producer、reviewer、repairer、re-reviewer Attempts；每个 Attempt 对应新的 Codex thread。同一 thread 内的写后检查只是 `in_thread_refinement`，缺 typed closeout 时的 resume 也只补协议，二者都不能产生 Review receipt。
 
-Formal Review StageRun 的 decisive route owner 是 terminal reviewer/re-reviewer；producer、repairer 与 repair-required reviewer/re-reviewer 只能给 route recommendation。Primary-only 的 `review_and_rebuttal` Meta Review 由其 producer 直接输出 `route_impact.stage_route_decision`。OPL 只校验角色、shape 与 declared target 并运输结果，不替代 MAG 的 grant-semantic route 判断。
+Formal Review StageRun 的 decisive route owner 是 terminal reviewer/re-reviewer；producer 与 repairer 只能给 route recommendation。`repair_required` reviewer/re-reviewer 在 repair budget 尚存时也只能 recommendation；预算耗尽且 exact artifact 可消费时，它保留 `repair_required` outcome、成为 terminal decisive Attempt并返回 `route_impact.stage_route_decision`，controller 物化 transition 并投影 `completed_with_quality_debt`。Primary-only 的 `review_and_rebuttal` Meta Review 由其 producer 直接输出 `route_impact.stage_route_decision`。OPL 不替代 MAG 的 grant-semantic judgment，也不从 transition materialization 获得领域批准权。
 
 `review_and_rebuttal` 保留稳定 Stage ID，但承担独立 Grant Meta Review：它只消费 exact artifact/hash、Stage Review receipts、call/source/rubric 与必要 lineage，输出整体 verdict 和 defect-owner route-back，不在 Review Stage 内改写 proposal。可消费 artifact 在三轮质量预算耗尽后带质量债推进；债务继续阻止 quality、export、submission 和 ready 声明。
 

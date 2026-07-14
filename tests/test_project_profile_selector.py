@@ -114,11 +114,14 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             "near_submission_candidate",
         )
         self.assertFalse(grammar["governance_policy"]["ready_claim_policy"]["blocks_stage_transition"])
+        route_advisory = grammar["governance_policy"]["route_back_advisory"]
+        self.assertEqual(route_advisory["semantic_route_decision_owner"], "decisive_codex_attempt")
         self.assertEqual(
-            grammar["governance_policy"]["route_back_advisory"]["route_selection_owner"],
-            "codex_cli",
+            route_advisory["stage_transition_materialization_owner"],
+            "opl_stage_run_controller",
         )
-        self.assertFalse(grammar["governance_policy"]["route_back_advisory"]["binding"])
+        self.assertNotIn("route_selection_owner", route_advisory)
+        self.assertFalse(route_advisory["binding"])
         workspace, _selection = build_initialized_intake_workspace(selection_input)
         self.assertEqual(
             workspace["project_profile"]["grant_family_grammar"]["family_id"],

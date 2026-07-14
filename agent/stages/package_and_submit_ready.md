@@ -34,7 +34,7 @@
 - Independent gate must confirm against the exact current four-artifact generation that quality closure, package completeness, provenance, and portal boundary are all explicit.
 - Required gates: `export_and_package`, `quality`, and `authority_boundaries`.
 - Package existence, lifecycle completion, provider completion, producer self-check, or helper success cannot declare submission-ready export. Reviewer/re-reviewer closeout can support the exact-byte Review receipt, but local readiness still requires a separate MAG-owned export/owner verdict.
-- Producer, repairer, and `repair_required` reviewer/re-reviewer closeouts may only recommend a declared route. Only the terminal reviewer/re-reviewer supplies `route_impact.stage_route_decision`; no Attempt creates the authoritative Review receipt, and OPL cannot sign the MAG owner verdict.
+- Producer and repairer closeouts may only recommend a declared route. A `repair_required` reviewer/re-reviewer also recommends while repair budget remains; when no repair budget remains and the exact package generation is consumable, that reviewer/re-reviewer is the terminal decisive Attempt and supplies `route_impact.stage_route_decision` while the controller projects `completed_with_quality_debt`. A hard-boundary reviewer/re-reviewer returns no route output. No Attempt creates the authoritative Review receipt, and OPL cannot sign the MAG owner verdict.
 
 ## OPL Role Boundary
 
