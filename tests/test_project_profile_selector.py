@@ -133,6 +133,10 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         result = select_project_profile(selection_input)
         self.assertEqual(result["selection_summary"]["decision"], "completed_with_quality_debt")
         self.assertTrue(result["selection_summary"]["next_stage_may_start"])
+        self.assertEqual(
+            result["selection_summary"]["route_back_selection_owner"],
+            "decisive_codex_attempt",
+        )
         self.assertIsNone(result["recommended_project_profile"])
         self.assertFalse(result["quality_debt"]["blocks_stage_transition"])
 

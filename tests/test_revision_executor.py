@@ -126,7 +126,10 @@ class RevisionExecutorTest(unittest.TestCase):
                 self.assertIn(message, payload["quality_debt"]["detail"])
                 self.assertFalse(payload["quality_debt"]["blocks_stage_transition"])
                 self.assertTrue(payload["next_stage_may_start"])
-                self.assertEqual(payload["route_back_selection_owner"], "codex_cli")
+                self.assertEqual(
+                    payload["route_back_selection_owner"],
+                    "decisive_codex_attempt",
+                )
 
     def test_presubmission_freeze_remains_an_irreversible_write_guard(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

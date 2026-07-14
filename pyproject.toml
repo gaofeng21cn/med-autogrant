@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "med-autogrant"
-version = "0.3.1"
+version = "0.3.2"
 description = "Medical grant authoring domain agent for NSFC-oriented workflows."
 readme = "README.md"
 license = { text = "Apache-2.0" }

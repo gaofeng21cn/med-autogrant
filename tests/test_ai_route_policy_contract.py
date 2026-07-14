@@ -77,9 +77,15 @@ def test_active_source_never_assigns_semantic_route_ownership_to_codex_cli() -> 
                     continue
                 key = key_node.value
                 value = value_node.value
+                semantic_owner_aliases = {
+                    "semantic_owner",
+                    "semantic_route_owner",
+                    "semantic_route_decision_owner",
+                    "route_selection_owner",
+                    "route_back_selection_owner",
+                }
                 executor_claims_semantic_ownership = (
-                    key in {"semantic_route_owner", "semantic_route_decision_owner"}
-                    and value == "codex_cli"
+                    key in semantic_owner_aliases and value == "codex_cli"
                 ) or (key == "codex_cli_role" and "semantic_route" in value)
                 if executor_claims_semantic_ownership:
                     relative_path = source_path.relative_to(REPO_ROOT)

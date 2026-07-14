@@ -193,7 +193,7 @@ def discover_funding_landscape(
             "applied_filters": applied_filters,
             "required_input_fields": list(REQUIRED_DISCOVERY_INPUT_FIELDS),
             "next_stage_may_start": True,
-            "route_back_selection_owner": "codex_cli",
+            "route_back_selection_owner": "decisive_codex_attempt",
             "quality_debt": (
                 None
                 if matched

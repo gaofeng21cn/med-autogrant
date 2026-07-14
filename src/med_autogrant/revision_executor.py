@@ -123,7 +123,7 @@ def build_revision_execution_payload(
                 "blocks_quality_submission_export_or_ready_claims": True,
             },
             "next_stage_may_start": True,
-            "route_back_selection_owner": "codex_cli",
+            "route_back_selection_owner": "decisive_codex_attempt",
             "recommended_route_back_stage": document.get("lifecycle_stage"),
         }
     resolved_output_path = Path(output_path).expanduser().resolve()
@@ -158,7 +158,7 @@ def build_revision_execution_payload(
                 "blocks_quality_submission_export_or_ready_claims": True,
             },
             "next_stage_may_start": True,
-            "route_back_selection_owner": "codex_cli",
+            "route_back_selection_owner": "decisive_codex_attempt",
             "recommended_route_back_stage": "critique",
         })
     return payload

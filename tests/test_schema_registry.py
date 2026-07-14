@@ -140,3 +140,13 @@ class SchemaRegistryTest(unittest.TestCase):
             "opl_stage_run_controller",
         )
         self.assertNotIn("route_selection_owner", advisory["properties"])
+
+    def test_funding_discovery_route_back_owner_is_the_decisive_attempt(self) -> None:
+        summary = _load("funding-landscape-discovery.schema.json")["$defs"][
+            "discoverySummary"
+        ]
+
+        self.assertEqual(
+            summary["properties"]["route_back_selection_owner"]["const"],
+            "decisive_codex_attempt",
+        )

@@ -142,6 +142,23 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
 
         self.assertEqual(build_document.call_args.kwargs["executor_kind"], "hermes_agent")
 
+    def test_critique_precondition_failure_keeps_route_authority_on_decisive_attempt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir, patch.object(
+            handoff_surfaces,
+            "build_critique_execution_document",
+            side_effect=WorkspaceStateError("critique output is not consumable"),
+        ):
+            result = MagDomainRuntime().execute_critique_pass(
+                input_path=str(RE_REVIEW_EXAMPLE_PATH),
+                output_path=str(Path(tmp_dir) / "critique.json"),
+            )
+
+        self.assertEqual(result["status"], "completed_with_quality_debt")
+        self.assertEqual(
+            result["route_back_selection_owner"],
+            "decisive_codex_attempt",
+        )
+
     def test_authoring_precondition_failure_becomes_progress_diagnostic(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir, patch.object(
             handoff_surfaces,

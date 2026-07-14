@@ -37,7 +37,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | repo-local version `0.3.1`；published ref、digest 与 channel receipt 仍由 OPL release authority 生成 |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | repo-local version `0.3.2`；published ref、digest 与 channel receipt 仍由 OPL release authority 生成 |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | 9 exact audited entries；unresolved/private generic/unreachable sensitive/audit mismatch 为 0 |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |

@@ -90,6 +90,10 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
         self.assertEqual(negative["candidate_count"], 0)
         self.assertEqual(negative["discovery_summary"]["decision"], "completed_with_quality_debt")
         self.assertTrue(negative["discovery_summary"]["next_stage_may_start"])
+        self.assertEqual(
+            negative["discovery_summary"]["route_back_selection_owner"],
+            "decisive_codex_attempt",
+        )
         self.assertFalse(negative["discovery_summary"]["quality_debt"]["blocks_stage_transition"])
 
     def test_default_discovery_keeps_multiple_funders_and_provenance(self) -> None:
