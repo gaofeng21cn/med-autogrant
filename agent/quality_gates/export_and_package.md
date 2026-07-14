@@ -39,7 +39,7 @@ This gate decides whether MAG can produce a local submission-ready package and e
 - A fresh reviewer must inspect all four final package artifacts and bind the controller-owned Review receipt to their current hashes before MAG owner authority evaluates terminal local readiness.
 - Repair inside this Stage is limited to package assembly, manifest, and provenance projection. Proposal content, source evidence, quality-closure, attachment ownership, or export-verdict defects route back to the earliest owning Stage.
 - After any local repair, a fresh re-reviewer must inspect the complete rebuilt four-artifact generation; unchanged evidence cannot authorize changed bytes.
-- Producer, repairer, and repair-required reviewer/re-reviewer output only `route_impact.stage_route_recommendation`; the terminal reviewer/re-reviewer alone outputs `route_impact.stage_route_decision`. The controller materializes only `opl_stage_review_receipt`; neither it nor the reviewer signs the MAG owner verdict.
+- Producer and repairer output at most `route_impact.stage_route_recommendation`. While repair budget remains, a repair-required reviewer/re-reviewer is also non-terminal and may only recommend a route. At final budget with consumable exact bytes, that reviewer/re-reviewer keeps outcome `repair_required` and returns the terminal `route_impact.stage_route_decision`; the controller projects `completed_with_quality_debt`. The controller materializes only `opl_stage_review_receipt`; neither it nor the reviewer signs the MAG owner verdict.
 
 ## Quality-Debt And Human-Gate Shapes
 

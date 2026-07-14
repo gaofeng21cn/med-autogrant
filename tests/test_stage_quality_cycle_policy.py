@@ -157,7 +157,8 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "submission-ready-package.json",
     ):
         assert artifact in prompt
-    assert "Only a terminal reviewer or re-reviewer returns `route_impact.stage_route_decision`" in prompt
+    assert "While repair budget remains" in prompt
+    assert "may only recommend a route" in prompt
     assert "repair only assembly, manifest, or provenance projection" in roles
     for finding_field in ("finding_id", "severity", "required", "evidence_refs", "repair_expectation"):
         assert f"`{finding_field}`" in roles
@@ -169,6 +170,8 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "route_impact.stage_route_recommendation" in roles
     assert "repair_required" in roles
     assert "StageRunController materializes only the exact-hash-bound `opl_stage_review_receipt`" in roles
+    assert "to its identically named receipt verdict" in roles
+    assert "to the same receipt verdict" not in roles
     assert "`route_impact.stage_quality_cycle.outcome`" in roles
     for outcome in ("pass", "repair_required", "quality_debt", "blocked", "human_gate"):
         assert f"`{outcome}`" in roles
@@ -191,6 +194,9 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     ):
         assert f"legacy `{legacy_field}`" in roles or f"`{legacy_field}`" in roles
     assert "materializes only the exact-hash-bound `opl_stage_review_receipt`" in prompt
+    assert "When repair budget is exhausted and exact package bytes remain consumable" in prompt
+    assert "keeps outcome `repair_required`" in prompt
+    assert "projects `completed_with_quality_debt`" in prompt
     assert "Neither the reviewer Attempt nor OPL signs the MAG owner receipt" in prompt
     assert "submission_ready_package_receipt_recorded" not in prompt
     assert "submission_ready_package_receipt_recorded" not in json.dumps(manifest)
