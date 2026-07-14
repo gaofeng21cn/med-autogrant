@@ -35,6 +35,10 @@
       "stage_id": "call_and_candidate_intake",
       "stage_kind": "intake",
       "title": "Call and candidate intake",
+      "display_names": {
+        "en-US": "Call and candidate intake",
+        "zh-CN": "申报指南与候选方向梳理"
+      },
       "summary": "Establish the locked call, applicant context, eligibility, and source gaps.",
       "goal": "Read call guidance, applicant context, candidate directions, and eligibility constraints.",
       "policy_ref": "agent/stages/call_and_candidate_intake.md",
@@ -52,6 +56,10 @@
       "stage_id": "fundability_strategy",
       "stage_kind": "planning",
       "title": "Fundability strategy",
+      "display_names": {
+        "en-US": "Fundability strategy",
+        "zh-CN": "资助竞争力策略"
+      },
       "summary": "Decide whether the locked call and proposal strategy are competitive.",
       "goal": "Evaluate fit, novelty, feasibility, reviewer risk, and funder-specific strategy.",
       "policy_ref": "agent/stages/fundability_strategy.md",
@@ -69,6 +77,10 @@
       "stage_id": "specific_aims_and_structure",
       "stage_kind": "planning",
       "title": "Specific aims and structure",
+      "display_names": {
+        "en-US": "Specific aims and structure",
+        "zh-CN": "研究目标与申请书结构"
+      },
       "summary": "Turn the accepted strategy into aims, claims, evidence needs, and proposal structure.",
       "goal": "Shape the research question, aims, technical route, innovation, and argument structure.",
       "policy_ref": "agent/stages/specific_aims_and_structure.md",
@@ -86,6 +98,10 @@
       "stage_id": "proposal_authoring",
       "stage_kind": "creation",
       "title": "Proposal authoring",
+      "display_names": {
+        "en-US": "Proposal authoring",
+        "zh-CN": "申请书撰写"
+      },
       "summary": "Draft the proposal against accepted aims, evidence, and call constraints.",
       "goal": "Draft and revise the proposal body within the locked funding-call context.",
       "policy_ref": "agent/stages/proposal_authoring.md",
@@ -104,6 +120,10 @@
       "stage_kind": "review",
       "stage_role": "cross_stage_meta_review",
       "title": "Grant Meta Review",
+      "display_names": {
+        "en-US": "Grant Meta Review",
+        "zh-CN": "申请书综合评审"
+      },
       "summary": "Independently review the whole grant and route each defect to its owning Stage.",
       "goal": "Judge the whole grant against the locked call and evidence, then pass or route defects to the earliest owning Stage.",
       "policy_ref": "agent/stages/review_and_rebuttal.md",
@@ -121,6 +141,10 @@
       "stage_id": "package_and_submit_ready",
       "stage_kind": "packaging",
       "title": "Package and submit ready",
+      "display_names": {
+        "en-US": "Package and submit ready",
+        "zh-CN": "材料定稿与提交准备"
+      },
       "summary": "Apply MAG package authority and export gates to the local delivery package.",
       "goal": "Freeze the final local package and run submission-ready export checks.",
       "policy_ref": "agent/stages/package_and_submit_ready.md",

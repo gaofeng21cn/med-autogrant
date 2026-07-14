@@ -75,6 +75,16 @@ def test_domain_descriptor_declares_the_opl_hosted_standard_interface() -> None:
             "required_locator_fields": ["input_path"],
             "optional_locator_fields": [],
         },
+        "stage_catalog": {
+            "source_kind": "agent_repo_relative_json",
+            "relative_path": "agent/stages/manifest.json",
+            "items_pointer": "/stages",
+            "field_map": {
+                "stage_id": "stage_id",
+                "display_name": "title",
+                "display_names": "display_names",
+            },
+        },
         "runtime": {
             "runtime_domain_id": "medautogrant",
             "registration_ref": (
