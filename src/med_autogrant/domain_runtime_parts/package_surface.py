@@ -221,7 +221,7 @@ def build_submission_ready_package(
                 ],
                 "blocks_stage_transition": False,
                 "blocks_submission_ready_claim": True,
-                "semantic_route_owner": "codex_cli",
+                "semantic_route_owner": "decisive_codex_attempt",
             }
         ),
         "command": "build-submission-ready-package",

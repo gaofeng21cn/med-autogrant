@@ -294,13 +294,13 @@ def _with_ai_route_context(payload: dict[str, Any]) -> dict[str, Any]:
         **payload,
         "current_stage_role": "workspace_lifecycle_observation",
         "recommended_stage_role": "non_authoritative_repair_hint",
-        "semantic_route_owner": "codex_cli",
+        "semantic_route_owner": "decisive_codex_attempt",
         "authority_boundary": build_ai_route_boundary(
             surface_id="mag.next-step",
             mag_role="route_context_projection_only",
         ),
         "ai_route_policy": {
-            "semantic_route_owner": "codex_cli",
+            "semantic_route_owner": "decisive_codex_attempt",
             "declared_stage_scope_only": True,
             "program_recommendation_can_block_or_select_route": False,
             "advance_repeat_skip_or_route_back_allowed": True,

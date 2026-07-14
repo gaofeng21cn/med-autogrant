@@ -84,6 +84,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             )
 
         self.assertEqual(critique_route["verification_checkpoint"]["identity"]["grant_run_id"], IDENTITY["grant_run_id"])
+        self.assertEqual(critique_route["semantic_route_owner"], "decisive_codex_attempt")
         self.assertEqual(revised["grant_run_id"], IDENTITY["grant_run_id"])
         self.assertEqual(revised["draft_id"], IDENTITY["draft_id"])
         self.assertEqual(revised_route["verification_checkpoint"]["identity"]["reviewed_revision_plan_id"], "revision-v1")
@@ -156,7 +157,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         self.assertEqual(result["status"], "completed_with_quality_debt")
         self.assertTrue(result["next_stage_may_start"])
         self.assertFalse(result["quality_debt"]["blocks_stage_transition"])
-        self.assertEqual(result["semantic_route_owner"], "codex_cli")
+        self.assertEqual(result["semantic_route_owner"], "decisive_codex_attempt")
 
 
 if __name__ == "__main__":

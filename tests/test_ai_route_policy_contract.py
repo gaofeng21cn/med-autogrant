@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 
@@ -45,9 +46,43 @@ def test_ai_route_policy_projects_declared_scope_without_program_route_authority
         family_action_catalog={"actions": [{"action_id": "author"}]},
     )
 
-    assert policy["semantic_route_owner"] == "codex_cli"
+    assert policy["semantic_route_owner"] == "decisive_codex_attempt"
+    assert policy["authority_boundary"]["decisive_codex_attempt_role"] == (
+        "semantic_route_decision"
+    )
+    assert "codex_cli_role" not in policy["authority_boundary"]
     assert policy["declared_stage_ids"] == ["draft", "intake"]
     assert policy["route_capabilities"]["route_back_to_any_declared_stage"] is True
     assert policy["quality_debt_policy"]["blocks_stage_transition"] is False
     assert policy["static_transition_table_present"] is False
     assert policy["program_validator_can_reject_ai_route"] is False
+
+
+def test_active_source_never_assigns_semantic_route_ownership_to_codex_cli() -> None:
+    offenders: list[str] = []
+    source_root = REPO_ROOT / "src/med_autogrant"
+
+    for source_path in sorted(source_root.rglob("*.py")):
+        tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Dict):
+                continue
+            for key_node, value_node in zip(node.keys, node.values, strict=True):
+                if not (
+                    isinstance(key_node, ast.Constant)
+                    and isinstance(key_node.value, str)
+                    and isinstance(value_node, ast.Constant)
+                    and isinstance(value_node.value, str)
+                ):
+                    continue
+                key = key_node.value
+                value = value_node.value
+                executor_claims_semantic_ownership = (
+                    key in {"semantic_route_owner", "semantic_route_decision_owner"}
+                    and value == "codex_cli"
+                ) or (key == "codex_cli_role" and "semantic_route" in value)
+                if executor_claims_semantic_ownership:
+                    relative_path = source_path.relative_to(REPO_ROOT)
+                    offenders.append(f"{relative_path}:{node.lineno}:{key}={value}")
+
+    assert offenders == []
