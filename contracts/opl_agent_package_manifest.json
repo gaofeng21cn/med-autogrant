@@ -11,6 +11,7 @@
   "machine_boundary": "This repo-local sidecar declares OPL Agent Package identity and carrier locators. OPL release authority generates published artifact refs, digests, channels, and receipts; the repo plugin directory and lifecycle module fields remain carrier locators, not package truth or domain truth owners.",
   "codex_surface": {
     "plugin_id": "med-autogrant",
+    "carrier_source_commit": "8ceb733acd63406816a330c465907e69f4179a6d",
     "standalone_distribution": "repo_carrier_source",
     "required_skill_ids": [
       "med-autogrant"
