@@ -35,5 +35,6 @@ Machine boundary: 本文是人读历史归档索引。历史文档只保存 prov
 - [OPL 托管运行时三层合同](./runtime/opl-managed-runtime-three-layer-contract.md)
 - [轻量产品入口与 OPL Handoff 历史说明](./product/lightweight-product-entry-and-opl-handoff.md)
 - [历史 plans](./plans/README.md)
+- [2026-07-11 MAG structural and tests closeout](./plans/2026-07-11-mag-structural-and-tests-closeout.md)
 - [历史 specs 索引](./specs/README.md)
 - [OMX 历史资料](./omx/README.md)

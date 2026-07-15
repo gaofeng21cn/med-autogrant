@@ -17,3 +17,4 @@ Machine boundary: 本文是人读历史计划索引。历史计划只保存 prov
 - [P1 formal entry 与 durability planning brief](./2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 - [OPL-aligned target shape and hosted caller plan](./2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
 - [Grant writing full coverage landing plan](./2026-04-13-grant-writing-full-coverage-landing-plan.md)
+- [MAG structural and tests closeout](./2026-07-11-mag-structural-and-tests-closeout.md)

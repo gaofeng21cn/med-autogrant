@@ -57,26 +57,11 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 这些内容不再作为 current source、active contract 或 active docs 入口。历史只能从 `docs/history/**` 或 git history 读取。
 
-## Structural Closeout
+## Structural Readback
 
-Contract V2 fresh MAG candidate readback：
+结构 currentness 不在本文冻结 commit、digest、测试计数或 worktree closeout。需要判断当前状态时，直接读取上面的机器合同，并运行本文件末尾的 MAG repo-native 验证与 OPL scaffold/interfaces/source-closure/conformance 命令。旧 Contract V2 snapshot、consumer ABI pin、tests-only consolidation 和 absorption 明细已折回 [历史 closeout](./history/plans/2026-07-11-mag-structural-and-tests-closeout.md)。
 
-- OPL snapshot `eb4634f1f9fa74a8171c7e1cfef492420f2280c4`：scaffold `passed`、interfaces `ready`、source closure `passed`、isolated conformance `1 passed / 0 blocked`、structural/ordinary-path guard `passed`、MAG blockers `[]`。
-- Source closure：4 entrypoints、384 reachable symbols、1348 call edges、17 observed effects；unresolved edges、private generic effects、unreachable sensitive residue、audit mismatch均为 `0`，digest=`sha256:d2e91403e3bb4d4c8bf82570da7d41e18ef97bc85a24a6eaf4630349213ddbc1`。
-- Default callers：`8/8` retirement gates closed、blocked/worklist `0`、`keep_as_authority_adapter_observed_no_further_opl_delete_work`；projection仍明确 `physical_delete_authorized=false`。Residue decisions：`decision_item_count=0`、`residue_verification_status=verified_zero`。
-- 本机历史安装 descriptor 会污染未隔离 family readback；fresh admission 使用空 `OPL_STATE_DIR` / `OPL_MODULES_ROOT`，不通过恢复已退役 command template兼容陈旧状态。最终吸收后仍须在 promoted OPL main 上重放 currentness。
-- 单 Agent readback 的 Foundry Agent OS aggregate 因未输入其余四个 Agent 与 `mas-scholar-skills` 而保持 family-level blocked；MAG domain report为 `passed` 且 blockers为空。该聚合缺席只由最终五 Agent closeout关闭。
-
-以下 readback 是 Contract V2 前的已吸收结构基线，只保留 provenance；旧 `matched 0`、`allowed 9` 不能替代上面的新 scanner 结果。
-
-- Foundry consumer ABI基线：OPL `ddcc3242adac530b03f0a66bfe27a6a83bd835b5`、policy bundle `sha256:2abdcbe6e7c238dfc0bcbff2251fb0eda505647927446a6fbf47ae8b28253415`；`contracts/foundry_agent_series.json` 只保留 MAG identity/domain delta、canonical policy refs 和 `opl-generated:family_stage_control_plane` locator，不复制 OPL policy body。
-- OPL StageRun 持有 cycle、rollback、resume、dispatch、attempt ledger 与 output orchestration；MAG 只返回 domain refs、verdict、typed blocker 与 owner receipt。
-- Final source-behavior scanner：`status=passed`、`matched_source_behavior_count=0`、`blockers=[]`、`allowed_source_behavior_count=9`。
-- Allowed matches只覆盖 typed executor closeout adapter、domain handler、memory accept/reject、owner receipt signer与 typed blocker projection；没有 repo-local executor transport、unclassified generic behavior或 active private generic residue。
-- Framework Python helper 由 OPL 在 `opl_framework` namespace 托管；MAG manifest / lock 不声明或锁定 OPL implementation。
-- MAG production base为 `3fd7cd3dc5bd3102ac8bf95b33a90a439b82e7fc`；tests-only consolidation `c755594d7a005176fab1e687de58f42a49ab0ece` 已线性吸收，严格只改 `tests/**`，净删 `1695` 行。
-- Final tests boundary：`sys.path.insert` 为0，6个 retired owner tests未复活；fresh focused、smoke、fast、meta与full均为零失败，independent review `ACCEPT`。
-- Tests replay与三个 superseded tests clones已完成 absorption audit并清理；无关 `stage-size-mag` lane继续保留。
+这些 readback 只证明对应结构门；`physical_delete_authorized`、grant/quality/export/submission/production readiness、owner acceptance 与 live evidence 仍由各自 owner surface 决定。
 
 ## 仍开放的 Evidence Gate
 
