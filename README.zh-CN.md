@@ -49,7 +49,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 </table>
 
 <p align="center">
-  <img src="assets/branding/medautogrant-overview-v2.png" alt="Med Auto Grant 主示意图" width="100%" />
+  <img src="assets/branding/medautogrant-overview-v3.png" alt="Med Auto Grant 从申请想法到提交包的用户旅程" width="100%" />
 </p>
 
 ## 核心亮点

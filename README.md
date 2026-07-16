@@ -49,7 +49,7 @@ It does not treat grant writing as fixed-template filling. A proposal can keep c
 </table>
 
 <p align="center">
-  <img src="assets/branding/medautogrant-overview-v2.png" alt="Med Auto Grant overview" width="100%" />
+  <img src="assets/branding/medautogrant-overview-v3.png" alt="Med Auto Grant journey from idea to submission package" width="100%" />
 </p>
 
 ## Core Highlights
