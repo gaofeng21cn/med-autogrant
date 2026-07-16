@@ -4,14 +4,13 @@
   "package_id": "mag",
   "display_name": "Med Auto Grant",
   "publisher": "one-person-lab",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "source": "first_party_repo_local",
   "carrier_source_role": "codex_plugin_default_carrier_not_package_truth",
   "schema_ref": "one-person-lab/contracts/opl-framework/agent-package-manifest.schema.json",
   "machine_boundary": "This repo-local sidecar declares OPL Agent Package identity and carrier locators. OPL release authority generates published artifact refs, digests, channels, and receipts; the repo plugin directory and lifecycle module fields remain carrier locators, not package truth or domain truth owners.",
   "codex_surface": {
     "plugin_id": "med-autogrant",
-    "carrier_source_commit": "8ceb733acd63406816a330c465907e69f4179a6d",
     "standalone_distribution": "repo_carrier_source",
     "required_skill_ids": [
       "med-autogrant"
