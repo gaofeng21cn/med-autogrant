@@ -7,9 +7,9 @@ Machine boundary: 本文是人读目标态参考。机器真相继续归 `contra
 
 ## 文档读法
 
-- 本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和证据缺口回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。
+- 本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前摘要、外部 evidence gap 和下一轮执行入口回到 [MAG Active Truth](../active/mag-ideal-state-cross-repo-gap-plan.md)。
 - 过程性校准、fresh audit、follow-through、receipt proof 和 closeout 流水归档到 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
-- 本文不冻结某次运行的日期、计数、receipt id、worktree 状态或 readiness 输出。需要判断当前完成度时，读取 active gap plan、`docs/status.md`、`contracts/runtime-program/current-program.json`、production acceptance / external evidence contracts、MAG grouped CLI 和 OPL `stages readiness` / App drilldown fresh read model。
+- 本文不冻结某次运行的日期、计数、receipt id、worktree 状态或 readiness 输出。需要判断当前状态时，读取 Active Truth、`docs/status.md`、`contracts/runtime-program/current-program.json`、production acceptance / external evidence contracts、MAG grouped CLI 和 OPL `stages readiness` / App drilldown fresh read model。
 - 目标态优先于当前实现。当前 MAG 内已经存在的 product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入，不是长期架构约束。
 - 目标态不承诺旧 runtime / journal / probe / alias 兼容。旧模块、旧接口、旧测试和旧 docs 入口在 replacement、owner receipt parity 与 no-active-caller proof 成立后直接移除或进入 history/tombstone；MAG 不再新增 compatibility facade 来照顾过时调用方。
 
@@ -130,7 +130,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - `contracts/production_acceptance/mag-production-acceptance.json` 必须持有 MAG-owned production acceptance evidence tail。该 surface 可以记录 structural / physical conformance passed 和 production-like grant receipt chain refs present；它必须继续声明 OPL/provider/conformance/Agent Lab/meta-agent 不可授权 grant/domain/fundability/submission readiness。若缺少真实 MAG owner receipt scaleout，状态必须是 typed blocker 并携带下一跳 verification refs；若关闭，只能指向 MAG-owned `domain_owner_receipt` refs。
 - 旧 executor-first landing snapshot 已退役；当前 production acceptance 只读 `contracts/production_acceptance/mag-production-acceptance.json`，并在缺少真实 MAG owner closing ref 时保持 typed blocker。
 - 旧 product-entry read/guard projection 已退役；generated-surface handoff、direct domain handler 与 owner receipt refs 都不能生成 grant-ready、fundability-ready、quality-ready、export-ready 或 submission-ready。
-- OPL refs-only external evidence ledger 可以记录 MAG typed blocker / owner receipt ref roundtrip。它只证明 first live production evidence refs 可消费，不替代真实 grant workspace 扩面、MAG-owned grant/fundability/export verdict 或 submission-ready export；当前 evidence gate 统计回到 active gap plan 和机器合同。
+- OPL refs-only external evidence ledger 可以记录 MAG typed blocker / owner receipt ref roundtrip。它只证明 first live production evidence refs 可消费，不替代真实 grant workspace 扩面、MAG-owned grant/fundability/export verdict 或 submission-ready export；当前 evidence gate 回到 Active Truth 和机器合同。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。
 
@@ -142,8 +142,8 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - OPL-owned generated/hosted target：product-entry、status/user-loop、runtime lifecycle、workbench、continuous reconciliation 与 observability。MAG 只保留 direct domain handler、七项 authority function 和必要 refs-only grant adapter。
 - MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、owner receipt signer、typed blocker 和 grant-native helper。
 
-具体日期的 cleanup audit、stale worktree 判断、receipt refs 和 lane closeout 进入 history/provenance；当前状态和剩余证据门回到 `docs/status.md`、active gap plan 与机器合同。
+具体日期的 cleanup audit、stale worktree 判断、receipt refs 和 lane closeout 进入 history/provenance；当前状态和剩余证据门回到 `docs/status.md`、Active Truth 与机器合同。
 
 ## 当前差距入口
 
-当前功能/结构差距、测试/证据差距、完善顺序和禁止误写口径由 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md) 维护。本文不双写 active plan。
+当前摘要、外部 evidence gap、下一轮执行入口和禁止误写口径由 [MAG Active Truth](../active/mag-ideal-state-cross-repo-gap-plan.md) 维护。本文不双写 active 状态。

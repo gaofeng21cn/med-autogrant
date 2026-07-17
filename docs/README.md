@@ -17,17 +17,17 @@ Machine boundary: 本文是人读索引。机器真相归 root contracts、schem
 
 ## 当前计划
 
-- [MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)
-- [私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)
+- [MAG Active Truth：外部 Owner Evidence Tail](./active/mag-ideal-state-cross-repo-gap-plan.md)
+- [私有面 machine owner 导航](./active/opl-private-implementation-migration-inventory.md)
 - [Foundry Agent OS 目标差异](./active/foundry-agent-os-target-delta.md)
 
-结构 cleanup 已收口；active plan 只保留 live owner evidence 与 readiness gate，不再维护已删除 wrapper 的迁移 backlog。
+结构 cleanup 已收口；active plan 只保留 live owner evidence 与下一轮执行 baton，私有面导航只指向 machine owners，不维护已删除 wrapper、固定 path inventory 或 scanner snapshot。
 
 ## 目录
 
 | 目录 | 角色 |
 | --- | --- |
-| `active/` | 当前计划、差距、迁移台账 |
+| `active/` | 唯一 Active Truth、外部 evidence gaps 与 owner 路由 |
 | `public/` | 公开定位与 MVP 边界 |
 | `product/` | app skill 和 generated product surface 支撑 |
 | `runtime/` | OPL-hosted runtime 与 MAG authority 边界 |

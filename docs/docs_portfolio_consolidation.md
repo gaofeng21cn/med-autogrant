@@ -10,8 +10,8 @@ Machine boundary: 本文是人读治理入口。机器真相归 contracts、sche
 MAG 使用 `active/public/product/runtime/delivery/source/policies/specs/references/history` taxonomy。
 
 - 核心五件套承担 current 人读 truth。
-- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan。
-- `docs/active/opl-private-implementation-migration-inventory.md` 是 per-surface inventory。
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一 Active Truth 与下一轮 evidence baton。
+- `docs/active/opl-private-implementation-migration-inventory.md` 是 private-surface machine owner 路由，不持有 path inventory。
 - `docs/specs/specs_lifecycle_map.md` 判断 spec 的 active/support/history 角色。
 - `docs/history/**` 保存旧 runtime、provider、proof、worktree、snapshot 与 tombstone。
 
@@ -26,8 +26,8 @@ MAG 使用 `active/public/product/runtime/delivery/source/policies/specs/referen
 | 内容 | Owner |
 | --- | --- |
 | 项目角色、架构、约束、状态、决策 | 核心五件套 |
-| 当前差距与完成门 | active plan |
-| retained/deleted source role | migration inventory + contracts |
+| 当前摘要、外部 evidence gap 与下一轮执行入口 | active plan |
+| retained/deleted source role | machine contracts；owner map 只提供导航 |
 | package/export/manual portal | `delivery/` |
 | runtime/OPL boundary | `runtime/` |
 | source/workspace body boundary | `source/` |

@@ -47,4 +47,4 @@ Domain handler dispatch 只允许 `domain-memory/propose`、`domain-memory/decid
 - [不变量](./invariants.md)
 - [决策](./decisions.md)
 - [当前计划](./active/mag-ideal-state-cross-repo-gap-plan.md)
-- [迁移台账](./active/opl-private-implementation-migration-inventory.md)
+- [私有面 machine owner 导航](./active/opl-private-implementation-migration-inventory.md)

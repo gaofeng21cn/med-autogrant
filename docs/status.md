@@ -39,9 +39,9 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
 | Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | repo-local version `0.3.3`；published ref、digest 与 channel receipt 仍由 OPL release authority 生成 |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
-| Source closure | `contracts/source_closure_audit.json` + OPL scanner | 9 exact audited entries；unresolved/private generic/unreachable sensitive/audit mismatch 为 0 |
+| Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |
-| Foundry consumer + source behavior | OPL conformance scanner | thin consumer ABI passed；matched 0；blockers 0；allowed 9 |
+| Foundry consumer + source behavior | OPL conformance scanner | 不冻结 pass/count snapshot；以 fresh conformance JSON 为准 |
 | Owner receipt | `contracts/owner_receipt_contract.json` | 3 canonical receipt classes |
 | Production acceptance | `contracts/production_acceptance/mag-production-acceptance.json` | provenance only, typed blocker open |
 | Live progress | `contracts/live_stage_run_progress_evidence.json` | owner blocker recorded, no ready claim |

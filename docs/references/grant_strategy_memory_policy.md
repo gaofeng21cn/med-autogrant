@@ -86,4 +86,4 @@ Family-level governance 参考：`/Users/gaofeng/workspace/one-person-lab/docs/r
 - 仅由 memory 生成 quality 或 fundability score；
 - 用 memory writeback 绕过 MAG owner receipt、quality gate 或 submission-ready export gate。
 
-当前执行计划、证据门和 next action 不在本文维护，统一回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。
+当前摘要、证据门和下一轮执行入口不在本文维护，统一回到 [MAG Active Truth](../active/mag-ideal-state-cross-repo-gap-plan.md)。

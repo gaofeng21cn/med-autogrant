@@ -1,74 +1,71 @@
-# MAG 理想目标态差距与完成度审计
+# MAG Active Truth：外部 Owner Evidence Tail
 
 Owner: `Med Auto Grant`
-Purpose: `active_gap_and_completion_audit`
+Purpose: `single_active_truth_plan`
 State: `active_evidence_tail`
-Machine boundary: 本文是人读完成度索引。机器真相归 current-program、root contracts、source、OPL conformance、runtime receipts、live progress 与 workspace/package artifacts。
+Machine boundary: 本文只维护当前人读摘要、仍开放的 evidence gap 和下一轮执行入口。结构、源码、运行、包与 owner 真相分别归 current-program、root contracts、source/tests、OPL readback、runtime receipts、workspace artifacts 与 MAG owner receipts。
 
-## 目标态
+## Current State Summary
 
-`Declarative Grant Pack + OPL generated/hosted surfaces + minimal MAG authority functions`
+- MAG 当前形态是 Declarative Grant Pack、OPL generated/hosted surfaces 与最小 MAG authority functions。
+- `contracts/runtime-program/current-program.json` 将结构阶段声明为 `structural_cleanup_closed`，当前 tranche 是 `external_owner_evidence_gated`。
+- 已关闭结构工作的详细过程不在 active 层维护；历史入口是 [2026-07-11 结构与测试 closeout](../history/plans/2026-07-11-mag-structural-and-tests-closeout.md) 和 Git history。
+- 当前没有选中的 repo-local 功能或结构 gap。只有真实 runtime、human gate、quality/export、持续消费、long-soak 与 owner acceptance evidence 仍开放。
+- 因此不能声明 grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 
-## 原始过度设计规划
+## Current-State vs Ideal-State Gaps
 
-| # | 原始条目 | 状态 | 完成度 | Current evidence |
-| ---: | --- | --- | ---: | --- |
-| 1 | 删除未使用的 `hermes-agent[acp]` 依赖 | done | 100% | dependency/lock surface只保留 release-cohort OPL shared package |
-| 2 | 删除正式入口不可达的 9 个模块 | done | 100% | continuous reconciliation、memory projection、family shared release等 cohort 已物理退役 |
-| 3 | 消除 domain command catalog 双重真相 | done | 100% | public hosted action 只来自 closed `family-action-catalog.v2`；repo-local direct handler 只保留 MAG authority dispatch |
-| 4 | 删除重复 hosted bundle payload builder | done | 100% | payload construction只有一个 owner；runtime仅组装和校验 |
-| 5 | 删除 compatibility re-export、alias、wrapper 与退休 helper | done | 100% | patch bridge、private facade和 compatibility alias已退役 |
-| 6 | 合并重复 index/dedupe/count helpers到标准库 | done | 100% | index owner唯一；dedupe使用 `dict.fromkeys`；计数使用 `Counter` |
-| 7 | 删除 editable bootstrap与 import-time path injection | done | 100% | 依赖由 `uv`/package config管理；repo source不再注入路径 |
-| 8 | 移除 ProductEntry/DomainRuntime 单实现 mixin树 | done | 100% | ProductEntry/MRO实现细节面退役；保留直接 `MagDomainRuntime` |
-| 9 | 由 registry驱动 CLI parser与dispatch | done | 100% | command specs 只声明 parser 字段；执行使用显式静态 dispatch，已删除 `handler` 注入、`runtime_method` 与 `getattr` 动态分派 |
-| 10 | 删除 runtime consumer-thinning/functional-closure自审计层 | done | 100% | OPL conformance/CI持有静态审计；MAG runtime不再投影自审计产品面 |
-| 11 | 删除 MAG 私有 product/status/user-loop/runtime/workbench平台面 | done | 100% | 3 个 stage-bound hosted action + direct authority handler；progress/cockpit/status/workbench 归 OPL generated/read-model surface |
-| 12 | 删除私有 OPL pack compiler与tracked generated aggregate | done | 100% | `agent/`/root contracts是声明源；OPL Pack生成 family stage plane |
-| 13 | 将 cycle/rollback/resume/dispatch/output编排迁入 OPL StageRun | done | 100% | MAG只保留 selector、quality 与 authority receipt；Codex 选择语义 route |
-| 14 | 将全部 executor transport 上收到 OPL Python client | done | 100% | authoring/critique 的 `codex_cli` 与 `hermes_agent` 均调用 `opl_framework.executor_client.run_agent_execution_request`；repo-local Codex/OPL subprocess、adapter 和 default command 已删除 |
-| 15 | 将 Agent Package/Codex carrier 生命周期统一到 OPL Packages | done | 100% | canonical `opl packages install mag`、`opl packages update mag`、`opl packages uninstall mag`；本地 installer/symlink/marketplace mutation 已删除 |
-| 16 | 关闭 6 个 generated default-caller retirement tails | done | 100% | 4 个 physically absent surface 声明 retired；`cli/domain_handler` 保留为 authority adapter 并提供 keep/no-write/provenance refs |
+| Gap | Current state | Required evidence | Truth owner / route |
+| --- | --- | --- | --- |
+| OPL-hosted grant attempts | `owner_evidence_required` | same-identity StageRun/Attempt 与 runtime receipt refs | OPL runtime owner + MAG stage owner |
+| Submission human gate | `owner_evidence_required` | 真实 human-gate receipt 和 accepted owner answer | MAG submission owner / human owner |
+| Quality and export | `owner_evidence_required` | fresh independent review、MAG quality/export verdict 与 exact artifact refs | MAG quality/export authority |
+| Sustained default-caller consumption | `owner_evidence_required` | App/operator consumption 与 no-regression readback | App/operator owner + MAG owner |
+| Provider long soak and production acceptance | `owner_evidence_required` | restart/retry/dead-letter/long-soak evidence、owner receipt 或 typed blocker | OPL provider owner + MAG production owner |
 
-结构规划完成度：`16/16 done`。这只证明源码、contracts、docs与结构边界已经收口，不证明运行态 ready。
+这些 gap 不能通过新增 wrapper、snapshot、read model、文档、focused tests、schema completeness、package existence 或 conformance pass 关闭。若没有新的 owner/live evidence，本计划保持薄状态，不生成替代 backlog。
 
-## Standard Agent Contract V2 收口
+## Structural Readback
 
-| 条目 | 状态 | 完成度 | Fresh evidence / stop condition |
-| --- | --- | ---: | --- |
-| Closed action catalog v2 | done | 100% | 只保留 `open_grant_user_loop`、`build_direct_entry`、`build_submission_ready_package`；全部使用 exact `stage_binding` 与 closed input schema |
-| 私有 command template 退役 | done | 100% | descriptor 不再包含 `entry_command_template`、`manifest_command_template`、`runtime.dispatch_command`；MAG 测试固定 closed interface |
-| Generated read model 归位 | done | 100% | `inspect_progress`、`inspect_cockpit` 已退出 action catalog 与 Stage allow-list；由 OPL 生成 progress/cockpit/status/workbench |
-| Domain handler registry | done | 100% | `contracts/domain_handler_registry.json` 是 closed 空 registry；当前无 `handler_ref` public action，不通过 registry 暴露私有 runtime shell |
-| 七项 authority 对齐 | done | 100% | functional audit、pack input、handler export、tests、core docs 与 skill carrier统一为 7；`ai_route_policy` 不算第八项 authority |
-| OPL Packages consumer 声明 | done | 100% | MAG sidecar、测试与 active docs统一到 package id `mag` 的 install/update/uninstall；未修改 OPL Release Set、digest lock 或 lifecycle 实现 |
-| Source-closure exact 分类 | done | 100% | final Contract V2 scanner `status=passed`；4 entrypoints、384 reachable symbols、1348 call edges、17 observed effects，unresolved/private generic/unreachable sensitive/audit mismatch 全部为 `0` |
-| MAG final structural admission | done | 100% | isolated fresh readback：scaffold `passed`、interfaces `ready`、source closure `passed`、conformance `1 passed / 0 blocked`，structural 与 ordinary-path guard均为 `passed`，MAG blockers `[]` |
+结构 currentness 不在本文冻结 commit、digest、测试数量、source graph counters 或 worktree closeout。需要判断当前结构时，直接读取：
 
-Contract V2 结构收口为 `8/8 done`。这只关闭 MAG candidate 对应的非 Live 功能/结构边界；最终吸收后仍须在 promoted OPL main 上重放 currentness，且不能由此声明任何 Live readiness。
+- `contracts/runtime-program/current-program.json`
+- `contracts/functional_privatization_audit.json`
+- `contracts/private_functional_surface_policy.json`
+- `contracts/source_closure_audit.json`
+- `contracts/standard_agent_conformance_profile.json`
+- repo source/tests 与 fresh `./scripts/verify.sh`
+- OPL `agents scaffold|interfaces|source-closure|conformance --json` readback
 
-## Live Evidence Gate
+私有面与 retained authority 的人读导航见 [私有面 owner map](./opl-private-implementation-migration-inventory.md)。它只路由到 machine owners，不复制 path inventory 或 scanner count。
 
-| 条目 | 状态 | 完成度 | 缺口 |
-| --- | --- | ---: | --- |
-| 真实 OPL-hosted grant stage attempts | blocked | 0% | 需要 runtime attempt与receipt refs |
-| Submission human gate | blocked | 0% | 需要真实 human-gate receipt |
-| Quality/export live receipt | blocked | 0% | 需要真实 attempt的 MAG owner receipt |
-| App/operator sustained consumption | blocked | 0% | 需要 default-caller长期 readback |
-| Provider long soak与 owner acceptance | blocked | 0% | 需要 live/no-regression evidence |
+## Next-Round Agent Prompt
 
-因此不能声明 grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。
+Owner: `Med Auto Grant`
 
-## Stop Condition
+Objective: 只在出现新的 external owner/live evidence 时，选择一个能改变上表状态的单一 evidence lane；验证 exact refs、owner authority 与 false-ready boundary，并把结果折回对应 machine/owner surface。
 
-- 不通过新增 wrapper、snapshot、read model或 test-only proof推进 readiness。
-- 没有真实 owner/live evidence时保持 typed blocker与 `domain_owned_closing_ref=null`。
-- Consumer dependency pin保持 shared release cohort commit，不追 OPL dev HEAD。
-- Structural currentness必须绑定最终发布的 OPL main：overall passed、source behavior matched 0、blocking 0；allowed matches逐项记录。
-- Tests-only收益只按 `tests/**` path-filtered numstat计算，不把 source/contracts/docs删除计入。
+Trigger: 新的 StageRun/Attempt receipt、human-gate answer、quality/export verdict、持续 App/operator readback、provider long-soak evidence、owner receipt、typed blocker 或 route-back ref。
 
-## Current Structural Readback
+Write scope: 只有在 MAG owner authority 与 exact evidence refs 已确认时，才可更新 `contracts/live_stage_run_progress_evidence.json`、`contracts/production_acceptance/mag-production-acceptance.json`、本计划的对应 gap 行，以及直接受影响的 `docs/status.md` 或索引指针。OPL runtime、App/operator 与 human-owned evidence 只作为只读输入，必须由各自 owner lane 写入。
 
-本 active plan 不冻结 OPL/MAG commit、digest、测试计数、numstat、review 结果或 worktree closeout。结构 currentness 由 `contracts/runtime-program/current-program.json`、`contracts/standard_agent_conformance_profile.json`、`contracts/source_closure_audit.json`、repo source/tests，以及 fresh MAG `./scripts/verify.sh` 和 OPL `agents scaffold|interfaces|source-closure|conformance --json` readback共同决定。
+Non-goals: 不为制造进展而新增 MAG-local runtime、projection、compiler、queue、scheduler、session 或 package lifecycle；不恢复已退役接口、旧调用路线或转接层；不改写不属于 MAG 的 runtime、release、App/operator 或 human authority。
 
-2026-07-11 的 Contract V2 snapshot、V1 allowed-match 清单、tests-only consolidation 与 absorption 明细已进入 [历史 closeout](../history/plans/2026-07-11-mag-structural-and-tests-closeout.md)，不能作为当前 SHA、ready 状态或新 backlog 读取。
+Live truth inputs: current-program、live progress、production acceptance、owner receipt contract、exact workspace/artifact refs、OPL runtime readback 和当前 lane 的 owner evidence。
+
+Required actions: 验证 evidence 与同一 StageRun/Attempt、workspace、artifact 和 owner identity 绑定；确认该 evidence 只能关闭一个现有 gap；先更新对应 machine/owner surface，再删除或重写本计划中的已关闭 gap；把执行流水和一次性计数留在 receipt、history 或 Git history。
+
+Verification commands: 运行 lane-specific owner validator 和 `./scripts/verify.sh`；结构 claim 变化时，另运行 OPL `agents scaffold --validate`、`agents interfaces`、`agents source-closure` 与 isolated `agents conformance --json`。只按实际证据层报告结果。
+
+Stop condition: 没有新的 owner/live evidence，owner 或 currentness 不明，写集冲突，exact refs 不完整，或验证不能在 final bytes 上运行时停止；保留 blocker、owner、合法入口与重新进入条件，不做 fallback edit。
+
+Completion gate: exact owner evidence 已落到 canonical machine/owner surface，受影响 gap 已删除或重写，过程材料未进入 active 层，最终 `main` 字节验证通过。只完成一次文档或 focused-test 更新不能关闭 evidence gap。
+
+Foldback target: durable current fact 折回 `docs/status.md`；当前 gap 和下一轮执行入口只保留在本文；一次性执行流水进入 receipt、`docs/history/**` 或 Git history。
+
+## Coverage Boundary
+
+- 本文覆盖当前摘要、外部 evidence gaps 与下一轮执行 baton。
+- durable current status owner 是 `docs/status.md`；north-star 是 `docs/references/med-auto-grant-ideal-state.md`；本文持有当前摘要、外部 evidence gap 与下一轮执行 baton。
+- 私有面机器分类归 root contracts；历史完成过程归 `docs/history/**` 与 Git history。
+- paper/grant 内容、质量、export、submission、owner acceptance 与 production readiness 始终由对应 MAG/human owner surface 决定。

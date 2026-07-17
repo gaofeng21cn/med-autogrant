@@ -17,7 +17,7 @@ Machine boundary: 本文只保存 2026-07-11 附近的结构与 tests-only close
 当前入口：
 
 - [当前状态](../../status.md)
-- [MAG 理想目标态差距与完成度审计](../../active/mag-ideal-state-cross-repo-gap-plan.md)
+- [MAG Active Truth：外部 Owner Evidence Tail](../../active/mag-ideal-state-cross-repo-gap-plan.md)
 - `contracts/runtime-program/current-program.json`
 - `contracts/standard_agent_conformance_profile.json`
 - `contracts/source_closure_audit.json`
