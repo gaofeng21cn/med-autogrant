@@ -24,7 +24,8 @@
       "mag:package_and_submit_ready:grant_export",
       "mag:package_and_submit_ready:grant_package"
     ],
-    "review_receipt_must_match_current_package_hashes": false,
+    "review_receipt_must_bind_reviewed_scope_artifact_identity": true,
+    "unrelated_package_hash_change_alone_invalidates_review_receipt": false,
     "reviewed_artifact_hashes_role": "transport_identity_locator_and_stale_hint_only",
     "hash_change_alone_invalidates_epistemic_review": false,
     "release_integrity_contract_ref": "contracts/epistemic_review_scope_profile.json#/release_integrity",

@@ -189,6 +189,9 @@ def test_release_integrity_remains_exact_byte_and_separate() -> None:
     integrity = profile["release_integrity"]
     owner_contract = read_json(ROOT / "contracts" / "owner_receipt_contract.json")
     readiness = owner_contract["local_submission_ready_projection_contract"]
+    content_scope = scopes_by_id()[
+        "mag:package_and_submit_ready:grant_content"
+    ]
 
     assert integrity["member_refs"] == [
         "mag:artifact:artifact-bundle.json",
@@ -200,7 +203,21 @@ def test_release_integrity_remains_exact_byte_and_separate() -> None:
     assert integrity["member_mutation_requires_new_integrity_evidence"] is True
     assert integrity["can_replace_epistemic_review"] is False
     assert integrity["epistemic_review_can_replace_release_integrity"] is False
-    assert readiness["review_receipt_must_match_current_package_hashes"] is False
+    assert "review_receipt_must_match_current_package_hashes" not in readiness
+    assert (
+        readiness["review_receipt_must_bind_reviewed_scope_artifact_identity"]
+        is True
+    )
+    assert (
+        readiness[
+            "unrelated_package_hash_change_alone_invalidates_review_receipt"
+        ]
+        is False
+    )
+    assert set(content_scope["reviewed_node_refs"]) == {
+        "mag:artifact:grant_body",
+        "mag:claim:scientific_rationale",
+    }
     assert readiness["hash_change_alone_invalidates_epistemic_review"] is False
     assert readiness["release_integrity_must_match_current_package_hashes"] is True
     assert readiness["release_integrity_can_replace_epistemic_review"] is False

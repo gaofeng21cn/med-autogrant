@@ -152,7 +152,8 @@ def test_submission_ready_schema_separates_scoped_review_and_release_integrity()
             "mag:package_and_submit_ready:grant_export",
             "mag:package_and_submit_ready:grant_package",
         ],
-        "review_receipt_must_match_current_package_hashes": False,
+        "review_receipt_must_bind_reviewed_scope_artifact_identity": True,
+        "unrelated_package_hash_change_alone_invalidates_review_receipt": False,
         "reviewed_artifact_hashes_role": (
             "transport_identity_locator_and_stale_hint_only"
         ),

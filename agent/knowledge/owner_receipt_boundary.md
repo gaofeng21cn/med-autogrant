@@ -31,7 +31,7 @@ This knowledge boundary defines what MAG owner receipts prove during Codex-first
 - Fundability receipts sign proceed/repair/retarget/stop state.
 - Aims receipts sign route/structure acceptance.
 - Authoring receipts sign draft/ref acceptance, not quality readiness.
-- OPL Stage Review receipts record context-isolated review identity, exact reviewed hashes, rubric, and verdict; they do not sign MAG readiness authority.
+- OPL Stage Review receipts bind the context-isolated identity of each reviewed scope and its reviewed artifacts, rubric, and verdict; unrelated package hashes do not widen that binding, and the receipts do not sign MAG readiness authority.
 - MAG package receipts sign package/export state and manual portal boundary only after consuming current dependency-scoped review evidence, the identity-bound Stage Review receipt, and separate exact-byte release-integrity evidence.
 
 ## Blocker Expectations
