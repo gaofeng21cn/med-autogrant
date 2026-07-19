@@ -134,3 +134,35 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
 
     assert 'display_name: "Med Auto Grant"' in metadata_text
     assert "$med-autogrant" in metadata_text
+
+
+def test_primary_skill_exposes_only_three_opl_actions_and_semantic_grant_admission() -> None:
+    skill = PRIMARY_SKILL_PATH.read_text(encoding="utf-8")
+
+    assert "description: Use when Codex needs Med Auto Grant (MAG) to plan, author, critique, revise, or package a medical grant application" in skill
+    assert "Do not use for research-paper production, generic document formatting, patient care, or irreversible submission" in skill
+    for heading in (
+        "Admission",
+        "Action Routing",
+        "Default Workflow",
+        "Quality And Hard Stops",
+        "Output Expectations",
+        "References",
+    ):
+        assert f"## {heading}\n" in skill
+
+    assert "`open_grant_user_loop`: default end-to-end entry" in skill
+    assert "`build_direct_entry`: enter `proposal_authoring` directly only when" in skill
+    assert "`build_submission_ready_package`: enter `package_and_submit_ready` only when" in skill
+    assert "Do not expose repo-local CLI commands" in skill
+    assert "`MedAutoGrantDomainEntry`" in skill
+    assert "Missing call material is a typed source gap for intake" in skill
+    assert "`submission-ready` means a local package passed MAG gates; it does not mean submitted" in skill
+    assert "Retry, review, and repair counts are quality budgets" in skill
+    for retired_entry in (
+        "scripts/run-python-clean.sh",
+        "workspace route-report --input",
+        "domain-handler dispatch --task",
+        "opl agents conformance --agent",
+    ):
+        assert retired_entry not in skill

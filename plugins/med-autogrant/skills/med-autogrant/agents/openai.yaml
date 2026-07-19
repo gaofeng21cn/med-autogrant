@@ -1,4 +1,4 @@
 interface:
   display_name: "Med Auto Grant"
   short_description: "Grant authoring domain agent for Codex"
-  default_prompt: "Use $med-autogrant to inspect the current grant workspace and continue through MAG's grant-native handlers and authority targets."
+  default_prompt: "Use $med-autogrant through the installed OPL-generated MAG actions to continue the current funding-call workflow, a bounded proposal-authoring task, or an explicitly requested local submission package."

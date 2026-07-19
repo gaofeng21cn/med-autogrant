@@ -1,84 +1,58 @@
 ---
 name: med-autogrant
-description: Use when Codex should operate Med Auto Grant through its grant-authoring domain entry, authority targets, and schema-backed contracts instead of ad-hoc repo scripting.
+description: Use when Codex needs Med Auto Grant (MAG) to plan, author, critique, revise, or package a medical grant application, including funding-call intake, fundability strategy, specific aims, proposal sections, rebuttal, and a submission-ready local package. Do not use for research-paper production, generic document formatting, patient care, or irreversible submission to a sponsor portal.
 ---
 
-# Med Auto Grant App Skill
+# Med Auto Grant
 
-OPL canonical agent id 与 OPL Agent Package id 都固定为 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`。`med-autogrant` 是仓库、Python distribution、plugin slug 与安装后 skill locator，不是与 `mag` 并存的 package identity、OCI package coordinate 或兼容 alias。
+Canonical OPL Agent and Package id is `mag`; `med-autogrant` is the repository, distribution, plugin, and Skill locator. Use only the installed OPL-generated MAG actions as user entrypoints.
 
-Implementation profile 见 `contracts/pack_compiler_input.json#/implementation_profile`：声明 pack 只使用 Markdown/JSON，Python 只作为声明 source root 下的 domain helper；grant authority 由 pack authority contracts 独立声明。它不拥有 generic runtime、CLI、MCP、product-entry、status 或 workbench。
+## Admission
 
-当 Codex 需要操作医学基金申请主线时，使用这个 app skill。OPL/App 负责 generated product/status/user-loop/workbench caller；MAG repo-local `CLI`、`MedAutoGrantDomainEntry` 与 domain handler 只保留 grant-native action target、authority function 和 schema-backed contract。
+- Admit MAG when the requested outcome is a grant application or grant-specific strategy/review/package tied to a funding call or an identifiable grant workspace.
+- Route research study and paper production to MAS, visual presentations to RCA, and generic document formatting to the relevant document capability unless they are subordinate artifacts of the grant workflow.
+- Bind the current funding call, applicant/project context, exact workspace/input refs, task intent, and any accepted upstream decisions. Missing call material is a typed source gap for intake, not permission to invent sponsor requirements.
+- Keep sponsor-portal submission, certification, signatures, and other irreversible external actions behind explicit human authority. `submission-ready` means a local package passed MAG gates; it does not mean submitted.
 
-## 核心入口
+## Action Routing
 
-调用 repo-local handler 时使用 clean runner：`<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli ...`。不要用 shell PATH 上的裸命令或临时脚本旁路当前 checkout。
+Use one of the three public actions declared in `contracts/action_catalog.json`:
 
-- `workspace route-report --input <input_path> --format json`
-- `workspace quality-scorecard --input <input_path> --format json`
-- `pass revision --input <input_path> --output <output_path> --format json`
-- `package submission-ready --input <input_path> --output-dir <output_dir> --format json`
-- `authority memory-proposal --input <input_path> --stage-id <stage_id> --source-ref <source_ref> --lesson-summary "<summary>" --format json`
-- `authority memory-decision --proposal <proposal_path> --decision accepted|rejected --decision-reason "<reason>" --format json`
-- `domain-handler export --input <input_path> --format json`
-- `domain-handler dispatch --task <task_path> --format json`
+- `open_grant_user_loop`: default end-to-end entry. Use for a new or continuing funding-call workflow spanning intake, fundability strategy, aims/structure, proposal authoring, and review/rebuttal.
+- `build_direct_entry`: enter `proposal_authoring` directly only when the current workspace already contains sufficient accepted call, strategy, and structure refs for the requested bounded authoring task.
+- `build_submission_ready_package`: enter `package_and_submit_ready` only when the user explicitly requests a local submission package, provides an output directory, and the human `submission_ready_export_gate` can be satisfied.
 
-Domain handler dispatch 只允许三项 MAG-owned action：
+Do not expose repo-local CLI commands, `MedAutoGrantDomainEntry`, domain-handler dispatch/export, private scanners, or source-purity wrappers as user entrypoints. They are implementation details or authority targets behind OPL-generated surfaces.
 
-- `domain-memory/propose`
-- `domain-memory/decide`
-- `stage-attempt/closeout`
+## Default Workflow
 
-其 export 返回 body-free workspace identity/locator，并携带 action catalog、stage control plane、owner receipt contract、三项 allowed action、七项 minimal authority refs、generated-surface handoff ref，以及 caller/false-authority boundary；不包含 grant、memory、artifact 或 package body，也不是 scheduler、queue、session、status 或 workbench runtime。
+1. Select `open_grant_user_loop` unless accepted upstream refs justify a bounded direct authoring or package action.
+2. Keep one funding-call identity and OPL StageRun lineage across `call_and_candidate_intake -> fundability_strategy -> specific_aims_and_structure -> proposal_authoring -> review_and_rebuttal -> package_and_submit_ready`.
+3. At each Stage, read the current grant artifact, route/quality findings, sponsor requirements, owner decisions, and exact source refs before writing.
+4. Let the decisive Codex Attempt route forward, repeat, or return to the highest owning Stage; OPL materializes the transition and MAG retains grant truth and verdict authority.
+5. Build the local submission package only after current review evidence, package requirements, output target, and explicit human export approval are present.
 
-## OPL 边界
+## Quality And Hard Stops
 
-MAG 只有一个语义控制面：Codex CLI。任何可读 grant 草稿、fundability
-判断、review finding、阴性结果、部分 package 或 diagnostic 都是 progress，
-可直接作为下一 declared stage 的输入。retry、review、repair 次数只代表质量
-预算；预算用尽时保留最佳 artifact 并以 `completed_with_quality_debt` 推进。
-Decisive Codex Attempt 可以前进、重复当前 stage，或回到 call intake、fundability strategy、
-specific aims、proposal authoring、review/package 等任一 declared stage；静态
-transition table、schema、normalizer、validator 或 receipt 缺口无权否决该路由。
-质量债只关闭 fundable、grant-ready、submission-ready、export-ready、accepted
-与 production-ready 声明。零、损坏或不可读 artifact 物化 no-output/failure
-diagnostic 并继续；只有 executor unavailable、权限/安全/authority、wrong-target
-identity/currentness、不可逆 portal/write 操作或明确 owner/human authority 才能硬停。
+- Treat any readable grant draft, fundability judgment, review finding, negative result, partial package, failed attempt, or diagnostic as progress and valid route context.
+- Retry, review, and repair counts are quality budgets. On exhaustion, preserve the best artifact and continue as `completed_with_quality_debt`; do not loop until validators clear.
+- Static transition tables, schemas, normalizers, validators, generated receipts, provider completion, and tests cannot overrule the decisive semantic route or establish `grant-ready` / `submission-ready`.
+- Quality debt closes fundable, grant-ready, submission-ready, export-ready, accepted, and production-ready claims while allowing later declared stages to consume the artifact.
+- Only executor unavailability, wrong-target identity/currentness, permission/safety/authority boundaries, missing protected credentials/material, irreversible external submission, or an explicit owner/human decision may hard-stop progress.
 
-- OPL/Temporal 持有任务运行驻留、stage attempt lifecycle、queue/wakeup、retry/resume、attempt ledger、generated caller 与 App/workbench shell。
-- MAG 持有 grant truth、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、typed blocker 与 grant-native helper；decisive Codex Attempt 给出语义 route，OPL StageRun controller 只校验并物化 transition。
-- OPL generated surface、provider completion、schema completeness或测试通过都不能声明 grant-ready、submission-ready 或 production-ready。
-- 当前 MCP 仍满足 `descriptor_only=true`、`public_runtime=false`；不能写成 public MCP runtime 已落地。
+## Output Expectations
 
-结构 currentness 必须由 OPL canonical scanner 读取，而不是由 MAG 私有 source-purity wrapper 推断：
+- Return the selected public action, funding-call/workspace/input identity, exact grant artifact refs, review and package findings, owner/human-gate refs, typed blockers, remaining quality debt, and next owning Stage.
+- Distinguish strategy, aims/structure, proposal draft, reviewed candidate, and local submission-ready package. Never describe a package as submitted without exact external human-authorized evidence.
+- Preserve MAG-owned fundability, quality, artifact/package, memory, and owner-receipt authority. OPL-generated status or scanner conformance proves transport/structure only.
+- Use OPL-generated status/workbench surfaces for progress and resume; do not create a second MAG runtime, queue, session, or lifecycle model.
 
-`<one-person-lab-repo>/bin/opl agents conformance --agent mag=<med-autogrant-repo> --json`
+## References
 
-Scanner 通过只证明 standard-agent 结构与 source-behavior gate 对齐，不替代真实 workspace artifact、owner receipt、human gate、quality/export verdict 或 production evidence。
-
-## OPL 公开检查面
-
-Foundry membership、status、interfaces、validation、diagnostics 与 peers 由 OPL generated surface 统一投影。使用 `opl foundry agents inspect mag --json`，不要在 MAG repo-local CLI 重建同类 payload 或 alias。
-
-## 操作约束
-
-- 写 grant artifact 前先读取 workspace route、quality/package gate 与当前 funding call。
-- 不用通用 Office/document skill、ad-hoc 脚本或 prompt-only 路径替代 MAG authoring contract。
-- 不直接修改 runtime state；所有写入通过 schema-backed handler、authority target 或 package surface。
-- 不把 generated status/user-loop/workbench shell重新实现到 MAG repo。
-- 能力缺失时补最小 grant-native handler 或 authority target，不恢复旧 wrapper、facade、alias 或私有平台面。
-
-## 首先应读
-
-- `README.md`
+- `contracts/action_catalog.json`
+- `agent/stages/manifest.json`
+- `contracts/stage_quality_cycle_policy.json`
+- `contracts/owner_receipt_contract.json`
+- `contracts/runtime-program/current-program.json`
 - `docs/project.md`
 - `docs/status.md`
-- `contracts/runtime-program/current-program.json`
-
-## 典型任务
-
-- 读取 route report、quality gate、package gate 与当前 blocker。
-- 在同一 funding call 下继续 authoring、critique、revision 或 package flow。
-- 提交 memory proposal/decision 或 stage-attempt closeout，并读取 owner receipt / typed blocker refs。
-- 通过 OPL generated caller 回到 MAG 的 grant-native handler，而不复制 product/runtime shell。
