@@ -4,10 +4,9 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant import artifact_bundle_validation as _artifact_bundle_validation
 from med_autogrant.domain_runtime_parts.io import (
     _guard_final_package_output_identity,
-    _read_artifact_bundle as _read_artifact_bundle_from_runtime_parts,
+    _read_artifact_bundle,
     _write_final_package_output,
 )
 from med_autogrant.route_report import build_stage_route_report
@@ -121,14 +120,14 @@ def build_final_package_payload(
         artifact_bundle=artifact_bundle,
     )
     resolved_output_path = Path(output_path).expanduser().resolve()
-    _guard_output_identity(
+    _guard_final_package_output_identity(
         resolved_output_path,
         grant_run_id=final_package["grant_run_id"],
         workspace_id=final_package["workspace_id"],
         draft_id=final_package["draft_id"],
         lifecycle_stage=final_package["lifecycle_stage"],
     )
-    _write_final_package(resolved_output_path, final_package)
+    _write_final_package_output(resolved_output_path, final_package)
     return {
         "ok": True,
         "command": "build-final-package",
@@ -139,56 +138,3 @@ def build_final_package_payload(
         "output_path": str(resolved_output_path),
         "final_package": final_package,
     }
-
-
-def _read_artifact_bundle(
-    artifact_bundle_path: str | Path,
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    draft_id: str,
-    lifecycle_stage: str | None,
-) -> dict[str, Any]:
-    return _read_artifact_bundle_from_runtime_parts(
-        artifact_bundle_path,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        draft_id=draft_id,
-        lifecycle_stage=lifecycle_stage,
-    )
-
-
-def _validate_required_artifact_bundle_fields(
-    artifact_bundle: dict[str, Any],
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    lifecycle_stage: str | None,
-) -> None:
-    _artifact_bundle_validation._validate_required_artifact_bundle_fields(
-        artifact_bundle,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        lifecycle_stage=lifecycle_stage,
-    )
-
-
-def _guard_output_identity(
-    output_path: Path,
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    draft_id: str,
-    lifecycle_stage: str | None,
-) -> None:
-    _guard_final_package_output_identity(
-        output_path,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        draft_id=draft_id,
-        lifecycle_stage=lifecycle_stage,
-    )
-
-
-def _write_final_package(output_path: Path, final_package: dict[str, Any]) -> None:
-    _write_final_package_output(output_path, final_package)

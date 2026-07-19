@@ -127,7 +127,7 @@ def build_revision_execution_payload(
             "recommended_route_back_stage": document.get("lifecycle_stage"),
         }
     resolved_output_path = Path(output_path).expanduser().resolve()
-    _guard_output_identity(
+    _guard_revision_output_identity(
         resolved_output_path,
         grant_run_id=revision_document["grant_run_id"],
         workspace_id=revision_document["workspace_id"],
@@ -135,7 +135,7 @@ def build_revision_execution_payload(
         active_revision_plan_id=revision_document["active_revision_plan_id"],
         lifecycle_stage=revision_document["lifecycle_stage"],
     )
-    _write_workspace(resolved_output_path, revision_document["revised_workspace"])
+    _write_revised_workspace_output(resolved_output_path, revision_document["revised_workspace"])
     payload = {
         "ok": True,
         "command": "execute-revision-pass",
@@ -428,26 +428,3 @@ def _index_by_section_key(items: Any, *, scope_name: str) -> dict[str, dict[str,
             raise WorkspaceStateError(f"{scope_name}.section_key 不能重复: {section_key}。")
         indexed[section_key] = item
     return indexed
-
-
-def _guard_output_identity(
-    output_path: Path,
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    draft_id: str,
-    active_revision_plan_id: str,
-    lifecycle_stage: str | None,
-) -> None:
-    _guard_revision_output_identity(
-        output_path,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        draft_id=draft_id,
-        active_revision_plan_id=active_revision_plan_id,
-        lifecycle_stage=lifecycle_stage,
-    )
-
-
-def _write_workspace(output_path: Path, revised_workspace: dict[str, Any]) -> None:
-    _write_revised_workspace_output(output_path, revised_workspace)

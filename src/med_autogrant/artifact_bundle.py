@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -174,14 +173,14 @@ def build_artifact_bundle_payload(
 ) -> dict[str, Any]:
     bundle = build_artifact_bundle_document(document=document)
     resolved_output_path = Path(output_path).expanduser().resolve()
-    _guard_output_identity(
+    _guard_artifact_bundle_output_identity(
         resolved_output_path,
         grant_run_id=bundle["grant_run_id"],
         workspace_id=bundle["workspace_id"],
         draft_id=bundle["draft_id"],
         lifecycle_stage=bundle["lifecycle_stage"],
     )
-    _write_bundle(resolved_output_path, bundle)
+    _write_artifact_bundle_output(resolved_output_path, bundle)
 
     return {
         "ok": True,
@@ -193,24 +192,3 @@ def build_artifact_bundle_payload(
         "output_path": str(resolved_output_path),
         "bundle": bundle,
     }
-
-
-def _guard_output_identity(
-    output_path: Path,
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    draft_id: str,
-    lifecycle_stage: str,
-) -> None:
-    _guard_artifact_bundle_output_identity(
-        output_path,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        draft_id=draft_id,
-        lifecycle_stage=lifecycle_stage,
-    )
-
-
-def _write_bundle(output_path: Path, bundle: dict[str, Any]) -> None:
-    _write_artifact_bundle_output(output_path, bundle)

@@ -75,7 +75,6 @@
     "foundry_agent_series_policy_release": "contracts/opl-framework/foundry-agent-series-policy-release.json",
     "functional_privatization_audit": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff": "contracts/generated_surface_handoff.json",
-    "domain_handler_registry": "contracts/domain_handler_registry.json",
     "source_closure_audit": "contracts/source_closure_audit.json",
     "oma_handoff_refs": "contracts/oma_handoff_refs.json",
     "pack_compiler_input": "contracts/pack_compiler_input.json",

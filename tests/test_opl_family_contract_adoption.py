@@ -121,9 +121,6 @@ def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
     assert manifest_action_ids == catalog_action_ids
     assert pack_input["source_refs"]["stage_manifest"] == "agent/stages/manifest.json"
     assert pack_input["source_refs"]["action_catalog"] == "contracts/action_catalog.json"
-    assert pack_input["source_refs"]["domain_handler_registry_source_ref"] == (
-        "contracts/domain_handler_registry.json"
-    )
     assert pack_input["source_refs"]["source_closure_audit_source_ref"] == (
         "contracts/source_closure_audit.json"
     )
@@ -194,16 +191,10 @@ def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
         assert all(reachable(required[0], stage_id) for stage_id in optional)
 
 
-def test_hosted_action_registry_and_source_closure_contracts_are_closed() -> None:
+def test_hosted_action_source_closure_contracts_are_closed() -> None:
     descriptor = _read_json("contracts/domain_descriptor.json")
-    registry = _read_json("contracts/domain_handler_registry.json")
     source_audit = _read_json("contracts/source_closure_audit.json")
 
-    assert registry == {
-        "surface_kind": "domain_handler_registry",
-        "version": "domain-handler-registry.v1",
-        "handlers": [],
-    }
     assert set(source_audit) == {"surface_kind", "version", "entries"}
     assert source_audit["surface_kind"] == "standard_agent_source_closure_audit"
     assert source_audit["version"] == "standard-agent-source-closure-audit.v1"
@@ -263,9 +254,6 @@ def test_hosted_action_registry_and_source_closure_contracts_are_closed() -> Non
         assert tuple(entry["allowed_targets"]) == expected_targets
         assert entry["source_digest"].startswith("sha256:")
         assert len(entry["source_digest"]) == len("sha256:") + 64
-    assert descriptor["standard_contract_refs"]["domain_handler_registry"] == (
-        "contracts/domain_handler_registry.json"
-    )
     assert descriptor["standard_contract_refs"]["source_closure_audit"] == (
         "contracts/source_closure_audit.json"
     )

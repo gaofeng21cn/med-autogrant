@@ -14,9 +14,8 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 - `domain_descriptor.json`
 - `pack_compiler_input.json`
 - `capability_map.json`
-- `action_catalog.json`
+- `action_catalog.json`：3 个 public action 都使用 `stage_binding`，没有 `handler_ref`，因此不声明空 handler registry。
 - `schemas/*action*.input.schema.json`：3 个 hosted action 的 exact closed input schema。
-- `domain_handler_registry.json`：closed handler registry；MAG 当前 public action 全部使用 `stage_binding`，因此 registry 为空。
 - `source_closure_audit.json`：OPL canonical source-closure scanner消费的 exact audit；未分类 generic effect 不得通过扩张 domain authority 放行。
 - `../agent/stages/manifest.json`
 - `generated_surface_handoff.json`
