@@ -61,9 +61,9 @@ MAG workspace locator/topology、runtime domain identity/registration ref、prog
 
 正式 Review 不复用 producer thread。OPL 在同一 StageRun 下创建独立 reviewer/repairer/re-reviewer Attempts，并按 `contracts/stage_quality_cycle_policy.json` 运输 exact refs、hash、rubric 与 lineage。默认最多三轮 repair + re-review；有可消费 artifact 时预算耗尽形成质量债而非 transition blocker。`review_and_rebuttal` 是跨 Stage Grant Meta Review，缺陷回到最早 owning Stage，专业因果顺序继续由 MAG rubric 与 skill 定义。
 
-## D15 最终 package bytes 必须在冻结后独立复审
+## D15 最终 package 使用 scoped review 与独立 release integrity
 
-`package_and_submit_ready` 会在 Grant Meta Review 之后生成或转换四个 canonical package artifacts，并可支撑本地 submission-ready claim，因此不是纯 refs-only handoff。Producer 必须绑定同 generation 的四份 exact refs/hash，且其 package JSON 始终保持 `submission_ready=false`；producer 与 repairer 只能返回 `route_impact.stage_route_recommendation`。`same_stage_repair_required` 在 repair budget 尚存时继续本 Stage 的 assembly/manifest/provenance 修复；若 required finding 的最窄 canonical owner 是另一个 declared Stage，`cross_stage_route_back_before_budget_exhaustion` 允许 reviewer/re-reviewer 提前以 `repair_required + route_back` 终结当前 StageRun，且禁止其他预算耗尽前终局 route。预算耗尽且 exact package bytes 可消费时，它保留 `repair_required` outcome、成为 terminal decisive Attempt并返回 `route_impact.stage_route_decision`，controller 投影 `completed_with_quality_debt`。Reviewer closeout 只提供审阅字段，StageRunController 只能物化 exact-hash-bound `opl_stage_review_receipt`；最终本地 readiness 必须同时消费该 receipt 与 MAG-owned export/owner verdict，OPL 和 reviewer 都不能签 MAG owner receipt。本 Stage repair 只处理 assembly、manifest 和 provenance projection；上游内容、证据、质量闭环、附件 owner 或 export-verdict 缺陷必须 route-back。外部 portal acceptance 继续由下游 human owner 持有。
+`package_and_submit_ready` 的四个 canonical outputs 始终先保持 `submission_ready=false`。Exact refs/hash 只承担 transport identity、locator/stale hint 与独立 release integrity；`contracts/epistemic_review_scope_profile.json` 声明 content、methodology、reference、display、export 与 package 的 artifact/claim/provenance dependencies，semantic change 只失效 declared dependents。所有 scope 共用本 Stage 现有 managed StageAttempt budget，不新增 scheduler、ledger、loop 或 parallel evidence control plane。Local readiness 同时要求 current scoped evidence、identity-bound Review receipt、exact-byte release integrity 与 MAG-owned export/owner verdict；本 Stage 仍只修 assembly、manifest 与 provenance projection。
 
 ## D16 Hosted action 与 package lifecycle 归 OPL
 

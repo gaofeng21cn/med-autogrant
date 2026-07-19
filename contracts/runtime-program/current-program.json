@@ -33,6 +33,7 @@
     "action_catalog": "contracts/action_catalog.json",
     "stage_manifest": "agent/stages/manifest.json",
     "owner_receipt": "contracts/owner_receipt_contract.json",
+    "epistemic_review": "contracts/epistemic_review_scope_profile.json",
     "functional_audit": "contracts/functional_privatization_audit.json",
     "runtime_profile": "contracts/stage_run_kernel_profile.json",
     "live_progress": "contracts/live_stage_run_progress_evidence.json",

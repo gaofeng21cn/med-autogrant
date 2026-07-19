@@ -49,7 +49,7 @@ Last reviewed: `2026-07-13`
 
 - 新增 quality-ready state 前，先识别持有判断的 AI artifact。
 - 将 scorecard 映射到 autonomy status 前，检查 `assessment_owner` 和 `ai_reviewer_required`。
-- 将 package completeness 映射到本地 submission-ready 投影前，同时检查 exact-byte `opl_stage_review_receipt` 与 `submission_ready_export_verdict.owner=med-autogrant`、`export_verdict_ref` 和 `provenance_ref`。
+- Package review currentness 与 readiness 输入以 `contracts/epistemic_review_scope_profile.json` 和 `contracts/owner_receipt_contract.json` 为准。
 - 新增 revision execution 行为前，确认每个 prose mutation 都来自 `mutation_payload`。
 - schema/gate/controller code 只能作为 aggregation 和 routing layer，不能变成 hidden author 或 hidden reviewer。
 - 修改 scorecard、dossier、critique、revision 或 autonomy quality mapping 时，同步新增或更新 AI-first boundary tests。

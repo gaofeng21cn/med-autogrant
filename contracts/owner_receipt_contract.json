@@ -15,7 +15,21 @@
       "opl_stage_review_receipt",
       "submission_ready_export_verdict"
     ],
-    "review_receipt_must_match_current_package_hashes": true,
+    "epistemic_review_scope_profile_ref": "contracts/epistemic_review_scope_profile.json",
+    "required_current_epistemic_scope_ids": [
+      "mag:package_and_submit_ready:grant_content",
+      "mag:package_and_submit_ready:grant_methodology",
+      "mag:package_and_submit_ready:grant_reference",
+      "mag:package_and_submit_ready:grant_display",
+      "mag:package_and_submit_ready:grant_export",
+      "mag:package_and_submit_ready:grant_package"
+    ],
+    "review_receipt_must_match_current_package_hashes": false,
+    "reviewed_artifact_hashes_role": "transport_identity_locator_and_stale_hint_only",
+    "hash_change_alone_invalidates_epistemic_review": false,
+    "release_integrity_contract_ref": "contracts/epistemic_review_scope_profile.json#/release_integrity",
+    "release_integrity_must_match_current_package_hashes": true,
+    "release_integrity_can_replace_epistemic_review": false,
     "owner_evidence_must_reference_required_inputs": true,
     "opl_can_authorize_local_readiness": false,
     "external_portal_acceptance": "separate_human_gate"

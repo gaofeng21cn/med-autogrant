@@ -62,6 +62,25 @@ class SubmissionReadyPackageTest(unittest.TestCase):
                     "opl_stage_review_receipt",
                     "submission_ready_export_verdict",
                 ],
+                "epistemic_review_scope_profile_ref": (
+                    "contracts/epistemic_review_scope_profile.json"
+                ),
+                "required_current_epistemic_scope_ids": [
+                    "mag:package_and_submit_ready:grant_content",
+                    "mag:package_and_submit_ready:grant_methodology",
+                    "mag:package_and_submit_ready:grant_reference",
+                    "mag:package_and_submit_ready:grant_display",
+                    "mag:package_and_submit_ready:grant_export",
+                    "mag:package_and_submit_ready:grant_package",
+                ],
+                "reviewed_artifact_hashes_role": (
+                    "transport_identity_locator_and_stale_hint_only"
+                ),
+                "hash_change_alone_invalidates_epistemic_review": False,
+                "release_integrity_contract_ref": (
+                    "contracts/epistemic_review_scope_profile.json#/release_integrity"
+                ),
+                "release_integrity_separate": True,
             })
             self.assertEqual(package["submission_ready_export_verdict"], EXPORT_VERDICT)
             self.assertEqual(package["mechanical_package_completeness"]["status"], "passed")

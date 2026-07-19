@@ -158,7 +158,7 @@ def test_mag_meta_review_is_independent_and_routes_to_defect_owner() -> None:
     assert "producer_conversation_history" in meta["forbidden_inputs"]
 
 
-def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> None:
+def test_package_stage_uses_scoped_currentness_before_ready_projection() -> None:
     manifest = read_json("agent/stages/manifest.json")
     profile = read_json("contracts/stage_quality_cycle_policy.json")
     stages = {stage["stage_id"]: stage for stage in manifest["stages"]}
@@ -183,6 +183,15 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "review_depth": "full",
         "context_isolation_required": True,
         "max_repair_rounds": 3,
+        "scope_budget": {
+            "surface_kind": "opl_stage_quality_scope_budget",
+            "version": "opl-stage-quality-scope-budget.v1",
+            "max_attempts": 3,
+            "max_elapsed_ms": 21_600_000,
+            "max_tokens": 1_000_000,
+            "token_budget_requires_observed_usage": True,
+            "foreground_execution_must_use_managed_attempt": True,
+        },
     }
 
     prompt = (ROOT / package_stage["prompt_ref"]).read_text(encoding="utf-8")
@@ -207,7 +216,7 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
     assert "route_impact.stage_route_decision" in roles
     assert "route_impact.stage_route_recommendation" in roles
     assert "repair_required" in roles
-    assert "StageRunController materializes only the exact-hash-bound `opl_stage_review_receipt`" in roles
+    assert "StageRunController materializes only the identity-bound `opl_stage_review_receipt`" in roles
     assert "to its identically named receipt verdict" in roles
     assert "to the same receipt verdict" not in roles
     assert "`route_impact.stage_quality_cycle.outcome`" in roles
@@ -231,7 +240,9 @@ def test_package_stage_reviews_current_final_bytes_before_ready_projection() -> 
         "workflow_complete",
     ):
         assert f"legacy `{legacy_field}`" in roles or f"`{legacy_field}`" in roles
-    assert "materializes only the exact-hash-bound `opl_stage_review_receipt`" in prompt
+    assert "materializes only the identity-bound `opl_stage_review_receipt`" in prompt
+    assert "Hashes are only locators and stale hints for epistemic review" in prompt
+    assert "do not create another loop, ledger, scheduler, or evidence control plane" in prompt
     assert "When repair budget is exhausted and exact package bytes remain consumable" in prompt
     assert "keeps outcome `repair_required`" in prompt
     assert "projects `completed_with_quality_debt`" in prompt

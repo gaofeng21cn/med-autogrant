@@ -66,7 +66,13 @@
         "local_readiness_authority_owner",
         "local_readiness_requirement_mode",
         "local_readiness_contract_ref",
-        "local_readiness_required_ref_kinds"
+        "local_readiness_required_ref_kinds",
+        "epistemic_review_scope_profile_ref",
+        "required_current_epistemic_scope_ids",
+        "reviewed_artifact_hashes_role",
+        "hash_change_alone_invalidates_epistemic_review",
+        "release_integrity_contract_ref",
+        "release_integrity_separate"
       ],
       "properties": {
         "status": {
@@ -104,6 +110,31 @@
             "opl_stage_review_receipt",
             "submission_ready_export_verdict"
           ]
+        },
+        "epistemic_review_scope_profile_ref": {
+          "const": "contracts/epistemic_review_scope_profile.json"
+        },
+        "required_current_epistemic_scope_ids": {
+          "const": [
+            "mag:package_and_submit_ready:grant_content",
+            "mag:package_and_submit_ready:grant_methodology",
+            "mag:package_and_submit_ready:grant_reference",
+            "mag:package_and_submit_ready:grant_display",
+            "mag:package_and_submit_ready:grant_export",
+            "mag:package_and_submit_ready:grant_package"
+          ]
+        },
+        "reviewed_artifact_hashes_role": {
+          "const": "transport_identity_locator_and_stale_hint_only"
+        },
+        "hash_change_alone_invalidates_epistemic_review": {
+          "const": false
+        },
+        "release_integrity_contract_ref": {
+          "const": "contracts/epistemic_review_scope_profile.json#/release_integrity"
+        },
+        "release_integrity_separate": {
+          "const": true
         }
       }
     },

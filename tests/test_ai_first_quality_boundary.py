@@ -40,7 +40,7 @@ def test_scorecard_and_dossier_schemas_require_ai_reviewer_provenance() -> None:
     assert "ai_reviewer_blocker_reason" in summary_required
 
 
-def test_submission_ready_schema_requires_exact_review_receipt_and_mag_owner_verdict() -> None:
+def test_submission_ready_schema_separates_scoped_review_and_release_integrity() -> None:
     submission_ready_schema = json.loads(_read("schemas/v1/submission-ready-package.schema.json"))
 
     required = submission_ready_schema["required"]
@@ -102,6 +102,15 @@ def test_submission_ready_schema_requires_exact_review_receipt_and_mag_owner_ver
         "opl_stage_review_receipt",
         "submission_ready_export_verdict",
     ]
+    assert handoff_review["properties"]["reviewed_artifact_hashes_role"] == {
+        "const": "transport_identity_locator_and_stale_hint_only"
+    }
+    assert handoff_review["properties"]["hash_change_alone_invalidates_epistemic_review"] == {
+        "const": False
+    }
+    assert handoff_review["properties"]["release_integrity_separate"] == {
+        "const": True
+    }
 
     receipt_bundle_schema = json.loads(_read("schemas/v1/codex-stage-execution-receipt-bundle.schema.json"))
     authority = receipt_bundle_schema["$defs"]["authorityBoundary"]
@@ -132,7 +141,27 @@ def test_submission_ready_schema_requires_exact_review_receipt_and_mag_owner_ver
             "opl_stage_review_receipt",
             "submission_ready_export_verdict",
         ],
-        "review_receipt_must_match_current_package_hashes": True,
+        "epistemic_review_scope_profile_ref": (
+            "contracts/epistemic_review_scope_profile.json"
+        ),
+        "required_current_epistemic_scope_ids": [
+            "mag:package_and_submit_ready:grant_content",
+            "mag:package_and_submit_ready:grant_methodology",
+            "mag:package_and_submit_ready:grant_reference",
+            "mag:package_and_submit_ready:grant_display",
+            "mag:package_and_submit_ready:grant_export",
+            "mag:package_and_submit_ready:grant_package",
+        ],
+        "review_receipt_must_match_current_package_hashes": False,
+        "reviewed_artifact_hashes_role": (
+            "transport_identity_locator_and_stale_hint_only"
+        ),
+        "hash_change_alone_invalidates_epistemic_review": False,
+        "release_integrity_contract_ref": (
+            "contracts/epistemic_review_scope_profile.json#/release_integrity"
+        ),
+        "release_integrity_must_match_current_package_hashes": True,
+        "release_integrity_can_replace_epistemic_review": False,
         "owner_evidence_must_reference_required_inputs": True,
         "opl_can_authorize_local_readiness": False,
         "external_portal_acceptance": "separate_human_gate",

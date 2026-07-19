@@ -1,0 +1,506 @@
+{
+  "surface_kind": "mag_epistemic_review_scope_profile",
+  "version": "mag-epistemic-review-scope-profile.v1",
+  "domain_id": "med-autogrant",
+  "owner": "med-autogrant",
+  "stage_id": "package_and_submit_ready",
+  "framework_binding": {
+    "currentness_contract_ref": "contracts/opl-framework/epistemic-review-currentness-contract.json",
+    "scope_schema_ref": "contracts/opl-framework/epistemic-review-scope-v2.schema.json",
+    "stage_quality_contract_ref": "contracts/opl-framework/stage-quality-cycle-contract.json"
+  },
+  "stage_attempt_budget": {
+    "policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/package_and_submit_ready/formal_review/scope_budget",
+    "all_review_scopes_share_one_stage_attempt_budget": true,
+    "framework_enforces_budget": true,
+    "parallel_evidence_control_plane_allowed": false,
+    "mag_can_schedule_or_materialize_attempts": false
+  },
+  "review_scopes": [
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_content",
+      "scope_kind": "content",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:artifact:grant_body",
+        "mag:claim:scientific_rationale"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:provenance:funding_call",
+          "node_kind": "provenance",
+          "role": "context"
+        },
+        {
+          "node_ref": "mag:provenance:preliminary_evidence",
+          "node_kind": "provenance",
+          "role": "source_data"
+        },
+        {
+          "node_ref": "mag:reference:rationale_source",
+          "node_kind": "artifact",
+          "role": "reference_source"
+        },
+        {
+          "node_ref": "mag:provenance:rationale_citation",
+          "node_kind": "provenance",
+          "role": "citation_linkage"
+        },
+        {
+          "node_ref": "mag:artifact:grant_body",
+          "node_kind": "artifact",
+          "role": "analysis_result"
+        },
+        {
+          "node_ref": "mag:claim:scientific_rationale",
+          "node_kind": "claim",
+          "role": "claim"
+        },
+        {
+          "node_ref": "mag:provenance:grant_limitations",
+          "node_kind": "provenance",
+          "role": "limitation"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:provenance:funding_call",
+          "dependent_ref": "mag:artifact:grant_body",
+          "relation": "derived_from"
+        },
+        {
+          "source_ref": "mag:provenance:preliminary_evidence",
+          "dependent_ref": "mag:claim:scientific_rationale",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:reference:rationale_source",
+          "dependent_ref": "mag:provenance:rationale_citation",
+          "relation": "cites"
+        },
+        {
+          "source_ref": "mag:provenance:rationale_citation",
+          "dependent_ref": "mag:claim:scientific_rationale",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:artifact:grant_body",
+          "dependent_ref": "mag:claim:scientific_rationale",
+          "relation": "interprets"
+        },
+        {
+          "source_ref": "mag:provenance:grant_limitations",
+          "dependent_ref": "mag:claim:scientific_rationale",
+          "relation": "interprets"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    },
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_methodology",
+      "scope_kind": "content",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:artifact:methodology_section",
+        "mag:claim:methodological_validity"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:provenance:funding_call",
+          "node_kind": "provenance",
+          "role": "context"
+        },
+        {
+          "node_ref": "mag:provenance:preliminary_evidence",
+          "node_kind": "provenance",
+          "role": "source_data"
+        },
+        {
+          "node_ref": "mag:provenance:methodology_parameters",
+          "node_kind": "provenance",
+          "role": "analysis_parameters"
+        },
+        {
+          "node_ref": "mag:reference:methodology_source",
+          "node_kind": "artifact",
+          "role": "reference_source"
+        },
+        {
+          "node_ref": "mag:provenance:methodology_citation",
+          "node_kind": "provenance",
+          "role": "citation_linkage"
+        },
+        {
+          "node_ref": "mag:artifact:methodology_section",
+          "node_kind": "artifact",
+          "role": "analysis_result"
+        },
+        {
+          "node_ref": "mag:claim:methodological_validity",
+          "node_kind": "claim",
+          "role": "claim"
+        },
+        {
+          "node_ref": "mag:provenance:methodology_reproduction",
+          "node_kind": "provenance",
+          "role": "reproduction_instruction"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:provenance:funding_call",
+          "dependent_ref": "mag:artifact:methodology_section",
+          "relation": "derived_from"
+        },
+        {
+          "source_ref": "mag:provenance:preliminary_evidence",
+          "dependent_ref": "mag:artifact:methodology_section",
+          "relation": "derived_from"
+        },
+        {
+          "source_ref": "mag:provenance:methodology_parameters",
+          "dependent_ref": "mag:artifact:methodology_section",
+          "relation": "derived_from"
+        },
+        {
+          "source_ref": "mag:reference:methodology_source",
+          "dependent_ref": "mag:provenance:methodology_citation",
+          "relation": "cites"
+        },
+        {
+          "source_ref": "mag:provenance:methodology_citation",
+          "dependent_ref": "mag:claim:methodological_validity",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:artifact:methodology_section",
+          "dependent_ref": "mag:claim:methodological_validity",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:provenance:methodology_reproduction",
+          "dependent_ref": "mag:claim:methodological_validity",
+          "relation": "reproduces"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    },
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_reference",
+      "scope_kind": "reference",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:claim:scientific_rationale",
+        "mag:claim:methodological_validity"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:reference:rationale_source",
+          "node_kind": "artifact",
+          "role": "reference_source"
+        },
+        {
+          "node_ref": "mag:provenance:rationale_citation",
+          "node_kind": "provenance",
+          "role": "citation_linkage"
+        },
+        {
+          "node_ref": "mag:claim:scientific_rationale",
+          "node_kind": "claim",
+          "role": "claim"
+        },
+        {
+          "node_ref": "mag:reference:methodology_source",
+          "node_kind": "artifact",
+          "role": "reference_source"
+        },
+        {
+          "node_ref": "mag:provenance:methodology_citation",
+          "node_kind": "provenance",
+          "role": "citation_linkage"
+        },
+        {
+          "node_ref": "mag:claim:methodological_validity",
+          "node_kind": "claim",
+          "role": "claim"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:reference:rationale_source",
+          "dependent_ref": "mag:provenance:rationale_citation",
+          "relation": "cites"
+        },
+        {
+          "source_ref": "mag:provenance:rationale_citation",
+          "dependent_ref": "mag:claim:scientific_rationale",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:reference:methodology_source",
+          "dependent_ref": "mag:provenance:methodology_citation",
+          "relation": "cites"
+        },
+        {
+          "source_ref": "mag:provenance:methodology_citation",
+          "dependent_ref": "mag:claim:methodological_validity",
+          "relation": "supports"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    },
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_display",
+      "scope_kind": "display",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:artifact:rendered_grant"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:claim:scientific_rationale",
+          "node_kind": "claim",
+          "role": "claim"
+        },
+        {
+          "node_ref": "mag:claim:methodological_validity",
+          "node_kind": "claim",
+          "role": "claim"
+        },
+        {
+          "node_ref": "mag:artifact:rendered_grant",
+          "node_kind": "artifact",
+          "role": "visual_content"
+        },
+        {
+          "node_ref": "mag:provenance:grant_layout",
+          "node_kind": "provenance",
+          "role": "layout"
+        },
+        {
+          "node_ref": "mag:provenance:render_template",
+          "node_kind": "provenance",
+          "role": "render_template"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:claim:scientific_rationale",
+          "dependent_ref": "mag:artifact:rendered_grant",
+          "relation": "renders"
+        },
+        {
+          "source_ref": "mag:claim:methodological_validity",
+          "dependent_ref": "mag:artifact:rendered_grant",
+          "relation": "renders"
+        },
+        {
+          "source_ref": "mag:provenance:grant_layout",
+          "dependent_ref": "mag:artifact:rendered_grant",
+          "relation": "renders"
+        },
+        {
+          "source_ref": "mag:provenance:render_template",
+          "dependent_ref": "mag:artifact:rendered_grant",
+          "relation": "renders"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    },
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_export",
+      "scope_kind": "package",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:claim:export_conformance"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:artifact:final-package.json",
+          "node_kind": "artifact",
+          "role": "package_content"
+        },
+        {
+          "node_ref": "mag:provenance:funder_export_requirements",
+          "node_kind": "provenance",
+          "role": "context"
+        },
+        {
+          "node_ref": "mag:provenance:manual_portal_boundary",
+          "node_kind": "provenance",
+          "role": "limitation"
+        },
+        {
+          "node_ref": "mag:provenance:export_reproduction",
+          "node_kind": "provenance",
+          "role": "reproduction_instruction"
+        },
+        {
+          "node_ref": "mag:claim:export_conformance",
+          "node_kind": "claim",
+          "role": "claim"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:artifact:final-package.json",
+          "dependent_ref": "mag:claim:export_conformance",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:provenance:funder_export_requirements",
+          "dependent_ref": "mag:claim:export_conformance",
+          "relation": "supports"
+        },
+        {
+          "source_ref": "mag:provenance:manual_portal_boundary",
+          "dependent_ref": "mag:claim:export_conformance",
+          "relation": "interprets"
+        },
+        {
+          "source_ref": "mag:provenance:export_reproduction",
+          "dependent_ref": "mag:claim:export_conformance",
+          "relation": "reproduces"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    },
+    {
+      "surface_kind": "opl_epistemic_review_scope",
+      "version": "opl-epistemic-review-scope.v2",
+      "scope_id": "mag:package_and_submit_ready:grant_package",
+      "scope_kind": "package",
+      "evidence_profile": "epistemic_provenance",
+      "trust_model": "trusted_local_workspace",
+      "reviewed_node_refs": [
+        "mag:artifact:artifact-bundle.json",
+        "mag:artifact:final-package.json",
+        "mag:artifact:hosted-contract-bundle.json",
+        "mag:artifact:submission-ready-package.json",
+        "mag:claim:package_completeness"
+      ],
+      "nodes": [
+        {
+          "node_ref": "mag:artifact:artifact-bundle.json",
+          "node_kind": "artifact",
+          "role": "package_content"
+        },
+        {
+          "node_ref": "mag:artifact:final-package.json",
+          "node_kind": "artifact",
+          "role": "package_content"
+        },
+        {
+          "node_ref": "mag:artifact:hosted-contract-bundle.json",
+          "node_kind": "artifact",
+          "role": "package_wrapper"
+        },
+        {
+          "node_ref": "mag:artifact:submission-ready-package.json",
+          "node_kind": "artifact",
+          "role": "package_wrapper"
+        },
+        {
+          "node_ref": "mag:claim:package_completeness",
+          "node_kind": "claim",
+          "role": "claim"
+        }
+      ],
+      "dependency_edges": [
+        {
+          "source_ref": "mag:artifact:artifact-bundle.json",
+          "dependent_ref": "mag:artifact:final-package.json",
+          "relation": "packages"
+        },
+        {
+          "source_ref": "mag:artifact:final-package.json",
+          "dependent_ref": "mag:artifact:submission-ready-package.json",
+          "relation": "packages"
+        },
+        {
+          "source_ref": "mag:artifact:hosted-contract-bundle.json",
+          "dependent_ref": "mag:artifact:submission-ready-package.json",
+          "relation": "packages"
+        },
+        {
+          "source_ref": "mag:artifact:submission-ready-package.json",
+          "dependent_ref": "mag:claim:package_completeness",
+          "relation": "supports"
+        }
+      ],
+      "authority_boundary": {
+        "hash_is_locator_or_stale_hint_only": true,
+        "hash_is_content_authority": false,
+        "release_integrity_is_separate": true,
+        "framework_can_issue_domain_verdict": false
+      }
+    }
+  ],
+  "release_integrity": {
+    "surface_kind": "mag_release_integrity_profile",
+    "version": "mag-release-integrity-profile.v1",
+    "owner": "med-autogrant",
+    "member_refs": [
+      "mag:artifact:artifact-bundle.json",
+      "mag:artifact:final-package.json",
+      "mag:artifact:hosted-contract-bundle.json",
+      "mag:artifact:submission-ready-package.json"
+    ],
+    "digest_algorithm": "sha256",
+    "exact_current_bytes_required": true,
+    "member_mutation_requires_new_integrity_evidence": true,
+    "can_replace_epistemic_review": false,
+    "epistemic_review_can_replace_release_integrity": false
+  },
+  "authority_boundary": {
+    "hash_is_locator_or_stale_hint_only_for_epistemic_review": true,
+    "hash_is_content_authority": false,
+    "semantic_change_invalidates_only_declared_dependents": true,
+    "governance_metadata_invalidates_content_methodology_or_reference": false,
+    "layout_invalidates_content_methodology_or_reference": false,
+    "package_wrapper_invalidates_content_methodology_or_reference": false,
+    "release_integrity_is_separate": true,
+    "framework_can_issue_mag_verdict": false,
+    "mag_can_create_parallel_attempt_control_plane": false
+  }
+}

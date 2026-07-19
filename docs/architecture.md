@@ -114,4 +114,4 @@ Formal Review StageRun 的 decisive route owner 是 terminal reviewer/re-reviewe
 
 `review_and_rebuttal` 保留稳定 Stage ID，但承担独立 Grant Meta Review：它只消费 exact artifact/hash、Stage Review receipts、call/source/rubric 与必要 lineage，输出整体 verdict 和 defect-owner route-back，不在 Review Stage 内改写 proposal。可消费 artifact 在三轮质量预算耗尽后带质量债推进；债务继续阻止 quality、export、submission 和 ready 声明。
 
-`package_and_submit_ready` 的四份 final bytes 始终先作为 `submission_ready=false` 候选输出。StageRunController 只能物化绑定 exact hashes 的 `opl_stage_review_receipt`；最终本地 submission-ready 投影必须同时消费该 receipt 与 MAG-owned export/owner verdict。Reviewer 与 OPL 都不能签 MAG owner receipt，外部 portal acceptance 继续是独立 human gate。
+`package_and_submit_ready` 的 review-pending 四文件候选使用 `contracts/epistemic_review_scope_profile.json` 判断 dependency-scoped currentness；hash 只作 identity/locator/stale hint，exact-byte release integrity 独立。Local readiness 仍由 `contracts/owner_receipt_contract.json` 约束，Reviewer 与 OPL 都不能签 MAG owner receipt，外部 portal acceptance 继续是独立 human gate。

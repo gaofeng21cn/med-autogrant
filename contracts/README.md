@@ -28,6 +28,7 @@ OPL Pack 直接从 declarative stage manifest 生成 `family_stage_control_plane
 
 - `functional_privatization_audit.json`：canonical compact audit；七项 retained authority/refs adapter 的逐文件分类、三条 retired generated-surface provenance 与不授权物理删除的 bridge gate。Declarative pack inventory 只在 `pack_compiler_input.json#declarative_domain_pack`。
 - `owner_receipt_contract.json`：`domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
+- `epistemic_review_scope_profile.json`：`package_and_submit_ready` 的 grant content、methodology、reference、display、export 与 package dependency graph；hash 仅作 locator/stale hint，exact-byte release integrity 单独建模。
 - `memory_descriptor.json`、`artifact_locator_contract.json`：body-free locator/refs contract。
 - `production_acceptance/mag-production-acceptance.json`：provenance-only acceptance tail；不是 live readiness。
 - `live_stage_run_progress_evidence.json`：真实 owner refs 与 typed blocker source。

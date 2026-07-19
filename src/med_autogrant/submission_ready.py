@@ -20,6 +20,19 @@ LOCAL_READINESS_REQUIRED_REF_KINDS = [
     OPL_STAGE_REVIEW_RECEIPT_KIND,
     "submission_ready_export_verdict",
 ]
+EPISTEMIC_REVIEW_SCOPE_PROFILE_REF = "contracts/epistemic_review_scope_profile.json"
+EPISTEMIC_REVIEW_SCOPE_IDS = [
+    "mag:package_and_submit_ready:grant_content",
+    "mag:package_and_submit_ready:grant_methodology",
+    "mag:package_and_submit_ready:grant_reference",
+    "mag:package_and_submit_ready:grant_display",
+    "mag:package_and_submit_ready:grant_export",
+    "mag:package_and_submit_ready:grant_package",
+]
+REVIEWED_ARTIFACT_HASHES_ROLE = "transport_identity_locator_and_stale_hint_only"
+RELEASE_INTEGRITY_CONTRACT_REF = (
+    "contracts/epistemic_review_scope_profile.json#/release_integrity"
+)
 SUBMISSION_READY_EXPORT_VERDICT_STATES = frozenset({"submission_ready", "blocked"})
 SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS = frozenset(
     {
@@ -125,6 +138,12 @@ def build_submission_ready_package_document(
             "local_readiness_requirement_mode": LOCAL_READINESS_REQUIREMENT_MODE,
             "local_readiness_contract_ref": LOCAL_READINESS_CONTRACT_REF,
             "local_readiness_required_ref_kinds": list(LOCAL_READINESS_REQUIRED_REF_KINDS),
+            "epistemic_review_scope_profile_ref": EPISTEMIC_REVIEW_SCOPE_PROFILE_REF,
+            "required_current_epistemic_scope_ids": list(EPISTEMIC_REVIEW_SCOPE_IDS),
+            "reviewed_artifact_hashes_role": REVIEWED_ARTIFACT_HASHES_ROLE,
+            "hash_change_alone_invalidates_epistemic_review": False,
+            "release_integrity_contract_ref": RELEASE_INTEGRITY_CONTRACT_REF,
+            "release_integrity_separate": True,
         },
         "mechanical_package_completeness": mechanical_package_completeness,
         "submission_ready_export_verdict": submission_ready_export_verdict,

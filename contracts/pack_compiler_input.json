@@ -147,6 +147,7 @@
   "required_domain_pack_paths": [
     "agent/stages/manifest.json",
     "contracts/stage_quality_cycle_policy.json",
+    "contracts/epistemic_review_scope_profile.json",
     "contracts/action_catalog.json",
     "agent/stages/call_and_candidate_intake.md",
     "agent/stages/fundability_strategy.md",
@@ -186,6 +187,7 @@
   "declarative_domain_pack": [
     "stage_manifest",
     "stage_policies_and_prompts",
+    "epistemic_review_scope_profile",
     "grant_authoring_skill",
     "professional_skill_refs",
     "tool_affordance_catalog",

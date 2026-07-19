@@ -238,7 +238,16 @@
         "risk_tier": "high",
         "review_depth": "full",
         "context_isolation_required": true,
-        "max_repair_rounds": 3
+        "max_repair_rounds": 3,
+        "scope_budget": {
+          "surface_kind": "opl_stage_quality_scope_budget",
+          "version": "opl-stage-quality-scope-budget.v1",
+          "max_attempts": 3,
+          "max_elapsed_ms": 21600000,
+          "max_tokens": 1000000,
+          "token_budget_requires_observed_usage": true,
+          "foreground_execution_must_use_managed_attempt": true
+        }
       },
       "budget_exhaustion": "complete_with_quality_debt_if_consumable",
       "attempt_boundary": {
