@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -205,36 +206,6 @@ def test_hosted_action_source_closure_contracts_are_closed() -> None:
             ("process_spawn",),
             ("git",),
         ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_hosted_contract_bundle_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_artifact_bundle_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_revised_workspace_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_final_package_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_submission_ready_package_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
-        ("src/med_autogrant/domain_runtime_parts/io.py", "_write_json_output"): (
-            "minimal_authority_function",
-            ("filesystem_write",),
-            (),
-        ),
         (
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
             "write_domain_memory_receipt_evidence",
@@ -254,6 +225,16 @@ def test_hosted_action_source_closure_contracts_are_closed() -> None:
         assert tuple(entry["allowed_targets"]) == expected_targets
         assert entry["source_digest"].startswith("sha256:")
         assert len(entry["source_digest"]) == len("sha256:") + 64
+    for source_file in {entry["file"] for entry in entries}:
+        declared_digests = {
+            entry["source_digest"]
+            for entry in entries
+            if entry["file"] == source_file
+        }
+        observed_digest = "sha256:" + hashlib.sha256(
+            (REPO_ROOT / source_file).read_bytes()
+        ).hexdigest()
+        assert declared_digests == {observed_digest}, source_file
     assert descriptor["standard_contract_refs"]["source_closure_audit"] == (
         "contracts/source_closure_audit.json"
     )
