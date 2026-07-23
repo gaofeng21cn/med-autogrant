@@ -10,7 +10,10 @@ from pathlib import Path
 
 from med_autogrant.cli import main
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
-from med_autogrant.domain_runtime_parts.contracts import build_operator_contract
+from med_autogrant.domain_runtime_parts.contracts import (
+    build_operator_contract,
+    read_scholar_skill_binding_contract,
+)
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS
 from support.cli import public_cli_argv
 
@@ -227,4 +230,8 @@ def _assert_hosted_authoring_contract(
     test_case.assertEqual(
         route_catalog["hosted_contract_bundle"]["execution_surface"]["command"],
         "build-hosted-contract-bundle",
+    )
+    test_case.assertEqual(
+        authoring_contract["scholar_skill_binding_contract"],
+        read_scholar_skill_binding_contract(),
     )

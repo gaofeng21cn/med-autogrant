@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,10 @@ from .shared import (
     SCHEMA_INDEX_RELATIVE_PATH,
 )
 
+SCHOLAR_SKILL_BINDING_CONTRACT_RELATIVE_PATH = Path(
+    "contracts/scholar_skill_binding_contract.json"
+)
+
 
 def read_program_id(*, repo_root: Path | None = None) -> str:
     return _read_program_id_from_contract(repo_root=repo_root)
@@ -37,6 +42,82 @@ def read_program_id(*, repo_root: Path | None = None) -> str:
 
 def read_current_program_contract(*, repo_root: Path | None = None) -> dict[str, Any]:
     return _read_current_program_contract_from_contract(repo_root=repo_root)
+
+
+def read_scholar_skill_binding_contract(
+    *,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    resolved_repo_root = (repo_root or Path(__file__).resolve().parents[3]).resolve()
+    contract_path = resolved_repo_root / SCHOLAR_SKILL_BINDING_CONTRACT_RELATIVE_PATH
+    try:
+        payload = json.loads(contract_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise WorkspaceStateError(
+            f"无法读取 MAG Scholar Skill binding contract: {contract_path}"
+        ) from exc
+    if (
+        not isinstance(payload, dict)
+        or payload.get("surface_kind") != "mag_scholar_skill_binding_contract"
+        or payload.get("version") != "mag-scholar-skill-binding.v1"
+        or payload.get("consumer_agent_id") != "mag"
+        or payload.get("provider_package_id") != "mas-scholar-skills"
+        or payload.get("consumer_profile_id") != "mag-medical-grant.v1"
+    ):
+        raise WorkspaceStateError(
+            "MAG Scholar Skill binding contract identity is invalid."
+        )
+    required_export_ids = payload.get("required_export_ids")
+    direct_route_bindings = payload.get("direct_route_bindings")
+    authority_boundary = payload.get("authority_boundary")
+    if (
+        not isinstance(required_export_ids, list)
+        or not required_export_ids
+        or not all(isinstance(item, str) and item for item in required_export_ids)
+        or not isinstance(direct_route_bindings, dict)
+        or not isinstance(authority_boundary, dict)
+        or not authority_boundary
+        or any(value is not False for value in authority_boundary.values())
+    ):
+        raise WorkspaceStateError(
+            "MAG Scholar Skill binding contract boundary is invalid."
+        )
+    return payload
+
+
+def scholar_skill_ids_for_direct_route(route_id: str) -> list[str]:
+    contract = read_scholar_skill_binding_contract()
+    bindings = contract["direct_route_bindings"]
+    selected = bindings.get(route_id)
+    if (
+        not isinstance(selected, list)
+        or not selected
+        or not all(isinstance(item, str) and item for item in selected)
+    ):
+        raise WorkspaceStateError(
+            f"MAG direct route 缺少 Scholar Skill binding: {route_id}"
+        )
+    required_export_ids = set(contract["required_export_ids"])
+    undeclared = [skill_id for skill_id in selected if skill_id not in required_export_ids]
+    if undeclared:
+        raise WorkspaceStateError(
+            "MAG direct route 引用了 consumer profile 之外的 Scholar Skill: "
+            + ", ".join(undeclared)
+        )
+    return selected
+
+
+def build_direct_scholar_skill_prompt_lines(route_id: str) -> list[str]:
+    selected_skill_ids = scholar_skill_ids_for_direct_route(route_id)
+    return [
+        "",
+        "Managed professional Skill binding:",
+        f"- Consumer profile: mag-medical-grant.v1; selected Skill ids: {', '.join(selected_skill_ids)}.",
+        "- Invoke only selected Skills that are material to this grant delta, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
+        "- Shared Skill outputs are refs-only professional candidates: source_pack_ref, candidate_refs, owner_gate_handoff_ref, or route_back_candidate.",
+        "- MAG must consume, reject, or route back each candidate against current sources before changing grant truth.",
+        "- Candidate refs and provider completion cannot authorize fundability, quality, export, grant-ready, submission-ready, owner-receipt, or typed-blocker claims.",
+    ]
 
 
 def validate_contract_schema(
@@ -384,6 +465,7 @@ def build_hosted_authoring_contract() -> dict[str, Any]:
             build_author_side_route_contract(route_id, source_stage=route_id)
             for route_id in AUTHOR_SIDE_ROUTE_IDS
         ],
+        "scholar_skill_binding_contract": read_scholar_skill_binding_contract(),
     }
 
 

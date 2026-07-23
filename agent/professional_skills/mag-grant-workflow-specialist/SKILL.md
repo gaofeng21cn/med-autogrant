@@ -51,6 +51,21 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 10. Verify quality closure before package readiness; keep local package completeness distinct from external portal submission, grant-ready, owner acceptance, and submission-ready authority.
 11. Do not mutate package/export artifacts, write owner receipts, sign export verdicts, or claim submission readiness outside MAG package authority.
 
+## Shared Scholar Skill Binding
+
+- Read `contracts/scholar_skill_binding_contract.json` and use only the shared
+  `mas-scholar-skills` ids bound to the current MAG Stage.
+- Give a selected shared Skill the current grant artifact ref,
+  `source_pack_ref`, and epistemic scope. Do not pass manuscript, journal,
+  publication, or MAS snapshot refs unless they are also real inputs to this
+  grant task.
+- Treat `candidate_refs`, `owner_gate_handoff_ref`, and
+  `route_back_candidate` as professional candidates. Consume, reject, or route
+  them back against MAG sources before changing the proposal or package.
+- Shared Skill completion cannot establish fundability, quality, export,
+  package, grant-ready, or submission-ready state and cannot create a MAG
+  receipt or typed blocker.
+
 ## Stage Prompt Boundary
 
 - The decisive Codex Attempt owns semantic route selection. The OPL StageRun controller only validates and materializes the transition. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.

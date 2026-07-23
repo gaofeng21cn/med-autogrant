@@ -43,6 +43,9 @@
       "goal": "Read call guidance, applicant context, candidate directions, and eligibility constraints.",
       "policy_ref": "agent/stages/call_and_candidate_intake.md",
       "prompt_ref": "agent/prompts/call_and_candidate_intake.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/call_and_candidate_intake",
       "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
       "quality_gate_refs": ["agent/quality_gates/memory_and_receipts.md", "agent/quality_gates/authority_boundaries.md"],
@@ -64,6 +67,9 @@
       "goal": "Evaluate fit, novelty, feasibility, reviewer risk, and funder-specific strategy.",
       "policy_ref": "agent/stages/fundability_strategy.md",
       "prompt_ref": "agent/prompts/fundability_strategy.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/fundability_strategy",
       "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
       "quality_gate_refs": ["agent/quality_gates/fundability.md", "agent/quality_gates/authority_boundaries.md"],
@@ -85,6 +91,9 @@
       "goal": "Shape the research question, aims, technical route, innovation, and argument structure.",
       "policy_ref": "agent/stages/specific_aims_and_structure.md",
       "prompt_ref": "agent/prompts/specific_aims_and_structure.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/specific_aims_and_structure",
       "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
       "quality_gate_refs": ["agent/quality_gates/fundability.md", "agent/quality_gates/quality.md"],
@@ -106,6 +115,9 @@
       "goal": "Draft and revise the proposal body within the locked funding-call context.",
       "policy_ref": "agent/stages/proposal_authoring.md",
       "prompt_ref": "agent/prompts/proposal_authoring.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/proposal_authoring",
       "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/package_authority.md"],
       "quality_gate_refs": ["agent/quality_gates/quality.md", "agent/quality_gates/authority_boundaries.md"],
@@ -128,6 +140,9 @@
       "goal": "Judge the whole grant against the locked call and evidence, then pass or route defects to the earliest owning Stage.",
       "policy_ref": "agent/stages/review_and_rebuttal.md",
       "prompt_ref": "agent/prompts/review_and_rebuttal.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/review_and_rebuttal",
       "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
       "quality_gate_refs": ["agent/quality_gates/quality.md", "agent/quality_gates/fundability.md", "agent/quality_gates/authority_boundaries.md"],
@@ -149,6 +164,9 @@
       "goal": "Freeze the final local package and run submission-ready export checks.",
       "policy_ref": "agent/stages/package_and_submit_ready.md",
       "prompt_ref": "agent/prompts/package_and_submit_ready.md",
+      "skill_refs": [
+        "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
+      ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/package_and_submit_ready",
       "knowledge_refs": ["agent/knowledge/package_authority.md", "agent/knowledge/owner_receipt_boundary.md"],
       "quality_gate_refs": ["agent/quality_gates/export_and_package.md", "agent/quality_gates/quality.md", "agent/quality_gates/authority_boundaries.md"],

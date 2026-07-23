@@ -55,6 +55,21 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 11. Treat memory as advisory strategy context, not grant truth, route truth, fundability score, quality verdict, export verdict, package authority, or submission-ready evidence.
 12. Keep grant bodies, memory bodies, verdict bodies, receipt instances, package bodies, and runtime state out of repo source and OPL generated surfaces.
 
+## Shared Scholar Skill Binding
+
+- Read `contracts/scholar_skill_binding_contract.json` and use only the shared
+  `mas-scholar-skills` ids bound to the current MAG Stage.
+- Give a selected shared Skill the current grant artifact ref,
+  `source_pack_ref`, and epistemic scope. Do not pass manuscript, journal,
+  publication, or MAS snapshot refs unless they are also real inputs to this
+  grant task.
+- Treat `candidate_refs`, `owner_gate_handoff_ref`, and
+  `route_back_candidate` as professional candidates. Consume, reject, or route
+  them back against MAG sources before changing the grant artifact.
+- Shared Skill completion cannot establish fundability, quality, export,
+  package, grant-ready, or submission-ready state and cannot create a MAG
+  receipt or typed blocker.
+
 ## Stage Prompt Boundary
 
 - Stage prompts own route, accepted output refs, handoff shape, and blocker enums.

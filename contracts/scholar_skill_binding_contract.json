@@ -1,0 +1,145 @@
+{
+  "surface_kind": "mag_scholar_skill_binding_contract",
+  "version": "mag-scholar-skill-binding.v1",
+  "consumer_agent_id": "mag",
+  "provider_package_id": "mas-scholar-skills",
+  "consumer_profile_id": "mag-medical-grant.v1",
+  "capability_abi": "mas-scholar-skills.v1",
+  "required_export_ids": [
+    "medical-research-lit",
+    "medical-statistical-review",
+    "medical-methodology-planner",
+    "medical-evidence-integrity-reviewer",
+    "medical-evidence-synthesis-and-claim-map",
+    "medical-reference-integrity-auditor"
+  ],
+  "required_module_ids": [
+    "mas-scholar-skills.lit",
+    "mas-scholar-skills.stats",
+    "mas-scholar-skills.review",
+    "mas-scholar-skills.data",
+    "mas-scholar-skills.reference-provider-adapters",
+    "mas-scholar-skills.scientific-search-adapters"
+  ],
+  "stage_bindings": {
+    "call_and_candidate_intake": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-reference-integrity-auditor"
+    ],
+    "fundability_strategy": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "specific_aims_and_structure": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map"
+    ],
+    "proposal_authoring": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "review_and_rebuttal": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "package_and_submit_ready": [
+      "medical-reference-integrity-auditor"
+    ]
+  },
+  "direct_route_bindings": {
+    "strategy_authoring": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "direction_screening": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "question_refinement": [
+      "medical-research-lit",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map"
+    ],
+    "argument_building": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "fit_alignment": [
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer"
+    ],
+    "outline": [
+      "medical-methodology-planner",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "drafting": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ]
+  },
+  "invocation_policy": {
+    "selection": "stage_or_direct_route_declared_subset_only",
+    "invocation": "invoke_only_when_material_to_current_grant_delta",
+    "inputs": [
+      "current_grant_artifact_ref",
+      "source_pack_ref",
+      "epistemic_scope_ref"
+    ],
+    "accepted_candidate_outputs": [
+      "source_pack_ref",
+      "candidate_refs",
+      "owner_gate_handoff_ref",
+      "route_back_candidate"
+    ],
+    "candidate_consumption": "mag_owner_surface_must_consume_reject_or_route_back",
+    "provider_completion_is_mag_completion": false
+  },
+  "authority_boundary": {
+    "can_write_mag_grant_truth": false,
+    "can_mutate_mag_grant_artifact": false,
+    "can_issue_mag_fundability_verdict": false,
+    "can_issue_mag_quality_verdict": false,
+    "can_issue_mag_export_verdict": false,
+    "can_sign_mag_owner_receipt": false,
+    "can_create_mag_typed_blocker": false,
+    "can_claim_mag_readiness": false
+  },
+  "forbidden_candidate_claims": [
+    "fundability_verdict",
+    "quality_verdict",
+    "export_verdict",
+    "submission_ready",
+    "grant_ready",
+    "owner_receipt",
+    "typed_blocker"
+  ]
+}

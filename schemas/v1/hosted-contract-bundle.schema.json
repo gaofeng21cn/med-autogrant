@@ -277,7 +277,8 @@
       "required": [
         "route_contract_version",
         "route_catalog_kind",
-        "author_side_route_catalog"
+        "author_side_route_catalog",
+        "scholar_skill_binding_contract"
       ],
       "properties": {
         "route_contract_version": {
@@ -293,6 +294,9 @@
             "$ref": "executor-routing-contract.schema.json#/$defs/routeContract"
           },
           "minItems": 12
+        },
+        "scholar_skill_binding_contract": {
+          "type": "object"
         }
       }
     }

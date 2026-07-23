@@ -291,6 +291,94 @@
       "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
     },
     {
+      "capability_id": "med-autogrant.shared-scholar-skills.dependency_bundle",
+      "surface_role": "dependency_professional_skill_bundle",
+      "capability_kind": "managed_capability_package_binding",
+      "canonical_owner": "mas-scholar-skills",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "contracts/scholar_skill_binding_contract.json",
+        "role": "consumer_profile_binding_contract"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
+          "role": "managed_capability_dependency"
+        },
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "mag_stage_overlay_skill_refs"
+        }
+      ],
+      "sync_policy": "opl_managed_consumer_profile_materialization",
+      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the consumer profile binding, Stage selection, candidate consumption, and grant authority.",
+      "provider_package_id": "mas-scholar-skills",
+      "consumer_profile_id": "mag-medical-grant.v1",
+      "exported_skill_ids": [
+        "medical-research-lit",
+        "medical-statistical-review",
+        "medical-methodology-planner",
+        "medical-evidence-integrity-reviewer",
+        "medical-evidence-synthesis-and-claim-map",
+        "medical-reference-integrity-auditor"
+      ],
+      "stage_binding_ref": "contracts/scholar_skill_binding_contract.json#/stage_bindings",
+      "direct_route_binding_ref": "contracts/scholar_skill_binding_contract.json#/direct_route_bindings",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "dependency_professional_skill_binding_quality",
+        "grant_candidate_ref_consumption_quality"
+      ],
+      "exposure_layer": "managed_capability_dependency",
+      "codex_default_exposure": false,
+      "allowed_exposure_scopes": [
+        "domain_runtime_stage",
+        "direct_authoring_route"
+      ],
+      "codex_visibility_policy": "materialized_by_selected_consumer_profile",
+      "exposure_owner": "one-person-lab",
+      "canonical_target_paths": [
+        "contracts/scholar_skill_binding_contract.json"
+      ],
+      "forbidden_surfaces": [
+        "copied_provider_skill_bodies",
+        "mas_agent_runtime",
+        "grant_truth",
+        "fundability_or_quality_or_export_verdict",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
+      "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
+    },
+    {
       "capability_id": "med-autogrant.domain-affordances.tool_connector",
       "surface_role": "tool_connector",
       "capability_kind": "tool_connector",
@@ -552,6 +640,9 @@
     ],
     "professional_skill_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=professional_skill"
+    ],
+    "dependency_professional_skill_bundle_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=dependency_professional_skill_bundle"
     ],
     "tool_connector_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=tool_connector"

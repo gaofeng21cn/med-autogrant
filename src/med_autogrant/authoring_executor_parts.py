@@ -10,6 +10,9 @@ from med_autogrant.domain_executor_client import (
     ExecutorRunner,
     run_domain_executor,
 )
+from med_autogrant.domain_runtime_parts.contracts import (
+    build_direct_scholar_skill_prompt_lines,
+)
 from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     materialize_workspace_surfaces,
@@ -246,6 +249,7 @@ def _build_prompt(
     ]
     for schema_path in schema_paths:
         lines.append(f"Schema file: {schema_path}")
+    lines.extend(build_direct_scholar_skill_prompt_lines(route_id))
     lines.extend(
         [
             "",
