@@ -34,6 +34,27 @@ from .shared import (
 SCHOLAR_SKILL_BINDING_CONTRACT_RELATIVE_PATH = Path(
     "contracts/scholar_skill_binding_contract.json"
 )
+SCHOLAR_SKILL_REQUIRED_NON_USABLE_OBSERVATIONS = frozenset(
+    {
+        "missing",
+        "incompatible",
+        "disabled",
+        "unmaterialized",
+        "unobserved",
+    }
+)
+SCHOLAR_SKILL_REQUIRED_FAIL_OPEN_BLOCK_FIELDS = frozenset(
+    {
+        "blocks_mag_install",
+        "blocks_stage_launch",
+        "blocks_stage_route",
+        "blocks_operational_readiness",
+        "blocks_grant_core",
+        "blocks_fundability_core",
+        "blocks_quality_core",
+        "blocks_export_core",
+    }
+)
 
 
 def read_program_id(*, repo_root: Path | None = None) -> str:
@@ -69,8 +90,14 @@ def read_scholar_skill_binding_contract(
         )
     eligible_export_ids = payload.get("eligible_export_ids")
     direct_route_bindings = payload.get("direct_route_bindings")
+    invocation_policy = payload.get("invocation_policy")
     availability_policy = payload.get("availability_policy")
     authority_boundary = payload.get("authority_boundary")
+    known_non_usable_observations = (
+        availability_policy.get("known_non_usable_observations")
+        if isinstance(availability_policy, dict)
+        else None
+    )
     if (
         payload.get("enhancement_kind") != "optional_enhancement"
         or payload.get("handoff_mode") != "refs_only"
@@ -79,10 +106,34 @@ def read_scholar_skill_binding_contract(
         or not eligible_export_ids
         or not all(isinstance(item, str) and item for item in eligible_export_ids)
         or not isinstance(direct_route_bindings, dict)
+        or not isinstance(invocation_policy, dict)
+        or invocation_policy.get("provider_completion_is_mag_completion") is not False
+        or invocation_policy.get("provider_gap_is_hard_stop") is not False
+        or invocation_policy.get("provider_gap_can_create_typed_blocker") is not False
+        or invocation_policy.get("provider_gap_can_select_stage_route") is not False
         or not isinstance(availability_policy, dict)
-        or availability_policy.get("missing_or_incompatible_action")
+        or availability_policy.get("usable_observation") != "available_compatible"
+        or not isinstance(known_non_usable_observations, list)
+        or not all(
+            isinstance(item, str) and item
+            for item in known_non_usable_observations
+        )
+        or not SCHOLAR_SKILL_REQUIRED_NON_USABLE_OBSERVATIONS.issubset(
+            set(known_non_usable_observations)
+        )
+        or "available_compatible" in known_non_usable_observations
+        or availability_policy.get("available_compatible_action")
+        != "select_only_material_declared_skills"
+        or availability_policy.get("other_observation_action")
         != "continue_with_consumer_core_and_record_diagnostic"
+        or availability_policy.get("accepted_gap_outputs")
+        != ["diagnostic", "quality_hint"]
+        or availability_policy.get("quality_hint_is_advisory") is not True
         or availability_policy.get("creates_typed_blocker") is not False
+        or any(
+            availability_policy.get(field) is not False
+            for field in SCHOLAR_SKILL_REQUIRED_FAIL_OPEN_BLOCK_FIELDS
+        )
         or not isinstance(authority_boundary, dict)
         or not authority_boundary
         or any(value is not False for value in authority_boundary.values())
@@ -124,7 +175,7 @@ def build_direct_scholar_skill_prompt_lines(route_id: str) -> list[str]:
         "Optional refs-only professional Skill enhancement:",
         f"- Consumer profile: mag-medical-grant.v1; eligible Skill ids for this route: {', '.join(selected_skill_ids)}.",
         "- Invoke only selected Skills that are available, compatible, and material to this grant delta, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
-        "- If the provider is missing or incompatible, record a diagnostic or advisory quality hint and continue the MAG owner core. Do not block install, Stage launch, Stage route, operational readiness, grant work, fundability, quality, or export.",
+        "- Unless the provider is observed available-compatible, record a diagnostic or advisory quality hint and continue the MAG owner core. This includes missing, incompatible, disabled, unmaterialized, unobserved, and future non-usable observations. Do not block install, Stage launch, Stage route, operational readiness, grant work, fundability, quality, or export.",
         "- Shared Skill outputs are refs-only professional candidates: source_pack_ref, candidate_refs, owner_gate_handoff_ref, or route_back_candidate.",
         "- MAG must consume, reject, or route back each candidate against current sources before changing grant truth.",
         "- Candidate refs, provider gaps, and provider completion cannot authorize fundability, quality, export, grant-ready, submission-ready, operational-readiness, owner-receipt, route, or typed-blocker claims.",

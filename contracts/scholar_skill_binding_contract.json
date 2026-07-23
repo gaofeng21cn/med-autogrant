@@ -130,14 +130,16 @@
     "provider_gap_can_select_stage_route": false
   },
   "availability_policy": {
-    "provider_states": [
-      "available_compatible",
+    "usable_observation": "available_compatible",
+    "known_non_usable_observations": [
       "missing",
       "incompatible",
+      "disabled",
+      "unmaterialized",
       "unobserved"
     ],
     "available_compatible_action": "select_only_material_declared_skills",
-    "missing_or_incompatible_action": "continue_with_consumer_core_and_record_diagnostic",
+    "other_observation_action": "continue_with_consumer_core_and_record_diagnostic",
     "accepted_gap_outputs": [
       "diagnostic",
       "quality_hint"

@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 from pathlib import Path
+
+import pytest
 
 from med_autogrant.authoring_executor_parts import _build_direction_screening_prompt
 from med_autogrant.domain_runtime_parts.contracts import (
@@ -10,10 +13,21 @@ from med_autogrant.domain_runtime_parts.contracts import (
     read_scholar_skill_binding_contract,
     scholar_skill_ids_for_direct_route,
 )
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BINDING_REF = "contracts/scholar_skill_binding_contract.json"
+EXPECTED_FAIL_OPEN_BLOCK_FIELDS = {
+    "blocks_mag_install",
+    "blocks_stage_launch",
+    "blocks_stage_route",
+    "blocks_operational_readiness",
+    "blocks_grant_core",
+    "blocks_fundability_core",
+    "blocks_quality_core",
+    "blocks_export_core",
+}
 
 
 def _read_json(ref: str) -> dict:
@@ -40,8 +54,11 @@ def test_package_declares_optional_enhancement_without_install_or_runtime_gate()
     assert dependency["dependency_kind"] == "optional_enhancement"
     assert dependency["activation_materialization"]["required"] is False
     assert dependency["activation_materialization"]["receipt_required"] is False
+    assert dependency["availability_policy_ref"] == (
+        "contracts/scholar_skill_binding_contract.json#/availability_policy"
+    )
     assert dependency["missing_or_incompatible_policy"] == (
-        "continue_with_consumer_core_and_record_diagnostic"
+        binding["availability_policy"]["other_observation_action"]
     )
     assert dependency["provider_completion_is_mag_completion"] is False
     assert not any(dependency["blocking_policy"].values())
@@ -116,22 +133,43 @@ def test_hosted_and_direct_authoring_consume_the_same_binding_contract() -> None
     assert "cannot authorize fundability, quality, export" in prompt
     assert "Optional refs-only professional Skill enhancement" in prompt
     assert "continue the MAG owner core" in prompt
+    assert "Unless the provider is observed available-compatible" in prompt
     assert "Do not block install, Stage launch, Stage route" in prompt
 
 
-def test_missing_or_incompatible_provider_is_fail_open_without_typed_blocker() -> None:
+def test_every_non_usable_or_unknown_provider_observation_is_fail_open() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     availability = binding["availability_policy"]
+    expected_known_non_usable = {
+        "missing",
+        "incompatible",
+        "disabled",
+        "unmaterialized",
+        "unobserved",
+    }
 
     assert binding["enhancement_kind"] == "optional_enhancement"
     assert binding["handoff_mode"] == "refs_only"
     assert binding["provider_required"] is False
-    assert availability["missing_or_incompatible_action"] == (
+    assert availability["usable_observation"] == "available_compatible"
+    assert expected_known_non_usable <= set(
+        availability["known_non_usable_observations"]
+    )
+    assert "available_compatible" not in availability["known_non_usable_observations"]
+    assert availability["other_observation_action"] == (
         "continue_with_consumer_core_and_record_diagnostic"
     )
+    for observation in [*expected_known_non_usable, "future_provider_observation"]:
+        assert observation != availability["usable_observation"]
+        assert availability["other_observation_action"] == (
+            "continue_with_consumer_core_and_record_diagnostic"
+        )
     assert availability["accepted_gap_outputs"] == ["diagnostic", "quality_hint"]
     assert availability["quality_hint_is_advisory"] is True
     assert availability["creates_typed_blocker"] is False
+    assert {
+        key for key in availability if key.startswith("blocks_")
+    } == EXPECTED_FAIL_OPEN_BLOCK_FIELDS
     assert not any(
         value
         for key, value in availability.items()
@@ -140,6 +178,32 @@ def test_missing_or_incompatible_provider_is_fail_open_without_typed_blocker() -
     assert binding["invocation_policy"]["provider_gap_is_hard_stop"] is False
     assert binding["invocation_policy"]["provider_gap_can_create_typed_blocker"] is False
     assert binding["invocation_policy"]["provider_gap_can_select_stage_route"] is False
+
+
+def test_binding_reader_rejects_incomplete_or_drifted_fail_open_policy(
+    tmp_path: Path,
+) -> None:
+    binding = _read_json(BINDING_REF)
+    missing_block = deepcopy(binding)
+    del missing_block["availability_policy"]["blocks_operational_readiness"]
+    non_advisory_hint = deepcopy(binding)
+    non_advisory_hint["availability_policy"]["quality_hint_is_advisory"] = False
+    drifted_available_action = deepcopy(binding)
+    drifted_available_action["availability_policy"]["available_compatible_action"] = (
+        "gate_consumer_readiness"
+    )
+
+    for case_id, payload in [
+        ("missing-block", missing_block),
+        ("non-advisory-hint", non_advisory_hint),
+        ("drifted-available-action", drifted_available_action),
+    ]:
+        case_root = tmp_path / case_id
+        contract_path = case_root / BINDING_REF
+        contract_path.parent.mkdir(parents=True)
+        contract_path.write_text(json.dumps(payload), encoding="utf-8")
+        with pytest.raises(WorkspaceStateError):
+            read_scholar_skill_binding_contract(repo_root=case_root)
 
 
 def test_candidate_refs_have_no_mag_verdict_or_readiness_authority() -> None:
