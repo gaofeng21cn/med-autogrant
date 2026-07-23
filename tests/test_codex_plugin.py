@@ -47,6 +47,7 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
 
 def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    lock_data = tomllib.loads((REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
     plugin_manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
     package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     init_text = (REPO_ROOT / "src" / "med_autogrant" / "__init__.py").read_text(
@@ -58,6 +59,11 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
+    assert next(
+        package["version"]
+        for package in lock_data["package"]
+        if package["name"] == "med-autogrant"
+    ) == version
     assert "distribution_payload" not in package_manifest
 
 
