@@ -37,8 +37,8 @@
       "module_id": "scholarskills",
       "package_id": "mas-scholar-skills",
       "kind": "framework_capability_package",
-      "required": true,
-      "dependency_kind": "hard_runtime_dependency",
+      "required": false,
+      "dependency_kind": "optional_enhancement",
       "version_requirement": ">=0.2.19 <0.3.0",
       "capability_abi": "mas-scholar-skills.v1",
       "consumer_profile_id": "mag-medical-grant.v1",
@@ -78,26 +78,29 @@
         "opl packages activate mag --scope quest --target-quest <quest-root> --json"
       ],
       "activation_materialization": {
-        "required": true,
+        "required": false,
         "owner": "one-person-lab",
-        "trigger": "mag_workspace_or_quest_activation",
+        "trigger": "explicit_optional_enhancement_activation",
         "scopes": [
           "workspace",
           "quest"
         ],
         "required_skill_ids_source": "provider_manifest_selected_consumer_profile_required_export_ids",
         "target_path_template": "<scope-root>/.codex/skills/<skill-id>",
-        "receipt_required": true,
-        "readiness_policy": "selected_consumer_profile_required_skills_current_for_active_scope"
+        "receipt_required": false
       },
-      "missing_or_incompatible_policy": "fail_closed_to_doctor_and_repair",
-      "status_command_templates": {
-        "workspace": "opl packages status --package-id mag --scope workspace --target-workspace <workspace-root> --json",
-        "quest": "opl packages status --package-id mag --scope quest --target-quest <quest-root> --json"
-      },
-      "repair_command_templates": {
-        "workspace": "opl packages repair --package-id mag --scope workspace --target-workspace <workspace-root> --json",
-        "quest": "opl packages repair --package-id mag --scope quest --target-quest <quest-root> --json"
+      "missing_or_incompatible_policy": "continue_with_consumer_core_and_record_diagnostic",
+      "provider_completion_is_mag_completion": false,
+      "blocking_policy": {
+        "mag_install": false,
+        "stage_launch": false,
+        "stage_route": false,
+        "operational_readiness": false,
+        "grant_core": false,
+        "fundability_core": false,
+        "quality_core": false,
+        "export_core": false,
+        "typed_blocker": false
       },
       "authority_boundary": {
         "can_write_domain_truth": false,
@@ -106,7 +109,10 @@
         "can_write_runtime_queue": false,
         "can_claim_fundability_verdict": false,
         "can_claim_quality_verdict": false,
-        "can_claim_export_readiness": false
+        "can_claim_export_readiness": false,
+        "can_gate_mag_install": false,
+        "can_gate_mag_stage_route": false,
+        "can_gate_mag_operational_readiness": false
       }
     }
   ]

@@ -20,7 +20,7 @@ def _read_json(ref: str) -> dict:
     return json.loads((REPO_ROOT / ref).read_text(encoding="utf-8"))
 
 
-def test_package_dependency_matches_mag_consumer_profile() -> None:
+def test_package_declares_optional_enhancement_without_install_or_runtime_gate() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("contracts/opl_agent_package_manifest.json")
 
@@ -34,29 +34,37 @@ def test_package_dependency_matches_mag_consumer_profile() -> None:
     assert dependency["consumer_profile_id"] == binding["consumer_profile_id"]
     assert dependency["capability_abi"] == binding["capability_abi"]
     assert dependency["version_requirement"] == ">=0.2.19 <0.3.0"
-    assert dependency["required_export_ids"] == binding["required_export_ids"]
-    assert dependency["required_module_ids"] == binding["required_module_ids"]
-    assert dependency["required"] is True
+    assert dependency["required_export_ids"] == binding["eligible_export_ids"]
+    assert dependency["required_module_ids"] == binding["eligible_module_ids"]
+    assert dependency["required"] is False
+    assert dependency["dependency_kind"] == "optional_enhancement"
+    assert dependency["activation_materialization"]["required"] is False
+    assert dependency["activation_materialization"]["receipt_required"] is False
+    assert dependency["missing_or_incompatible_policy"] == (
+        "continue_with_consumer_core_and_record_diagnostic"
+    )
+    assert dependency["provider_completion_is_mag_completion"] is False
+    assert not any(dependency["blocking_policy"].values())
     assert not any(dependency["authority_boundary"].values())
 
 
-def test_every_stage_uses_resolvable_mag_overlay_and_declared_shared_skills() -> None:
+def test_every_stage_uses_resolvable_overlay_and_single_binding_contract() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("agent/stages/manifest.json")
     stages = {stage["stage_id"]: stage for stage in manifest["stages"]}
 
     assert set(stages) == set(binding["stage_bindings"])
-    required_export_ids = set(binding["required_export_ids"])
+    eligible_export_ids = set(binding["eligible_export_ids"])
     for stage_id, shared_skill_ids in binding["stage_bindings"].items():
         stage = stages[stage_id]
         assert shared_skill_ids
-        assert set(shared_skill_ids) <= required_export_ids
+        assert set(shared_skill_ids) <= eligible_export_ids
         assert len(stage["skill_refs"]) == 1
         for skill_ref in stage["skill_refs"]:
             assert (REPO_ROOT / skill_ref).is_file()
         prompt = (REPO_ROOT / stage["prompt_ref"]).read_text(encoding="utf-8")
-        for skill_id in shared_skill_ids:
-            assert f"`{skill_id}`" in prompt
+        assert "`contracts/scholar_skill_binding_contract.json`" in prompt
+        assert all(f"`{skill_id}`" not in prompt for skill_id in shared_skill_ids)
         assert "`candidate_refs`" in prompt
         assert "refs-only" in prompt
 
@@ -67,7 +75,7 @@ def test_capability_map_indexes_provider_binding_without_copying_skills() -> Non
     entries = [
         capability
         for capability in capability_map["capabilities"]
-        if capability["surface_role"] == "dependency_professional_skill_bundle"
+        if capability["surface_role"] == "optional_professional_skill_enhancement"
     ]
 
     assert len(entries) == 1
@@ -75,11 +83,14 @@ def test_capability_map_indexes_provider_binding_without_copying_skills() -> Non
     assert entry["physical_source_ref"]["ref"] == BINDING_REF
     assert entry["provider_package_id"] == binding["provider_package_id"]
     assert entry["consumer_profile_id"] == binding["consumer_profile_id"]
-    assert entry["exported_skill_ids"] == binding["required_export_ids"]
+    assert entry["eligible_skill_ids"] == binding["eligible_export_ids"]
+    assert entry["availability_policy_ref"] == (
+        "contracts/scholar_skill_binding_contract.json#/availability_policy"
+    )
     assert not any(entry["authority_boundary"].values())
     assert not any(
         (REPO_ROOT / "agent/professional_skills" / skill_id).exists()
-        for skill_id in binding["required_export_ids"]
+        for skill_id in binding["eligible_export_ids"]
     )
 
 
@@ -103,6 +114,32 @@ def test_hosted_and_direct_authoring_consume_the_same_binding_contract() -> None
     assert "medical-research-lit" in prompt
     assert "candidate_refs" in prompt
     assert "cannot authorize fundability, quality, export" in prompt
+    assert "Optional refs-only professional Skill enhancement" in prompt
+    assert "continue the MAG owner core" in prompt
+    assert "Do not block install, Stage launch, Stage route" in prompt
+
+
+def test_missing_or_incompatible_provider_is_fail_open_without_typed_blocker() -> None:
+    binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
+    availability = binding["availability_policy"]
+
+    assert binding["enhancement_kind"] == "optional_enhancement"
+    assert binding["handoff_mode"] == "refs_only"
+    assert binding["provider_required"] is False
+    assert availability["missing_or_incompatible_action"] == (
+        "continue_with_consumer_core_and_record_diagnostic"
+    )
+    assert availability["accepted_gap_outputs"] == ["diagnostic", "quality_hint"]
+    assert availability["quality_hint_is_advisory"] is True
+    assert availability["creates_typed_blocker"] is False
+    assert not any(
+        value
+        for key, value in availability.items()
+        if key.startswith("blocks_")
+    )
+    assert binding["invocation_policy"]["provider_gap_is_hard_stop"] is False
+    assert binding["invocation_policy"]["provider_gap_can_create_typed_blocker"] is False
+    assert binding["invocation_policy"]["provider_gap_can_select_stage_route"] is False
 
 
 def test_candidate_refs_have_no_mag_verdict_or_readiness_authority() -> None:
@@ -113,6 +150,8 @@ def test_candidate_refs_have_no_mag_verdict_or_readiness_authority() -> None:
         "export_verdict",
         "submission_ready",
         "grant_ready",
+        "operational_readiness",
+        "stage_route_decision",
         "owner_receipt",
         "typed_blocker",
     }

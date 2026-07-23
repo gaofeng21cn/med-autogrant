@@ -59,7 +59,7 @@ def read_scholar_skill_binding_contract(
     if (
         not isinstance(payload, dict)
         or payload.get("surface_kind") != "mag_scholar_skill_binding_contract"
-        or payload.get("version") != "mag-scholar-skill-binding.v1"
+        or payload.get("version") != "mag-scholar-skill-binding.v2"
         or payload.get("consumer_agent_id") != "mag"
         or payload.get("provider_package_id") != "mas-scholar-skills"
         or payload.get("consumer_profile_id") != "mag-medical-grant.v1"
@@ -67,14 +67,22 @@ def read_scholar_skill_binding_contract(
         raise WorkspaceStateError(
             "MAG Scholar Skill binding contract identity is invalid."
         )
-    required_export_ids = payload.get("required_export_ids")
+    eligible_export_ids = payload.get("eligible_export_ids")
     direct_route_bindings = payload.get("direct_route_bindings")
+    availability_policy = payload.get("availability_policy")
     authority_boundary = payload.get("authority_boundary")
     if (
-        not isinstance(required_export_ids, list)
-        or not required_export_ids
-        or not all(isinstance(item, str) and item for item in required_export_ids)
+        payload.get("enhancement_kind") != "optional_enhancement"
+        or payload.get("handoff_mode") != "refs_only"
+        or payload.get("provider_required") is not False
+        or not isinstance(eligible_export_ids, list)
+        or not eligible_export_ids
+        or not all(isinstance(item, str) and item for item in eligible_export_ids)
         or not isinstance(direct_route_bindings, dict)
+        or not isinstance(availability_policy, dict)
+        or availability_policy.get("missing_or_incompatible_action")
+        != "continue_with_consumer_core_and_record_diagnostic"
+        or availability_policy.get("creates_typed_blocker") is not False
         or not isinstance(authority_boundary, dict)
         or not authority_boundary
         or any(value is not False for value in authority_boundary.values())
@@ -97,8 +105,10 @@ def scholar_skill_ids_for_direct_route(route_id: str) -> list[str]:
         raise WorkspaceStateError(
             f"MAG direct route 缺少 Scholar Skill binding: {route_id}"
         )
-    required_export_ids = set(contract["required_export_ids"])
-    undeclared = [skill_id for skill_id in selected if skill_id not in required_export_ids]
+    eligible_export_ids = set(contract["eligible_export_ids"])
+    undeclared = [
+        skill_id for skill_id in selected if skill_id not in eligible_export_ids
+    ]
     if undeclared:
         raise WorkspaceStateError(
             "MAG direct route 引用了 consumer profile 之外的 Scholar Skill: "
@@ -111,12 +121,13 @@ def build_direct_scholar_skill_prompt_lines(route_id: str) -> list[str]:
     selected_skill_ids = scholar_skill_ids_for_direct_route(route_id)
     return [
         "",
-        "Managed professional Skill binding:",
-        f"- Consumer profile: mag-medical-grant.v1; selected Skill ids: {', '.join(selected_skill_ids)}.",
-        "- Invoke only selected Skills that are material to this grant delta, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
+        "Optional refs-only professional Skill enhancement:",
+        f"- Consumer profile: mag-medical-grant.v1; eligible Skill ids for this route: {', '.join(selected_skill_ids)}.",
+        "- Invoke only selected Skills that are available, compatible, and material to this grant delta, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
+        "- If the provider is missing or incompatible, record a diagnostic or advisory quality hint and continue the MAG owner core. Do not block install, Stage launch, Stage route, operational readiness, grant work, fundability, quality, or export.",
         "- Shared Skill outputs are refs-only professional candidates: source_pack_ref, candidate_refs, owner_gate_handoff_ref, or route_back_candidate.",
         "- MAG must consume, reject, or route back each candidate against current sources before changing grant truth.",
-        "- Candidate refs and provider completion cannot authorize fundability, quality, export, grant-ready, submission-ready, owner-receipt, or typed-blocker claims.",
+        "- Candidate refs, provider gaps, and provider completion cannot authorize fundability, quality, export, grant-ready, submission-ready, operational-readiness, owner-receipt, route, or typed-blocker claims.",
     ]
 
 

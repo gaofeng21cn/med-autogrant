@@ -54,7 +54,11 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 ## Shared Scholar Skill Binding
 
 - Read `contracts/scholar_skill_binding_contract.json` and use only the shared
-  `mas-scholar-skills` ids bound to the current MAG Stage.
+  `mas-scholar-skills` ids optionally bound to the current MAG Stage.
+- Invoke a shared Skill only when its Provider is available and compatible.
+  Missing or incompatible Provider state yields a diagnostic or advisory
+  quality hint; continue the MAG owner core without blocking install, Stage
+  route, operational readiness, grant work, quality review, or export.
 - Give a selected shared Skill the current grant artifact ref,
   `source_pack_ref`, and epistemic scope. Do not pass manuscript, journal,
   publication, or MAS snapshot refs unless they are also real inputs to this
@@ -65,6 +69,8 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - Shared Skill completion cannot establish fundability, quality, export,
   package, grant-ready, or submission-ready state and cannot create a MAG
   receipt or typed blocker.
+- Provider absence, incompatibility, or completion cannot select the MAG route,
+  create quality debt by itself, or create a MAG typed blocker.
 
 ## Stage Prompt Boundary
 

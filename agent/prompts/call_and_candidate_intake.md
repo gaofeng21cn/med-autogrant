@@ -6,15 +6,15 @@ Read the call, portal instructions, eligibility and deadline constraints, applic
 
 A good result gives later stages traceable refs for the call identity, review criteria, required sections and attachments, eligibility, budget/personnel limits, applicant strengths, source gaps, and the questions that fundability review must resolve. Use `mag-strategy-intake-specialist` when the intake requires specialist judgment.
 
-For this Stage, that MAG overlay may selectively invoke
-`medical-research-lit`, `medical-evidence-integrity-reviewer`, and
-`medical-reference-integrity-auditor` from the managed
-`mag-medical-grant.v1` profile. Give them only the current grant artifact,
-`source_pack_ref`, and epistemic scope. Their `candidate_refs`,
-`owner_gate_handoff_ref`, and `route_back_candidate` are refs-only
-professional candidates; MAG must consume, reject, or route them back before
-changing grant truth. They cannot issue a fundability, quality, export,
-readiness, receipt, or blocker decision.
+For this Stage, the MAG overlay reads its optional Skill selection and
+availability policy from `contracts/scholar_skill_binding_contract.json`.
+Invoke only available, compatible, material Skills with the current grant
+artifact ref, `source_pack_ref`, and epistemic scope. Their outputs are
+refs-only `candidate_refs`, `owner_gate_handoff_ref`, or
+`route_back_candidate`; MAG must consume, reject, or route them back. Missing
+or incompatible Provider state records only a diagnostic or advisory quality
+hint and cannot block install, Stage launch, Stage route, operational
+readiness, grant work, or create a typed blocker.
 
 OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
 

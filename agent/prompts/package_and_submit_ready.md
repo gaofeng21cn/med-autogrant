@@ -7,14 +7,16 @@ Consume the reviewed draft, independent quality verdict, closure evidence, call 
 A good result is a traceable local package whose scientific body, required components, formatting, identity, and export evidence agree. Use the package/export quality gates and keep artifact bodies in the workspace or delivery root.
 
 Use `mag-grant-workflow-specialist` as the MAG overlay. When the declared
-reference scope is missing current evidence or became stale, it may invoke
-`medical-reference-integrity-auditor` from the managed
-`mag-medical-grant.v1` profile with only the current package/grant refs,
-`source_pack_ref`, and reference epistemic scope. Its `candidate_refs`,
-`owner_gate_handoff_ref`, and `route_back_candidate` are refs-only candidates;
-MAG must consume, reject, or route them back. The shared Skill cannot freeze
-package bytes or issue a fundability, quality, export, submission-ready,
-receipt, or blocker decision.
+reference scope is missing current evidence or became stale, read this Stage's
+optional Skill selection and availability policy from
+`contracts/scholar_skill_binding_contract.json`. Invoke only available,
+compatible, material Skills with the current package/grant refs,
+`source_pack_ref`, and reference epistemic scope. Their outputs are refs-only
+`candidate_refs`, `owner_gate_handoff_ref`, or `route_back_candidate`; MAG
+must consume, reject, or route them back. Missing or incompatible Provider
+state records only a diagnostic or advisory quality hint and cannot block
+install, Stage route, operational readiness, package/export work, freeze
+package bytes, or create a typed blocker.
 
 A fresh reviewer must evaluate each scope that lacks current evidence or whose declared transitive dependency changed. It may verify all four final refs and hashes for package identity and release integrity without reopening grant content, methodology, or reference review after governance metadata, review-receipt, locator-only, layout-only, or package-wrapper-only changes. Layout changes stale display evidence; package composition or wrapper changes stale package evidence; source, claim, citation, methodology, visual, or export changes stale only scopes that declare those dependencies. A repairer may change only package assembly, manifest, or provenance projection within this Stage. Any defect in proposal content, quality closure, source evidence, attachments owned upstream, or an existing export verdict must route back to the earliest owning Stage instead of being rewritten here.
 

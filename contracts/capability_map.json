@@ -291,20 +291,20 @@
       "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
     },
     {
-      "capability_id": "med-autogrant.shared-scholar-skills.dependency_bundle",
-      "surface_role": "dependency_professional_skill_bundle",
-      "capability_kind": "managed_capability_package_binding",
-      "canonical_owner": "mas-scholar-skills",
+      "capability_id": "med-autogrant.shared-scholar-skills.optional-enhancement",
+      "surface_role": "optional_professional_skill_enhancement",
+      "capability_kind": "optional_refs_only_capability_binding",
+      "canonical_owner": "med-autogrant",
       "physical_source_ref": {
         "ref_kind": "repo_path",
         "ref": "contracts/scholar_skill_binding_contract.json",
-        "role": "consumer_profile_binding_contract"
+        "role": "optional_consumer_profile_binding_contract"
       },
       "runtime_projection_refs": [
         {
           "ref_kind": "contract_ref",
           "ref": "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
-          "role": "managed_capability_dependency"
+          "role": "optional_capability_enhancement"
         },
         {
           "ref_kind": "external_capability_ref",
@@ -312,11 +312,12 @@
           "role": "mag_stage_overlay_skill_refs"
         }
       ],
-      "sync_policy": "opl_managed_consumer_profile_materialization",
-      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the consumer profile binding, Stage selection, candidate consumption, and grant authority.",
+      "sync_policy": "optional_provider_discovery_no_materialization_requirement",
+      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the optional refs-only binding, Stage selection, candidate consumption, and grant authority. Missing or incompatible provider state does not block MAG core.",
+      "provider_owner": "mas-scholar-skills",
       "provider_package_id": "mas-scholar-skills",
       "consumer_profile_id": "mag-medical-grant.v1",
-      "exported_skill_ids": [
+      "eligible_skill_ids": [
         "medical-research-lit",
         "medical-statistical-review",
         "medical-methodology-planner",
@@ -326,6 +327,7 @@
       ],
       "stage_binding_ref": "contracts/scholar_skill_binding_contract.json#/stage_bindings",
       "direct_route_binding_ref": "contracts/scholar_skill_binding_contract.json#/direct_route_bindings",
+      "availability_policy_ref": "contracts/scholar_skill_binding_contract.json#/availability_policy",
       "authority_boundary": {
         "can_write_domain_truth": false,
         "can_write_memory_body": false,
@@ -334,25 +336,31 @@
         "can_create_typed_blocker": false,
         "can_authorize_quality_or_export": false,
         "can_claim_domain_ready": false,
-        "can_claim_production_ready": false
+        "can_claim_production_ready": false,
+        "can_gate_mag_install": false,
+        "can_gate_mag_stage_route": false,
+        "can_gate_mag_operational_readiness": false
       },
       "improvement_tokens": [
-        "dependency_professional_skill_binding_quality",
+        "optional_professional_skill_binding_quality",
         "grant_candidate_ref_consumption_quality"
       ],
-      "exposure_layer": "managed_capability_dependency",
+      "exposure_layer": "optional_external_professional_skill_enhancement",
       "codex_default_exposure": false,
       "allowed_exposure_scopes": [
         "domain_runtime_stage",
         "direct_authoring_route"
       ],
-      "codex_visibility_policy": "materialized_by_selected_consumer_profile",
+      "codex_visibility_policy": "use_when_discoverable_and_compatible_else_continue_mag_owner_core",
       "exposure_owner": "one-person-lab",
       "canonical_target_paths": [
         "contracts/scholar_skill_binding_contract.json"
       ],
       "forbidden_surfaces": [
         "copied_provider_skill_bodies",
+        "hard_install_or_runtime_dependency",
+        "typed_blocker_on_provider_gap",
+        "operational_readiness_gate",
         "mas_agent_runtime",
         "grant_truth",
         "fundability_or_quality_or_export_verdict",
@@ -641,8 +649,8 @@
     "professional_skill_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=professional_skill"
     ],
-    "dependency_professional_skill_bundle_refs": [
-      "contracts/capability_map.json#/capabilities?surface_role=dependency_professional_skill_bundle"
+    "optional_professional_skill_enhancement_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=optional_professional_skill_enhancement"
     ],
     "tool_connector_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=tool_connector"

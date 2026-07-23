@@ -1,11 +1,14 @@
 {
   "surface_kind": "mag_scholar_skill_binding_contract",
-  "version": "mag-scholar-skill-binding.v1",
+  "version": "mag-scholar-skill-binding.v2",
   "consumer_agent_id": "mag",
   "provider_package_id": "mas-scholar-skills",
   "consumer_profile_id": "mag-medical-grant.v1",
   "capability_abi": "mas-scholar-skills.v1",
-  "required_export_ids": [
+  "enhancement_kind": "optional_enhancement",
+  "handoff_mode": "refs_only",
+  "provider_required": false,
+  "eligible_export_ids": [
     "medical-research-lit",
     "medical-statistical-review",
     "medical-methodology-planner",
@@ -13,7 +16,7 @@
     "medical-evidence-synthesis-and-claim-map",
     "medical-reference-integrity-auditor"
   ],
-  "required_module_ids": [
+  "eligible_module_ids": [
     "mas-scholar-skills.lit",
     "mas-scholar-skills.stats",
     "mas-scholar-skills.review",
@@ -107,8 +110,8 @@
     ]
   },
   "invocation_policy": {
-    "selection": "stage_or_direct_route_declared_subset_only",
-    "invocation": "invoke_only_when_material_to_current_grant_delta",
+    "selection": "stage_or_direct_route_declared_optional_subset_only",
+    "invocation": "invoke_only_when_provider_is_available_compatible_and_material_to_current_grant_delta",
     "inputs": [
       "current_grant_artifact_ref",
       "source_pack_ref",
@@ -121,7 +124,34 @@
       "route_back_candidate"
     ],
     "candidate_consumption": "mag_owner_surface_must_consume_reject_or_route_back",
-    "provider_completion_is_mag_completion": false
+    "provider_completion_is_mag_completion": false,
+    "provider_gap_is_hard_stop": false,
+    "provider_gap_can_create_typed_blocker": false,
+    "provider_gap_can_select_stage_route": false
+  },
+  "availability_policy": {
+    "provider_states": [
+      "available_compatible",
+      "missing",
+      "incompatible",
+      "unobserved"
+    ],
+    "available_compatible_action": "select_only_material_declared_skills",
+    "missing_or_incompatible_action": "continue_with_consumer_core_and_record_diagnostic",
+    "accepted_gap_outputs": [
+      "diagnostic",
+      "quality_hint"
+    ],
+    "quality_hint_is_advisory": true,
+    "blocks_mag_install": false,
+    "blocks_stage_launch": false,
+    "blocks_stage_route": false,
+    "blocks_operational_readiness": false,
+    "blocks_grant_core": false,
+    "blocks_fundability_core": false,
+    "blocks_quality_core": false,
+    "blocks_export_core": false,
+    "creates_typed_blocker": false
   },
   "authority_boundary": {
     "can_write_mag_grant_truth": false,
@@ -131,7 +161,10 @@
     "can_issue_mag_export_verdict": false,
     "can_sign_mag_owner_receipt": false,
     "can_create_mag_typed_blocker": false,
-    "can_claim_mag_readiness": false
+    "can_claim_mag_readiness": false,
+    "can_gate_mag_install": false,
+    "can_gate_mag_stage_route": false,
+    "can_gate_mag_operational_readiness": false
   },
   "forbidden_candidate_claims": [
     "fundability_verdict",
@@ -139,6 +172,8 @@
     "export_verdict",
     "submission_ready",
     "grant_ready",
+    "operational_readiness",
+    "stage_route_decision",
     "owner_receipt",
     "typed_blocker"
   ]
