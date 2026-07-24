@@ -123,6 +123,11 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 - MAG owner 是完整 Package bytes 及其 GHCR `latest-stable` 的唯一发布权威；这条边界
   不声明 live channel 迁移已经完成。普通依赖组合只检查 required/optional identity
   presence 与 callability，不绑定共享发布批次或跨 Package 版本 lock。
+- `mas-scholar-skills` 是 MAG 的 required hard dependency；identity 缺失或不可调用时
+  MAG 局部 fail closed，但不阻断无关 Package，也不引入 provider version、ABI、lock、
+  payload 或 digest 求解。
+- MAG owner 定义 runtime activation、health、基金业务任务和 typed-view 接口；carrier
+  执行，Framework 聚合 fresh readback，App 只消费该投影。
 - 完整技术边界、当前入口矩阵、合同 refs 与 proof surfaces 由 [文档索引](./docs/README.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 和 [合同说明](./contracts/README.md) 维护。
 
 </details>

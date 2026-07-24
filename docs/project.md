@@ -43,8 +43,11 @@ transport，只解析 canonical receipt 和 typed grant closeout。`opl packages
 install|update|uninstall mag` 是 Framework 聚合的稳定用户动作入口，实际 bytes 与
 lifecycle 由 carrier 承担。目标发布权威是 MAG owner 独立推进本包 GHCR
 `latest-stable`；其 live 迁移状态以 [当前状态](./status.md) 为准。Codex Plugin 只投影
-Plugin/config/cache，不能单独证明完整 MAG runtime installed。本仓不提供用户目录
-symlink/marketplace mutation。
+Plugin/config/cache，不能单独证明完整 MAG runtime installed。`mas-scholar-skills` 是
+MAG 的 required hard dependency；缺失或不可调用只让 MAG fail closed，不阻断无关
+Package，也不做 provider version/ABI/lock/payload/digest 求解。MAG owner 定义
+activation、health、grant task 与 typed-view 接口，carrier 执行，Framework 聚合 fresh
+readback，App 只消费。本仓不提供用户目录 symlink/marketplace mutation。
 
 ## 目标
 

@@ -38,12 +38,18 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - Required/optional Package 依赖只以 identity presence 与 callability 判断。普通
   composition/readiness 不得要求版本范围、ABI、lock、payload、digest、atomic closure、
   shared Release Set 或跨 Package 版本求解。
+- `mas-scholar-skills` 是 MAG 的 required hard dependency；identity 缺失或不可调用时，
+  MAG install/activation/operational readiness 必须 fail closed 并暴露修复动作。该
+  blocker 不得传播给无关 Package，也不得转化为 provider version/ABI/lock/payload/digest
+  求解。
 - 公共 install/update/uninstall 入口固定为 `opl packages ...` 聚合动作，不得回退到
   `opl connect ... --module medautogrant`；动作实现委托实际 carrier，Framework 不保存
   第二份 currentness 或完整 installed truth。
 - Codex Plugin 只投影 Plugin/config/cache。完整 MAG runtime 必须由所有实际 carrier 的
   fresh readback共同证明；切换 executor 不得重装 Package 或丢失偏好、grant task、
   dependency 和 typed view。
+- MAG owner 定义 runtime activation、health、grant business task 与 typed-view 接口；
+  carrier 执行，Framework 只聚合 fresh readback 和动作，App 只消费投影。
 - 通用 source fetch 必须调用 OPL fail-closed HTTPS transport；MAG 只持有 exact official URL allowlist和领域解析语义，不得恢复私有 `urllib` transport、宽泛 origin放行或 fallback downloader。
 - MAG 不写 OPL stage attempt/current/terminal state，不拥有 Temporal worker，也不把 bounded controller 扩成 durable loop。
 - Generated caller 只能回到 MAG action target；不能读取 grant/memory/artifact/package body。

@@ -127,6 +127,13 @@ You can start with prompts like:
   channel migration is already complete. Ordinary dependency composition
   checks required or optional identity presence and callability, not a shared
   release cohort or cross-Package version lock.
+- `mas-scholar-skills` is MAG's required hard dependency. If that identity is
+  absent or not callable, MAG fails closed without blocking unrelated
+  Packages; this edge does not introduce provider version, ABI, lock, payload,
+  or digest solving.
+- MAG owns its runtime activation, health, grant task, and typed-view
+  interfaces. Carriers execute them, the Framework aggregates fresh readback,
+  and the App only consumes that projection.
 - The full technical boundary, current entry matrix, contract refs, and proof surfaces are maintained in the [Docs Guide](./docs/README.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 
 </details>

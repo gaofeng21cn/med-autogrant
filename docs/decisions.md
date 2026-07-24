@@ -102,3 +102,10 @@ GHCR `latest-stable`。普通组合只检查 dependency identity presence 与 ca
 版本范围、ABI、lock、payload、digest、atomic closure、共享 Release Set 和跨包求解不作
 readiness 门。exact ref/digest 只约束一次 release artifact 或 MAG submission artifact
 integrity。当前合同中的相反字段按兼容迁移读取，不据此宣称迁移完成。
+
+`mas-scholar-skills` 是 MAG 的 required hard dependency：缺失或不可调用时，只有 MAG
+install/activation/operational readiness fail closed；无关 Package 继续运行。required
+不等于版本绑定，不恢复 provider version/ABI/lock/payload/digest 求解。MAG owner 定义
+runtime activation、health、grant task 与 typed-view 接口，carrier 执行，Framework
+聚合 fresh readback，App 只消费。当前 optional/fail-open machine contract 与本决策冲突，
+必须通过兼容迁移修正，在此之前不得声称该边界已实现。

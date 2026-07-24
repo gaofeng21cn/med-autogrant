@@ -25,6 +25,9 @@ Carrier     = GHCR/Base OCI adapter + Codex Plugin/config/cache + complete runti
 Executor    = Codex CLI today; another adapter when there is a real need
 ```
 
+这里的 Base OCI adapter 只下载和校验 bytes；Package 声明的实际 carrier/runtime
+adapter 才负责完整 runtime 激活与 fresh readback。
+
 MAG owner 把完整 Package bytes 独立发布到
 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag:latest-stable`，只推进自己的
 currentness。普通依赖只表达 required/optional identity presence 与 callability；不以
@@ -32,17 +35,28 @@ currentness。普通依赖只表达 required/optional identity presence 与 call
 作为安装、组合或运行 readiness 门。breaking capability 通过新 capability identity 或
 owner-side adapter 演进。
 
+`mas-scholar-skills` 是 MAG 声明的 required hard dependency，而不是普通可选增强。
+Framework/Profile 安装 MAG 时应保证该 identity 一并存在；carrier fresh readback 发现其
+缺失或不可调用时，MAG install/activation/operational readiness 必须 fail closed 并给出
+修复动作。这个 blocker 只属于 MAG，不阻断无关 Package；它也不允许恢复
+provider version range、ABI、lock、payload、digest 或跨包版本求解。当前
+`contracts/scholar_skill_binding_contract.json` 和 package manifest 仍实现成
+optional/fail-open，这是待迁移实现差异，不是长期权威。
+
 Codex-first 是当前正式实现路径。Codex Plugin 只是 carrier projection，不是 MAG
 Package identity、完整 installed truth 或领域 authority；切换 executor 不得重装 MAG，
 也不得丢失用户偏好、grant task、依赖和 typed views。Framework 只聚合 carrier fresh
-readback、presence/callability 与 executor route readiness。
+readback、presence/callability 与 executor route readiness。MAG owner 定义
+executor-neutral runtime activation、health、grant business task 与 typed-view 接口；
+carrier 执行这些接口，Framework 生成统一状态/动作投影，App 只消费该投影，不解释
+MAG 私有合同或保存第二份依赖清单。
 
 本规则只约束 OPL 安装包组合。MAG 的 submission package 仍必须保留 exact artifact
 identity、independent release-integrity evidence 和 MAG owner receipt。当前 JSON
 contracts/source 仍可能携带旧 lifecycle、version、ABI、materialization 或 receipt 字段；
 它们是迁移期机器真相，不代表上述平台目标已经实现，也不得继续扩张。跨仓阶段、删除
 门禁和功能等价 proof 只在
-[App 平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)
+[Framework 平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/active/opl-package-platform-composition-migration.md)
 维护。
 
 `contracts/domain_descriptor.json#/standard_agent_interface` 是 MAG 交给 OPL hosted surface 的唯一差异接口：workspace 只声明 `input_path` locator 与 grant topology；runtime 只声明 domain identity 和 registration ref；progress alias 与显式 routing signal 继续归 MAG。`workspace_binding.entry_command_template`、`workspace_binding.manifest_command_template` 与 `runtime.dispatch_command` 已退出 closed interface，OPL 不从 descriptor 恢复任何 MAG 私有命令模板。OPL 必须通过 package currentness 消费该 descriptor；显式 checkout 只作开发验证 fallback。
