@@ -46,10 +46,15 @@ ScholarSkills 成为 required hard dependency：只以 identity presence/callabi
 fail closed MAG，不阻断无关 Package，也不做 provider version/ABI/lock/payload/digest
 求解。因此当前实现尚未满足 owner invariant；这些字段是当前机器事实，不是目标
 architecture，也不证明 Package/carrier/executor 已经解耦。迁移完成前继续兼容读取，
-不扩大这些字段；删除顺序与功能等价证据服从
-[Framework 平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/active/opl-package-platform-composition-migration.md)。
+不扩大这些字段；跨仓阶段、删除顺序与功能等价证据服从 App 的
+[跨仓总体迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
+Framework 同名文档只作 Framework compatibility inventory、repo-local migration 与
+deletion appendix，不是第二份总体计划。
 这项平台减法不删除 MAG 的 grant workflow、领域 verdict、submission package
 exact-byte integrity、owner receipt、business task 或 typed views。
+
+当前只完成文档 Gate D 校准；上述机器合同和运行行为仍未变更。required/fail-closed
+实现、旧字段删除与 live proof 必须等 Gate I 获得用户明确批准后按总体 SSOT 执行。
 
 ## Machine State
 
