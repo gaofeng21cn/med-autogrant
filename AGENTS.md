@@ -2,9 +2,20 @@
 
 本仓是 OPL 的基金写作 domain agent，canonical id 为 `mag`。
 
-- MAG 持有 grant truth、fundability/quality/export verdict、package authority、strategy memory 和 owner receipts。
-- OPL Framework 持有通用 runtime、attempt lifecycle、workspace/source transport、package lifecycle 与 generated interfaces。
-- current-program、package identity 和 primary-skill carrier 关系以 `contracts/` 中的机器合同为准。
+- MAG 是 `OPL Package(kind=agent)`；持有 executor-neutral package identity、capability/dependency
+  声明、grant business task/typed view，以及 grant truth、fundability/quality/export verdict、
+  submission package authority、strategy memory 和 owner receipts。
+- OPL Framework 持有通用 runtime、attempt lifecycle、workspace/source transport、carrier
+  readback/动作聚合与 generated interfaces，不持有 MAG identity、领域状态或第二份 package
+  currentness。
+- Package、carrier、executor 必须分离。Codex Plugin 是当前默认 carrier projection，不是
+  完整 Package identity 或 installed truth；一方完整 Package bytes 由 owner 独立发布到
+  自己的 GHCR `latest-stable`。
+- 普通 Package 依赖只按 required/optional identity presence 与 callability 组合；版本范围、
+  ABI、lock、payload、digest、原子闭包或共享 Release Set 不得成为日常 readiness 门。
+- current-program、package identity 和 primary-skill carrier 关系以 `contracts/` 中的机器合同
+  为当前实现准绳；其中旧 lifecycle/version/ABI 字段仍可能是迁移期表面，不得据此宣称
+  平台组合迁移完成。
 - 当前事实以 contracts、源码、runtime artifacts 和验证输出为准。
 
 默认验证入口：`scripts/verify.sh`。

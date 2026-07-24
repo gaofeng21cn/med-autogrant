@@ -20,9 +20,18 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 - `../agent/stages/manifest.json`
 - `generated_surface_handoff.json`
 - `standard_agent_conformance_profile.json`：MAG-owned golden path 与 physical morphology 声明；OPL 只做通用读取和校验。
-- `opl_agent_package_manifest.json`：声明 OPL Packages 持有 Agent Package/Codex carrier 的 install、update、uninstall 生命周期；MAG 只提供 carrier source 与 `medautogrant` runtime source locator。
+- `opl_agent_package_manifest.json`：当前过渡 sidecar，声明 `mag` identity、Codex carrier
+  与 `medautogrant` runtime locator。目标上 MAG owner 持有 executor-neutral
+  identity/capabilities/dependency intent 并独立发布完整 GHCR bytes；Framework 只聚合
+  carrier install/update/uninstall 与 fresh readback。现有 version/ABI、
+  activation/materialization、lifecycle owner 或 receipt 字段不得被提升为普通
+  composition/readiness 的长期权威。
 
 OPL Pack 直接从 declarative stage manifest 生成 `family_stage_control_plane`，不在 MAG 跟踪生成快照。这些合同让 OPL 生成或托管 CLI/MCP/skill/product/status/user-loop/workbench caller；OPL 不能写 grant truth、memory/artifact/package body，不能签发 MAG verdict、receipt 或 typed blocker。
+
+OPL Package 的跨仓目标与删除门禁归
+[App 平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
+本文只解释当前 MAG machine surface；文档更新不表示迁移完成。
 
 ## MAG Authority
 

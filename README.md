@@ -100,7 +100,10 @@ You can start with prompts like:
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
-- In the OPL family, MAG is the grant-writing domain agent package: MAG keeps grant authority, while OPL owns generic runtime, package carrier, generated wrapper, and hosted surfaces.
+- In the OPL family, MAG is an `OPL Package(kind=agent)`: MAG owns its
+  executor-neutral identity, capabilities, dependency intent, grant task model,
+  typed views, and grant authority. OPL supplies generic runtime, carrier
+  aggregation, generated wrappers, and hosted surfaces.
 - Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach stable capabilities through that skill.
 - MAG owns the grant-writing work itself: funding-call understanding, proposal structure, scientific questions, evidence organization, drafting, revision, and review-ready delivery packages. One Person Lab handles hosted runtime, progress display, recovery/retry, and the cross-agent product entry.
 - It can be used as the Grant Foundry inside One Person Lab, and it can also be called directly by Codex or another agent through stable capability entries.
@@ -115,7 +118,15 @@ You can start with prompts like:
 
 - `OPL` can host MAG as an external domain agent and provide stage scheduling, wakeups, handoffs, receipts, retries, and projections.
 - MAG keeps the grant-facing authority: grant truth, fundability and writing-quality judgment, route evidence and constraints, and submission/export authority. A decisive Codex Attempt supplies the semantic Stage route; the OPL StageRun controller only validates and materializes that transition.
-- `Codex CLI` is the current first-class executor; Hermes-Agent, Claude Code, and similar executors are explicit opt-in adapters with auditable receipts.
+- `Codex CLI` is the current first-class executor and the Codex plugin is its
+  default carrier projection. Neither defines MAG Package identity or complete
+  installed truth; changing an executor or carrier must not discard MAG
+  preferences, grant tasks, dependencies, or typed views.
+- The MAG owner is the sole publication authority for complete Package bytes
+  and its GHCR `latest-stable`; this boundary does not claim that the live
+  channel migration is already complete. Ordinary dependency composition
+  checks required or optional identity presence and callability, not a shared
+  release cohort or cross-Package version lock.
 - The full technical boundary, current entry matrix, contract refs, and proof surfaces are maintained in the [Docs Guide](./docs/README.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 
 </details>

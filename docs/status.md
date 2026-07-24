@@ -31,13 +31,29 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 当前结构阶段已关闭，`current-program` 为 `structural_cleanup_closed`。后续 tranche 只接收 external owner/live evidence，不再恢复 MAG 私有 runtime、projection、compiler 或 self-audit 平台面。
 
+## OPL Package 组合迁移状态
+
+目标边界已经明确但尚未完成实现：MAG 是 `OPL Package(kind=agent)`，owner 保有
+executor-neutral identity、capabilities、required/optional dependency intent、grant
+business task 与 typed views；完整一方 bytes 由本 owner 独立发布到本包 GHCR
+`latest-stable`。Codex Plugin 只是当前默认 carrier projection，Framework 只应聚合
+carrier fresh readback、presence/callability 与动作。
+
+当前 `contracts/opl_agent_package_manifest.json`、Scholar binding、source 和 validators
+仍包含 version/ABI、activation/materialization、lifecycle owner、receipt 等过渡字段。
+它们是当前机器实现事实，不是目标 architecture，也不证明 Package/carrier/executor
+已经解耦。迁移完成前继续兼容读取，不扩大这些字段；删除顺序与功能等价证据服从
+[App 平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
+这项平台减法不删除 MAG 的 grant workflow、领域 verdict、submission package
+exact-byte integrity、owner receipt、business task 或 typed views。
+
 ## Machine State
 
 | Surface | Current owner/readback | 状态 |
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | repo-local version `0.3.5`；published ref、digest 与 channel receipt 仍由 OPL release authority 生成 |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | 过渡实现：repo-local version `0.3.5`；目标为 owner 独立 GHCR `latest-stable`、carrier fresh readback 与 presence/callability composition |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |
@@ -76,7 +92,13 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 ## Skill 与安装
 
-`agent/primary_skill/SKILL.md` 是 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical materialized carrier。Canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；公共 package lifecycle 使用 `opl packages install|update|uninstall mag`。安装后的 skill locator 是 `med-autogrant`，module/CLI locator 是 `medautogrant`；这些 locator 不形成兼容 alias、第二个 package identity 或 OCI package coordinate。
+`agent/primary_skill/SKILL.md` 是 canonical source；
+`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是 byte-identical Codex carrier
+projection。Canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package
+repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；公共聚合动作使用
+`opl packages install|update|uninstall mag`。安装后的 skill locator 是
+`med-autogrant`，module/CLI locator 是 `medautogrant`；这些 locator 不形成兼容 alias、
+第二个 package identity、完整 installed truth 或 OCI package coordinate。
 
 ## 验证入口
 

@@ -31,7 +31,9 @@ OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarat
 
 ## D7 Primary skill carrier
 
-`agent/primary_skill/SKILL.md` 是 canonical rich skill；plugin 路径是 Codex 安装要求的 byte-identical materialized carrier，不是 compatibility mirror，也不持有第二份 MAG truth。
+`agent/primary_skill/SKILL.md` 是 canonical rich skill；plugin 路径是 Codex carrier 所需的
+byte-identical projection，不是 compatibility mirror、MAG Package identity、完整
+installed truth 或第二份领域 truth。
 
 ## D8 Live evidence 分层
 
@@ -39,7 +41,11 @@ OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarat
 
 ## D9 Framework carrier
 
-MAG 不声明、不安装、不锁定 OPL Framework implementation。OPL module workflow 在 owner checkout 的 `python/opl_framework` 维护 carrier；MAG clean runner 只通过显式 `OPL_FRAMEWORK_ROOT` 将该 namespace加入验证环境。
+MAG 不声明、不安装、不锁定 OPL Framework implementation。OPL module workflow 在
+owner checkout 的 `python/opl_framework` 维护 runtime helper；MAG clean runner 只通过
+显式 `OPL_FRAMEWORK_ROOT` 将该 namespace 加入验证环境。Framework 对 Package
+lifecycle 只保留 carrier adapter、fresh readback 和动作聚合，不成为 MAG currentness
+或完整 bytes 的第二权威。
 
 ## D10 Transition runner locator
 
@@ -65,9 +71,15 @@ MAG workspace locator/topology、runtime domain identity/registration ref、prog
 
 `package_and_submit_ready` 的四个 canonical outputs 始终先保持 `submission_ready=false`。Exact refs/hash 只承担 transport identity、locator/stale hint 与独立 release integrity；`contracts/epistemic_review_scope_profile.json` 声明 content、methodology、reference、display、export 与 package 的 artifact/claim/provenance dependencies，semantic change 只失效 declared dependents。所有 scope 共用本 Stage 现有 managed StageAttempt budget，不新增 scheduler、ledger、loop 或 parallel evidence control plane。Local readiness 同时要求 current scoped evidence、identity-bound Review receipt、exact-byte release integrity 与 MAG-owned export/owner verdict；本 Stage 仍只修 assembly、manifest 与 provenance projection。
 
-## D16 Hosted action 与 package lifecycle 归 OPL
+## D16 Hosted action 与 Package 聚合入口归 OPL
 
-MAG public action catalog 固定为 closed `family-action-catalog.v2`，只声明 3 个 `stage_binding` action 和 exact input schema；progress/cockpit 由 OPL generated read model提供。Hosted execution 使用 `opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>`。Agent Package 的安装、更新和卸载由 OPL Packages 持有，公共命令分别为 `opl packages install mag`、`opl packages update mag`、`opl packages uninstall mag`；Connect 不再持有 package lifecycle namespace，`medautogrant` 只保留 managed runtime source module locator。
+MAG public action catalog 固定为 closed `family-action-catalog.v2`，只声明 3 个
+`stage_binding` action 和 exact input schema；progress/cockpit 由 OPL generated read
+model 提供。Hosted execution 使用 `opl agents run --domain med-autogrant --action
+<action_id> --workspace <absolute_path>`。公共 Package 命令仍为 `opl packages
+install|update|uninstall mag`，但它们只聚合 carrier 动作与 fresh readback，不使
+Framework、Connect 或 Codex Plugin 成为 Package identity、完整 installed truth 或
+owner publication currentness；`medautogrant` 只保留 runtime source locator。
 
 ## D17 CLI 声明与执行分离
 
@@ -80,3 +92,13 @@ Command specs 只声明 parser 字段和帮助信息，不承载 callable、meth
 ## D19 语义 route 与 transition 物化分权
 
 所有 active Stage policy、StageRun profile 和 route advisory 统一声明 `semantic_route_decision_owner=decisive_codex_attempt` 与 `stage_transition_materialization_owner=opl_stage_run_controller`。Primary-only Stage 的 producer、Formal Review 的 terminal reviewer/re-reviewer 可以成为 decisive Attempt；repairer 永不 decisive。Controller 只能校验 decisive Attempt 的 route shape、evidence 与 declared target 后物化 transition，不拥有 grant-semantic approval authority；旧 `semantic_owner`、`route_selection_owner` 和把 `codex_cli` 同时写成语义与 transition owner 的合同已退役。
+
+## D20 Package 采用 presence-based composition
+
+生态形态固定为 `OPL Base ~= R`、`OPL App ~= RStudio`、`OPL Package ~= R Package`，
+MAG 是 `Package(kind=agent)`。MAG owner 独立定义 identity、capabilities、
+required/optional dependencies、grant task 与 typed views，并把完整 bytes 发布到自己的
+GHCR `latest-stable`。普通组合只检查 dependency identity presence 与 callability；
+版本范围、ABI、lock、payload、digest、atomic closure、共享 Release Set 和跨包求解不作
+readiness 门。exact ref/digest 只约束一次 release artifact 或 MAG submission artifact
+integrity。当前合同中的相反字段按兼容迁移读取，不据此宣称迁移完成。

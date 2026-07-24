@@ -14,6 +14,9 @@ Machine boundary: 本文是人读索引。机器真相归 root contracts、schem
 5. [决策](./decisions.md)
 
 这五份文档是当前人读 truth set。它们不作为脚本、测试或 runtime 的机器接口。
+OPL Package 跨仓目标、迁移顺序与删除门禁只在 App 的
+[平台组合迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)
+维护；本仓只记录 MAG owner 边界，不复制整套平台计划。
 
 ## 当前计划
 

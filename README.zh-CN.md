@@ -100,7 +100,9 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 ## 当前边界
 
 - `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
-- 在 OPL family 中，MAG 是基金写作 domain agent package：MAG 保留基金领域 authority，OPL 持有通用 runtime、package carrier、generated wrapper 和 hosted surface。
+- 在 OPL family 中，MAG 是 `OPL Package(kind=agent)`：MAG 持有 executor-neutral
+  identity、capability/dependency 意图、基金业务任务、typed views 和领域 authority；
+  OPL 提供通用 runtime、carrier 聚合、generated wrapper 与 hosted surface。
 - 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口访问稳定能力面。
 - MAG 负责基金写作本身：基金任务理解、正文结构、科学问题、证据组织、写作修订和可待审交付包。One Person Lab 负责托管运行、进度展示、恢复重试和跨 Agent 的入口体验。
 - 它可以作为 One Person Lab 里的基金工坊使用，也可以由 Codex 或其他 Agent 直接调用稳定能力入口。
@@ -115,7 +117,12 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 
 - `OPL` 可以把 MAG 作为外部领域智能体托管，并提供阶段调度、唤醒、队列、交接、回执、重试和投影。
 - MAG 保留基金侧权威：正文真相、可资助性和写作质量判断、route evidence/constraints，以及 submission/export authority。Decisive Codex Attempt 给出语义 Stage route；OPL StageRun controller 只校验并物化 transition。
-- `Codex CLI` 是当前第一公民 executor；Hermes-Agent、Claude Code 等其他 executor 是显式 opt-in adapter，必须产出可审计回执。
+- `Codex CLI` 是当前第一公民 executor，Codex Plugin 是其默认 carrier projection。
+  二者都不定义 MAG Package identity 或完整 installed truth；切换 executor/carrier 不得
+  丢失 MAG 偏好、基金任务、依赖或 typed views。
+- MAG owner 是完整 Package bytes 及其 GHCR `latest-stable` 的唯一发布权威；这条边界
+  不声明 live channel 迁移已经完成。普通依赖组合只检查 required/optional identity
+  presence 与 callability，不绑定共享发布批次或跨 Package 版本 lock。
 - 完整技术边界、当前入口矩阵、合同 refs 与 proof surfaces 由 [文档索引](./docs/README.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 和 [合同说明](./contracts/README.md) 维护。
 
 </details>
