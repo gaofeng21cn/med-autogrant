@@ -62,7 +62,7 @@ exact-byte integrity、owner receipt、business task 或 typed views。
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | 过渡实现：repo-local version `0.3.5`，ScholarSkills 仍 optional/fail-open；目标为 owner 独立 GHCR `latest-stable`、required Scholar identity/callability、carrier fresh readback |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | 过渡实现：repo-local version `0.3.6`，ScholarSkills 仍 optional/fail-open；目标为 owner 独立 GHCR `latest-stable`、required Scholar identity/callability、carrier fresh readback |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |

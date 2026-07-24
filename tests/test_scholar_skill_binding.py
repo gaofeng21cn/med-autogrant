@@ -38,7 +38,7 @@ def test_package_declares_optional_enhancement_without_install_or_runtime_gate()
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("contracts/opl_agent_package_manifest.json")
 
-    assert manifest["version"] == "0.3.5"
+    assert manifest["version"] == "0.3.6"
     assert manifest["codex_surface"]["bundled_capability_package_ids"] == [
         "mas-scholar-skills"
     ]
