@@ -13,6 +13,9 @@ TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
     ".DS_Store",
     ".agent-contract-baseline.json",
 }
+TRACKED_AGENT_STATE_ALLOWED_PATHS = {
+    ".agents/plugins/marketplace.json",
+}
 TRACKED_PATH_FORBIDDEN_PARTS = {
     ".agents",
     ".codex",
@@ -49,6 +52,8 @@ def _tracked_or_pending_files() -> list[str]:
 
 
 def _is_forbidden_tracked_path(path: str) -> bool:
+    if path in TRACKED_AGENT_STATE_ALLOWED_PATHS:
+        return False
     parts = Path(path).parts
     return (
         any(part in TRACKED_PATH_FORBIDDEN_EXACT_NAMES for part in parts)
@@ -108,10 +113,10 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(forbidden_paths, [])
 
-    def test_repo_does_not_track_repo_local_agent_state(self) -> None:
+    def test_repo_tracks_only_the_stable_codex_marketplace_under_agents(self) -> None:
         agent_paths = [path for path in _tracked_files() if path.startswith(".agents/")]
 
-        self.assertEqual(agent_paths, [])
+        self.assertEqual(agent_paths, sorted(TRACKED_AGENT_STATE_ALLOWED_PATHS))
         self.assertTrue((REPO_ROOT / "plugins" / "med-autogrant" / ".codex-plugin" / "plugin.json").is_file())
 
     def test_framework_python_carrier_is_not_an_agent_dependency(self) -> None:
