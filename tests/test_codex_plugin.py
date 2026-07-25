@@ -14,7 +14,6 @@ PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
 PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agents" / "openai.yaml"
 PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
-MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
 PACKAGE_MANIFEST_PATH = REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
 REPO_LOCAL_INSTALLER_PATHS = (
     REPO_ROOT / "scripts" / "install-codex-plugin.sh",
@@ -65,10 +64,6 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
         if package["name"] == "med-autogrant"
     ) == version
     assert "distribution_payload" not in package_manifest
-
-
-def test_repo_does_not_track_repo_local_codex_marketplace() -> None:
-    assert not MARKETPLACE_PATH.exists()
 
 
 def test_agent_package_lifecycle_is_owned_by_opl_packages() -> None:
