@@ -103,6 +103,34 @@ def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
     assert "opl-agent-med-autogrant" not in json.dumps(package_manifest)
 
 
+def test_mag_package_manifest_declares_owner_home_presentation() -> None:
+    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+
+    assert package_manifest["presentation"] == {
+        "display_name_i18n": {"en-US": "Med Auto Grant"},
+        "description_i18n": {"en-US": "Grant authoring domain agent for Codex"},
+        "session_routing_summary_i18n": {
+            "en-US": (
+                "Enter the current MAG grant workflow and continue the same "
+                "funding-call authoring loop."
+            )
+        },
+        "home_shortcuts": [
+            {
+                "shortcut_id": "open_grant_user_loop",
+                "label_i18n": {"en-US": "Open MAG user loop"},
+                "default_visible": True,
+                "user_configurable": True,
+                "route": {
+                    "route_kind": "agent_package_shortcut",
+                    "executor": "codex_cli",
+                    "codex_visible_entry": "med-autogrant",
+                },
+            }
+        ],
+    }
+
+
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
     metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
