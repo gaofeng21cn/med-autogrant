@@ -144,12 +144,37 @@ You can start with prompts like:
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 3. Developers and maintainers should continue into `docs/active/`, `docs/specs/`, `docs/references/`, and [History Archive](./docs/history/README.md).
 
-## Agent And Operator Quick Start
+## For Codex / Agents
 
 <details>
-  <summary><strong>Start here if you are handing this repo to Codex or another agent</strong></summary>
+  <summary><strong>Install or hand this repo to Codex and other agents</strong></summary>
 
-- Cloning this repo does not install the OPL Framework or hosted runtime. If you need hosted execution, prepare the current `one-person-lab` checkout or release bundle first.
+- This repo contains the Codex plugin carrier `med-autogrant`; the OPL Package identity remains `mag`. Installing the carrier makes its bundled skill discoverable to Codex, but does not prove that the full OPL Package or runtime is ready.
+- From a clone of this repository, add its repo marketplace, inspect the available entry, install the plugin, and verify the installed readback:
+
+  ```bash
+  codex plugin marketplace add .
+  codex plugin marketplace list --json
+  codex plugin list --marketplace med-autogrant --available --json
+  codex plugin add med-autogrant@med-autogrant --json
+  codex plugin list --marketplace med-autogrant --json
+  ```
+
+- Start a new Codex App task or CLI session after installation so the bundled skill is loaded. To remove the isolated carrier and its configured marketplace:
+
+  ```bash
+  codex plugin remove med-autogrant@med-autogrant --json
+  codex plugin marketplace remove med-autogrant --json
+  ```
+
+- The commands above only manage the Codex plugin carrier. They do not install or validate the OPL Framework, dependencies, activation, runtime health, complete installed truth, or grant-workspace readiness, and this repo marketplace does not grant OPL Package transaction or receipt authority.
+- For the full OPL Package and runtime readback, use the current OPL Base that provides the Package command surface:
+
+  ```bash
+  opl packages status mag --json
+  ```
+
+  Treat a missing `packages` command as an outdated or incomplete OPL Base, not as MAG readiness. Follow the returned owner route instead of inferring readiness from a successful Codex plugin install.
 - Read the [Docs Guide](./docs/README.md) first, then [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json).
 - Before changing routes, public wording, or operator commands, use [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the current technical truth set.
 - Direct MAG use and OPL-hosted use must converge on the same MAG-owned route, workspace, quality, and export surfaces.
