@@ -13,6 +13,7 @@ PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
 PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
 PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agents" / "openai.yaml"
+PLUGIN_PACKAGE_DESCRIPTOR_PATH = PLUGIN_ROOT / "opl-package.json"
 PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
 PACKAGE_MANIFEST_PATH = REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
 REPO_LOCAL_INSTALLER_PATHS = (
@@ -96,6 +97,79 @@ def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
     assert package_manifest["lifecycle"]["module_id"] == "medautogrant"
     assert "distribution_payload" not in package_manifest
     assert "opl-agent-med-autogrant" not in json.dumps(package_manifest)
+
+
+def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
+    owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    carrier_descriptor = json.loads(
+        PLUGIN_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8")
+    )
+    plugin_manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
+
+    owner_dependency = owner_manifest["capability_dependencies"][0]
+    expected_presence = "required" if owner_dependency["required"] else "optional"
+    assert carrier_descriptor == {
+        "surface_kind": owner_manifest["surface_kind"],
+        "kind": "agent",
+        "agent_id": owner_manifest["agent_id"],
+        "package_id": owner_manifest["package_id"],
+        "domain_id": "med-autogrant",
+        "display_name": owner_manifest["display_name"],
+        "presentation": owner_manifest["presentation"],
+        "publisher": owner_manifest["publisher"],
+        "version": owner_manifest["version"],
+        "source": owner_manifest["source"],
+        "carrier_source_role": owner_manifest["carrier_source_role"],
+        "schema_ref": owner_manifest["schema_ref"],
+        "domain_descriptor_ref": "contracts/domain_descriptor.json",
+        "task_provider_ref": (
+            "contracts/domain_descriptor.json"
+            "#/standard_agent_interface/stage_catalog"
+        ),
+        "action_catalog_ref": "contracts/action_catalog.json",
+        "view_refs": [],
+        "entrypoints": [],
+        "codex_surface": {
+            "plugin_id": owner_manifest["codex_surface"]["plugin_id"],
+            "plugin_source_path": ".",
+            "required_skill_ids": owner_manifest["codex_surface"][
+                "required_skill_ids"
+            ],
+        },
+        "requires": [
+            {
+                "package_id": owner_dependency["package_id"],
+                "presence": expected_presence,
+            }
+        ],
+        # Kept only because the current Framework parser requires the field.
+        # Dependency authority lives in the owner contract, not this projection.
+        "capability_dependencies": [],
+    }
+    assert carrier_descriptor["version"] == plugin_manifest["version"]
+    assert carrier_descriptor["codex_surface"]["plugin_id"] == plugin_manifest["name"]
+    assert (REPO_ROOT / carrier_descriptor["domain_descriptor_ref"]).is_file()
+    assert (REPO_ROOT / carrier_descriptor["action_catalog_ref"]).is_file()
+
+    forbidden_manager_fields = {
+        "content_lock",
+        "distribution_payload",
+        "lifecycle",
+        "lifecycle_receipt",
+        "lock_ref",
+        "managed_policy_surface",
+        "managed_update_source",
+        "opl_managed_surface",
+        "package_core",
+        "registry_entry",
+        "rollback_ref",
+        "transaction",
+    }
+    assert forbidden_manager_fields.isdisjoint(carrier_descriptor)
+    assert all(
+        set(requirement) == {"package_id", "presence"}
+        for requirement in carrier_descriptor["requires"]
+    )
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:

@@ -1,0 +1,58 @@
+{
+  "surface_kind": "opl_agent_package_manifest.v1",
+  "kind": "agent",
+  "agent_id": "mag",
+  "package_id": "mag",
+  "domain_id": "med-autogrant",
+  "display_name": "Med Auto Grant",
+  "presentation": {
+    "display_name_i18n": {
+      "en-US": "Med Auto Grant"
+    },
+    "description_i18n": {
+      "en-US": "Grant authoring domain agent for Codex"
+    },
+    "session_routing_summary_i18n": {
+      "en-US": "Enter the current MAG grant workflow and continue the same funding-call authoring loop."
+    },
+    "home_shortcuts": [
+      {
+        "shortcut_id": "open_grant_user_loop",
+        "label_i18n": {
+          "en-US": "Open MAG user loop"
+        },
+        "default_visible": true,
+        "user_configurable": true,
+        "route": {
+          "route_kind": "agent_package_shortcut",
+          "executor": "codex_cli",
+          "codex_visible_entry": "med-autogrant"
+        }
+      }
+    ]
+  },
+  "publisher": "one-person-lab",
+  "version": "0.3.6",
+  "source": "first_party_repo_local",
+  "carrier_source_role": "codex_plugin_default_carrier_not_package_truth",
+  "schema_ref": "one-person-lab/contracts/opl-framework/agent-package-manifest.schema.json",
+  "domain_descriptor_ref": "contracts/domain_descriptor.json",
+  "task_provider_ref": "contracts/domain_descriptor.json#/standard_agent_interface/stage_catalog",
+  "action_catalog_ref": "contracts/action_catalog.json",
+  "view_refs": [],
+  "entrypoints": [],
+  "codex_surface": {
+    "plugin_id": "med-autogrant",
+    "plugin_source_path": ".",
+    "required_skill_ids": [
+      "med-autogrant"
+    ]
+  },
+  "requires": [
+    {
+      "package_id": "mas-scholar-skills",
+      "presence": "optional"
+    }
+  ],
+  "capability_dependencies": []
+}
