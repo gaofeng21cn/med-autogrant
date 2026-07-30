@@ -16,13 +16,13 @@ Machine boundary: 本文是人读路由表，不是 source/path inventory、scan
 | Private/generic surface prohibition | `contracts/private_functional_surface_policy.json` | generic runtime、projection、compiler 与 lifecycle 不得在 MAG 复活 |
 | Sensitive source effects | `contracts/source_closure_audit.json` | exact file、symbol、digest、effect 与 target 只从 audit/readback 读取 |
 | Generated product/status/workbench | `contracts/generated_surface_handoff.json` | OPL 持有生成/投影；MAG 不保留第二实现 |
-| Package lifecycle | `contracts/opl_agent_package_manifest.json` + OPL package receipts | MAG 声明 package；install/update/rollback/currentness 归 OPL Packages |
+| Package ownership and lifecycle | `contracts/opl_agent_package_manifest.json` + MAG owner publication + configured carrier readback | MAG 声明 identity、capability、dependency 并持有完整 Package bytes/publication；实际 carrier 持有物理 install/update/remove/currentness readback，Framework 只聚合状态与委托动作 |
 | Live progress and acceptance | `contracts/live_stage_run_progress_evidence.json`, `contracts/production_acceptance/mag-production-acceptance.json`, MAG owner receipts | 只接受真实 runtime/owner evidence，不从结构状态推断 ready |
 
 ## Stable Boundary
 
 - MAG 保留 grant truth、fundability/quality/export verdict、package body authority、strategy memory decision、owner receipt signer、typed blocker 与 grant-native validation。
-- OPL 保留通用 runtime、Attempt/session lifecycle、executor transport、workspace/source transport、generated surfaces 与 package lifecycle。
+- OPL 保留通用 runtime、Attempt/session lifecycle、executor transport、workspace/source transport 与 generated surfaces；实际 carrier 保留物理 Package lifecycle/readback，Framework 只做发现、委托与聚合。
 - retained source 必须有 active caller、明确 authority、允许/禁止写入和可执行验证；否则按 machine policy 进入 retirement review。
 - retired surface 只从 [retired-surface provenance](../history/docs-portfolio-coverage-ledger/retired-surface-provenance.md) 或 Git history 追溯，不恢复 compatibility entry。
 
