@@ -17,7 +17,7 @@
     {
       "file": "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
       "symbol": "write_domain_memory_receipt_evidence",
-      "source_digest": "sha256:b04cfccc3f84b3c2e1d66c74c52498036d95e047751e68f36ac850fd6579b5f3",
+      "source_digest": "sha256:618364fdf35147bace5a00a0fdbe193876ebb66706ed4f1895f813ad3f02ef68",
       "allowed_effects": [
         "filesystem_write"
       ],
