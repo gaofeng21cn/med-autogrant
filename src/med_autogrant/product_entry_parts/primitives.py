@@ -1,13 +1,27 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
+
+
+def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise WorkspaceFileError(f"读取 {context} 失败: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise WorkspaceStateError(f"{context} 不是合法 JSON: {path}") from exc
+    if not isinstance(payload, Mapping):
+        raise WorkspaceStateError(f"{context} 必须是 JSON object: {path}")
+    return payload
 
 
 def _read_funding_call_from_summary(summary: Mapping[str, Any]) -> str:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -11,6 +10,7 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
 )
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
+    _read_json_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
@@ -24,7 +24,7 @@ from med_autogrant.product_entry_parts.typed_blocker_projection import (
     build_typed_blocker_projection,
 )
 from med_autogrant.product_entry_parts.owner_receipt_writers import write_owner_receipt_evidence
-from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 def dispatch_domain_handler_task(
@@ -218,18 +218,6 @@ def _stage_attempt_receipt_refs(receipt: Mapping[str, Any]) -> dict[str, Any]:
     if receipt.get("receipt_shape") == "no_regression_evidence":
         refs["no_regression_evidence_ref"] = receipt["receipt_instance_ref"]
     return refs
-
-
-def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 {context} 失败: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise WorkspaceStateError(f"{context} 不是合法 JSON: {path}") from exc
-    if not isinstance(payload, Mapping):
-        raise WorkspaceStateError(f"{context} 必须是 JSON object: {path}")
-    return payload
 
 
 def _optional_nonempty_string(value: Any) -> str | None:

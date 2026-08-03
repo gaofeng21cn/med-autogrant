@@ -7,7 +7,7 @@ import pytest
 
 from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
 from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 
 CRITIQUE_EXAMPLE_PATH = (
@@ -63,6 +63,31 @@ def test_domain_handler_rejects_generic_platform_actions(tmp_path: Path) -> None
 
     with pytest.raises(WorkspaceStateError, match="action 不允许"):
         dispatch_domain_handler_task(task_path=task_path)
+
+
+@pytest.mark.parametrize(
+    ("contents", "error_type", "message"),
+    [
+        ("{", WorkspaceStateError, "domain_handler_task 不是合法 JSON"),
+        ("[]", WorkspaceStateError, "domain_handler_task 必须是 JSON object"),
+        (None, WorkspaceFileError, "读取 domain_handler_task 失败"),
+    ],
+)
+def test_domain_handler_preserves_json_loader_errors(
+    tmp_path: Path,
+    contents: str | None,
+    error_type: type[Exception],
+    message: str,
+) -> None:
+    task_path = tmp_path / "task.json"
+    if contents is not None:
+        task_path.write_text(contents, encoding="utf-8")
+
+    with pytest.raises(error_type) as exc_info:
+        dispatch_domain_handler_task(task_path=task_path)
+
+    assert type(exc_info.value) is error_type
+    assert str(exc_info.value) == f"{message}: {task_path.resolve()}"
 
 
 def test_domain_handler_writes_memory_decision_receipt_refs_only(tmp_path: Path) -> None:

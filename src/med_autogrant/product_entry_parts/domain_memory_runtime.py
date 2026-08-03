@@ -7,10 +7,11 @@ from typing import Any, Mapping
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
+    _read_json_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
-from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 DOMAIN_MEMORY_WRITEBACK_PROPOSAL_KIND = "mag_domain_memory_writeback_proposal"
@@ -307,18 +308,6 @@ def _require_proposal_body(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     if isinstance(body, Mapping):
         return body
     raise WorkspaceStateError("domain_memory_writeback_proposal 缺少 proposal body。")
-
-
-def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 {context} 失败: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise WorkspaceStateError(f"{context} 不是合法 JSON: {path}") from exc
-    if not isinstance(payload, Mapping):
-        raise WorkspaceStateError(f"{context} 必须是 JSON object: {path}")
-    return payload
 
 
 def _require_stage_id(stage_id: str) -> str:
