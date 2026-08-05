@@ -9,6 +9,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "med-autogrant"
 PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
+ROOT_PLUGIN_MANIFEST_PATH = REPO_ROOT / ".codex-plugin" / "plugin.json"
+ROOT_PACKAGE_DESCRIPTOR_PATH = REPO_ROOT / "opl-package.json"
 PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
 PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
@@ -55,7 +57,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.7"
+    assert version == "0.3.8"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
@@ -182,6 +184,50 @@ def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
         set(requirement) == {"package_id", "presence"}
         for requirement in carrier_descriptor["requires"]
     )
+
+
+def test_repo_root_carrier_contains_hosted_runtime_closure() -> None:
+    marketplace = json.loads(
+        (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    plugin_source_root = (
+        REPO_ROOT / marketplace["plugins"][0]["source"]["path"]
+    ).resolve()
+    root_plugin_manifest = json.loads(
+        ROOT_PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
+    )
+    owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    domain_descriptor = json.loads(
+        (plugin_source_root / owner_manifest["domain_descriptor_ref"]).read_text(
+            encoding="utf-8"
+        )
+    )
+    action_catalog = json.loads(
+        (plugin_source_root / owner_manifest["action_catalog_ref"]).read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert plugin_source_root == REPO_ROOT.resolve()
+    assert root_plugin_manifest["skills"] == "./plugins/med-autogrant/skills/"
+    assert root_plugin_manifest["version"] == owner_manifest["version"]
+    assert ROOT_PACKAGE_DESCRIPTOR_PATH.read_bytes() == PACKAGE_MANIFEST_PATH.read_bytes()
+    assert domain_descriptor["domain_id"] == owner_manifest["domain_id"]
+    stage_manifest_ref = domain_descriptor["standard_agent_interface"]["stage_catalog"][
+        "relative_path"
+    ]
+    assert (plugin_source_root / stage_manifest_ref).is_file()
+    assert all(
+        action["execution_binding"]["stage_manifest_ref"] == stage_manifest_ref
+        for action in action_catalog["actions"]
+    )
+    for hosted_runtime_ref in (
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
+        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
+    ):
+        assert (plugin_source_root / hosted_runtime_ref).is_file()
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:

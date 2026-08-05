@@ -8,7 +8,7 @@
       "name": "med-autogrant",
       "source": {
         "source": "local",
-        "path": "./plugins/med-autogrant"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",
