@@ -19,7 +19,7 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
             "name": "med-autogrant",
             "source": {
                 "source": "local",
-                "path": "./plugins/med-autogrant",
+                "path": "./",
             },
             "policy": {
                 "installation": "AVAILABLE",
@@ -36,6 +36,10 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
     assert plugin_root.is_dir()
     assert plugin_manifest["name"] == "med-autogrant"
     assert plugin_manifest["interface"]["category"] == "Research"
+    assert plugin_manifest["skills"] == "./plugins/med-autogrant/skills/"
+    assert (plugin_root / "opl-package.json").read_bytes() == (
+        REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
+    ).read_bytes()
 
 
 def test_readme_separates_codex_carrier_install_from_opl_package_readiness() -> None:

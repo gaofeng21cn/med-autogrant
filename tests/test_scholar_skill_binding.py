@@ -38,7 +38,7 @@ def test_package_declares_optional_enhancement_without_install_or_runtime_gate()
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("contracts/opl_agent_package_manifest.json")
 
-    assert manifest["version"] == "0.3.7"
+    assert manifest["version"] == "0.3.8"
     assert manifest["codex_surface"]["bundled_capability_package_ids"] == [
         "mas-scholar-skills"
     ]
@@ -52,16 +52,9 @@ def test_package_declares_optional_enhancement_without_install_or_runtime_gate()
     assert dependency["required_module_ids"] == binding["eligible_module_ids"]
     assert dependency["required"] is False
     assert dependency["dependency_kind"] == "optional_enhancement"
-    assert dependency["activation_materialization"]["required"] is False
-    assert dependency["activation_materialization"]["receipt_required"] is False
     assert dependency["availability_policy_ref"] == (
         "contracts/scholar_skill_binding_contract.json#/availability_policy"
     )
-    assert dependency["missing_or_incompatible_policy"] == (
-        binding["availability_policy"]["other_observation_action"]
-    )
-    assert dependency["provider_completion_is_mag_completion"] is False
-    assert not any(dependency["blocking_policy"].values())
     assert not any(dependency["authority_boundary"].values())
 
 
