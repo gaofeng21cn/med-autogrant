@@ -32,7 +32,7 @@
     ]
   },
   "publisher": "one-person-lab",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "source": "first_party_repo_local",
   "carrier_source_role": "codex_plugin_default_carrier_not_package_truth",
   "schema_ref": "one-person-lab/contracts/opl-framework/agent-package-manifest.schema.json",
@@ -44,6 +44,13 @@
   "codex_surface": {
     "plugin_id": "med-autogrant",
     "plugin_source_path": ".",
+    "configured_codex_plugin_carrier": {
+      "kind": "codex_plugin_manager",
+      "plugin_selector": "med-autogrant@med-autogrant",
+      "executor_route": "codex_cli",
+      "marketplace_source": "gaofeng21cn/med-autogrant",
+      "publication_ref": "ghcr.io/gaofeng21cn/one-person-lab-packages/mag:latest-stable"
+    },
     "required_skill_ids": [
       "med-autogrant"
     ]

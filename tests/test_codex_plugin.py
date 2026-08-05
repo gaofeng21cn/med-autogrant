@@ -55,7 +55,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.6"
+    assert version == "0.3.7"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
@@ -94,6 +94,15 @@ def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
     assert package_manifest["package_id"] == "mag"
     assert package_manifest["version"] == pyproject_data["project"]["version"]
     assert package_manifest["codex_surface"]["plugin_id"] == "med-autogrant"
+    assert package_manifest["codex_surface"]["configured_codex_plugin_carrier"] == {
+        "kind": "codex_plugin_manager",
+        "plugin_selector": "med-autogrant@med-autogrant",
+        "executor_route": "codex_cli",
+        "marketplace_source": "gaofeng21cn/med-autogrant",
+        "publication_ref": (
+            "ghcr.io/gaofeng21cn/one-person-lab-packages/mag:latest-stable"
+        ),
+    }
     assert package_manifest["lifecycle"]["module_id"] == "medautogrant"
     assert "distribution_payload" not in package_manifest
     assert "opl-agent-med-autogrant" not in json.dumps(package_manifest)
@@ -132,6 +141,9 @@ def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
         "codex_surface": {
             "plugin_id": owner_manifest["codex_surface"]["plugin_id"],
             "plugin_source_path": ".",
+            "configured_codex_plugin_carrier": owner_manifest["codex_surface"][
+                "configured_codex_plugin_carrier"
+            ],
             "required_skill_ids": owner_manifest["codex_surface"][
                 "required_skill_ids"
             ],
