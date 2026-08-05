@@ -41,7 +41,7 @@
   "action_catalog_ref": "contracts/action_catalog.json",
   "view_refs": [],
   "entrypoints": [],
-  "machine_boundary": "This repo-local sidecar declares OPL Agent Package identity and carrier locators. OPL release authority generates published artifact refs, digests, channels, and receipts; the repo plugin directory and lifecycle module fields remain carrier locators, not package truth or domain truth owners.",
+  "machine_boundary": "This repo-local sidecar declares OPL Agent Package identity, domain runtime refs, capability presence and callability, and native carrier locators. Per-Package owner publication and currentness remain external to this descriptor.",
   "codex_surface": {
     "plugin_id": "med-autogrant",
     "plugin_source_path": ".",
@@ -60,18 +60,6 @@
       "mas-scholar-skills"
     ],
     "user_install_action_count": 1
-  },
-  "lifecycle": {
-    "owner": "opl_packages",
-    "module_id": "medautogrant",
-    "commands": {
-      "install": "opl packages install mag",
-      "update": "opl packages update mag",
-      "uninstall": "opl packages uninstall mag"
-    },
-    "repo_local_installer_allowed": false,
-    "repo_local_marketplace_mutation_allowed": false,
-    "repo_local_user_symlink_mutation_allowed": false
   },
   "capability_dependencies": [
     {
@@ -100,50 +88,7 @@
         "mas-scholar-skills.reference-provider-adapters",
         "mas-scholar-skills.scientific-search-adapters"
       ],
-      "required_for": [
-        "mag_professional_grant_research",
-        "mag_methodology_and_statistical_review",
-        "mag_evidence_and_reference_integrity"
-      ],
-      "codex_distribution": "bundled",
-      "opl_distribution": "managed_dependency",
-      "developer_distribution": "source_checkout",
-      "install_owner": "one-person-lab",
-      "install_update_source": "ghcr_capability_packages_channel",
-      "sync_scopes": [
-        "workspace",
-        "quest"
-      ],
-      "sync_command_refs": [
-        "opl packages activate mag --scope workspace --target-workspace <workspace-root> --json",
-        "opl packages activate mag --scope quest --target-quest <quest-root> --json"
-      ],
-      "activation_materialization": {
-        "required": false,
-        "owner": "one-person-lab",
-        "trigger": "explicit_optional_enhancement_activation",
-        "scopes": [
-          "workspace",
-          "quest"
-        ],
-        "required_skill_ids_source": "provider_manifest_selected_consumer_profile_required_export_ids",
-        "target_path_template": "<scope-root>/.codex/skills/<skill-id>",
-        "receipt_required": false
-      },
       "availability_policy_ref": "contracts/scholar_skill_binding_contract.json#/availability_policy",
-      "missing_or_incompatible_policy": "continue_with_consumer_core_and_record_diagnostic",
-      "provider_completion_is_mag_completion": false,
-      "blocking_policy": {
-        "mag_install": false,
-        "stage_launch": false,
-        "stage_route": false,
-        "operational_readiness": false,
-        "grant_core": false,
-        "fundability_core": false,
-        "quality_core": false,
-        "export_core": false,
-        "typed_blocker": false
-      },
       "authority_boundary": {
         "can_write_domain_truth": false,
         "can_sign_owner_receipt": false,
