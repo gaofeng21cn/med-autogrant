@@ -81,7 +81,7 @@ def build_domain_handler_export(
             {"authority_id": authority_id, "ref": ref}
             for authority_id, ref in AUTHORITY_FUNCTION_REFS.items()
         ],
-        "ai_route_policy_ref": "src/med_autogrant/stage_control_plane_parts/ai_route_policy.py",
+        "ai_route_policy_ref": "agent/stages/manifest.json#/progress_first_policy",
         "allowed_dispatch_actions": sorted(ALLOWED_ACTIONS),
         "generated_surface_handoff_ref": "contracts/generated_surface_handoff.json",
         "caller_boundary": {

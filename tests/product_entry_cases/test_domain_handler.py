@@ -38,7 +38,7 @@ def test_domain_handler_export_is_direct_and_keeps_seven_authority_targets() -> 
         "owner_receipt_signer",
         "grant_native_helper",
     }
-    assert export["ai_route_policy_ref"].endswith("stage_control_plane_parts/ai_route_policy.py")
+    assert export["ai_route_policy_ref"] == "agent/stages/manifest.json#/progress_first_policy"
     assert export["allowed_dispatch_actions"] == [
         "domain-memory/decide",
         "domain-memory/propose",

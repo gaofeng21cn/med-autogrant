@@ -85,11 +85,14 @@ def test_capability_map_indexes_provider_binding_without_copying_skills() -> Non
     entries = [
         capability
         for capability in capability_map["capabilities"]
-        if capability["surface_role"] == "optional_professional_skill_enhancement"
+        if capability["capability_id"]
+        == "med-autogrant.shared-scholar-skills.optional-enhancement"
     ]
 
     assert len(entries) == 1
     entry = entries[0]
+    assert entry["surface_role"] == "professional_skill"
+    assert entry["capability_kind"] == "contract_module"
     assert entry["physical_source_ref"]["ref"] == BINDING_REF
     assert entry["provider_package_id"] == binding["provider_package_id"]
     assert entry["consumer_profile_id"] == binding["consumer_profile_id"]

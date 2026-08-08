@@ -4,8 +4,6 @@ import ast
 import json
 from pathlib import Path
 
-from med_autogrant.stage_control_plane_parts.ai_route_policy import build_mag_ai_route_policy
-
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,24 +36,6 @@ def test_stage_operating_principles_match_progress_first_route_policy() -> None:
     _assert_progress_first_route_policy(policy)
     assert policy["decisive_codex_attempt_is_single_semantic_control_plane"] is True
     assert "codex_cli_is_single_semantic_control_plane" not in policy
-
-
-def test_ai_route_policy_projects_declared_scope_without_program_route_authority() -> None:
-    policy = build_mag_ai_route_policy(
-        family_stage_control_plane={"stages": [{"stage_id": "intake"}, {"stage_id": "draft"}]},
-        family_action_catalog={"actions": [{"action_id": "author"}]},
-    )
-
-    assert policy["semantic_route_owner"] == "decisive_codex_attempt"
-    assert policy["authority_boundary"]["decisive_codex_attempt_role"] == (
-        "semantic_route_decision"
-    )
-    assert "codex_cli_role" not in policy["authority_boundary"]
-    assert policy["declared_stage_ids"] == ["draft", "intake"]
-    assert policy["route_capabilities"]["route_back_to_any_declared_stage"] is True
-    assert policy["quality_debt_policy"]["blocks_stage_transition"] is False
-    assert policy["static_transition_table_present"] is False
-    assert policy["program_validator_can_reject_ai_route"] is False
 
 
 def test_active_source_never_assigns_semantic_route_ownership_to_codex_cli() -> None:

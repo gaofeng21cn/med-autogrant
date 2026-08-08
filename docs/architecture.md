@@ -114,7 +114,7 @@ Repo-local CLI 的 command specs 只声明 help、required/optional/exclusive fi
 | `owner_receipt_signer` | domain owner receipt / typed blocker / no-regression evidence |
 | `grant_native_helper` | 无法声明化的 grant-native prompt、typed closeout/answer validation、direct CLI/domain-handler adapter；validation finding 是 Codex input/质量债，不是 stage progression 控制面；任何 executor transport 均不在本仓 |
 
-这七项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。`ai_route_policy` 只投影 declared stage/action scope；`semantic_route_decision_owner=decisive_codex_attempt` 负责语义 route，`stage_transition_materialization_owner=opl_stage_run_controller` 只校验角色、shape 与 declared target 并物化 transition。
+这七项 ID 必须在 functional audit、pack compiler input、current-program 和 domain handler export 中一致。`agent/stages/manifest.json#/progress_first_policy` 是 declarative route-policy source，OPL 从同一 manifest 生成 declared stage scope；`workspace next-step.ai_route_policy` 是 `stage_router` 提供的兼容 runtime context，不是第二个 policy builder。`semantic_route_decision_owner=decisive_codex_attempt` 负责语义 route，`stage_transition_materialization_owner=opl_stage_run_controller` 只校验角色、shape 与 declared target 并物化 transition。
 
 ## OPL-owned Surfaces
 
@@ -149,13 +149,13 @@ marketplace/symlink mutation 或 fallback lifecycle。
 结构 currentness 由 OPL canonical command验证：
 
 ```bash
-<one-person-lab-repo>/bin/opl agents scaffold --validate <med-autogrant-repo> --json
+<one-person-lab-repo>/bin/opl agents check --repo <med-autogrant-repo> --json
 <one-person-lab-repo>/bin/opl agents interfaces --repo-dir <med-autogrant-repo> --json
 <one-person-lab-repo>/bin/opl agents source-closure --agent mag=<med-autogrant-repo> --json
 <one-person-lab-repo>/bin/opl agents conformance --agent mag=<med-autogrant-repo> --json
 ```
 
-必须满足 scaffold passed、interfaces ready、source closure passed、overall structural status passed 与 blockers empty；sensitive effects 只能由逐 symbol exact audit覆盖，unresolved/private generic/unreachable sensitive/audit mismatch 必须为 `0`。
+必须满足 standard-agent check passed、interfaces ready、source closure passed、overall structural status passed 与 blockers empty；sensitive effects 只能由逐 symbol exact audit覆盖，unresolved/private generic/unreachable sensitive/audit mismatch 必须为 `0`。
 
 这不证明 live grant progress、owner acceptance、quality/export ready、submission human gate、provider long soak 或 production readiness。对应真相继续归 live progress contract、workspace artifacts 和 owner receipts。
 

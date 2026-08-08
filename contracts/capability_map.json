@@ -292,8 +292,8 @@
     },
     {
       "capability_id": "med-autogrant.shared-scholar-skills.optional-enhancement",
-      "surface_role": "optional_professional_skill_enhancement",
-      "capability_kind": "optional_refs_only_capability_binding",
+      "surface_role": "professional_skill",
+      "capability_kind": "contract_module",
       "canonical_owner": "med-autogrant",
       "physical_source_ref": {
         "ref_kind": "repo_path",

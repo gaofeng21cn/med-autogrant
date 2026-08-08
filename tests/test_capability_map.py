@@ -24,7 +24,7 @@ def test_capability_map_declares_all_professional_skills() -> None:
     professional_skill_entries = [
         capability
         for capability in capability_map["capabilities"]
-        if capability["surface_role"] == "professional_skill"
+        if capability["capability_kind"] == "professional_skill"
     ]
     mapped_paths = {
         capability["physical_source_ref"]["ref"]
@@ -33,6 +33,7 @@ def test_capability_map_declares_all_professional_skills() -> None:
 
     assert mapped_paths == skill_paths
     for capability in professional_skill_entries:
+        assert capability["surface_role"] == "professional_skill"
         assert capability["capability_kind"] == "professional_skill"
         assert capability["physical_source_ref"]["role"] == "professional_skill_source"
         assert not any(capability["authority_boundary"].values())
@@ -55,6 +56,7 @@ def test_capability_sources_and_generated_stage_projections_are_separate() -> No
         for capability in capability_map["capabilities"]
         if capability["surface_role"]
         in {"stage_prompt", "professional_skill", "knowledge_pack"}
+        and capability["capability_kind"] != "contract_module"
     ]
 
     assert stage_capabilities
@@ -67,6 +69,39 @@ def test_capability_sources_and_generated_stage_projections_are_separate() -> No
             assert projection["ref"] == (
                 "opl_generated:product_entry_manifest#/family_stage_control_plane/stages"
             )
+
+
+def test_optional_scholar_skills_binding_uses_standard_contract_module_enums() -> None:
+    capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
+    binding = next(
+        capability
+        for capability in capability_map["capabilities"]
+        if capability["capability_id"]
+        == "med-autogrant.shared-scholar-skills.optional-enhancement"
+    )
+
+    assert binding["surface_role"] == "professional_skill"
+    assert binding["capability_kind"] == "contract_module"
+    assert binding["physical_source_ref"] == {
+        "ref_kind": "repo_path",
+        "ref": "contracts/scholar_skill_binding_contract.json",
+        "role": "optional_consumer_profile_binding_contract",
+    }
+    assert {
+        (projection["ref_kind"], projection["ref"], projection["role"])
+        for projection in binding["runtime_projection_refs"]
+    } == {
+        (
+            "contract_ref",
+            "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
+            "optional_capability_enhancement",
+        ),
+        (
+            "external_capability_ref",
+            "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+            "mag_stage_overlay_skill_refs",
+        ),
+    }
 
 
 def test_capability_map_self_evolution_routing_fields_are_refs_only() -> None:
