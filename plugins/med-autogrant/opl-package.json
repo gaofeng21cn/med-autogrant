@@ -61,5 +61,46 @@
       "presence": "optional"
     }
   ],
-  "capability_dependencies": []
+  "capability_dependencies": [
+    {
+      "module_id": "scholarskills",
+      "package_id": "mas-scholar-skills",
+      "kind": "framework_capability_package",
+      "required": false,
+      "dependency_kind": "optional_enhancement",
+      "version_requirement": ">=0.2.19 <0.3.0",
+      "capability_abi": "mas-scholar-skills.v1",
+      "consumer_profile_id": "mag-medical-grant.v1",
+      "provider_manifest_ref": "mas-scholar-skills/contracts/opl_capability_package_manifest.json",
+      "required_export_ids": [
+        "medical-research-lit",
+        "medical-statistical-review",
+        "medical-methodology-planner",
+        "medical-evidence-integrity-reviewer",
+        "medical-evidence-synthesis-and-claim-map",
+        "medical-reference-integrity-auditor"
+      ],
+      "required_module_ids": [
+        "mas-scholar-skills.lit",
+        "mas-scholar-skills.stats",
+        "mas-scholar-skills.review",
+        "mas-scholar-skills.data",
+        "mas-scholar-skills.reference-provider-adapters",
+        "mas-scholar-skills.scientific-search-adapters"
+      ],
+      "availability_policy_ref": "contracts/scholar_skill_binding_contract.json#/availability_policy",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_write_runtime_queue": false,
+        "can_claim_fundability_verdict": false,
+        "can_claim_quality_verdict": false,
+        "can_claim_export_readiness": false,
+        "can_gate_mag_install": false,
+        "can_gate_mag_stage_route": false,
+        "can_gate_mag_operational_readiness": false
+      }
+    }
+  ]
 }

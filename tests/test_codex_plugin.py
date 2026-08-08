@@ -9,7 +9,6 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "med-autogrant"
 PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
-ROOT_PLUGIN_MANIFEST_PATH = REPO_ROOT / ".codex-plugin" / "plugin.json"
 ROOT_PACKAGE_DESCRIPTOR_PATH = REPO_ROOT / "opl-package.json"
 PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
 PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
@@ -140,7 +139,7 @@ def test_owner_dependency_contains_only_presence_callability_and_domain_authorit
     assert forbidden_lifecycle_fields.isdisjoint(dependency)
 
 
-def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
+def test_native_carrier_projects_descriptor_neutral_mag_owner_contract() -> None:
     owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     carrier_descriptor = json.loads(
         PLUGIN_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8")
@@ -186,9 +185,7 @@ def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
                 "presence": expected_presence,
             }
         ],
-        # Kept only because the current Framework parser requires the field.
-        # Dependency authority lives in the owner contract, not this projection.
-        "capability_dependencies": [],
+        "capability_dependencies": owner_manifest["capability_dependencies"],
     }
     assert carrier_descriptor["version"] == plugin_manifest["version"]
     assert carrier_descriptor["codex_surface"]["plugin_id"] == plugin_manifest["name"]
@@ -216,7 +213,7 @@ def test_carrier_root_projects_descriptor_neutral_mag_owner_contract() -> None:
     )
 
 
-def test_repo_root_carrier_contains_hosted_runtime_closure() -> None:
+def test_nested_native_carrier_keeps_hosted_runtime_owned_by_the_repo() -> None:
     marketplace = json.loads(
         (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").read_text(
             encoding="utf-8"
@@ -225,30 +222,30 @@ def test_repo_root_carrier_contains_hosted_runtime_closure() -> None:
     plugin_source_root = (
         REPO_ROOT / marketplace["plugins"][0]["source"]["path"]
     ).resolve()
-    root_plugin_manifest = json.loads(
-        ROOT_PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
+    plugin_manifest = json.loads(
+        PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
     )
     owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     domain_descriptor = json.loads(
-        (plugin_source_root / owner_manifest["domain_descriptor_ref"]).read_text(
+        (REPO_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
             encoding="utf-8"
         )
     )
     action_catalog = json.loads(
-        (plugin_source_root / owner_manifest["action_catalog_ref"]).read_text(
+        (REPO_ROOT / owner_manifest["action_catalog_ref"]).read_text(
             encoding="utf-8"
         )
     )
 
-    assert plugin_source_root == REPO_ROOT.resolve()
-    assert root_plugin_manifest["skills"] == "./plugins/med-autogrant/skills/"
-    assert root_plugin_manifest["version"] == owner_manifest["version"]
+    assert plugin_source_root == PLUGIN_ROOT.resolve()
+    assert plugin_manifest["skills"] == "./skills/"
+    assert plugin_manifest["version"] == owner_manifest["version"]
     assert ROOT_PACKAGE_DESCRIPTOR_PATH.read_bytes() == PACKAGE_MANIFEST_PATH.read_bytes()
     assert domain_descriptor["domain_id"] == owner_manifest["domain_id"]
     stage_manifest_ref = domain_descriptor["standard_agent_interface"]["stage_catalog"][
         "relative_path"
     ]
-    assert (plugin_source_root / stage_manifest_ref).is_file()
+    assert (REPO_ROOT / stage_manifest_ref).is_file()
     assert all(
         action["execution_binding"]["stage_manifest_ref"] == stage_manifest_ref
         for action in action_catalog["actions"]
@@ -257,7 +254,7 @@ def test_repo_root_carrier_contains_hosted_runtime_closure() -> None:
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
     ):
-        assert (plugin_source_root / hosted_runtime_ref).is_file()
+        assert (REPO_ROOT / hosted_runtime_ref).is_file()
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:

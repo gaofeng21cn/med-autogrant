@@ -19,7 +19,7 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
             "name": "med-autogrant",
             "source": {
                 "source": "local",
-                "path": "./",
+                "path": "./plugins/med-autogrant",
             },
             "policy": {
                 "installation": "AVAILABLE",
@@ -36,10 +36,21 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
     assert plugin_root.is_dir()
     assert plugin_manifest["name"] == "med-autogrant"
     assert plugin_manifest["interface"]["category"] == "Research"
-    assert plugin_manifest["skills"] == "./plugins/med-autogrant/skills/"
-    assert (plugin_root / "opl-package.json").read_bytes() == (
-        REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
-    ).read_bytes()
+    assert plugin_manifest["skills"] == "./skills/"
+    carrier_descriptor = json.loads(
+        (plugin_root / "opl-package.json").read_text(encoding="utf-8")
+    )
+    owner_descriptor = json.loads(
+        (REPO_ROOT / "contracts/opl_agent_package_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert carrier_descriptor["package_id"] == owner_descriptor["package_id"]
+    assert carrier_descriptor["version"] == owner_descriptor["version"]
+    assert (
+        carrier_descriptor["capability_dependencies"]
+        == owner_descriptor["capability_dependencies"]
+    )
 
 
 def test_readme_separates_codex_carrier_install_from_opl_package_readiness() -> None:
