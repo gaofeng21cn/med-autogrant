@@ -13,6 +13,7 @@ import pytest
 import med_autogrant.__main__ as main_module
 import med_autogrant.cli as cli_module
 from med_autogrant.cli import main
+from med_autogrant.cli_rendering_parts import _human_token_label
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -120,6 +121,45 @@ def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
     assert payload["grant_run_id"] == "grant-run-nsfc-demo-001-baseline-001"
     assert payload["workspace_id"] == "nsfc-demo-001"
     assert payload["lifecycle_stage"] == "critique"
+
+
+@pytest.mark.smoke
+def test_workspace_validate_text_renders_mag_stage_label() -> None:
+    exit_code, stdout, stderr = _run_cli(
+        "workspace",
+        "validate",
+        "--input",
+        str(CRITIQUE_EXAMPLE_PATH),
+        "--format",
+        "text",
+    )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "当前阶段: 批注审阅\n" in stdout
+
+
+@pytest.mark.smoke
+def test_workspace_route_report_text_renders_mag_progress_labels() -> None:
+    exit_code, stdout, stderr = _run_cli(
+        "workspace",
+        "route-report",
+        "--input",
+        str(CRITIQUE_EXAMPLE_PATH),
+        "--format",
+        "text",
+    )
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "当前阶段: 批注审阅\n" in stdout
+    assert "下一阶段: 修订落实\n" in stdout
+    assert "当前 checkpoint: 继续向前推进\n" in stdout
+
+
+@pytest.mark.smoke
+def test_unknown_progress_token_keeps_title_case_fallback() -> None:
+    assert _human_token_label("custom-progress_stage") == "Custom Progress Stage"
 
 
 @pytest.mark.smoke

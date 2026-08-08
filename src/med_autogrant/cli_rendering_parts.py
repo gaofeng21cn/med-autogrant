@@ -3,9 +3,6 @@ from __future__ import annotations
 import json
 from typing import Any, Callable
 
-from opl_framework.status_narration import build_status_narration_human_view
-
-
 _HUMAN_FIELD_LABELS = {
     "grant_run_id": "当前 grant run",
     "workspace_id": "当前 workspace",
@@ -42,6 +39,25 @@ _HUMAN_FIELD_LABELS = {
     "current_focus": "当前 focus",
 }
 
+_GRANT_PROGRESS_LABELS = {
+    "direction_screening": "方向筛选",
+    "question_refinement": "科学问题收紧",
+    "argument_building": "论证链搭建",
+    "fit_alignment": "项目匹配校准",
+    "outline": "提纲成型",
+    "drafting": "正文起草",
+    "critique": "批注审阅",
+    "revision": "修订落实",
+    "freeze": "冻结收口",
+    "frozen": "冻结完成",
+    "final_package": "最终材料打包",
+    "submission_ready": "投稿就绪",
+    "forward_progress": "继续向前推进",
+    "freeze_ready": "已具备冻结条件",
+    "rollback_required": "需要先回退修复",
+    "submission_frozen": "投稿包冻结完成",
+}
+
 _HUMAN_TOKEN_FIELDS = {
     "lifecycle_stage",
     "recommended_next_stage",
@@ -50,9 +66,17 @@ _HUMAN_TOKEN_FIELDS = {
 
 
 def _human_token_label(value: object) -> str | None:
-    view = build_status_narration_human_view(None, fallback_current_stage=str(value or "").strip() or None)
-    label = view.get("current_stage_label")
-    return str(label).strip() or None
+    text = str(value or "").strip()
+    if not text:
+        return None
+    key = text.lower().replace("-", "_").replace(" ", "_")
+    label = _GRANT_PROGRESS_LABELS.get(text) or _GRANT_PROGRESS_LABELS.get(key)
+    if label:
+        return label
+    words = [item for item in text.replace("-", "_").split("_") if item]
+    if not words:
+        return text
+    return " ".join(word.upper() if word.isupper() else word.capitalize() for word in words)
 
 
 def _field_label(field: str) -> str:
