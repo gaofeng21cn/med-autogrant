@@ -9,6 +9,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "med-autogrant"
 PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
+PORTABLE_PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / "plugin.json"
 ROOT_PACKAGE_DESCRIPTOR_PATH = REPO_ROOT / "opl-package.json"
 PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
 PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
@@ -26,6 +27,9 @@ REPO_LOCAL_INSTALLER_PATHS = (
 def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
+    portable_manifest = json.loads(
+        PORTABLE_PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
+    )
 
     assert manifest["name"] == "med-autogrant"
     assert manifest["version"] == pyproject_data["project"]["version"]
@@ -35,6 +39,16 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert manifest["interface"]["category"] == "Research"
     assert manifest["interface"]["composerIcon"] == "./assets/icon.png"
     assert manifest["interface"]["logo"] == "./assets/icon.png"
+    assert portable_manifest["$schema"] == (
+        "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+    )
+    assert portable_manifest["name"] == manifest["name"]
+    assert portable_manifest["version"] == manifest["version"]
+    assert portable_manifest["extensions"]["com.openai"]["interface"] == (
+        manifest["interface"]
+    )
+    assert "skills" not in portable_manifest
+    assert not (PLUGIN_ROOT / "mcp.json").exists()
     assert "domain app" in manifest["description"].lower()
     assert PLUGIN_ICON_PATH.is_file()
     assert PLUGIN_ICON_SOURCE_PATH.is_file()
@@ -56,7 +70,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.8"
+    assert version == "0.3.9"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
