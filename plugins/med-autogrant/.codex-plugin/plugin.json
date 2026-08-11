@@ -1,7 +1,7 @@
 {
   "name": "med-autogrant",
-  "version": "0.3.9",
-  "description": "Codex plugin shell for the Med Auto Grant grant-authoring domain app.",
+  "version": "0.3.10",
+  "description": "Medical grant planning, writing, review, and revision.",
   "author": {
     "name": "Gao Feng",
     "url": "https://github.com/gaofeng21cn"
@@ -18,8 +18,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Med Auto Grant",
-    "shortDescription": "Grant-authoring domain app for Codex.",
-    "longDescription": "Adds a thin Codex plugin entry for Med Auto Grant while preserving the existing CLI, domain-entry contracts, and authoring loop surfaces.",
+    "shortDescription": "Medical grant planning, writing, review, and revision.",
+    "longDescription": "Plans, writes, reviews, and revises medical grant applications while preserving the current funding-call workflow.",
     "developerName": "Gao Feng",
     "category": "Research",
     "capabilities": [

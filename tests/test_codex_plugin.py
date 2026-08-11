@@ -49,7 +49,8 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     )
     assert "skills" not in portable_manifest
     assert not (PLUGIN_ROOT / "mcp.json").exists()
-    assert "domain app" in manifest["description"].lower()
+    assert "medical grant" in manifest["description"].lower()
+    assert "for codex" not in json.dumps(manifest).lower()
     assert PLUGIN_ICON_PATH.is_file()
     assert PLUGIN_ICON_SOURCE_PATH.is_file()
     icon_source = PLUGIN_ICON_SOURCE_PATH.read_text(encoding="utf-8")
@@ -70,7 +71,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.9"
+    assert version == "0.3.10"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
@@ -275,8 +276,14 @@ def test_mag_package_manifest_declares_owner_home_presentation() -> None:
     package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
 
     assert package_manifest["presentation"] == {
-        "display_name_i18n": {"en-US": "Med Auto Grant"},
-        "description_i18n": {"en-US": "Grant authoring domain agent for Codex"},
+        "display_name_i18n": {
+            "zh-CN": "Med Auto Grant",
+            "en-US": "Med Auto Grant",
+        },
+        "description_i18n": {
+            "zh-CN": "医学基金申请规划、撰写、评审与修订。",
+            "en-US": "Medical grant application planning, writing, review, and revision.",
+        },
         "session_routing_summary_i18n": {
             "en-US": (
                 "Enter the current MAG grant workflow and continue the same "

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "med-autogrant"
-version = "0.3.9"
-description = "Medical grant authoring domain agent for NSFC-oriented workflows."
+version = "0.3.10"
+description = "Medical grant planning, writing, review, and revision for funding applications."
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.12"
