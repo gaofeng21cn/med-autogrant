@@ -103,8 +103,8 @@ def test_profile_binds_canonical_framework_and_existing_stage_attempt_budget() -
         "surface_kind": "opl_stage_quality_scope_budget",
         "version": "opl-stage-quality-scope-budget.v1",
         "max_attempts": 3,
-        "max_elapsed_ms": 21_600_000,
-        "max_tokens": 1_000_000,
+        "max_elapsed_ms": None,
+        "max_tokens": None,
         "token_budget_requires_observed_usage": True,
         "foreground_execution_must_use_managed_attempt": True,
     }

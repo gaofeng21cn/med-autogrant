@@ -5,6 +5,14 @@ Purpose: `single_active_truth_plan`
 State: `active_evidence_tail`
 Machine boundary: 本文只维护当前人读摘要、仍开放的 evidence gap 和下一轮执行入口。结构、源码、运行、包与 owner 真相分别归 current-program、root contracts、source/tests、OPL readback、runtime receipts、workspace artifacts 与 MAG owner receipts。
 
+## Review Budget SSOT
+
+- 每个 Stage 最多 3 个 repair cycle；producer/reviewer 不计入 repair retry，因此一个正式 StageRun 最多 8 个模型 Attempt。
+- Meta Review 的跨 Stage `route_back` 最多 3 次，计数绑定 logical task/route lineage，并在新 StageRun 间继承；达到上限时不再 launch 新 StageRun，保留现有产物并记录 quality debt。
+- elapsed/token 不设默认上限；仅当 owner 在 Stage policy 中显式配置时才参与预算评估。历史或派生的 6 小时、100 万 token 默认值不再是 MAG 的有效 SSOT。
+- 预算耗尽但存在可消费 artifact 时，状态为 `completed_with_quality_debt` 并继续后续 Stage。P0/P1 只阻断 quality/ready/export/submission claim，不自动把 MAG 转入 `human_gate`。
+- 只有无可消费产物、身份/权限/安全/凭据、不可逆动作或明确人工决策才 hard-stop。
+
 ## Current State Summary
 
 - MAG 当前形态是 Declarative Grant Pack、OPL generated/hosted surfaces 与最小 MAG authority functions。
@@ -22,6 +30,8 @@ Machine boundary: 本文只维护当前人读摘要、仍开放的 evidence gap 
 | Quality and export | `owner_evidence_required` | fresh independent review、MAG quality/export verdict 与 exact artifact refs | MAG quality/export authority |
 | Sustained default-caller consumption | `owner_evidence_required` | App/operator consumption 与 no-regression readback | App/operator owner + MAG owner |
 | Provider long soak and production acceptance | `owner_evidence_required` | restart/retry/dead-letter/long-soak evidence、owner receipt 或 typed blocker | OPL provider owner + MAG production owner |
+
+Review budget and route-back enforcement is owned by the OPL Framework runtime and its operator readback. MAG only declares the domain policy and consumes the resulting StageRun/Attempt receipts; this plan must not claim a runtime fix from contract text alone.
 
 这些 gap 不能通过新增 wrapper、snapshot、read model、文档、focused tests、schema completeness、package existence 或 conformance pass 关闭。若没有新的 owner/live evidence，本计划保持薄状态，不生成替代 backlog。
 
