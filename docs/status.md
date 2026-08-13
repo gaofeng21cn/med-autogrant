@@ -33,33 +33,30 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 ## OPL Package 组合迁移状态
 
-目标边界已经明确但尚未完成实现：MAG 是 `OPL Package(kind=agent)`，owner 保有
+目标边界已经进入 owner contract：MAG 是 `OPL Package(kind=agent)`，owner 保有
 executor-neutral identity、capabilities、required/optional dependency intent、grant
 business task 与 typed views；完整一方 bytes 由本 owner 独立发布到本包 GHCR
 `latest-stable`。Codex Plugin 只是当前默认 carrier projection，Framework 只应聚合
 carrier fresh readback、presence/callability 与动作。
 
 当前 `contracts/opl_agent_package_manifest.json`、Scholar binding、source 和 validators
-仍把 `mas-scholar-skills` 实现为 optional/fail-open，并保留 dependency kind、version
-requirement、capability ABI、consumer profile 与 provider manifest refs。旧
+已把 `mas-scholar-skills` 实现为 required/fail-closed，并保留 compatibility discovery 所需
+的 dependency kind、version requirement、capability ABI、consumer profile 与 provider
+manifest refs。旧
 activation/materialization、lifecycle owner/receipt、distribution/sync 和 status/repair
-command 字段已从 manifest 删除，不再是当前机器事实或新实现依据。目标边界仍要求
-ScholarSkills 成为 required hard dependency：只以 identity presence/callability fail
-closed MAG，不阻断无关 Package，也不做 provider version/ABI/lock/payload/digest 求解。
-因此 dependency semantics 与 version/ABI 兼容字段仍未满足 owner invariant；保留的
-callability refs 也不证明 Package/carrier/executor 已经解耦。跨仓阶段、删除顺序与
-功能等价证据服从 App 的
+command 字段已从 manifest 删除，不再是当前机器事实或新实现依据。ScholarSkills 已
+落地为 MAG 的 required hard dependency：仅以 identity presence/callability 在 MAG
+admission、launch、route、readiness 前 fail closed，不阻断无关 Package，也不做 provider
+version/ABI/lock/payload/digest 求解。跨仓阶段、删除顺序与功能等价证据服从 App 的
 [跨仓总体迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
 Framework 同名文档只作 Framework compatibility inventory、repo-local migration 与
 deletion appendix，不是第二份总体计划。
 这项平台减法不删除 MAG 的 grant workflow、领域 verdict、submission package
 exact-byte integrity、owner receipt、business task 或 typed views。
 
-required/fail-closed ScholarSkills dependency 仍未实现，相关 Gate I 仍需按总体 SSOT 与
-fresh owner 授权进入；不得从当前 optional/fail-open 合同反推目标 edge 已完成。与该 gate
-独立的 source version `0.3.10` 和配置的 Codex Plugin carrier 已进入机器合同，但它们只
-证明 source/carrier locator currentness，不证明完整 Package publication、installed state、
-dependency migration 或 live proof 已闭合。
+ScholarSkills required dependency 的本地合同、版本与载体投影已落地；这不等价于完整
+Package publication、installed state 或 live hosted proof 已闭合，后者仍需 owner-authoritative
+readback。
 
 ## Machine State
 
@@ -67,7 +64,7 @@ dependency migration 或 live proof 已闭合。
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | 过渡实现：source version `0.3.10`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，旧 lifecycle/materialization 字段已删除，ScholarSkills 仍 optional/fail-open；目标为 owner 独立 GHCR `latest-stable`、required Scholar identity/callability 与完整 carrier fresh readback |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | source version `0.3.11`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，ScholarSkills 为 required hard dependency；目标仍为 owner 独立 GHCR `latest-stable` 与完整 carrier fresh readback |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |

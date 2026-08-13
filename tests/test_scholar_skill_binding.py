@@ -18,7 +18,7 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BINDING_REF = "contracts/scholar_skill_binding_contract.json"
-EXPECTED_FAIL_OPEN_BLOCK_FIELDS = {
+EXPECTED_REQUIRED_BLOCK_FIELDS = {
     "blocks_mag_install",
     "blocks_stage_launch",
     "blocks_stage_route",
@@ -34,11 +34,11 @@ def _read_json(ref: str) -> dict:
     return json.loads((REPO_ROOT / ref).read_text(encoding="utf-8"))
 
 
-def test_package_declares_optional_enhancement_without_install_or_runtime_gate() -> None:
+def test_package_declares_required_runtime_dependency_with_install_and_runtime_gate() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("contracts/opl_agent_package_manifest.json")
 
-    assert manifest["version"] == "0.3.10"
+    assert manifest["version"] == "0.3.11"
     assert manifest["codex_surface"]["bundled_capability_package_ids"] == [
         "mas-scholar-skills"
     ]
@@ -47,11 +47,11 @@ def test_package_declares_optional_enhancement_without_install_or_runtime_gate()
     assert dependency["package_id"] == binding["provider_package_id"]
     assert dependency["consumer_profile_id"] == binding["consumer_profile_id"]
     assert dependency["capability_abi"] == binding["capability_abi"]
-    assert dependency["version_requirement"] == ">=0.2.19 <0.3.0"
+    assert dependency["version_requirement"] == ">=0.2.25 <0.3.0"
     assert dependency["required_export_ids"] == binding["eligible_export_ids"]
     assert dependency["required_module_ids"] == binding["eligible_module_ids"]
-    assert dependency["required"] is False
-    assert dependency["dependency_kind"] == "optional_enhancement"
+    assert dependency["required"] is True
+    assert dependency["dependency_kind"] == "hard_runtime_dependency"
     assert dependency["availability_policy_ref"] == (
         "contracts/scholar_skill_binding_contract.json#/availability_policy"
     )
@@ -86,7 +86,7 @@ def test_capability_map_indexes_provider_binding_without_copying_skills() -> Non
         capability
         for capability in capability_map["capabilities"]
         if capability["capability_id"]
-        == "med-autogrant.shared-scholar-skills.optional-enhancement"
+        == "med-autogrant.shared-scholar-skills.required-dependency"
     ]
 
     assert len(entries) == 1
@@ -127,13 +127,11 @@ def test_hosted_and_direct_authoring_consume_the_same_binding_contract() -> None
     assert "medical-research-lit" in prompt
     assert "candidate_refs" in prompt
     assert "cannot authorize fundability, quality, export" in prompt
-    assert "Optional refs-only professional Skill enhancement" in prompt
-    assert "continue the MAG owner core" in prompt
-    assert "Unless the provider is observed available-compatible" in prompt
-    assert "Do not block install, Stage launch, Stage route" in prompt
+    assert "Required refs-only professional Skill dependency" in prompt
+    assert "fail closed before install" in prompt
 
 
-def test_every_non_usable_or_unknown_provider_observation_is_fail_open() -> None:
+def test_every_non_usable_or_unknown_provider_observation_fails_closed() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     availability = binding["availability_policy"]
     expected_known_non_usable = {
@@ -144,46 +142,42 @@ def test_every_non_usable_or_unknown_provider_observation_is_fail_open() -> None
         "unobserved",
     }
 
-    assert binding["enhancement_kind"] == "optional_enhancement"
+    assert binding["enhancement_kind"] == "required_dependency"
     assert binding["handoff_mode"] == "refs_only"
-    assert binding["provider_required"] is False
+    assert binding["provider_required"] is True
     assert availability["usable_observation"] == "available_compatible"
     assert expected_known_non_usable <= set(
         availability["known_non_usable_observations"]
     )
     assert "available_compatible" not in availability["known_non_usable_observations"]
-    assert availability["other_observation_action"] == (
-        "continue_with_consumer_core_and_record_diagnostic"
-    )
+    assert availability["other_observation_action"] == "fail_closed_mag_dependency"
     for observation in [*expected_known_non_usable, "future_provider_observation"]:
         assert observation != availability["usable_observation"]
-        assert availability["other_observation_action"] == (
-            "continue_with_consumer_core_and_record_diagnostic"
-        )
-    assert availability["accepted_gap_outputs"] == ["diagnostic", "quality_hint"]
-    assert availability["quality_hint_is_advisory"] is True
+        assert availability["other_observation_action"] == "fail_closed_mag_dependency"
+    assert availability["accepted_gap_outputs"] == ["diagnostic", "typed_blocker_ref"]
+    assert availability["quality_hint_is_advisory"] is False
     assert availability["creates_typed_blocker"] is False
     assert {
         key for key in availability if key.startswith("blocks_")
-    } == EXPECTED_FAIL_OPEN_BLOCK_FIELDS
-    assert not any(
+    } == EXPECTED_REQUIRED_BLOCK_FIELDS
+    assert all(
         value
         for key, value in availability.items()
         if key.startswith("blocks_")
     )
-    assert binding["invocation_policy"]["provider_gap_is_hard_stop"] is False
+    assert binding["invocation_policy"]["provider_gap_is_hard_stop"] is True
     assert binding["invocation_policy"]["provider_gap_can_create_typed_blocker"] is False
     assert binding["invocation_policy"]["provider_gap_can_select_stage_route"] is False
 
 
-def test_binding_reader_rejects_incomplete_or_drifted_fail_open_policy(
+def test_binding_reader_rejects_incomplete_or_drifted_fail_closed_policy(
     tmp_path: Path,
 ) -> None:
     binding = _read_json(BINDING_REF)
     missing_block = deepcopy(binding)
     del missing_block["availability_policy"]["blocks_operational_readiness"]
     non_advisory_hint = deepcopy(binding)
-    non_advisory_hint["availability_policy"]["quality_hint_is_advisory"] = False
+    non_advisory_hint["availability_policy"]["quality_hint_is_advisory"] = True
     drifted_available_action = deepcopy(binding)
     drifted_available_action["availability_policy"]["available_compatible_action"] = (
         "gate_consumer_readiness"

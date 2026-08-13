@@ -28,8 +28,10 @@ def build_hosted_contract_bundle_document(
         "contract_version": HOSTED_CONTRACT_VERSION,
         "bundle_kind": HOSTED_CONTRACT_KIND,
         "formal_entry_matrix": {
-            "default_formal_entry": "CLI",
-            "supported_protocol_layer": "MCP",
+            "default_formal_entry": "OPL_HOSTED_ACTION",
+            "direct_domain_authority_adapter": "CLI",
+            "supported_protocol_layer": "MCP_DESCRIPTOR_ONLY",
+            "hosted_action_command": "opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>",
         },
         "execution_identity": {
             "grant_run_id": final_package["grant_run_id"],

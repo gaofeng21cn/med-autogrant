@@ -71,7 +71,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.10"
+    assert version == "0.3.11"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
@@ -131,8 +131,8 @@ def test_owner_dependency_contains_only_presence_callability_and_domain_authorit
         "availability_policy_ref",
         "authority_boundary",
     }
-    assert dependency["required"] is False
-    assert dependency["dependency_kind"] == "optional_enhancement"
+    assert dependency["required"] is True
+    assert dependency["dependency_kind"] == "hard_runtime_dependency"
     assert dependency["availability_policy_ref"] == (
         "contracts/scholar_skill_binding_contract.json#/availability_policy"
     )

@@ -71,13 +71,13 @@ def test_capability_sources_and_generated_stage_projections_are_separate() -> No
             )
 
 
-def test_optional_scholar_skills_binding_uses_standard_contract_module_enums() -> None:
+def test_required_scholar_skills_binding_uses_standard_contract_module_enums() -> None:
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
     binding = next(
         capability
         for capability in capability_map["capabilities"]
         if capability["capability_id"]
-        == "med-autogrant.shared-scholar-skills.optional-enhancement"
+        == "med-autogrant.shared-scholar-skills.required-dependency"
     )
 
     assert binding["surface_role"] == "professional_skill"
@@ -85,7 +85,7 @@ def test_optional_scholar_skills_binding_uses_standard_contract_module_enums() -
     assert binding["physical_source_ref"] == {
         "ref_kind": "repo_path",
         "ref": "contracts/scholar_skill_binding_contract.json",
-        "role": "optional_consumer_profile_binding_contract",
+        "role": "required_consumer_profile_binding_contract",
     }
     assert {
         (projection["ref_kind"], projection["ref"], projection["role"])
@@ -94,7 +94,7 @@ def test_optional_scholar_skills_binding_uses_standard_contract_module_enums() -
         (
             "contract_ref",
             "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
-            "optional_capability_enhancement",
+            "required_runtime_dependency",
         ),
         (
             "external_capability_ref",

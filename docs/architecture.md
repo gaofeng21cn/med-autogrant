@@ -33,14 +33,15 @@ adapter 才负责完整 runtime 激活与 fresh readback。
 currentness。普通依赖只表达 required/optional identity presence 与 callability；不以
 版本范围、ABI、lock、payload、digest、atomic closure、共享 Release Set 或跨包版本求解
 作为安装、组合或运行 readiness 门。breaking capability 通过新 capability identity 或
-owner-side adapter 演进。
+owner-side adapter 演进。当前 manifest 中的 version/ABI 字段只用于 provider compatibility
+discovery，不作为普通 composition/readiness 求解器输入。
 
 目标态把 `mas-scholar-skills` 作为 MAG required hard dependency，而不是普通可选增强。
 Framework/Profile 安装 MAG 时应保证该 identity 一并存在；carrier fresh readback 发现其
 缺失或不可调用时，只应 fail closed MAG 并给出修复动作，不阻断无关 Package。这个目标
 也不允许恢复 provider version range、ABI、lock、payload、digest 或跨包版本求解。当前
-`contracts/scholar_skill_binding_contract.json` 和 package manifest 仍明确实现为
-optional/fail-open，因此 required edge 尚未由当前机器合同验证。
+`contracts/scholar_skill_binding_contract.json` 和 package manifest 已实现 required/fail-closed
+edge；真实 installed/callable 状态仍由 carrier fresh readback 证明。
 
 Codex-first 是当前正式实现路径。Codex Plugin 只是 carrier projection，不是 MAG
 Package identity、完整 installed truth 或领域 authority；切换 executor 不得重装 MAG，

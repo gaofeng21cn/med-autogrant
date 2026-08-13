@@ -80,7 +80,7 @@ def read_scholar_skill_binding_contract(
     if (
         not isinstance(payload, dict)
         or payload.get("surface_kind") != "mag_scholar_skill_binding_contract"
-        or payload.get("version") != "mag-scholar-skill-binding.v2"
+        or payload.get("version") != "mag-scholar-skill-binding.v3"
         or payload.get("consumer_agent_id") != "mag"
         or payload.get("provider_package_id") != "mas-scholar-skills"
         or payload.get("consumer_profile_id") != "mag-medical-grant.v1"
@@ -99,16 +99,16 @@ def read_scholar_skill_binding_contract(
         else None
     )
     if (
-        payload.get("enhancement_kind") != "optional_enhancement"
+        payload.get("enhancement_kind") != "required_dependency"
         or payload.get("handoff_mode") != "refs_only"
-        or payload.get("provider_required") is not False
+        or payload.get("provider_required") is not True
         or not isinstance(eligible_export_ids, list)
         or not eligible_export_ids
         or not all(isinstance(item, str) and item for item in eligible_export_ids)
         or not isinstance(direct_route_bindings, dict)
         or not isinstance(invocation_policy, dict)
         or invocation_policy.get("provider_completion_is_mag_completion") is not False
-        or invocation_policy.get("provider_gap_is_hard_stop") is not False
+        or invocation_policy.get("provider_gap_is_hard_stop") is not True
         or invocation_policy.get("provider_gap_can_create_typed_blocker") is not False
         or invocation_policy.get("provider_gap_can_select_stage_route") is not False
         or not isinstance(availability_policy, dict)
@@ -123,15 +123,15 @@ def read_scholar_skill_binding_contract(
         )
         or "available_compatible" in known_non_usable_observations
         or availability_policy.get("available_compatible_action")
-        != "select_only_material_declared_skills"
+        != "select_required_declared_skills"
         or availability_policy.get("other_observation_action")
-        != "continue_with_consumer_core_and_record_diagnostic"
+        != "fail_closed_mag_dependency"
         or availability_policy.get("accepted_gap_outputs")
-        != ["diagnostic", "quality_hint"]
-        or availability_policy.get("quality_hint_is_advisory") is not True
+        != ["diagnostic", "typed_blocker_ref"]
+        or availability_policy.get("quality_hint_is_advisory") is not False
         or availability_policy.get("creates_typed_blocker") is not False
         or any(
-            availability_policy.get(field) is not False
+            availability_policy.get(field) is not True
             for field in SCHOLAR_SKILL_REQUIRED_FAIL_OPEN_BLOCK_FIELDS
         )
         or not isinstance(authority_boundary, dict)
@@ -172,10 +172,10 @@ def build_direct_scholar_skill_prompt_lines(route_id: str) -> list[str]:
     selected_skill_ids = scholar_skill_ids_for_direct_route(route_id)
     return [
         "",
-        "Optional refs-only professional Skill enhancement:",
-        f"- Consumer profile: mag-medical-grant.v1; eligible Skill ids for this route: {', '.join(selected_skill_ids)}.",
-        "- Invoke only selected Skills that are available, compatible, and material to this grant delta, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
-        "- Unless the provider is observed available-compatible, record a diagnostic or advisory quality hint and continue the MAG owner core. This includes missing, incompatible, disabled, unmaterialized, unobserved, and future non-usable observations. Do not block install, Stage launch, Stage route, operational readiness, grant work, fundability, quality, or export.",
+        "Required refs-only professional Skill dependency:",
+        f"- Consumer profile: mag-medical-grant.v1; required Skill ids for this route: {', '.join(selected_skill_ids)}.",
+        "- Resolve the required provider identity and callability before this MAG route, using the current grant artifact ref, source_pack_ref, and epistemic scope.",
+        "- Missing, incompatible, disabled, unmaterialized, unobserved, or otherwise non-usable provider state is a MAG dependency blocker: fail closed before install, Stage launch, Stage route, operational readiness, grant work, fundability, quality, or export.",
         "- Shared Skill outputs are refs-only professional candidates: source_pack_ref, candidate_refs, owner_gate_handoff_ref, or route_back_candidate.",
         "- MAG must consume, reject, or route back each candidate against current sources before changing grant truth.",
         "- Candidate refs, provider gaps, and provider completion cannot authorize fundability, quality, export, grant-ready, submission-ready, operational-readiness, owner-receipt, route, or typed-blocker claims.",

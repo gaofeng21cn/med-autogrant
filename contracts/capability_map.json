@@ -291,20 +291,20 @@
       "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
     },
     {
-      "capability_id": "med-autogrant.shared-scholar-skills.optional-enhancement",
+      "capability_id": "med-autogrant.shared-scholar-skills.required-dependency",
       "surface_role": "professional_skill",
       "capability_kind": "contract_module",
       "canonical_owner": "med-autogrant",
       "physical_source_ref": {
         "ref_kind": "repo_path",
         "ref": "contracts/scholar_skill_binding_contract.json",
-        "role": "optional_consumer_profile_binding_contract"
+        "role": "required_consumer_profile_binding_contract"
       },
       "runtime_projection_refs": [
         {
           "ref_kind": "contract_ref",
           "ref": "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
-          "role": "optional_capability_enhancement"
+          "role": "required_runtime_dependency"
         },
         {
           "ref_kind": "external_capability_ref",
@@ -312,8 +312,8 @@
           "role": "mag_stage_overlay_skill_refs"
         }
       ],
-      "sync_policy": "optional_provider_discovery_no_materialization_requirement",
-      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the optional refs-only binding, Stage selection, candidate consumption, and grant authority. Missing or incompatible provider state does not block MAG core.",
+      "sync_policy": "required_provider_identity_and_callability_no_cross_package_solver",
+      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the required refs-only binding, Stage selection, candidate consumption, and grant authority. Missing or incompatible provider state blocks MAG admission, launch, route, and readiness without blocking unrelated Packages.",
       "provider_owner": "mas-scholar-skills",
       "provider_package_id": "mas-scholar-skills",
       "consumer_profile_id": "mag-medical-grant.v1",
@@ -342,16 +342,16 @@
         "can_gate_mag_operational_readiness": false
       },
       "improvement_tokens": [
-        "optional_professional_skill_binding_quality",
+        "required_professional_skill_binding_quality",
         "grant_candidate_ref_consumption_quality"
       ],
-      "exposure_layer": "optional_external_professional_skill_enhancement",
+      "exposure_layer": "required_external_professional_skill_dependency",
       "codex_default_exposure": false,
       "allowed_exposure_scopes": [
         "domain_runtime_stage",
         "direct_authoring_route"
       ],
-      "codex_visibility_policy": "use_when_discoverable_and_compatible_else_continue_mag_owner_core",
+      "codex_visibility_policy": "required_identity_and_callability_before_mag_owner_core",
       "exposure_owner": "one-person-lab",
       "canonical_target_paths": [
         "contracts/scholar_skill_binding_contract.json"
@@ -649,8 +649,8 @@
     "professional_skill_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=professional_skill"
     ],
-    "optional_professional_skill_enhancement_refs": [
-      "contracts/capability_map.json#/capabilities?surface_role=optional_professional_skill_enhancement"
+    "required_professional_skill_dependency_refs": [
+      "contracts/capability_map.json#/capabilities?capability_id=med-autogrant.shared-scholar-skills.required-dependency"
     ],
     "tool_connector_refs": [
       "contracts/capability_map.json#/capabilities?surface_role=tool_connector"

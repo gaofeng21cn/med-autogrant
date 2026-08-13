@@ -54,9 +54,11 @@ MAG 可以作为 OPL stage-led framework 中的外部 domain agent 被发现、�
 
 其 formal-entry matrix 为：
 
-- `default_formal_entry`：`CLI`
-- `supported_protocol_layer`：`MCP`
-- `CLI` / `MedAutoGrantDomainEntry`：agent entry
+- `default_formal_entry`：`OPL_HOSTED_ACTION`
+- `direct_domain_authority_adapter`：`CLI`
+- `supported_protocol_layer`：`MCP_DESCRIPTOR_ONLY`
+- `opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>`：默认 hosted agent entry
+- `MedAutoGrantDomainEntry` / `medautogrant`：direct domain authority adapter
 - `product/status/direct-entry/user-loop/workbench`：OPL/App generated surface，回调 MAG grant-native handler
 
 ## 当前公开面状态

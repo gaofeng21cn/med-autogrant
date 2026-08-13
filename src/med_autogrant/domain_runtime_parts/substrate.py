@@ -102,9 +102,10 @@ class MagDomainRuntime:
             "quality_gate_owner": "Med Auto Grant",
             "export_authority": "Med Auto Grant",
             "can_claim_generic_runtime_owner": False,
-            "default_formal_entry": "CLI",
+            "default_formal_entry": "OPL_HOSTED_ACTION",
+            "direct_domain_authority_adapter": "CLI",
             "default_stage_attempt_executor": "Codex CLI",
-            "supported_protocol_layer": "MCP",
+            "supported_protocol_layer": "MCP_DESCRIPTOR_ONLY",
             "optional_proof_executor": "Hermes-Agent",
             "optional_proof_executor_boundary": "explicit opt-in only",
             "domain_logic_modules": [

@@ -9,14 +9,22 @@
       "additionalProperties": false,
       "required": [
         "default_formal_entry",
-        "supported_protocol_layer"
+        "direct_domain_authority_adapter",
+        "supported_protocol_layer",
+        "hosted_action_command"
       ],
       "properties": {
         "default_formal_entry": {
+          "const": "OPL_HOSTED_ACTION"
+        },
+        "direct_domain_authority_adapter": {
           "const": "CLI"
         },
         "supported_protocol_layer": {
-          "const": "MCP"
+          "const": "MCP_DESCRIPTOR_ONLY"
+        },
+        "hosted_action_command": {
+          "const": "opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>"
         }
       }
     },

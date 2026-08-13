@@ -128,8 +128,13 @@ def _assert_hosted_contract_bundle_header(
     test_case.assertEqual(contract_bundle["contract_version"], 1)
     test_case.assertEqual(contract_bundle["bundle_kind"], "hosted_contract_bundle")
     formal_entry_matrix = contract_bundle["formal_entry_matrix"]
-    test_case.assertEqual(formal_entry_matrix["default_formal_entry"], "CLI")
-    test_case.assertEqual(formal_entry_matrix["supported_protocol_layer"], "MCP")
+    test_case.assertEqual(formal_entry_matrix["default_formal_entry"], "OPL_HOSTED_ACTION")
+    test_case.assertEqual(formal_entry_matrix["direct_domain_authority_adapter"], "CLI")
+    test_case.assertEqual(formal_entry_matrix["supported_protocol_layer"], "MCP_DESCRIPTOR_ONLY")
+    test_case.assertEqual(
+        formal_entry_matrix["hosted_action_command"],
+        "opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>",
+    )
     execution_identity = contract_bundle["execution_identity"]
     test_case.assertEqual(execution_identity["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
     test_case.assertEqual(execution_identity["workspace_id"], "nsfc-demo-001")

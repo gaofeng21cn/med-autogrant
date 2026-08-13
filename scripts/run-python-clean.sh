@@ -69,7 +69,8 @@ path_is_inside_checkout() {
   [[ "${resolved}" == "${repo_root}" || "${resolved}" == "${repo_root}/"* ]]
 }
 
-if path_is_inside_checkout "${UV_PROJECT_ENVIRONMENT:-}"; then
+requested_uv_project_environment="${UV_PROJECT_ENVIRONMENT:-}"
+if path_is_inside_checkout "${requested_uv_project_environment}"; then
   unset UV_PROJECT_ENVIRONMENT
 fi
 
@@ -107,6 +108,13 @@ fi
 export MAG_CLEAN_RUNNER_SKIP_SYNC=1
 
 venv_python="${UV_PROJECT_ENVIRONMENT}/bin/python"
+if [[ ! -x "${venv_python}" && "${MAG_CLEAN_RUNNER_SKIP_SYNC:-0}" == "1" \
+  && -x "${requested_uv_project_environment}/bin/python" ]]; then
+  # A caller may deliberately reuse its already-active test environment while
+  # skipping sync; retain that explicit interpreter without making it the
+  # default cache or sync location.
+  venv_python="${requested_uv_project_environment}/bin/python"
+fi
 if [[ ! -x "${venv_python}" ]]; then
   echo "run-python-clean.sh: missing venv Python after dependency sync: ${venv_python}" >&2
   exit 1
