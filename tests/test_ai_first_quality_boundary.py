@@ -233,7 +233,7 @@ def test_active_critique_requires_independent_review_evidence_for_ai_backed_stat
 
 def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: pytest.MonkeyPatch) -> None:
     from med_autogrant.critique_executor import _normalize_mentor_critique
-    from med_autogrant.domain_executor_client import build_executor_payload
+    from opl_framework.executor_client import project_agent_execution_receipt_metadata
 
     monkeypatch.setattr("med_autogrant.critique_executor._validate_schema_payload", lambda *args, **kwargs: None)
     critique_context = {
@@ -255,7 +255,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "verdict": "major_revision",
     }
 
-    codex_executor = build_executor_payload(
+    codex_executor = project_agent_execution_receipt_metadata(
         {
             "surface_kind": "opl_agent_execution_receipt",
             "executor_kind": "codex_cli",
@@ -264,7 +264,8 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
             "exit_code": 0,
             "non_equivalence_notice": "codex_cli_first_class_default",
             "proof": {"model": "gpt-5.4", "reasoning_effort": "high"},
-        }
+        },
+        expected_executor_kind="codex_cli",
     )
     codex_critique = _normalize_mentor_critique(
         critique_context=critique_context,
@@ -291,7 +292,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "provider_reasoning_status": "unproven_custom_chat_completions",
         "event_stream": [{"type": "tool_start", "tool": "read_file"}],
     }
-    hermes_executor = build_executor_payload(
+    hermes_executor = project_agent_execution_receipt_metadata(
         {
             "surface_kind": "opl_agent_execution_receipt",
             "executor_kind": "hermes_agent",
@@ -315,6 +316,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
             "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
             "proof": hermes_proof,
         },
+        expected_executor_kind="hermes_agent",
     )
     hermes_critique = _normalize_mentor_critique(
         critique_context=critique_context,

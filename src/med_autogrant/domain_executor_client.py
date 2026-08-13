@@ -6,7 +6,6 @@ from typing import Any, Callable
 from med_autogrant.workspace_types import WorkspaceStateError
 from opl_framework.executor_client import (
     project_agent_execution_receipt_metadata,
-    require_agent_execution_receipt,
     run_agent_execution_request,
 )
 
@@ -49,7 +48,7 @@ def run_domain_executor(
         raise WorkspaceStateError(f"OPL executor client 执行失败: {exc}") from exc
 
     try:
-        receipt = require_agent_execution_receipt(
+        executor_payload = project_agent_execution_receipt_metadata(
             receipt,
             expected_executor_kind=executor_kind,
         )
@@ -67,27 +66,7 @@ def run_domain_executor(
             f"OPL executor receipt closeout_packet.domain_output_kind 必须是 {domain_output_kind}。"
         )
     domain_output = _require_object(closeout, "domain_output", context="MAG executor closeout packet")
-    return domain_output, build_executor_payload(receipt)
-
-
-def build_executor_payload(receipt: dict[str, Any]) -> dict[str, Any]:
-    executor_kind = receipt.get("executor_kind")
-    if not isinstance(executor_kind, str) or not executor_kind.strip():
-        raise WorkspaceStateError("OPL executor receipt.executor_kind 必须是非空字符串。")
-    try:
-        return project_agent_execution_receipt_metadata(
-            receipt,
-            expected_executor_kind=executor_kind.strip(),
-        )
-    except (RuntimeError, TypeError, ValueError) as exc:
-        message = str(exc)
-        if executor_kind == "hermes_agent" and (
-            "full agent loop" in message or "tool call" in message
-        ):
-            raise WorkspaceStateError(
-                "Hermes proof 必须证明完整 agent loop 和至少一个 tool call。"
-            ) from exc
-        raise WorkspaceStateError(f"OPL executor receipt 校验失败: {message}") from exc
+    return domain_output, executor_payload
 
 
 def _require_object(payload: dict[str, Any], key: str, *, context: str) -> dict[str, Any]:
