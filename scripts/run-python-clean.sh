@@ -81,12 +81,46 @@ fi
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPYCACHEPREFIX="${PYTHONPYCACHEPREFIX:-${tmp_root}/pycache}"
 export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-${tmp_root}/venv}"
+
+resolve_launcher_path() {
+  local path="${1}"
+  local link_target
+  local parent
+
+  if [[ "${path}" != */* ]]; then
+    path="$(command -v "${path}" 2>/dev/null)" || return 1
+  fi
+  while [[ -L "${path}" ]]; do
+    parent="$(cd "$(dirname "${path}")" >/dev/null 2>&1 && pwd -P)" || return 1
+    link_target="$(readlink "${path}")" || return 1
+    if [[ "${link_target}" == /* ]]; then
+      path="${link_target}"
+    else
+      path="${parent}/${link_target}"
+    fi
+  done
+  parent="$(cd "$(dirname "${path}")" >/dev/null 2>&1 && pwd -P)" || return 1
+  printf '%s/%s\n' "${parent}" "$(basename "${path}")"
+}
+
 framework_root="${OPL_FRAMEWORK_ROOT:-${OPL_OWNER_REPO_ROOT:-}}"
-framework_python=""
-if [[ -n "${framework_root}" && -d "${framework_root}/python" ]]; then
-  framework_python=":${framework_root}/python"
+if [[ -z "${framework_root}" ]]; then
+  opl_launcher="${OPL_BIN:-}"
+  if [[ -z "${opl_launcher}" ]]; then
+    opl_launcher="$(command -v opl 2>/dev/null || true)"
+  fi
+  resolved_launcher="$(resolve_launcher_path "${opl_launcher}")" || {
+    echo "run-python-clean.sh: cannot locate the OPL Framework; set OPL_FRAMEWORK_ROOT or install opl" >&2
+    exit 1
+  }
+  framework_root="$(cd "$(dirname "${resolved_launcher}")/.." >/dev/null 2>&1 && pwd -P)"
 fi
-export PYTHONPATH="${repo_root}/src${framework_python}${PYTHONPATH:+:${PYTHONPATH}}"
+if [[ ! -f "${framework_root}/python/opl_framework/executor_client.py" ]]; then
+  echo "run-python-clean.sh: invalid OPL Framework root: ${framework_root}" >&2
+  exit 1
+fi
+framework_root="$(cd "${framework_root}" >/dev/null 2>&1 && pwd -P)"
+export PYTHONPATH="${repo_root}/src:${framework_root}/python${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} -p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache"
 
 entrypoint_bin="${tmp_root}/bin"

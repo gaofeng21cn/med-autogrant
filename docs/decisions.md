@@ -42,8 +42,9 @@ installed truth 或第二份领域 truth。
 ## D9 Framework carrier
 
 MAG 不声明、不安装、不锁定 OPL Framework implementation。OPL module workflow 在
-owner checkout 的 `python/opl_framework` 维护 runtime helper；MAG clean runner 只通过
-显式 `OPL_FRAMEWORK_ROOT` 将该 namespace 加入验证环境。Framework 对 Package
+owner checkout 的 `python/opl_framework` 维护 runtime helper；MAG clean runner 优先通过
+显式 `OPL_FRAMEWORK_ROOT`，否则从已安装 `opl` launcher 解析 Framework root，将该
+namespace 加入验证环境。Framework 对 Package
 lifecycle 只保留 carrier adapter、fresh readback 和动作聚合，不成为 MAG currentness
 或完整 bytes 的第二权威。
 
