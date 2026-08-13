@@ -75,6 +75,7 @@ def test_clean_python_runner_resolves_framework_from_installed_opl(
     framework_root = tmp_path / "framework"
     framework_package = framework_root / "python" / "opl_framework"
     framework_package.mkdir(parents=True)
+    (framework_package / "__init__.py").write_text("", encoding="utf-8")
     (framework_package / "executor_client.py").write_text(
         'INSTALL_MARKER = "installed-opl-framework"\n',
         encoding="utf-8",
