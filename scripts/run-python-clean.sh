@@ -120,7 +120,7 @@ if [[ ! -f "${framework_root}/python/opl_framework/executor_client.py" ]]; then
   exit 1
 fi
 framework_root="$(cd "${framework_root}" >/dev/null 2>&1 && pwd -P)"
-export PYTHONPATH="${repo_root}/src:${framework_root}/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH="${framework_root}/python:${repo_root}/src${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} -p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache"
 
 entrypoint_bin="${tmp_root}/bin"
