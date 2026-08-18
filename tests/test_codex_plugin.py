@@ -293,7 +293,10 @@ def test_mag_package_manifest_declares_owner_home_presentation() -> None:
         "home_shortcuts": [
             {
                 "shortcut_id": "open_grant_user_loop",
-                "label_i18n": {"en-US": "Open MAG user loop"},
+                "label_i18n": {
+                    "zh-CN": "开展基金申请工作",
+                    "en-US": "Open MAG user loop",
+                },
                 "default_visible": True,
                 "user_configurable": True,
                 "route": {
