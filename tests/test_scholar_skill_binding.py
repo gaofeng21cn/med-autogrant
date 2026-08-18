@@ -38,7 +38,7 @@ def test_package_declares_required_runtime_dependency_with_install_and_runtime_g
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
     manifest = _read_json("contracts/opl_agent_package_manifest.json")
 
-    assert manifest["version"] == "0.3.11"
+    assert manifest["version"] == "0.3.12"
     assert manifest["codex_surface"]["bundled_capability_package_ids"] == [
         "mas-scholar-skills"
     ]

@@ -64,7 +64,7 @@ readback。
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | source version `0.3.11`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，ScholarSkills 为 required hard dependency；目标仍为 owner 独立 GHCR `latest-stable` 与完整 carrier fresh readback |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | source version `0.3.12`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，ScholarSkills 为 required hard dependency；目标仍为 owner 独立 GHCR `latest-stable` 与完整 carrier fresh readback |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |
