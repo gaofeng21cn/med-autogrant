@@ -123,11 +123,9 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 - MAG owner 是完整 Package bytes 及其 GHCR `latest-stable` 的唯一发布权威；这条边界
   不声明 live channel 迁移已经完成。普通依赖组合只检查 required/optional identity
   presence 与 callability，不绑定共享发布批次或跨 Package 版本 lock。
-- 当前机器合同把 `mas-scholar-skills` 实现为 optional/fail-open enhancement；provider
-  缺失或不兼容不阻断 MAG core。
-- 尚未实现的目标组合只按 identity presence/callability 将其设为 required dependency；
-  实现后，provider 缺失或不可调用将使 MAG 局部 fail closed，但不阻断无关 Package，
-  也不引入 provider version、ABI、lock、payload 或 digest 求解。
+- `mas-scholar-skills` 是 MAG 的 required dependency，只按 identity presence 与
+  callability 判断。缺失或不可调用会阻断 MAG readiness，但不影响无关 Package，也不
+  引入跨 Package 版本求解。
 - MAG owner 定义 runtime activation、health、基金业务任务和 typed-view 接口；carrier
   执行，Framework 聚合 fresh readback，App 只消费该投影。
 - 完整技术边界、当前入口矩阵、合同 refs 与 proof surfaces 由 [文档索引](./docs/README.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 和 [合同说明](./contracts/README.md) 维护。
@@ -138,7 +136,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 
 1. 潜在用户先读当前首页，再继续看 [文档索引](./docs/README.md)、[领域定位](./docs/public/domain-positioning.md) 和 [最小可用范围](./docs/public/mvp-scope.md)。
 2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
-3. 开发者和维护者再进入 `docs/active/`、`docs/specs/`、`docs/references/` 与 [历史归档索引](./docs/history/README.md)。
+3. 开发者和维护者再进入 `docs/active/`、`docs/specs/` 与 `docs/references/`；完成过程从 Git 历史读取。
 
 ## 给 Agent 和技术操作者的快速入口
 
@@ -149,17 +147,17 @@ Machine boundary: Human-readable entry only. Machine truth remains in current-pr
 - 先读 [文档索引](./docs/README.md)，再读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。
 - 改 route、公开表述或 operator 命令前，以 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 作为当前技术真相集。
 - MAG direct path 与 OPL-hosted path 必须回到同一套 MAG-owned route、workspace、quality 和 export surfaces。
-- 检查 command surface 或导出 handler 数据时，使用文档索引与 contracts 中记录的 repo-local clean runner 命令；已退役的 `mag` console alias 不是入口或 readiness evidence。
+- 检查 command surface 或导出 handler 数据时，使用文档索引与 contracts 中记录的 repo-local clean runner 命令。
 
 </details>
 
 ## 维护者验证
 
-- 默认本地门禁使用 `./scripts/verify.sh`。它只是公开薄入口；验证 lane 组合由 Makefile `test-*` target 持有。默认 lane 只收集并执行一次非重型 fast core；line-budget 与 smoke case 仍在该选集中，不再单独启动 pytest 或重复收集。
+- 默认本地门禁使用 `./scripts/verify.sh`。它是公开薄入口；验证 lane 组合由 Makefile `test-*` target 持有，默认 lane 只收集并执行一次非重型 fast core。
 - Makefile 中的 Python / pytest lane 通过 `scripts/run-python-clean.sh` / `scripts/run-pytest-clean.sh` 执行，把 bytecode 与 pytest cache 导向 checkout 外部。
 - 快速入口健康检查使用 `./scripts/verify.sh smoke`；只跑 pytest smoke target 时使用 `make test-cli-smoke`。
-- 矩阵型、product-entry、runtime/session、hosted/export 与回归覆盖使用 `./scripts/verify.sh regression`。Product-entry case 现在直接放在 `tests/product_entry_cases/` 下收集；旧 `tests/test_product_entry.py` 聚合面已删除。
-- repo 治理、结构检查和 clean-clone/full-suite 基线分别使用 `./scripts/verify.sh meta`、`./scripts/verify.sh structure` 与 `./scripts/verify.sh full`。meta lane 保持只读，需要清理时显式运行 `./scripts/verify.sh cleanup`。
+- 矩阵型、product-entry、runtime/session、hosted/export 与回归覆盖使用 `./scripts/verify.sh regression`。Product-entry case 直接放在 `tests/product_entry_cases/` 下收集。
+- repo 检查、合同结构检查和 full-suite 分别使用 `./scripts/verify.sh meta`、`./scripts/verify.sh structure` 与 `./scripts/verify.sh full`。meta lane 保持只读，需要清理时显式运行 `./scripts/verify.sh cleanup`。
 
 ## 延伸阅读
 

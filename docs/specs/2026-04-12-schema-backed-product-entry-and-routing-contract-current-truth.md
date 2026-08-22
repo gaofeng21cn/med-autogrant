@@ -18,19 +18,7 @@ MAG 保留并维护：
 
 OPL 生成并托管 product-entry manifest、status、user-loop、progress、cockpit、direct-entry 与 session surfaces。MAG source 中出现的 `/product_entry_manifest/*` 只是在 OPL-generated manifest 内定位 authority/descriptor refs 的 JSON pointer，不表示 MAG 维护本地 manifest schema、builder 或 public product CLI。
 
-## Retired Surfaces
-
-以下 repo-local surfaces 已退役，不再作为 current owner 或 compatibility target：
-
-- `product-entry-manifest.schema.json`
-- `product-status.schema.json`
-- local product/status/preflight/start/progress/cockpit/direct-entry text renderers
-- local `build-product-entry` wrapper
-- Upstream Hermes fast-cutover、future OPL Gateway 与 gateway/federation caller wording
-
-旧 caller 应迁到 OPL generated surfaces 或 MAG service-safe/domain-handler authority target；不新增 alias、facade、re-export 或兼容测试。
-
-## Fail-Closed Contract
+## Current Contract
 
 `product-entry.schema.json` 继续持有：
 
@@ -39,7 +27,7 @@ OPL 生成并托管 product-entry manifest、status、user-loop、progress、coc
 - workspace locator、runtime session envelope、domain payload 与 stage snapshot
 - author-side executor routing contract
 
-MAG 的 workspace/authoring validators 复用 `opl_framework.schema_validation.SchemaSubsetValidator`。OPL hosted contract bundle 复用 `product-entry.schema.json` 中的 domain-entry、operator 与 routing definitions；OPL-owned session/progress/artifact/runtime projection 不再复制进 MAG schema。
+MAG 的 workspace/authoring validators 复用 `opl_framework.schema_validation.SchemaSubsetValidator`。OPL hosted contract bundle 复用 `product-entry.schema.json` 中的 domain-entry、operator 与 routing definitions；session、progress、artifact 与 runtime projection 由 OPL 持有。
 
 ## Verification
 

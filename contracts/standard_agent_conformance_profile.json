@@ -129,7 +129,7 @@
         "surface_id": "legacy_runtime_residue",
         "classification": "provenance_or_fixture",
         "source_refs": [
-          "docs/history/"
+          "docs/decisions.md"
         ]
       }
     ],

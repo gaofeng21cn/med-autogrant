@@ -8,7 +8,7 @@ Last reviewed: `2026-06-12`
 
 ## 当前读法
 
-本文件保留 `2026-04-07` formal-entry vocabulary 的 path-stable 支撑位置，但当前 owner line 已由核心文档和 `current-program.json` 持有。早期 post-R5A local runtime / journal / recovery 叙事已经退为 history/provenance，不能从本文恢复旧 public CLI alias、compatibility test、local journal、attempt ledger、Gateway/local-manager path 或 MAG-owned generic runtime。
+Formal-entry owner line 由核心文档和 `current-program.json` 持有。
 
 当前 formal-entry matrix：
 
@@ -22,23 +22,9 @@ Last reviewed: `2026-06-12`
 
 `Med Auto Grant app skill -> OPL/App generated status or manifest refs -> MAG CLI / MedAutoGrantDomainEntry / domain-handler target -> generated grant-progress / grant-cockpit refs -> generated grant-direct-entry / grant-user-loop refs -> pass / package commands`
 
-`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest` 与 `product status` 不作为 repo-local public CLI group 复活；当前 repo-local grouped CLI 只保留 workspace audit、mainline、domain-handler、authority、pass 与 package command target。
+Repo-local grouped CLI 提供 workspace audit、mainline、domain-handler、authority、pass 与 package command target；进度、cockpit、direct-entry、user-loop、manifest 与 status 由 OPL generated surfaces 提供。
 
 OPL-hosted path 可以读取 MAG descriptor、stage/control plane、domain-handler/projection 和 owner receipt refs，但必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt 和 typed blocker。
-
-## 已退役入口
-
-以下旧面只作为历史 provenance 或 regression-oracle 词汇阅读：
-
-- `runtime-run`
-- `runtime-resume`
-- `probe-upstream-hermes`
-- local run journal / local attempt ledger
-- Gateway/local-manager default path
-- flat shell alias
-- compatibility aggregate test
-
-这些面已从 MAG public CLI、`MedAutoGrantDomainEntry` service-safe catalog、product-entry session continuity、hosted bundle schema 和默认 smoke 断言中退役。Session/resume 语义改由 OPL generated surface refs 与 MAG owner receipt / typed blocker refs 表达。
 
 ## 当前 hard boundary
 
@@ -46,8 +32,4 @@ OPL-hosted path 可以读取 MAG descriptor、stage/control plane、domain-handl
 - `Codex CLI` 是当前第一公民 concrete executor；`hermes_agent` / Claude Code 只能作为显式 opt-in executor adapter / proof lane。
 - `build-hosted-contract-bundle` 是 integration/reference export surface，不表示 actual hosted runtime、production/default caller 或 Temporal long soak 已完成。
 - `package submission-ready` 是本地严格导出 gate，不等于外部基金官网提交完成。
-- 任何新 public runtime entry、controller public entry、旧兼容别名或 local runtime recovery entry 都必须先更新核心五件套、contracts/schema/source 和验证入口。
-
-## 历史入口
-
-旧 post-R5A local runtime walkthrough、honest-stop 和 fail-closed hardening 记录已归档到 [历史 specs](../history/specs/README.md)。直接阅读历史文件时，以本文件、核心五件套、[Specs 生命周期地图](./specs_lifecycle_map.md) 和 `current-program.json` 为准。
+- 新 public runtime entry 或 controller public entry 需要先更新核心文档、contracts/schema/source 和验证入口。

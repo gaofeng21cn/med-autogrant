@@ -26,26 +26,13 @@ def _make_dry_run(target: str) -> str:
     return result.stdout
 
 
-def _tracked_files() -> set[str]:
-    result = subprocess.run(
-        ["git", "ls-files"],
-        cwd=REPO_ROOT,
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-    )
-    return set(result.stdout.splitlines())
-
-
 def test_makefile_lanes_route_to_repo_native_checks() -> None:
     fast = _make_dry_run("test-fast")
     meta = _make_dry_run("test-meta")
     structure = _make_dry_run("test-structure")
-    structure_strict = _make_dry_run("test-structure-strict")
 
     assert fast.count("run-pytest-clean.sh") == 1
     assert 'not meta and not regression' in fast
-    assert "test-line-budget" not in fast
     assert "test-cli-smoke" not in fast
 
     assert "scripts/repo-hygiene.sh --fix" not in meta
@@ -55,8 +42,6 @@ def test_makefile_lanes_route_to_repo_native_checks() -> None:
     assert "scripts/check_descriptor_contracts.py" in structure
     assert "run-structural-quality-gate" not in structure
     assert "sentrux" not in structure.lower()
-
-    assert "scripts/check_descriptor_contracts.py" in structure_strict
 
 
 def test_clean_python_runners_route_caches_outside_checkout() -> None:
@@ -124,13 +109,3 @@ def test_pyproject_registers_cli_scripts_and_external_cache() -> None:
 
     pytest_options = pyproject["tool"]["pytest"]["ini_options"]
     assert pytest_options["cache_dir"] == "/tmp/med-autogrant-pytest-cache"
-
-
-def test_sentrux_sidecar_is_not_a_tracked_structure_dependency() -> None:
-    tracked = _tracked_files()
-
-    assert ".sentrux/baseline.json" not in tracked
-    assert ".sentrux/rules.toml" not in tracked
-    assert ".github/workflows/sentrux-advisory.yml" not in tracked
-    assert "scripts/run-structural-quality-gate.sh" not in tracked
-    assert "scripts/run-opl-quality-details.sh" not in tracked

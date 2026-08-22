@@ -35,7 +35,7 @@ owner receipt、typed blocker 与 grant-native helper。领域语义 route 由
 - `domain-handler dispatch`
 - `agent/primary_skill/SKILL.md`
 
-Domain handler dispatch 只允许 `domain-memory/propose`、`domain-memory/decide`、`stage-attempt/closeout`。旧 product/status/user-loop/runtime/workbench wrapper 已退役；对应用户面由 OPL/App generated surfaces 提供。
+Domain handler dispatch 提供 `domain-memory/propose`、`domain-memory/decide`、`stage-attempt/closeout`。Product、status、user-loop 与 workbench 由 OPL/App generated surfaces 提供。
 
 所有 executor kind 由 MAG 组装 grant prompt 和 domain payload，再交给 OPL Python
 executor client；MAG 不实现 Codex/OPL subprocess、timeout、process cleanup 或 receipt
@@ -56,12 +56,6 @@ readback，App 只消费。本仓不提供用户目录 symlink/marketplace mutat
 - 让 OPL 只消费 descriptor、refs、receipt 与 blocker，不读取或改写 grant/memory/artifact/package body。
 - 保持 submission-ready package fail closed；它不等于外部 portal 已提交。
 
-## 非目标
-
-- 不拥有 generic scheduler、daemon、queue、attempt ledger、session store、workbench 或 generated product shell。
-- 不恢复旧 wrapper、facade、flat CLI alias、compatibility test 或私有 pack compiler。
-- 不把 schema、conformance、focused tests、provider completion 或 refs-only ledger 写成 grant-ready、submission-ready 或 production-ready。
-
 ## 下一跳
 
 - [当前状态](./status.md)
@@ -69,4 +63,3 @@ readback，App 只消费。本仓不提供用户目录 symlink/marketplace mutat
 - [不变量](./invariants.md)
 - [决策](./decisions.md)
 - [当前计划](./active/mag-ideal-state-cross-repo-gap-plan.md)
-- [私有面 machine owner 导航](./active/opl-private-implementation-migration-inventory.md)

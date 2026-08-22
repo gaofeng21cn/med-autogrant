@@ -127,14 +127,10 @@ You can start with prompts like:
   channel migration is already complete. Ordinary dependency composition
   checks required or optional identity presence and callability, not a shared
   release cohort or cross-Package version lock.
-- The current machine contract treats `mas-scholar-skills` as an optional,
-  fail-open enhancement; missing or incompatible provider state does not block
-  MAG core.
-- The target composition, which is not yet implemented, makes it required
-  using only identity presence and callability. Once implemented, missing or
-  uncallable provider state fails MAG closed without blocking unrelated
-  Packages; it does not introduce provider version, ABI, lock, payload, or
-  digest solving.
+- `mas-scholar-skills` is a required MAG dependency, evaluated by identity
+  presence and callability. Missing or uncallable provider state blocks MAG
+  readiness without affecting unrelated Packages or introducing cross-Package
+  version solving.
 - MAG owns its runtime activation, health, grant task, and typed-view
   interfaces. Carriers execute them, the Framework aggregates fresh readback,
   and the App only consumes that projection.
@@ -146,7 +142,7 @@ You can start with prompts like:
 
 1. Potential users should start here, then continue to the [Docs Guide](./docs/README.md), [Domain Positioning](./docs/public/domain-positioning.md), and [MVP Scope](./docs/public/mvp-scope.md).
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
-3. Developers and maintainers should continue into `docs/active/`, `docs/specs/`, `docs/references/`, and [History Archive](./docs/history/README.md).
+3. Developers and maintainers should continue into `docs/active/`, `docs/specs/`, and `docs/references/`; completed work remains available in Git history.
 
 ## For Codex / Agents
 
@@ -182,18 +178,18 @@ You can start with prompts like:
 - Read the [Docs Guide](./docs/README.md) first, then [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json).
 - Before changing routes, public wording, or operator commands, use [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the current technical truth set.
 - Direct MAG use and OPL-hosted use must converge on the same MAG-owned route, workspace, quality, and export surfaces.
-- Use repo-local clean runner commands described in the Docs Guide and contracts when inspecting command surfaces or exporting handler data; the retired `mag` console alias is not an entry or readiness signal.
+- Use the repo-local clean runner commands described in the Docs Guide and contracts when inspecting command surfaces or exporting handler data.
 
 </details>
 
 ## Maintainer Verification
 
-- Use `./scripts/verify.sh` for the default local check. It is a thin public wrapper; Makefile `test-*` targets own lane composition. The default lane collects the fast non-regression core once; line-budget and smoke cases remain in that collection without separate pytest startup or collection passes.
+- Use `./scripts/verify.sh` for the default local check. It is a thin public wrapper; Makefile `test-*` targets own lane composition, and the default lane collects the fast non-regression core once.
 - `./scripts/verify.sh` checks repo hygiene without deleting ignored local artifacts. Use `./scripts/verify.sh cleanup` when you intentionally want to remove ignored cache/build byproducts.
 - Makefile Python and pytest lanes run through `scripts/run-python-clean.sh` / `scripts/run-pytest-clean.sh`, which route bytecode and pytest cache outside the checkout.
 - Use `./scripts/verify.sh smoke` for the wrapper smoke lane, or `make test-cli-smoke` for the bare pytest smoke target.
-- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and regression coverage. Product-entry cases live under `tests/product_entry_cases/` as directly collected regression tests; the old `tests/test_product_entry.py` aggregation surface has been removed.
-- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repo governance, architecture checks, and clean-clone/full-suite baselines. The meta lane is read-only; repository cleanup is explicit through `./scripts/verify.sh cleanup`. `make test-line-budget-strict` remains an alias for the same line-budget gate.
+- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and regression coverage. Product-entry cases live under `tests/product_entry_cases/`.
+- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repository, contract-structure, and full-suite checks. The meta lane is read-only; repository cleanup is explicit through `./scripts/verify.sh cleanup`.
 
 ## Further Reading
 

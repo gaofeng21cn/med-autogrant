@@ -115,7 +115,7 @@
       {
         "surface_id": "legacy_runtime_residue",
         "classification": "provenance_or_fixture",
-        "source_refs": ["docs/history/"]
+        "source_refs": ["docs/decisions.md"]
       }
     ],
     "forbidden_residue_classes": [

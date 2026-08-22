@@ -9,13 +9,13 @@ Professional grant judgment lives in repo-local Codex skills under `agent/profes
 - `mag-strategy-intake-specialist`
 - `mag-grant-workflow-specialist`
 
-These MAG overlays may optionally invoke only the Stage-selected subset of the
-refs-only `mas-scholar-skills` enhancement declared in
-`contracts/scholar_skill_binding_contract.json`. Missing or incompatible
-Provider state records only a diagnostic or advisory quality hint and MAG
-continues its owner core. Shared Scholar Skills return professional candidate
-refs only. MAG must consume, reject, or route back those candidates before
-changing grant truth or issuing a fundability, quality, export, package,
+These MAG overlays use the Stage-selected required subset of the refs-only
+`mas-scholar-skills` dependency declared in
+`contracts/scholar_skill_binding_contract.json`. Provider identity and
+callability are MAG admission requirements; missing or incompatible state
+stops MAG work under that contract. Shared Scholar Skills return professional
+candidate refs only. MAG must consume, reject, or route back those candidates
+before changing grant truth or issuing a fundability, quality, export, package,
 readiness, receipt, route, or blocker decision.
 
 The domain skill covers specified-call intake, fundability strategy, specific aims, proposal authoring, reviewer-style critique, rebuttal planning, and submission-ready package preparation. Stage prompts route work and define accepted refs/blockers; professional skills provide consolidated specialist grant methods; tools only provide bounded affordances.

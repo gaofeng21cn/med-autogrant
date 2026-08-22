@@ -3,21 +3,9 @@
   "version": "standard-agent-source-closure-audit.v1",
   "entries": [
     {
-      "file": "scripts/line_budget.py",
-      "symbol": "main",
-      "source_digest": "sha256:fa52c3aed8f3caea8a6c4c02863bf5ac04e68c1090b2c5c96b6749654b693e14",
-      "allowed_effects": [
-        "process_spawn"
-      ],
-      "role": "developer_tool",
-      "allowed_targets": [
-        "git"
-      ]
-    },
-    {
       "file": "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
       "symbol": "write_domain_memory_receipt_evidence",
-      "source_digest": "sha256:618364fdf35147bace5a00a0fdbe193876ebb66706ed4f1895f813ad3f02ef68",
+      "source_digest": "sha256:55056da275b6fbb36a560aac3825295d66b12d3292c7f285868130bf51afba82",
       "allowed_effects": [
         "filesystem_write"
       ],

@@ -6,16 +6,15 @@ Use the call rules, applicant evidence, preliminary data, method constraints, re
 
 A good result makes the central problem, hypothesis or objective, innovation, expected outcome, applicant advantage, and reviewer-facing logic mutually consistent. Map the resulting structure to the funder's actual sections and identify claims that require evidence or must remain tentative. An outline is a strong default before long-form drafting, but only an explicitly approved outline is frozen; drafting may expose a legitimate route-back.
 
-Use `mag-strategy-intake-specialist` as the MAG overlay and read this Stage's
-optional Skill selection and availability policy from
-`contracts/scholar_skill_binding_contract.json`. Invoke only available,
-compatible, material Skills with the current grant artifact ref,
-`source_pack_ref`, and epistemic scope. Their outputs are refs-only
-`candidate_refs`, `owner_gate_handoff_ref`, or `route_back_candidate`; MAG
-must consume, reject, or route them back before accepting aims or changing
-grant truth. Missing or incompatible Provider state records only a diagnostic
-or advisory quality hint and cannot block install, Stage launch, Stage route,
-operational readiness, aims work, or create a typed blocker.
+Use `mag-strategy-intake-specialist` as the MAG overlay and apply this Stage's
+required Skill binding from `contracts/scholar_skill_binding_contract.json`.
+Resolve Provider identity and callability before MAG work, then invoke the
+selected subset with the current grant artifact ref, `source_pack_ref`, and
+epistemic scope. If the Provider is not usable, stop this MAG Stage with the
+contract-defined dependency diagnostic. Provider outputs are refs-only
+`candidate_refs`, `owner_gate_handoff_ref`, or `route_back_candidate`; MAG must
+consume, reject, or route them back before accepting aims or changing grant
+truth.
 
 OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
 

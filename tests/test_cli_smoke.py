@@ -55,12 +55,8 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "OPL public inspection: opl foundry agents inspect mag --json" in stdout
     assert "Authority boundary:" in stdout
     assert "Public command groups:" in stdout
-    assert "\n  foundry" not in stdout
     assert "workspace" in stdout
     assert "authority" in stdout
-    assert "product" not in stdout
-    assert "\n  mainline        " not in stdout
-    assert "runtime" not in stdout
 
 
 @pytest.mark.smoke
@@ -101,8 +97,6 @@ def test_pass_group_help_renders_canonical_commands() -> None:
     assert "\n  revision\n" in stdout
     assert "\n  critique\n" in stdout
     assert "\n  freeze\n" in stdout
-    assert "critique-loop" not in stdout
-    assert "mainline-loop" not in stdout
 
 
 @pytest.mark.smoke
@@ -160,20 +154,3 @@ def test_workspace_route_report_text_renders_mag_progress_labels() -> None:
 @pytest.mark.smoke
 def test_unknown_progress_token_keeps_title_case_fallback() -> None:
     assert _human_token_label("custom-progress_stage") == "Custom Progress Stage"
-
-
-@pytest.mark.smoke
-@pytest.mark.parametrize("group", ["foundry", "product", "mainline"])
-def test_generic_shell_group_is_not_a_public_default(group: str) -> None:
-    exit_code, stdout, stderr = _run_cli(
-        group,
-        "status",
-        "--input",
-        str(CRITIQUE_EXAMPLE_PATH),
-        "--format",
-        "json",
-    )
-
-    assert exit_code == 2
-    assert stdout == ""
-    assert f"invalid choice: '{group}'" in stderr

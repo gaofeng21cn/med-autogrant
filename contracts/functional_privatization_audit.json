@@ -7,7 +7,7 @@
   "state": "compact_domain_pack_inventory_and_seven_authority_functions",
   "default_surface_boundary": {
     "state": "physically_absent",
-    "retired_surface_provenance_ref": "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md",
+    "retired_surface_provenance_ref": "docs/decisions.md",
     "replacement_ref": "contracts/generated_surface_handoff.json"
   },
   "retired_default_surface_ids": [
@@ -181,7 +181,7 @@
           "contracts/private_functional_surface_policy.json#/canonical_source_behavior_gate"
         ],
         "provenance_refs": [
-          "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md"
+          "docs/decisions.md"
         ]
       }
     }
@@ -191,24 +191,21 @@
       "surface_id": "legacy_generated_cli_mcp_skill_wrappers",
       "replacement_ref": "contracts/generated_surface_handoff.json#/generated_surfaces",
       "provenance_refs": [
-        "git:a3396d17f042b1c2e35636b1358d32ef2caa1bcd#deleted-paths",
-        "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md"
+        "git:a3396d17f042b1c2e35636b1358d32ef2caa1bcd#deleted-paths"
       ]
     },
     {
       "surface_id": "legacy_product_status_user_loop_workbench_shells",
       "replacement_ref": "contracts/generated_surface_handoff.json#/handoff_surfaces",
       "provenance_refs": [
-        "git:a3396d17f042b1c2e35636b1358d32ef2caa1bcd#deleted-paths",
-        "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md"
+        "git:a3396d17f042b1c2e35636b1358d32ef2caa1bcd#deleted-paths"
       ]
     },
     {
       "surface_id": "legacy_tracked_stage_control_plane_snapshot",
       "replacement_ref": "contracts/generated_surface_handoff.json#/generated_stage_control_plane_ref",
       "provenance_refs": [
-        "git:81da093d6f72fdeda895b10092c7bc02811380d8#deleted-paths",
-        "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md"
+        "git:81da093d6f72fdeda895b10092c7bc02811380d8#deleted-paths"
       ]
     }
   ],
@@ -220,7 +217,6 @@
       "contracts/private_functional_surface_policy.json#/canonical_source_behavior_gate"
     ],
     "provenance_refs": [
-      "docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md",
       "git:a3396d17f042b1c2e35636b1358d32ef2caa1bcd#deleted-paths"
     ]
   }

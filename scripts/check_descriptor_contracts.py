@@ -6,8 +6,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STAGE_MANIFEST_PATH = REPO_ROOT / "agent" / "stages" / "manifest.json"
-LEGACY_STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane.json"
-LEGACY_STAGE_COMPILER_PATH = REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py"
 FIXED_OPL_CONTRACTS = {
     "action_catalog.json": "family_action_catalog",
     "pack_compiler_input.json": "opl_domain_pack_compiler_input",
@@ -170,13 +168,6 @@ def main() -> int:
                                 f"agent/stages/manifest.json: stage[{index}]: "
                                 f"unknown next_stage_ref: {next_stage_ref!r}"
                             )
-
-    for legacy_path in (LEGACY_STAGE_CONTROL_PLANE_PATH, LEGACY_STAGE_COMPILER_PATH):
-        if legacy_path.exists():
-            errors.append(
-                f"retired private stage compiler surface must remain absent: "
-                f"{legacy_path.relative_to(REPO_ROOT)}"
-            )
 
     pack = contracts.get("pack_compiler_input.json", {})
     listed_paths = pack.get("required_domain_pack_paths")

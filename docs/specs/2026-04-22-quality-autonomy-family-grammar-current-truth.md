@@ -23,21 +23,17 @@ AI-backed candidate status 必须携带独立 review provenance；projection-onl
 
 ## Autonomy Boundary
 
-MAG 不再提供 `execute-grant-autonomy-controller` 公共 facade、runtime method 或 controller schema。该 facade 无论输入是否合法都只返回“交给 OPL runtime controller”的 blocker，没有执行 grant authority 行为，因此已直接退役。
-
-当前 autonomy 边界固定为：
+当前 autonomy 分工为：
 
 - OPL 持有 stage residency、attempt ledger、budget/retry/resume、queue 与 stage transport；decisive Codex Attempt 持有语义 stage route，OPL StageRun controller 只物化 transition；
-- MAG 只执行 grant-native pass、quality/fundability/export/package authority 与 memory/receipt authority target；
-- repo-local `critique-revision-loop` 与 `authoring-mainline-loop` 已物理退役；OPL StageRun/Runway 通过声明化 stage manifest 调用 MAG single-pass handlers，并持有 owner chain、cycle/rollback/exhaustion 与 output-dir 编排；
+- MAG 提供声明式 Stage Pack、single-pass grant handlers，以及 quality/fundability/export/package、memory 和 receipt authority；
+- OPL StageRun/Runway 通过 Stage manifest 调用 MAG handler，并持有 owner chain、cycle/rollback/exhaustion 与 output-dir 编排；
 - stage closeout 只返回 MAG owner receipt、typed blocker 或 no-regression evidence ref；
-- CLI 不保留 autonomy alias、wrapper 或兼容测试。
+- CLI 通过显式静态 dispatch 调用当前 authority/runtime function。
 
 ## Family Grammar
 
-`grant_family_registry.py`、project profile selector 与 workspace grammar contracts 持有 common grammar、funder profile 与 target-lock semantics。已锁定 funding call 后，authoring/quality/package path不得 opportunistic切换 funder。
-
-旧 `grant_governance_adapter.py` 与私有 autonomy controller 均无 production authority 行为，已经退役。Family-specific policy 继续作为 declarative profile/context 输入，由具体 grant stage 与 quality owner 消费，不恢复 controller-local hydration、closure queue 或第二控制面。
+`grant_family_registry.py`、project profile selector 与 workspace grammar contracts 持有 common grammar、funder profile 与 target-lock semantics。锁定 funding call 后，authoring、quality 与 package Stage 都沿用该 target。Family-specific policy 作为 declarative profile/context 输入，由具体 grant Stage 与 quality owner 消费。
 
 ## Evidence Boundary
 

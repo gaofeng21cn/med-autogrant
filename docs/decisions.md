@@ -11,7 +11,7 @@ MAG 收敛为 `Declarative Grant Pack + OPL generated/hosted surfaces + minimal 
 
 ## D2 Direct Domain Handler
 
-Repo-local domain handler 保留 export 与 dispatch 两个薄入口。Dispatch action 固定为 memory propose、memory decide、stage closeout；旧 lifecycle receipt、operator readiness、physical morphology、executor/codex bundle action 已退役。
+Repo-local domain handler 保留 export 与 dispatch 两个薄入口。Dispatch action 是 memory propose、memory decide 和 stage closeout。
 
 ## D3 七项 Authority ID
 
@@ -20,10 +20,6 @@ Fundability、quality、export、package、memory、owner receipt、grant-native
 ## D4 OPL canonical currentness
 
 OPL source-behavior scanner 是结构 currentness owner。MAG 只保留 declarative morphology policy 与 functional audit，不再维护私有 standard-pack/source-purity implementation。
-
-## D5 Direct retirement
-
-旧 module、CLI alias、wrapper、facade、snapshot、compatibility test 无 active caller 后直接删除。需要来龙去脉时使用 history/provenance，不新增 shim、re-export 或别名。
 
 ## D6 测试组合
 
@@ -58,11 +54,11 @@ Call/eligibility、证据与 claim、独立复审、package authority 和 human 
 
 ## D12 Standard Agent Interface 归 domain descriptor
 
-MAG workspace locator/topology、runtime domain identity/registration ref、progress alias 与 routing signal只在 `contracts/domain_descriptor.json#/standard_agent_interface` 声明，OPL 通过 current package source 托管消费。`workspace_binding.entry_command_template`、`workspace_binding.manifest_command_template` 与 `runtime.dispatch_command` 已退役，并由 closed-object validation fail closed；OPL 不从 descriptor 恢复 MAG 私有命令模板。
+MAG workspace locator/topology、runtime domain identity/registration ref、progress alias 与 routing signal 在 `contracts/domain_descriptor.json#/standard_agent_interface` 声明，OPL 通过 current package source 托管消费并从 action catalog 生成 hosted execution。
 
 ## D13 默认验证只做一次 pytest 收集
 
-默认 `test-fast` 通过一个 marker 选择执行一次 pytest；line-budget 与 smoke case 保留在同一选集中，不再作为前置 pytest lane 重复启动。`test-meta` 只读检查 repository hygiene；任何 `--fix` 只允许通过显式 cleanup/fix 入口触发。
+默认 `test-fast` 通过 marker 选择执行一次 pytest。`test-meta` 只读检查 repository hygiene；清理操作通过显式 cleanup/fix 入口触发。
 
 ## D14 Stage Review 使用独立上下文
 
@@ -84,15 +80,15 @@ owner publication currentness；`medautogrant` 只保留 runtime source locator�
 
 ## D17 CLI 声明与执行分离
 
-Command specs 只声明 parser 字段和帮助信息，不承载 callable、method name 或 handler ref。CLI 与 domain entry 使用显式静态 dispatch 调用实际 authority/runtime function；argparse `handler` 注入、`DomainEntryCommandSpec.runtime_method`、`args.handler` 与 `getattr` 动态分派全部退役，避免 command metadata重新成为私有控制面。
+Command specs 只声明 parser 字段和帮助信息。CLI 与 domain entry 使用显式静态 dispatch 调用 authority/runtime function。
 
 ## D18 Source transport 归 OPL
 
-通用 HTTPS request、exact URL/origin policy、redirect enforcement、timeout、header validation、decode 与 transport error wrapping 由 `opl_framework.source_transport` 持有。MAG 只声明 NIH/NSFC 三个官方 URL allowlist、funding-specific User-Agent、HTML 解析和 domain provenance；不得恢复 repo-local `urllib` transport、fallback downloader 或第二套网络策略。
+通用 HTTPS request、exact URL/origin policy、redirect、timeout、header validation、decode 与 transport errors 由 `opl_framework.source_transport` 持有。MAG 声明 NIH/NSFC 官方 URL allowlist、funding-specific User-Agent、HTML 解析和 domain provenance。
 
 ## D19 语义 route 与 transition 物化分权
 
-所有 active Stage policy、StageRun profile 和 route advisory 统一声明 `semantic_route_decision_owner=decisive_codex_attempt` 与 `stage_transition_materialization_owner=opl_stage_run_controller`。Primary-only Stage 的 producer、Formal Review 的 terminal reviewer/re-reviewer 可以成为 decisive Attempt；repairer 永不 decisive。Controller 只能校验 decisive Attempt 的 route shape、evidence 与 declared target 后物化 transition，不拥有 grant-semantic approval authority；旧 `semantic_owner`、`route_selection_owner` 和把 `codex_cli` 同时写成语义与 transition owner 的合同已退役。
+所有 active Stage policy、StageRun profile 和 route advisory 声明 `semantic_route_decision_owner=decisive_codex_attempt` 与 `stage_transition_materialization_owner=opl_stage_run_controller`。Primary-only Stage 的 producer、Formal Review 的 terminal reviewer/re-reviewer 可以成为 decisive Attempt；repairer永不 decisive。Controller 校验 route shape、evidence 与 declared target 后物化 transition，grant-semantic approval 仍由 decisive Attempt 持有。
 
 ## D20 Package 采用 presence-based composition
 
@@ -102,11 +98,11 @@ required/optional dependencies、grant task 与 typed views，并把完整 bytes
 GHCR `latest-stable`。普通组合只检查 dependency identity presence 与 callability；
 版本范围、ABI、lock、payload、digest、atomic closure、共享 Release Set 和跨包求解不作
 readiness 门。exact ref/digest 只约束一次 release artifact 或 MAG submission artifact
-integrity。当前合同中的相反字段按兼容迁移读取，不据此宣称迁移完成。
+integrity。Package installed/readiness 以 carrier 与 owner 的 fresh readback 为准。
 
 `mas-scholar-skills` 是 MAG 的 required hard dependency：缺失或不可调用时，只有 MAG
 install/activation/operational readiness fail closed；无关 Package 继续运行。required
-不等于版本绑定，不恢复 provider version/ABI/lock/payload/digest 求解。MAG owner 定义
+不等于版本绑定。MAG owner 定义
 runtime activation、health、grant task 与 typed-view 接口，carrier 执行，Framework
 聚合 fresh readback，App 只消费。required/fail-closed machine contract 已落地；真实安装、
 载体可调用性与 publication currentness 仍只能由 owner-authoritative readback 证明。

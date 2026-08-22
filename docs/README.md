@@ -21,26 +21,21 @@ migration 与 deletion appendix；本仓只记录 MAG owner 边界，不复制�
 
 ## 当前计划
 
-- [MAG Active Truth：外部 Owner Evidence Tail](./active/mag-ideal-state-cross-repo-gap-plan.md)
-- [私有面 machine owner 导航](./active/opl-private-implementation-migration-inventory.md)
-- [Foundry Agent OS 目标差异](./active/foundry-agent-os-target-delta.md)
-
-结构 cleanup 已收口；active plan 只保留 live owner evidence 与下一轮执行 baton，私有面导航只指向 machine owners，不维护已删除 wrapper、固定 path inventory 或 scanner snapshot。
+- [MAG 外部 Owner Evidence](./active/mag-ideal-state-cross-repo-gap-plan.md)
 
 ## 目录
 
 | 目录 | 角色 |
 | --- | --- |
-| `active/` | 唯一 Active Truth、外部 evidence gaps 与 owner 路由 |
+| `active/` | 当前外部 evidence gaps |
 | `public/` | 公开定位与 MVP 边界 |
 | `product/` | app skill 和 generated product surface 支撑 |
 | `runtime/` | OPL-hosted runtime 与 MAG authority 边界 |
 | `delivery/` | package/export/manual portal 支撑 |
 | `source/` | workspace/source body 边界 |
-| `policies/` | 稳定治理规则 |
-| `specs/` | active/support specs 与 lifecycle map |
+| `policies/` | 稳定规则索引 |
+| `specs/` | current 与 support specs |
 | `references/` | 非 current owner 的参考材料 |
-| `history/` | 旧计划、旧 specs、proof 与 tombstone |
 
 ## Machine Entry
 
@@ -54,8 +49,4 @@ migration 与 deletion appendix；本仓只记录 MAG owner 边界，不复制�
 
 OPL structure currentness 使用 canonical conformance scanner，不使用 MAG 私有 source-purity wrapper。
 
-## 文档纪律
-
-- Active current facts 进入核心五件套、active plan、contract 或 source owner。
-- Dated proof、worktree/branch closeout、旧 snapshot 和 provider history 进入 `history/`。
-- 不把旧路径恢复为 compatibility entry，不用测试固定 prose。
+完成过程和旧版本从 Git 历史读取；当前事实直接更新核心文档、active evidence 表或对应机器 owner。

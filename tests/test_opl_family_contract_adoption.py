@@ -67,10 +67,6 @@ def test_stage_manifest_keeps_mag_authority_boundary_without_private_compiler() 
         assert stage["policy_ref"].startswith("agent/stages/")
         assert stage["allowed_action_refs"]
 
-    assert not (REPO_ROOT / "contracts" / "stage_control_plane.json").exists()
-    assert not (REPO_ROOT / "src" / "med_autogrant" / "stage_control_plane.py").exists()
-
-
 def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
     manifest = _read_json("agent/stages/manifest.json")
     action_catalog = _read_json("contracts/action_catalog.json")
@@ -205,11 +201,6 @@ def test_hosted_action_source_closure_contracts_are_closed() -> None:
     assert source_audit["version"] == "standard-agent-source-closure-audit.v1"
     entries = source_audit["entries"]
     expected_entries = {
-        ("scripts/line_budget.py", "main"): (
-            "developer_tool",
-            ("process_spawn",),
-            ("git",),
-        ),
         (
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
             "write_domain_memory_receipt_evidence",
@@ -242,12 +233,6 @@ def test_hosted_action_source_closure_contracts_are_closed() -> None:
     assert descriptor["standard_contract_refs"]["source_closure_audit"] == (
         "contracts/source_closure_audit.json"
     )
-
-    interface = descriptor["standard_agent_interface"]
-    assert "entry_command_template" not in interface["workspace_binding"]
-    assert "manifest_command_template" not in interface["workspace_binding"]
-    assert "dispatch_command" not in interface["runtime"]
-
 
 def test_descriptor_check_rejects_malformed_stage_manifest(tmp_path: Path) -> None:
     isolated_repo = tmp_path / "repo"

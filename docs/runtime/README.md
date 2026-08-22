@@ -16,5 +16,3 @@ OPL/Temporal 持有 durable runtime、stage attempt lifecycle、scheduler、queu
 - `contracts/owner_receipt_contract.json`
 
 本机非仓库状态统一进入 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。Repo 不保存 runtime receipt body、workspace body、artifact/package body、queue 或 provider attempt body。
-
-旧 local journal、attempt ledger、runtime wrapper、Hermes/Gateway/local-manager probe 和 compatibility alias 只从 history读取，不得恢复为 current runtime owner。

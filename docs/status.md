@@ -7,7 +7,7 @@ Machine boundary: 本文是人读状态摘要。机器真相归 current-program�
 
 ## 结论
 
-MAG 已完成 private OPL platform cleanup 的结构收口：私有 standard-pack/compiler、consumer-thinning/self-audit mesh、generic autonomy scheduler、product/status/user-loop/runtime shell、旧 evidence snapshots、editable bootstrap、`mag` console alias 和无 caller receipt/lifecycle wrapper 已退役。
+MAG 当前以 Declarative Grant Pack 提供领域语义，由 OPL 生成和托管通用运行面；grant 判断、artifact、package、memory 与 owner receipt authority 继续归 MAG。
 
 当前 repo-local 程序面是：
 
@@ -29,7 +29,7 @@ OPL/App 负责 generated product/status/user-loop/workbench caller。
 
 `contracts/standard_agent_conformance_profile.json` 现由 MAG 声明六阶段 ordinary golden path、唯一默认阶段 `call_and_candidate_intake`、12 项 physical morphology 分类，以及 generated default caller / OPL Python executor client / no-forbidden-write parity gates。OPL conformance 只通用读取该 profile，不再内置 MAG stage 或 morphology 分支。
 
-当前结构阶段已关闭，`current-program` 为 `structural_cleanup_closed`。后续 tranche 只接收 external owner/live evidence，不再恢复 MAG 私有 runtime、projection、compiler 或 self-audit 平台面。
+`current-program` 当前为 `structural_cleanup_closed`；后续工作是补充 external owner 与 live evidence。
 
 ## OPL Package 组合迁移状态
 
@@ -39,15 +39,10 @@ business task 与 typed views；完整一方 bytes 由本 owner 独立发布到�
 `latest-stable`。Codex Plugin 只是当前默认 carrier projection，Framework 只应聚合
 carrier fresh readback、presence/callability 与动作。
 
-当前 `contracts/opl_agent_package_manifest.json`、Scholar binding、source 和 validators
-已把 `mas-scholar-skills` 实现为 required/fail-closed，并保留 compatibility discovery 所需
-的 dependency kind、version requirement、capability ABI、consumer profile 与 provider
-manifest refs。旧
-activation/materialization、lifecycle owner/receipt、distribution/sync 和 status/repair
-command 字段已从 manifest 删除，不再是当前机器事实或新实现依据。ScholarSkills 已
-落地为 MAG 的 required hard dependency：仅以 identity presence/callability 在 MAG
-admission、launch、route、readiness 前 fail closed，不阻断无关 Package，也不做 provider
-version/ABI/lock/payload/digest 求解。跨仓阶段、删除顺序与功能等价证据服从 App 的
+`contracts/opl_agent_package_manifest.json`、Scholar binding、source 和 validators
+将 `mas-scholar-skills` 声明为 MAG required hard dependency。MAG admission、launch、
+route 与 readiness 只检查该 identity 的 presence/callability；缺失只阻断 MAG，不影响
+无关 Package。跨仓阶段与功能等价证据服从 App 的
 [跨仓总体迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
 Framework 同名文档只作 Framework compatibility inventory、repo-local migration 与
 deletion appendix，不是第二份总体计划。
@@ -73,20 +68,9 @@ readback。
 | Production acceptance | `contracts/production_acceptance/mag-production-acceptance.json` | provenance only, typed blocker open |
 | Live progress | `contracts/live_stage_run_progress_evidence.json` | owner blocker recorded, no ready claim |
 
-## 已退役
-
-- MAG-owned pack compiler、source scanner 与 generated aggregate checker
-- private product entry/status/progress/cockpit/user-loop/workbench builders
-- generic scheduler/daemon/queue/attempt-ledger/session/lifecycle shells
-- stale production/consumer snapshots and patch/worktree closeout ledgers
-- compatibility console alias、editable dependency bootstrap、proof-only lane
-- implementation-bound and snapshot-bound tests
-
-这些内容不再作为 current source、active contract 或 active docs 入口。历史只能从 `docs/history/**` 或 git history 读取。
-
 ## Structural Readback
 
-结构 currentness 不在本文冻结 commit、digest、测试计数或 worktree closeout。需要判断当前状态时，直接读取上面的机器合同，并运行本文件末尾的 MAG repo-native 验证与 OPL scaffold/interfaces/source-closure/conformance 命令。旧 Contract V2 snapshot、consumer ABI pin、tests-only consolidation 和 absorption 明细已折回 [历史 closeout](./history/plans/2026-07-11-mag-structural-and-tests-closeout.md)。
+结构 currentness 通过上面的机器合同、MAG repo-native 验证与 OPL scaffold/interfaces/source-closure/conformance 回读。完成过程和旧版本从 Git 历史读取。
 
 这些 readback 只证明对应结构门；`physical_delete_authorized`、grant/quality/export/submission/production readiness、owner acceptance 与 live evidence 仍由各自 owner surface 决定。
 

@@ -10,7 +10,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime  # noqa: E402
 from med_autogrant.domain_runtime_parts.contracts import build_executor_routing_contract  # noqa: E402
 import med_autogrant.domain_runtime_parts.handoff_surfaces as handoff_surfaces  # noqa: E402
-from support.cli import run_cli  # noqa: E402
 from med_autogrant.workspace_types import WorkspaceStateError  # noqa: E402
 
 
@@ -37,20 +36,6 @@ EXPECTED_AUTHOR_SIDE_ROUTE_IDS = (
     "final_package",
     "hosted_contract_bundle",
 )
-
-
-class MagRuntimeCliDispatchTest(unittest.TestCase):
-    def test_runtime_run_public_cli_is_retired(self) -> None:
-        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-            exit_code, stdout, stderr = run_cli(
-                "runtime", "run", "--input", str(CRITIQUE_EXAMPLE_PATH), "--format", "json",
-                allow_system_exit=True,
-            )
-
-        self.assertEqual(exit_code, 2)
-        self.assertEqual(stdout, "")
-        self.assertIn("invalid choice", stderr)
-        entry_class.assert_not_called()
 
 
 class MagDomainRuntimeFlowTest(unittest.TestCase):

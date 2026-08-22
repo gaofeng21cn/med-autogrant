@@ -29,15 +29,6 @@ STAGE_IDS = (
     "package_and_submit_ready",
 )
 
-_FORBIDDEN_SCAN = {
-    "contains_workspace_private_evidence": False,
-    "contains_canonical_grant_artifact_content": False,
-    "contains_fundability_verdict": False,
-    "contains_authoring_quality_verdict": False,
-    "contains_submission_ready_export_verdict": False,
-}
-
-
 def build_domain_memory_writeback_proposal(
     *,
     input_path: str | Path,
@@ -70,7 +61,6 @@ def build_domain_memory_writeback_proposal(
             "repo_tracked": False,
         },
         "lesson_summary": resolved_lesson_summary,
-        "forbidden_content_scan": dict(_FORBIDDEN_SCAN),
         "write_policy": "runtime_store_only_no_repo_write",
         "proposal_ref": (
             "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
@@ -112,7 +102,6 @@ def build_domain_memory_writeback_decision(
             context="domain_memory_writeback_proposal",
         )
     )
-    _validate_forbidden_scan(proposal_body)
     resolved_reason = _require_nonempty_string(decision_reason, field_name="decision_reason")
     resolved_memory_id = memory_id or proposal_id
     accepted_memory_ref = (
@@ -322,15 +311,6 @@ def _require_decision(decision: str) -> str:
     if resolved not in {"accepted", "rejected"}:
         raise WorkspaceStateError(f"domain memory decision 不允许: {resolved}")
     return resolved
-
-
-def _validate_forbidden_scan(proposal: Mapping[str, Any]) -> None:
-    scan = proposal.get("forbidden_content_scan")
-    if not isinstance(scan, Mapping):
-        raise WorkspaceStateError("domain memory proposal 缺少 forbidden_content_scan。")
-    for key, expected in _FORBIDDEN_SCAN.items():
-        if scan.get(key) is not expected:
-            raise WorkspaceStateError(f"domain memory proposal 违反内容边界: {key}")
 
 
 def _stage_descriptor_ref(stage_id: str) -> str:

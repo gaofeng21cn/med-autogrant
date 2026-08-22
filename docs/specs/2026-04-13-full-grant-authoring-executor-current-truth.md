@@ -1,144 +1,52 @@
-# Full Grant Authoring Executor Current Truth
+# Full Grant Authoring Executor
 
 Owner: `Med Auto Grant`
 Purpose: `full_authoring_route_executor_support_record`
 State: `support_current_truth`
-Machine boundary: 本文是人读支撑记录，只在 landed authoring route catalog 与默认 Codex CLI executor vocabulary subsection 内有效。机器真相继续归 source、schemas、product-entry manifest、contracts 和 `contracts/runtime-program/current-program.json`。
+Machine boundary: 本文解释 authoring route 与 executor 分工；机器真相归 source、schemas、contracts 和 `contracts/runtime-program/current-program.json`。
 
-> 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `support_current_truth`，只在 landed authoring route catalog 与默认 `Codex CLI` executor vocabulary 仍由当前 contracts/schema/source 支撑的 subsection 内有效。当前 public identity、runtime owner、App/workbench、production evidence 和 grant readiness 结论回到核心五件套、active plan 与 `contracts/runtime-program/current-program.json`。
+## Route Catalog
 
-Last reviewed: `2026-06-12`
+Authoring route 从方向判断推进到最终 package：
 
-## Activation Status
+| Route | Command |
+| --- | --- |
+| `direction_screening` | `execute-strategy-authoring-pass` 或 `execute-direction-screening-pass` |
+| `question_refinement` | `execute-question-refinement-pass` |
+| `argument_building` | `execute-argument-building-pass` |
+| `fit_alignment` | `execute-fit-alignment-pass` |
+| `outline` | `execute-outline-pass` |
+| `drafting` | `execute-drafting-pass` |
+| `critique` | `execute-critique-pass` |
+| `revision` | `execute-revision-pass` |
+| `frozen` | `execute-freeze-pass` |
+| `artifact_bundle` | `build-artifact-bundle` |
+| `final_package` | `build-final-package` |
+| `hosted_contract_bundle` | `build-hosted-contract-bundle` |
 
-- Phase: `P4 mature direct grant product entry`
-- Active tranche: `P4.D full grant authoring executor landing`
-- Status: `support_current_truth_by_subsection`
+`execute-strategy-authoring-pass` 是前半程默认入口：Codex 在一个 attempt 中共同收敛 direction、question、argument、fit、outline 和 draft，再由 deterministic projection 物化六个 schema-backed checkpoint。原子 pass 用于定点 route-back 和诊断。
 
-## Goal
+## Data Invalidation
 
-把此前只在 route matrix 里冻结、仍被写成 `pending / handoff-required` 的前半程 authoring route，全部收口成可执行、可验证、可审计的 landed service-safe command surface，并保持以下边界不变：
+上游对象改变时，下游对象和引用随之失效：
 
-- `Codex CLI` 继续是默认 concrete executor
-- `Hermes-Agent` 只作为显式 OPL receipt/proof lane，不持有默认 runtime、authoring executor、grant truth 或 quality verdict
-- `Med Auto Grant` 继续持有 grant domain truth、author-side route 与导出物 owner
-- `grant-user-loop` / `build-product-entry` / hosted bundle 继续只投影和导出 route truth，不发明新的产品层 executor
+- direction 变化使 question、argument、fit、draft、critique、revision 失效；
+- question 变化使 argument、fit、draft、critique、revision 失效；
+- argument 变化使 fit、draft、critique、revision 失效；
+- fit 变化使 draft、critique、revision 失效；
+- draft 变化使 critique、revision 失效。
 
-## Landed Facts
+Executor 同步移除 `preliminary_evidence_pack.evidence_items[].supports` 中指向失效对象的引用，避免悬挂 ID。
 
-### 1. `direction_screening -> frozen` 现在已经形成完整 landed route catalog
+## Executor Boundary
 
-当前 route contract / product entry / hosted contract bundle 共享的 landed command catalog 现在至少包括：
-
-- `direction_screening -> execute-strategy-authoring-pass`（默认；当前 attempt 通常一次 Codex 共同收敛到 reviewable draft，失败/反馈可重试或 route back）
-- `direction_screening -> execute-direction-screening-pass`
-- `question_refinement -> execute-question-refinement-pass`
-- `argument_building -> execute-argument-building-pass`
-- `fit_alignment -> execute-fit-alignment-pass`
-- `outline -> execute-outline-pass`
-- `drafting -> execute-drafting-pass`
-- `critique -> execute-critique-pass`
-- `revision -> execute-revision-pass`
-- `frozen -> execute-freeze-pass`
-- `artifact_bundle -> build-artifact-bundle`
-- `final_package -> build-final-package`
-- `hosted_contract_bundle -> build-hosted-contract-bundle`
-
-这意味着：
-
-- `executor_routing_contract.current_stage_route`
-- `executor_routing_contract.recommended_executor_route`
-- `author_side_route_catalog`
-- `grant-user-loop.next_action`
-- hosted bundle 内的 `authoring_contract`
-
-现在看到的是同一份“全链 landed authoring executor truth”，而不是“前半程 pending、后半程 landed”的分裂口径。
-
-### 2. `grant-user-loop` 现在对整条 authoring 主线直接投影 landed command
-
-`grant-user-loop` 当前不再只对 `drafting -> critique` 给 landed command。
-
-现在只要推荐 route 已经进入上述 landed catalog，`next_action` 就会直接返回：
-
-- `action_kind = execute_landed_route`
-- 对应的 `uv run python -m med_autogrant <command> ... --format json`
-- `--output` 不再是 `<...-output-path>` 占位符，而是指向 `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/<grant_run_id>/<workspace_id>/<draft_id-or-no-draft>/...` 的具体建议输出文件
-
-因此从 `direction_screening` 开始，当前 direct grant user loop 就能一路把用户送到：
-
-- 问题提纯
-- 立项依据构建
-- fit 对齐
-- 提纲冻结
-- 正文起草
-- 导师批注
-- 结构化修订
-- 送审前冻结
-
-### 3. 前半程 rerun 现在会显式清掉下游对象，并清理失效支持引用
-
-当前 landed authoring executor 在改写上游对象后，会显式清掉不再可信的下游对象：
-
-- 方向重筛后清空 question / argument / fit / draft / critique / revision
-- 问题重塑后清空 argument / fit / draft / critique / revision
-- 立项依据重建后清空 fit / draft / critique / revision
-- fit 重建后清空 draft / critique / revision
-- drafting 重跑后清空 critique / revision
-
-除此之外，executor 现在还会同步清理 `preliminary_evidence_pack.evidence_items[].supports` 中已经失效的旧下游引用，避免 rerun 后留下悬挂的旧 `question_id / argument_chain_id / fit_mapping_id / draft_id`。
-
-### 4. 当前执行器身份是“前半程 Codex CLI + 冻结 deterministic freeze”
-
-当前 landed executor 的 concrete owner 是：
-
-- `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique`
-  - 默认 concrete executor：`Codex CLI`
-  - `executor.kind = codex_cli`
-  - `model / reasoning_effort` 默认继续继承本机 Codex 默认
-- `revision`
-  - 当前 deterministic handler 只应用 AI 已明确给出的局部或 whole-draft mutation，不选择修订范围或认知顺序
-- `frozen`
-  - 当前是 deterministic domain freeze pass
-
-前六个原子 pass 继续作为定点 route-back/diagnostic surface；默认 route command 是 `execute-strategy-authoring-pass`，一个正常 attempt 通常由一次 Codex invocation 同时生成 direction/question/argument/fit/outline/draft，再以 deterministic contract projection 物化六个 schema-backed checkpoint。observed invocation count 只是 receipt telemetry，不是成功条件或调用上限；解析失败、provider/attempt retry、review feedback 与 route-back 可以产生后续 invocation。六个 checkpoint 不重新触发六次模型 micro-pass。
-
-因此当前 landed 的是“完整可执行 route truth”，不是“所有单步都已经迁成 `hermes_agent` 非默认 executor lane”。
-
-### 5. `pending_handoff_requirements` 已退出当前主线 route output
-
-旧 `product-status.schema.json` 已从 repo-tracked active schemas 删除；product status 只由 OPL generated surface 投影，历史形状从 git provenance 追溯。
-
-当前主线 route output 的真实口径已经是：
-
-- full landed route catalog
-- full service-safe command surface
-- full user-loop landed command projection
+- Strategy、drafting 与 critique 默认通过 OPL executor client 调用 `codex_cli`。
+- Revision handler 应用已明确的局部或 whole-draft mutation。
+- Freeze pass 负责 deterministic domain freeze。
+- Model invocation 数量是 telemetry；retry、review feedback 和 route-back 可以产生后续 invocation。
 
 ## Verification
 
-本 tranche 至少覆盖：
-
-- `uv run pytest tests/test_authoring_executor.py -q`
-- `uv run pytest tests/test_domain_entry.py tests/product_entry_cases tests/test_domain_runtime.py tests/test_hosted_contract_bundle.py -q`
-- `scripts/verify.sh`
-
-重点验证：
-
-- 前半程 executor 能产出合法 workspace
-- landed route catalog 与 schema / product entry / hosted bundle 保持一致
-- `grant-user-loop` 对前半程 route 直接投影带 runtime-state 输出路径的 landed command，而不是要求用户手填 output path 占位符
-- rerun 后失效的下游对象与 `preliminary_evidence_pack.supports` 会被显式清理
-
-## Honest Boundary
-
-这条 current truth 只说明：
-
-- `direction_screening -> frozen` 全链 authoring route 已 landed
-- 当前 product loop、hosted bundle 与 route contract 已共享同一份 landed truth
-- 当前执行器边界与失效清理规则已经冻结
-
-明确不表示以下内容已经成立或需要恢复：
-
-- 不表示 mature direct grant Web UI / hosted runtime 已完成
-- 不表示旧 `OPL Gateway` landed wording 是 current owner line；它只保留为 provenance
-- 不表示所有 landed route 都已经自动变成 `hermes_agent` 非默认 full agent loop
+- `./scripts/run-pytest-clean.sh tests/test_authoring_executor.py -q`
+- `./scripts/run-pytest-clean.sh tests/test_domain_entry.py tests/product_entry_cases tests/test_domain_runtime.py tests/test_hosted_contract_bundle.py -q`
+- `./scripts/verify.sh`

@@ -34,13 +34,6 @@
       "stage_scope": "<stage-id>",
       "reuse_boundary": "strategy_guidance_only_no_verdict_authority"
     },
-    "forbidden_content_scan": {
-      "contains_workspace_private_evidence": false,
-      "contains_canonical_grant_artifact_content": false,
-      "contains_fundability_verdict": false,
-      "contains_authoring_quality_verdict": false,
-      "contains_submission_ready_export_verdict": false
-    },
     "writeback_proposal_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/writeback-proposals/<grant_run_id>/<proposal_id>.json",
     "decision_receipt_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/<grant_run_id>/memory-writeback-decisions/<proposal_id>.json"
   },

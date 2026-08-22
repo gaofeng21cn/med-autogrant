@@ -6,15 +6,14 @@ Use the intake evidence and call review criteria to reason across call fit, appl
 
 A good result states the central grant opportunity, why this applicant can credibly pursue it, the strongest reviewer objections, the mitigation plan, and the evidence or decision still needed. Use `mag-strategy-intake-specialist` for specialist fundability judgment. Memory is advisory context only and must remain subordinate to the current call and source refs.
 
-For this Stage, the MAG overlay reads its optional Skill selection and
-availability policy from `contracts/scholar_skill_binding_contract.json`.
-Invoke only available, compatible, material Skills with the current grant
-artifact ref, `source_pack_ref`, and epistemic scope. Their outputs are
-refs-only `candidate_refs`, `owner_gate_handoff_ref`, or
-`route_back_candidate`; only MAG may consume them into grant truth or issue
-the fundability verdict. Missing or incompatible Provider state records only
-a diagnostic or advisory quality hint and cannot block install, Stage launch,
-Stage route, operational readiness, fundability, or create a typed blocker.
+Apply this Stage's required Skill binding from
+`contracts/scholar_skill_binding_contract.json`. Resolve Provider identity and
+callability before MAG work, then invoke the selected subset with the current
+grant artifact ref, `source_pack_ref`, and epistemic scope. If the Provider is
+not usable, stop this MAG Stage with the contract-defined dependency
+diagnostic. Provider outputs are refs-only `candidate_refs`,
+`owner_gate_handoff_ref`, or `route_back_candidate`; only MAG may consume them
+into grant truth or issue the fundability verdict.
 
 OPL applies the role-specific quality cycle declared for this Stage. Polishing inside the current Codex thread is `in_thread_refinement` only; formal review, repair, and re-review use separate StageAttempts and fresh threads that receive only the exact artifact, source, rubric, and necessary lineage refs.
 

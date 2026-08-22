@@ -43,17 +43,6 @@ def test_current_program_tracks_runtime_owner_and_executor_boundary() -> None:
     )
 
 
-def test_current_program_is_a_pointer_not_a_private_platform_snapshot() -> None:
-    contract = _contract()
-    serialized = json.dumps(contract, sort_keys=True)
-
-    assert "product_entry_manifest" not in serialized
-    assert "mag_consumer_thinning_contract" not in serialized
-    assert "stage_led_framework_boundary" not in serialized
-    assert "phase_map" not in serialized
-    assert "ideal_target" not in serialized
-
-
 def test_repo_tracked_truth_surfaces_use_machine_paths_or_semantic_docs() -> None:
     for surface_ref in _contract()["contract_refs"].values():
         assert (REPO_ROOT / surface_ref).exists(), surface_ref

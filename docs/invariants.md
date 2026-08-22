@@ -15,7 +15,6 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - 正式 repo-local entry 是 `medautogrant` CLI、`MedAutoGrantDomainEntry` 和 direct domain handler。
 - CLI command metadata 只声明 parser 字段；执行必须走显式静态 dispatch，不得向 argparse 注入 callable handler，不得在 command spec保存 runtime method，也不得使用 `getattr`/字符串反射执行命令。
 - `MCP` 仍是 `descriptor_only=true`、`public_runtime=false` 的协议投影，不是当前 public runtime。
-- 不恢复 `mag` console script、旧 flat command、wrapper、facade 或 compatibility alias。
 
 ## Authority
 
@@ -31,7 +30,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 ## OPL 边界
 
 - Generic runtime、scheduler、queue、attempt ledger、session、lifecycle transport、generated product shell 与 workbench 归 OPL。
-- Standard Agent interface 不得恢复 `entry_command_template`、`manifest_command_template` 或 `runtime.dispatch_command`；hosted execution 统一由 OPL 从 action catalog v2生成。
+- Standard Agent interface 声明 workspace locator、stage catalog、runtime identity、progress alias 与 routing signals；hosted execution 由 OPL 从 action catalog v2 生成。
 - MAG owner 持有 executor-neutral Package identity、capability/dependency intent、grant
   business task 与 typed views；App、Framework、carrier 与 executor 不得复制这些
   authority。
@@ -50,7 +49,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
   dependency 和 typed view。
 - MAG owner 定义 runtime activation、health、grant business task 与 typed-view 接口；
   carrier 执行，Framework 只聚合 fresh readback 和动作，App 只消费投影。
-- 通用 source fetch 必须调用 OPL fail-closed HTTPS transport；MAG 只持有 exact official URL allowlist和领域解析语义，不得恢复私有 `urllib` transport、宽泛 origin放行或 fallback downloader。
+- 通用 source fetch 调用 OPL HTTPS transport；MAG 持有 exact official URL allowlist、funding User-Agent 和领域解析语义。
 - MAG 不写 OPL stage attempt/current/terminal state，不拥有 Temporal worker，也不把 bounded controller 扩成 durable loop。
 - Generated caller 只能回到 MAG action target；不能读取 grant/memory/artifact/package body。
 
@@ -59,7 +58,6 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
 - 开发 checkout 不保存 runtime artifact、receipt instance、workspace body、package body、venv 或 cache。
 - `src/` 只允许 domain entry、authority function、refs-only adapter 与 grant-native helper；无 caller 的平台壳直接删除。
-- 历史路径只在 `docs/history/**`、明确 provenance 或 negative guard 中出现，不作为兼容承诺。
 - Exact ref/digest 只约束单次 OPL release artifact 或 MAG submission artifact integrity，
   不成为日常 Package composition/readiness 门。
 
@@ -80,4 +78,4 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - `package_and_submit_ready` 必须把四个 canonical package artifacts 的 exact refs/hash 交给 fresh Reviewer 作为 identity/release-integrity input，并按 `contracts/epistemic_review_scope_profile.json` 只复审 stale dependency scopes；producer/helper 结果固定为 `submission_ready=false` 候选，不能投影 terminal `submission_ready`。Governance metadata、layout 或 package-only delta 不得自动失效 content/methodology/reference evidence。本 Stage 只修 assembly、manifest 与 provenance projection，其余缺陷 route-back，外部 portal acceptance 保持 human-owned。
 - StageRunController 只能物化绑定所审 scope artifact identity 的 `opl_stage_review_receipt`；无关 package hash 单独变化不失效该 receipt，但其所审 artifact identity 变化必须失效。任何本地 submission-ready 投影仍须同时消费 current scoped evidence、匹配当前 package hashes 的独立 exact-byte release integrity 与 MAG-owned export/owner verdict；reviewer 与 OPL 均不得签 MAG owner receipt 或授权 export/submission readiness。
 - Reviewer 与 re-reviewer Attempt 只通过 `route_impact.stage_quality_cycle.outcome` 返回 `pass|repair_required|quality_debt|blocked|human_gate`。Attempt 不得输出 receipt `verdict`；StageRunController 将前三者同名映射，并将 `blocked|human_gate` 映射为 receipt `hard_stop`。
-- Formal Review StageRun 中只有 terminal reviewer/re-reviewer 能输出 `route_impact.stage_route_decision`；在这种 StageRun 内 producer、repairer 始终只能输出 `stage_route_recommendation`，但 primary-only StageRun 的 producer可以成为 decisive Attempt。`same_stage_repair_required` 且 budget 尚存时，reviewer/re-reviewer 也只 recommendation并继续本 Stage；仅当最窄 canonical owner 是另一个 declared Stage 时，`cross_stage_route_back_before_budget_exhaustion` 才允许它提前输出 `repair_required + stage_route_decision(decision_kind=route_back)`，其他预算耗尽前终局 route 一律禁止。预算耗尽且 exact artifact 可消费时，`repair_required` reviewer/re-reviewer 是 terminal decisive Attempt；hard boundary 或零可消费 artifact 不输出 route。Attempt 不直接物化 transition 或 Review receipt，旧 route closeout 字段不得使用。
+- Formal Review StageRun 中只有 terminal reviewer/re-reviewer 能输出 `route_impact.stage_route_decision`；在这种 StageRun 内 producer、repairer 始终只能输出 `stage_route_recommendation`，但 primary-only StageRun 的 producer可以成为 decisive Attempt。`same_stage_repair_required` 且 budget 尚存时，reviewer/re-reviewer 也只 recommendation并继续本 Stage；仅当最窄 canonical owner 是另一个 declared Stage 时，`cross_stage_route_back_before_budget_exhaustion` 才允许它提前输出 `repair_required + stage_route_decision(decision_kind=route_back)`，其他预算耗尽前终局 route 一律禁止。预算耗尽且 exact artifact 可消费时，`repair_required` reviewer/re-reviewer 是 terminal decisive Attempt；hard boundary 或零可消费 artifact 不输出 route。Attempt 不直接物化 transition 或 Review receipt。

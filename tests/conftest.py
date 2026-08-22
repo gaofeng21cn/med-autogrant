@@ -24,11 +24,6 @@ REGRESSION_FILES = {
     "tests/test_workspace_summary.py",
 }
 
-STRUCTURE_FILES = {
-    "tests/test_line_budget.py",
-}
-
-
 def _relative_test_path(item: pytest.Item) -> str:
     path = Path(str(item.fspath)).resolve()
     return path.relative_to(REPO_ROOT).as_posix()
@@ -41,5 +36,3 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
             item.add_marker(pytest.mark.meta)
         if relative_path in REGRESSION_FILES or relative_path.startswith("tests/product_entry_cases/"):
             item.add_marker(pytest.mark.regression)
-        if relative_path in STRUCTURE_FILES:
-            item.add_marker(pytest.mark.structure)

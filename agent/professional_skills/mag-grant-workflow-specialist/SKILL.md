@@ -53,12 +53,12 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Shared Scholar Skill Binding
 
-- Read `contracts/scholar_skill_binding_contract.json` and use only the shared
-  `mas-scholar-skills` ids optionally bound to the current MAG Stage.
-- Invoke a shared Skill only when its Provider is available and compatible.
-  Missing or incompatible Provider state yields a diagnostic or advisory
-  quality hint; continue the MAG owner core without blocking install, Stage
-  route, operational readiness, grant work, quality review, or export.
+- Read `contracts/scholar_skill_binding_contract.json` and use the current
+  Stage's selected required `mas-scholar-skills` subset.
+- Resolve Provider identity and callability before MAG work. Missing or
+  incompatible Provider state stops this MAG Stage under the contract's
+  dependency policy; it does not choose a Stage route or create a MAG typed
+  blocker.
 - Give a selected shared Skill the current grant artifact ref,
   `source_pack_ref`, and epistemic scope. Do not pass manuscript, journal,
   publication, or MAS snapshot refs unless they are also real inputs to this
@@ -69,8 +69,6 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - Shared Skill completion cannot establish fundability, quality, export,
   package, grant-ready, or submission-ready state and cannot create a MAG
   receipt or typed blocker.
-- Provider absence, incompatibility, or completion cannot select the MAG route,
-  create quality debt by itself, or create a MAG typed blocker.
 
 ## Stage Prompt Boundary
 
@@ -78,9 +76,9 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
 - Package work proceeds from the best readable grant artifact. Missing quality verdict refs, corrupt output, or zero readable output become quality debt plus a consumable diagnostic and close submission/export/ready claims without stopping the next stage; only authority, safety/permission, identity/currentness, unavailable executor, irreversible action, or explicit human authority hard-stops work.
 
-## Legacy Coverage
+## Workflow Scope
 
-This workflow-level skill covers the retired `mag-proposal-section-author`, `mag-grant-reviewer`, `mag-rebuttal-planner`, and `mag-submission-package-auditor` entries. Keep authoring, independent review, critique-as-repair-hint, rebuttal repair, closure dossier, and local package/portal handoff together after strategy and aims are accepted; do not restore the retired fine-grained skill directories.
+Keep authoring, independent review, critique-as-repair-hint, rebuttal repair, closure dossier, and local package/portal handoff together after strategy and aims are accepted.
 
 ## Blockers And Repair Targets
 

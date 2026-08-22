@@ -57,12 +57,12 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 
 ## Shared Scholar Skill Binding
 
-- Read `contracts/scholar_skill_binding_contract.json` and use only the shared
-  `mas-scholar-skills` ids optionally bound to the current MAG Stage.
-- Invoke a shared Skill only when its Provider is available and compatible.
-  Missing or incompatible Provider state yields a diagnostic or advisory
-  quality hint; continue the MAG owner core without blocking install, Stage
-  route, operational readiness, grant work, or fundability.
+- Read `contracts/scholar_skill_binding_contract.json` and use the current
+  Stage's selected required `mas-scholar-skills` subset.
+- Resolve Provider identity and callability before MAG work. Missing or
+  incompatible Provider state stops this MAG Stage under the contract's
+  dependency policy; it does not choose a Stage route or create a MAG typed
+  blocker.
 - Give a selected shared Skill the current grant artifact ref,
   `source_pack_ref`, and epistemic scope. Do not pass manuscript, journal,
   publication, or MAS snapshot refs unless they are also real inputs to this
@@ -73,8 +73,6 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - Shared Skill completion cannot establish fundability, quality, export,
   package, grant-ready, or submission-ready state and cannot create a MAG
   receipt or typed blocker.
-- Provider absence, incompatibility, or completion cannot select the MAG route,
-  create quality debt by itself, or create a MAG typed blocker.
 
 ## Stage Prompt Boundary
 
@@ -82,9 +80,9 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - This skill supplies professional strategy judgment; it does not write owner receipts, mutate grant truth, decide memory accept/reject, authorize quality/export/submission readiness, or claim domain readiness.
 - Proposal authoring must preserve the accepted strategy and aims, or route back here with the exact blocker.
 
-## Legacy Coverage
+## Workflow Scope
 
-This workflow-level skill covers the retired `mag-call-fit-analyst`, `mag-fundability-strategist`, `mag-specific-aims-architect`, and `mag-grant-strategy-memory-curator` entries. Keep those pre-authoring strategy decisions together so call fit, fundability, aims, reviewer-panel memory, call-specific risk reuse, and strategy memory are judged against one locked funding route; do not restore the retired fine-grained skill directories.
+Keep pre-authoring strategy decisions together so call fit, fundability, aims, reviewer-panel memory, call-specific risk reuse, and strategy memory are judged against one locked funding route.
 
 ## Blockers And Repair Targets
 

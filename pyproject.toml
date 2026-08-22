@@ -25,7 +25,6 @@ markers = [
   "smoke: minimal default CLI/product entry health checks",
   "integration: cross-surface integration checks that are broader than unit contracts",
   "regression: heavier matrix, provenance oracle, runtime/export, and product regression checks",
-  "structure: repository structure and architecture governance checks",
 ]
 
 [dependency-groups]

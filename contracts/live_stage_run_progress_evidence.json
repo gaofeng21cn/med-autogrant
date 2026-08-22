@@ -275,12 +275,6 @@
     "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
     "contracts/README.md"
   ],
-  "next_verification_command_refs": [
-    "rtk jq empty contracts/live_stage_run_progress_evidence.json",
-    "rtk ./scripts/run-pytest-clean.sh tests/test_live_stage_run_progress_evidence.py tests/test_stage_run_kernel_profile_contract.py tests/test_owner_chain_live_progress_evidence.py -q",
-    "rtk ./scripts/verify.sh",
-    "rtk git diff --check"
-  ],
   "refs_only_policy": {
     "repo_tracks_receipt_instance_body": false,
     "repo_tracks_grant_truth_body": false,

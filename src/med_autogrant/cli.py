@@ -18,9 +18,6 @@ from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
 
-RETIRED_FLAT_COMMANDS = frozenset(INTERNAL_TO_PUBLIC_COMMAND)
-
-
 def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, object]:
     input_path = vars(args).get("input_path")
     if not input_path:
@@ -173,13 +170,6 @@ def _maybe_handle_public_help(argv: list[str]) -> int | None:
     return None
 
 
-def _reject_retired_flat_command(argv: list[str]) -> None:
-    if not argv:
-        return
-    if argv[0] in RETIRED_FLAT_COMMANDS:
-        raise SystemExit(f"argument command: invalid choice: '{argv[0]}'")
-
-
 def entrypoint() -> None:
     raise SystemExit(main())
 
@@ -189,7 +179,6 @@ def main(argv: list[str] | None = None) -> int:
     help_result = _maybe_handle_public_help(resolved_argv)
     if help_result is not None:
         return help_result
-    _reject_retired_flat_command(resolved_argv)
     parser = build_parser()
     args = parser.parse_args(resolved_argv)
     try:

@@ -43,7 +43,7 @@ SCHOLAR_SKILL_REQUIRED_NON_USABLE_OBSERVATIONS = frozenset(
         "unobserved",
     }
 )
-SCHOLAR_SKILL_REQUIRED_FAIL_OPEN_BLOCK_FIELDS = frozenset(
+SCHOLAR_SKILL_REQUIRED_BLOCK_FIELDS = frozenset(
     {
         "blocks_mag_install",
         "blocks_stage_launch",
@@ -132,7 +132,7 @@ def read_scholar_skill_binding_contract(
         or availability_policy.get("creates_typed_blocker") is not False
         or any(
             availability_policy.get(field) is not True
-            for field in SCHOLAR_SKILL_REQUIRED_FAIL_OPEN_BLOCK_FIELDS
+            for field in SCHOLAR_SKILL_REQUIRED_BLOCK_FIELDS
         )
         or not isinstance(authority_boundary, dict)
         or not authority_boundary

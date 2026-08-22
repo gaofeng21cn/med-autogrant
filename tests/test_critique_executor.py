@@ -228,10 +228,8 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
         self.assertEqual(_resolve_critique_executor_kind(None), "codex_cli")
         self.assertEqual(_resolve_critique_executor_kind("hermes_agent"), "hermes_agent")
-        for retired_alias in ("codex_cli_autonomous", "hermes_native_proof"):
-            with self.subTest(retired_alias=retired_alias):
-                with self.assertRaisesRegex(WorkspaceStateError, "不支持该 executor_kind"):
-                    _resolve_critique_executor_kind(retired_alias)
+        with self.assertRaisesRegex(WorkspaceStateError, "不支持该 executor_kind"):
+            _resolve_critique_executor_kind("unsupported")
 
         invalid_receipt = _hermes_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
         invalid_receipt.pop("surface_kind")

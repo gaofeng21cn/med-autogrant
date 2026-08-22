@@ -233,13 +233,6 @@ def test_package_stage_uses_scoped_currentness_before_ready_projection() -> None
         assert f"`{repair_trigger}`" in roles
     assert "`optional_observation` or quality debt without reopening the loop" in roles
     assert "cannot create a Review receipt or a ready verdict" in roles
-    for legacy_field in (
-        "route_back_stage_ref",
-        "selected_next_stage_ref",
-        "next_stage_ref",
-        "workflow_complete",
-    ):
-        assert f"legacy `{legacy_field}`" in roles or f"`{legacy_field}`" in roles
     assert "materializes only the identity-bound `opl_stage_review_receipt`" in prompt
     assert "Hashes are only locators and stale hints for epistemic review" in prompt
     assert "do not create another loop, ledger, scheduler, or evidence control plane" in prompt

@@ -194,7 +194,7 @@
     "source_refs": [
       "contracts/stage_run_kernel_profile.json#/domain_thinning_policy",
       "contracts/functional_privatization_audit.json#/physical_source_morphology/surface_classifications/legacy_runtime_residue",
-      "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"
+      "docs/decisions.md"
     ],
     "allowed_remaining_roles": [
       "migration_input",
