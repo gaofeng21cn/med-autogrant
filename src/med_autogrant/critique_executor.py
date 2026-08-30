@@ -13,9 +13,9 @@ from med_autogrant.critique_policy import (
     resolve_critique_policy_from_document,
 )
 from med_autogrant.domain_executor_client import ExecutorRunner, run_domain_executor
+from med_autogrant.domain_runtime_parts.contracts import validate_contract_schema
 from med_autogrant.schema_loader import SchemaStore
 from opl_framework.executor_client import run_agent_execution_request
-from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
@@ -423,13 +423,10 @@ def _validate_schema_payload(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    issues = _SchemaSubsetValidator(SchemaStore()).validate(payload, schema_file)
-    if not issues:
-        return
-    detail = "; ".join(f"{issue.path}: {issue.message}" for issue in issues[:5])
-    raise WorkspaceStateError(
-        f"{schema_file} 校验失败: {detail}",
-        errors=issues,
+    validate_contract_schema(
+        payload,
+        schema_file=schema_file,
+        context=schema_file,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,

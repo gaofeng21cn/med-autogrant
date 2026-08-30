@@ -235,7 +235,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
     from med_autogrant.critique_executor import _normalize_mentor_critique
     from opl_framework.executor_client import project_agent_execution_receipt_metadata
 
-    monkeypatch.setattr("med_autogrant.critique_executor._validate_schema_payload", lambda *args, **kwargs: None)
+    monkeypatch.setattr("med_autogrant.critique_executor.validate_contract_schema", lambda *args, **kwargs: None)
     critique_context = {
         "draft_id": "draft-1",
         "next_critique_id": "critique-1",

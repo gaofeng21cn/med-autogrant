@@ -12,8 +12,8 @@ from med_autogrant.domain_executor_client import (
 )
 from med_autogrant.domain_runtime_parts.contracts import (
     build_direct_scholar_skill_prompt_lines,
+    validate_contract_schema,
 )
-from opl_framework.schema_validation import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     materialize_workspace_surfaces,
 )
@@ -374,13 +374,10 @@ def _validate_schema_payload(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    issues = _SchemaSubsetValidator(SchemaStore()).validate(payload, schema_file)
-    if not issues:
-        return
-    detail = "; ".join(f"{issue.path}: {issue.message}" for issue in issues[:5])
-    raise WorkspaceStateError(
-        f"{schema_file} 校验失败: {detail}",
-        errors=issues,
+    validate_contract_schema(
+        payload,
+        schema_file=schema_file,
+        context=schema_file,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
