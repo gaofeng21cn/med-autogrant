@@ -1,6 +1,6 @@
 ---
 name: med-autogrant
-description: Use when Codex needs Med Auto Grant (MAG) to plan, author, critique, revise, or package a medical grant application, including funding-call intake, fundability strategy, specific aims, proposal sections, rebuttal, and a submission-ready local package. Do not use for research-paper production, generic document formatting, patient care, or irreversible submission to a sponsor portal.
+description: Use Med Auto Grant (MAG) for medical grant strategy, proposal drafting, review, revision, or local submission-package preparation tied to a funding call or grant workspace. Research papers and standalone document formatting use their own capabilities.
 ---
 
 # Med Auto Grant

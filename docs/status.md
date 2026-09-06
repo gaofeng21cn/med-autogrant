@@ -9,6 +9,8 @@ Machine boundary: 本文是人读状态摘要。机器真相归 current-program�
 
 MAG 当前以 Declarative Grant Pack 提供领域语义，由 OPL 生成和托管通用运行面；grant 判断、artifact、package、memory 与 owner receipt authority 继续归 MAG。
 
+`0.3.13` 对齐 Astra Skill 审计：主入口描述聚焦 grant 路由；strategy 与 workflow specialist 将缺失或冲突证据、尚未验证的资助条件、记忆冲突和修复耗尽统一为 quality debt、repair 或 retarget 建议。真实身份、执行器、权限、安全、不可逆动作与明确 owner/human 决定仍可停止相应操作，ScholarSkills required dependency 仍独立检查。源包版本不代表已经发布或获得 grant/submission readiness。
+
 当前 repo-local 程序面是：
 
 - Declarative Grant Pack
@@ -59,7 +61,7 @@ readback。
 | --- | --- | --- |
 | Current program | `contracts/runtime-program/current-program.json` | 3 handler actions、7 authority IDs |
 | Agent pack | root contracts + `agent/` | declarative, OPL consumable |
-| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | source version `0.3.12`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，ScholarSkills 为 required hard dependency；目标仍为 owner 独立 GHCR `latest-stable` 与完整 carrier fresh readback |
+| Agent Package | `pyproject.toml` + plugin manifest + `contracts/opl_agent_package_manifest.json` | source version `0.3.13`，配置的 Codex Plugin carrier 为 `med-autogrant@med-autogrant`，ScholarSkills 为 required hard dependency；目标仍为 owner 独立 GHCR `latest-stable` 与完整 carrier fresh readback |
 | Hosted action contract | `contracts/action_catalog.json` + action input schemas | 3 stage-bound actions；progress/cockpit 归 OPL read model |
 | Source closure | `contracts/source_closure_audit.json` + OPL scanner | exact classification 归审计合同；currentness 需 fresh scanner readback |
 | Standard conformance profile | `contracts/standard_agent_conformance_profile.json` | MAG-owned golden path / morphology，OPL generic validator消费 |

@@ -35,7 +35,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 - This skill owns the flexible professional judgment: proposal repair priority, source/material gap recognition, reviewer-quality assessment, reviewer-facing framing, rebuttal substance, package completeness, package/portal handoff, budget/support-material gap routing, route-back/action-matrix decision, and owner-facing handoff framing.
 - Contracts, capability maps, scripts, package refs, and scorecards only provide identity, locators, refs, receipt/no-authority guards, boundaries, and traceable return shapes. They must not become a second source of grant truth, quality truth, package authority, or submission-readiness authority.
 - Use AI review to decide whether a weakness is local prose, source evidence, strategy/aims, package provenance, manual portal action, or owner decision. Route to the topmost owning layer instead of encoding a fallback workflow in contract metadata.
-- Keep quality, export, source, memory, and publication/package readiness elastic at the professional skill layer until the owning MAG authority surface issues the corresponding receipt, verdict, human gate, blocker, or route-back ref.
+- Return professional candidates and repair recommendations; the owning MAG authority surface issues the corresponding receipt, verdict, human gate, blocker, or route-back ref.
 
 ## Execution Rules
 
@@ -44,7 +44,7 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 3. Review independently from the authoring voice; scorecards organize evidence but do not declare quality-ready.
 4. Preserve reviewer concerns and treat critique as repair hints until verified against accepted strategy, source refs, and funder criteria; do not paste critique into prose as authority.
 5. Map each substantive concern to a proposal delta, source/material action, route-back, closure-dossier entry, or justified no-change response.
-6. Route strategy, aims, source, or fundability failures back to the owning stage instead of patching prose.
+6. Retrieve missing material from reachable, authorized sources first, then route remaining strategy, aims, source, or fundability failures to the owning stage instead of hiding them in prose. Do not cross protected-source or access boundaries.
 7. For rebuttal and package work, separate prose deltas, budget/support-material updates, portal-upload actions, owner decisions, route-back targets, closure-dossier refs, and residual blockers.
 8. Judge package completeness against funder instructions and MAG provenance refs, not file count alone; map every missing or uncertain item to owner action, route-back, typed blocker, or package-authority consumption.
 9. Produce a package/portal owner handoff when manual upload, portal field entry, institutional signoff, budget/support-material completion, or package-authority consumption remains.
@@ -74,21 +74,13 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 - The decisive Codex Attempt owns semantic route selection. The OPL StageRun controller only validates and materializes the transition. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
-- Package work proceeds from the best readable grant artifact. Missing quality verdict refs, corrupt output, or zero readable output become quality debt plus a consumable diagnostic and close submission/export/ready claims without stopping the next stage; only authority, safety/permission, identity/currentness, unavailable executor, irreversible action, or explicit human authority hard-stops work.
-
-## Workflow Scope
-
-Keep authoring, independent review, critique-as-repair-hint, rebuttal repair, closure dossier, and local package/portal handoff together after strategy and aims are accepted.
+- Package work proceeds from the best readable grant artifact. Missing quality verdict refs, corrupt output, or zero readable output become quality debt plus a consumable diagnostic and close submission/export/ready claims without stopping the next stage; only authority, safety/permission, identity/currentness, unavailable executor, irreversible action, or explicit human authority hard-stops work. With no readable artifact, report diagnostic/recovery work only; a completed content or package audit requires inspecting an actual readable artifact.
 
 ## Blockers And Repair Targets
 
-Return `typed_blocker` when:
+Apply the hard-stop boundary in Stage Prompt Boundary above. Identify the affected operation and concrete boundary when returning `typed_blocker`; missing or contradictory evidence, absent package provenance, and exhausted repair options alone remain quality debt with a diagnostic and next-owner recommendation. A verified call mismatch may justify a no-go or retarget recommendation without stopping safe revision or evidence collection. A required Scholar Provider gap follows its separate dependency diagnostic above.
 
-- Required semantic evidence, source truth, package provenance, or MAG authority is unavailable or contradictory, and no legal owner/repair route can produce it.
-- A requested export or package mutation would cross an authority, safety, compliance, or forbidden-write boundary.
-- Locked call truth conflicts with the only available evidence and requires a domain-authority stop rather than ordinary revision.
-
-Return `human_gate_ref` when a portal action, institutional signoff, applicant choice, or other human-only decision is required.
+Consume an existing owner-issued `human_gate_ref`, or request the owning MAG/human surface to issue it, when a portal action, institutional signoff, applicant choice, or other human-only decision is required. Do not manufacture the gate ref or its approval state.
 
 Return `repair_target` when:
 

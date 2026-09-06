@@ -28,10 +28,10 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 - Reviewer-rubric translation: what reviewers will reward, penalize, disqualify, question, or require as mitigation.
 - Fundability recommendation: proceed, repair, retarget, or stop, with reviewer-risk ranking and mitigation requirements.
 - Central claim, specific aims strategy, section map, claim/evidence ledger, reviewer-facing frame, and reviewer-risk mitigation map for authoring.
-- Strategy-memory review classifying refs as accepted, rejected, stale, conflicting, or pending, without writing memory bodies or receipts.
+- Strategy-memory review recommending acceptance or rejection, identifying stale, conflicting, or pending refs, and citing any existing MAG decision; do not write memory bodies or receipts.
 - Reviewer-panel memory and call-specific risk reuse summary: relevant prior panel risks, reusable mitigations, stale/non-transferable risks, and risks that must be rechecked against the locked call.
 - Funding-call constraint prefetch ledger with hard rules, soft reviewer preferences, unknowns, and source refs that must be consumed by strategy, aims, and later package work.
-- Typed blockers or repair targets when the call, applicant basis, fundability route, aims, or memory use is unsafe.
+- Evidence gaps, repair targets, and route recommendations for the call, applicant basis, fundability route, aims, or memory use; identify a typed blocker only at the Stage's real hard-stop boundary.
 
 ## AI-First / Contract-Light Boundary
 
@@ -45,7 +45,7 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 1. Read current call and applicant source refs literally before using memory or examples.
 2. Preserve the funding-call lock; do not silently switch funders, mechanisms, or project routes.
 3. Separate source facts from interpretation and mark uncertainty as evidence gaps.
-4. Prefetch hard funding-call constraints before scoring fit; do not rely on generic mechanism memory when the locked call has a contrary rule.
+4. Prefetch hard funding-call constraints before scoring fit; do not rely on generic mechanism memory when the locked call has a contrary rule. Retrieve missing material from reachable, authorized sources before returning remaining gaps; preserve protected-source and access boundaries.
 5. Judge as a skeptical grant reviewer: fit, eligibility, novelty, feasibility, impact, applicant credibility, timeline, budget realism, support-material credibility, and panel risk.
 6. Reuse reviewer-panel memory only as body-free risk context: name the prior risk pattern, why it transfers to this call, what mitigation transfers, and what must be revalidated.
 7. Reuse call-specific risk history only when mechanism, applicant class, source basis, and reviewer rubric remain compatible; otherwise mark it stale or non-transferable.
@@ -76,26 +76,21 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 
 ## Stage Prompt Boundary
 
-- Stage prompts own route, accepted output refs, handoff shape, and blocker enums.
+- Stage prompts declare output refs, handoff shape, and blocker enums. The decisive Codex Attempt makes the semantic route decision; OPL materializes it and MAG retains domain authority.
 - This skill supplies professional strategy judgment; it does not write owner receipts, mutate grant truth, decide memory accept/reject, authorize quality/export/submission readiness, or claim domain readiness.
 - Proposal authoring must preserve the accepted strategy and aims, or route back here with the exact blocker.
 
-## Workflow Scope
-
-Keep pre-authoring strategy decisions together so call fit, fundability, aims, reviewer-panel memory, call-specific risk reuse, and strategy memory are judged against one locked funding route.
-
 ## Blockers And Repair Targets
 
-Return `typed_blocker` when:
+Distinguish unknown requirements, a verified mismatch with the locked call, and an inability to execute. Missing or conflicting evidence is quality debt: preserve the best strategy or a consumable diagnostic, close unsupported fundable/ready claims, and return `repair_target` or a route-back recommendation. A verified eligibility failure or expired deadline can justify retargeting or a no-go recommendation for this call; it does not itself prevent evidence collection, revision, or an authorized alternative. Do not silently unlock the call.
 
-- No stable funder/call/task identity exists.
-- Eligibility, deadline, budget, geography, career stage, institution, mechanism fit, reviewer rubric, source basis, or project material cannot be verified.
-- Evidence cannot support call fit, novelty, feasibility, impact, applicant credibility, central claim, aims, or required sections.
-- Memory conflicts with locked call, eligibility, source evidence, accepted route, owner receipt, typed blocker, or human gate.
-- Memory-derived claims are used for a hard owner gate without MAG accept/reject state.
+Use the Stage's `typed_blocker` only for an unavailable executor, wrong-target identity/currentness, an authority/safety/permission boundary, an irreversible action, or an explicit owner/human decision. Ask intake to establish a missing call identity before call-bound mutation; continue unbound evidence preparation when safe. An unaccepted or conflicting memory claim is rejected as support and routed for review; only a real authority violation or stop decision blocks execution. A required Scholar Provider gap follows its separate dependency diagnostic above.
 
 Return `repair_target` when:
 
+- Eligibility, deadline, budget, geography, career stage, institution, mechanism fit, reviewer rubric, source basis, or project material is missing or unverified.
+- Evidence does not yet support call fit, novelty, feasibility, impact, applicant credibility, the central claim, aims, or required sections.
+- Memory conflicts with the locked call or sources, lacks MAG accept/reject state for a hard owner gate, or no longer transfers to this applicant and call.
 - Call summary omits a hard rule that affects later writing.
 - Proceed/repair/retarget state, mitigation, or reviewer-risk severity is vague.
 - Reviewer-panel memory or call-specific risk reuse lacks transfer rationale, freshness check, or non-transferable-risk rejection.
