@@ -44,7 +44,7 @@ codex plugin marketplace remove med-autogrant --json
 这些命令只管理 Codex carrier，不能证明 Framework 可用、required ScholarSkills 可调用、完整 runtime 已安装或基金质量/生产验收已通过。使用当前 OPL Base 读取完整 Package 状态：
 
 ```bash
-opl packages status mag --json
+opl packages status --package-id mag --json
 ```
 
 Runtime 或依赖证据不足时，沿返回的 owner action 处理。`packages` 命令不存在时需检查当前 OPL Base；plugin 安装成功不等于完整 Package ready。

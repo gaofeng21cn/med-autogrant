@@ -44,7 +44,7 @@ codex plugin marketplace remove med-autogrant --json
 These commands manage only the Codex carrier. They do not prove Framework availability, required ScholarSkills callability, complete runtime installation, grant quality, or production readiness. Read the full Package state through a current OPL Base:
 
 ```bash
-opl packages status mag --json
+opl packages status --package-id mag --json
 ```
 
 Follow the returned owner action when runtime or dependency evidence is missing. An unavailable `packages` command indicates that the current OPL Base must be checked; a successful plugin install is not full Package readiness.
