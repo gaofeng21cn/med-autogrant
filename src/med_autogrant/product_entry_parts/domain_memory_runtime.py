@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any, Mapping
+
+from opl_framework.json_io import write_json_object_atomic
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
@@ -236,8 +237,7 @@ def write_domain_memory_receipt_evidence(
             "can_issue_export_verdict": False,
         },
     }
-    receipt_path.parent.mkdir(parents=True, exist_ok=True)
-    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_json_object_atomic(receipt_path, receipt)
     return {
         "ok": True,
         "command": "domain-memory-receipt-evidence",

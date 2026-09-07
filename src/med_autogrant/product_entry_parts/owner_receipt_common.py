@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any, Mapping
+
+from opl_framework.json_io import write_json_object_atomic
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
@@ -82,9 +83,8 @@ def opl_receipt_ref_consumption() -> dict[str, bool | str]:
 
 
 def write_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     try:
-        path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        write_json_object_atomic(path, receipt)
     except OSError as exc:
         raise WorkspaceFileError(f"写入 receipt evidence 失败: {path}") from exc
 

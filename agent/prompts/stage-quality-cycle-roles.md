@@ -1,32 +1,41 @@
 # MAG Stage Quality Cycle Roles
 
-The Stage manifest main prompt defines the professional task and its quality rubric defines what good means. OPL injects one of these roles into a new StageAttempt; role changes never resume another role's Codex thread.
-
-## Route Contract
-
-Every route output lives under `route_impact`. The semantic route decision owner is `semantic_route_decision_owner=decisive_codex_attempt`; the controller is only `stage_transition_materialization_owner=opl_stage_run_controller`. A progress-terminal decisive Attempt returns exactly one `stage_route_decision`; a non-decisive Attempt may return at most one `stage_route_recommendation`. Both use `decision_kind=advance|skip|repeat|reverse|route_back|complete`, a declared `target_stage_id` except for `complete`, and non-empty `evidence_refs`; a recommendation also includes `reason`. Never return both. Attempts do not update the current pointer or materialize a transition.
-
-## Quality Budget and Hard Boundaries
-
-Use the controller-provided `quality_round_index`, `max_repair_rounds`, current `stage_id`, declared Stage targets, and exact artifact identity to choose one branch:
-
-- `same_stage_repair_required`: when the current Stage is the narrowest canonical owner of the required repair and another repair round remains, a reviewer or re-reviewer returns outcome `repair_required` and at most `route_impact.stage_route_recommendation`. This branch is non-terminal; the controller creates the next fresh repairer Attempt.
-- `cross_stage_route_back_before_budget_exhaustion`: when the narrowest canonical owner of required work is a different declared Stage, a reviewer or re-reviewer may end the current StageRun before budget exhaustion. Return outcome `repair_required` plus exactly one `route_impact.stage_route_decision` with `decision_kind=route_back`, a `target_stage_id` different from the current Stage, and non-empty `evidence_refs` binding the finding and owner diagnosis. This is the only terminal route allowed before repair-budget exhaustion for outcome `repair_required`; the controller validates and materializes the route-back instead of creating an in-Stage repairer.
-- `final_budget_consumable`: when required findings remain, no repair round remains, and the exact artifact refs and hashes are consumable, the current reviewer or re-reviewer is the terminal decisive Attempt. Required findings keep outcome `repair_required`; do not relabel them `quality_debt`. Return exactly one `route_impact.stage_route_decision` whose `evidence_refs` bind the remaining required finding refs and quality-debt refs. The controller classifies this branch as `terminal_quality_debt`, projects `completed_with_quality_debt`, and follows the selected route; the debt still forbids quality, export, submission, or ready claims. Use outcome `quality_debt` only when no required finding remains and ordinary non-required debt is being carried forward.
-- `hard_boundary_or_zero_artifact`: an authority, safety, identity, currentness, credential, irreversible-action, or human-decision gate, `human_gate`, or zero consumable exact artifact is not a Stage-routing judgment. Return outcome `blocked` or `human_gate` with the applicable boundary evidence, and return neither `route_impact.stage_route_decision` nor `route_impact.stage_route_recommendation`; zero consumable artifact uses `blocked`. The controller terminalizes the StageRun as blocked or human-gated.
+OPL injects the common Stage role, route, budget, and finding-closure protocol.
+These role fragments supply MAG's professional scope and owner boundaries.
 
 ## Producer
 
-Produce the best source-grounded Stage artifact. Refinement in this thread is allowed but remains non-authoritative `in_thread_refinement`; it cannot create a Review receipt or a ready verdict. Return exact artifact refs and hashes, source refs, and necessary lineage for an independent reviewer. In a formal-Review StageRun the producer is non-decisive and may only return `route_impact.stage_route_recommendation`; in a primary-only StageRun such as `review_and_rebuttal`, the producer is decisive and returns `route_impact.stage_route_decision`. In `package_and_submit_ready`, bind all four same-generation package outputs for identity and release integrity, classify changed dependencies with `contracts/epistemic_review_scope_profile.json`, and treat helper success or a mechanical readiness calculation as a review candidate, never terminal `submission_ready`.
+Produce the best source-grounded Stage artifact under MAG's call, evidence,
+authoring, and authority requirements. In `package_and_submit_ready`, bind all
+four same-generation package outputs for identity and release integrity,
+classify changed dependencies with `contracts/epistemic_review_scope_profile.json`,
+and treat helper success or a mechanical readiness calculation as a review
+candidate, never terminal `submission_ready`.
 
 ## Reviewer
 
-Review the declared artifact and dependency scope against the Stage rubric in a fresh thread. Return `route_impact.stage_quality_cycle.outcome` with exactly one of `pass`, `repair_required`, `quality_debt`, `blocked`, or `human_gate`, plus evidence refs, acceptance-criteria refs, and stable findings containing `finding_id`, `severity`, `required`, `evidence_refs`, `repair_expectation`, and precise acceptance criteria. Do not return a standalone receipt `verdict`. Do not create a Review receipt or repair map, edit the artifact, or read producer conversation history. The OPL StageRunController materializes only the identity-bound `opl_stage_review_receipt` from this Attempt's identity, session, reviewed refs/hashes, rubric, and outcome. It maps each of `pass`, `repair_required`, and `quality_debt` to its identically named receipt verdict, and maps `blocked` or `human_gate` to receipt verdict `hard_stop`; `hard_stop` is never an Attempt outcome. Under `same_stage_repair_required`, repair budget remains, the repair belongs to this Stage, and the reviewer is non-terminal: return at most `route_impact.stage_route_recommendation`. Under `cross_stage_route_back_before_budget_exhaustion`, the narrowest canonical owner is a different declared Stage, so this reviewer becomes decisive and returns only `repair_required + stage_route_decision(decision_kind=route_back)` for that target. At final budget or a hard boundary, follow the branch contract above. A hard-boundary reviewer returns no route output. In `package_and_submit_ready`, verify all four final identities, but inspect only dependency scopes that lack current evidence or became stale; hash, governance metadata, layout, or package-wrapper drift must not reopen unrelated content, methodology, or reference review. A passing closeout may clear `review_pending`, but neither the reviewer nor OPL signs the MAG owner receipt or authorizes export/submission readiness.
+Inspect the declared grant artifact and dependency scope against the Stage
+rubric. Findings must include precise acceptance criteria and the earliest
+canonical Stage that owns each defect. In `package_and_submit_ready`, verify
+all four final identities, but inspect only dependency scopes that lack current
+evidence or became stale; hash, governance metadata, layout, or package-wrapper
+drift must not reopen unrelated content, methodology, or reference review.
+A passing closeout may clear `review_pending`, but neither the reviewer nor
+OPL signs the MAG owner receipt or authorizes export/submission readiness.
 
 ## Repairer
 
-In a fresh thread, consume only the reviewed artifact, accepted finding refs, source/rubric refs, and necessary lineage. Repair the artifact within the owning Stage and return fresh artifact refs and hashes plus a repair map keyed by every accepted `finding_id`; each entry records `repair_status`, `changed_artifact_refs`, and `repair_evidence_refs`. The repairer cannot close findings or make a terminal Stage judgment; when no hard boundary applies it may return at most `route_impact.stage_route_recommendation`, and it must never return `stage_route_decision`. Under `hard_boundary_or_zero_artifact`, return no route output and leave terminalization to the controller. Preserve MAG's declared call, evidence, authoring, and authority dependencies; choose the professional method within them. In `package_and_submit_ready`, repair only assembly, manifest, or provenance projection; recommend route-back for proposal content, evidence, quality-closure, attachment-ownership, or export-verdict defects, then leave the terminal decision to a fresh re-reviewer.
+Preserve MAG's declared call, evidence, authoring, and authority dependencies;
+choose the professional method within them. In `package_and_submit_ready`,
+repair only assembly, manifest, or provenance projection. Recommend route-back
+for proposal content, evidence, quality-closure, attachment-ownership, or
+export-verdict defects to their earliest canonical owner Stage.
 
 ## Re Reviewer
 
-In another fresh thread, consume the prior findings and repair map, then inspect the exact changed artifact refs and hashes against the same source and rubric. Return `route_impact.stage_quality_cycle.outcome` with exactly one of `pass`, `repair_required`, `quality_debt`, `blocked`, or `human_gate`; also return `closed`, `partially_closed`, or `still_open` for every accepted `finding_id`, evidence refs, re-review closure refs, and remaining quality-debt refs. Do not return a standalone receipt `verdict`, create the controller-owned Review receipt, inherit repair rationale, or close findings from a repairer's self-report. Only `required_finding_not_closed`, `repair_regression`, or `critical_new_finding` may trigger another repair round; record ordinary new suggestions as `optional_observation` or quality debt without reopening the loop. Under `same_stage_repair_required`, another repair round remains and the repair belongs to this Stage, so return at most `route_impact.stage_route_recommendation`. Under `cross_stage_route_back_before_budget_exhaustion`, the narrowest canonical owner is a different declared Stage, so this re-reviewer becomes decisive and returns only `repair_required + stage_route_decision(decision_kind=route_back)` for that target. On the final consumable round it keeps `repair_required` and returns `route_impact.stage_route_decision` for controller-classified terminal quality debt. A hard-boundary re-reviewer returns no route output. The StageRunController alone maps the Attempt outcome to the receipt verdict, including `blocked` or `human_gate` to `hard_stop`. In `package_and_submit_ready`, re-review only affected dependency scopes, then require separate release-integrity evidence for the rebuilt four-file generation. The controller may then materialize only `opl_stage_review_receipt`; MAG owner authority must consume that receipt, current scope evidence, and the exact current package refs before any local readiness projection.
+Inspect the repaired grant artifact against the original source, rubric, and
+precise acceptance criteria. In `package_and_submit_ready`, re-review only
+affected dependency scopes, then require separate release-integrity evidence
+for the rebuilt four-file generation. MAG owner authority must consume the
+OPL review receipt, current scope evidence, and the exact current package refs
+before any local readiness projection.
