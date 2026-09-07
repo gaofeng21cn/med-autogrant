@@ -12,6 +12,10 @@
   "generated_surface_owner": "one-person-lab",
   "package_role": "opl_standard_domain_agent",
   "schema_version": 1,
+  "dispatch_evidence_projection": {
+    "work_item_id_field": "grant_run_id",
+    "result_collections": []
+  },
   "standard_agent_interface": {
     "version": "opl_standard_agent_interface.v1",
     "workspace_binding": {

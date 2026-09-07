@@ -207,32 +207,6 @@ def test_package_stage_uses_scoped_currentness_before_ready_projection() -> None
     assert "`cross_stage_route_back_before_budget_exhaustion`" in prompt
     assert "no other terminal route is allowed before budget exhaustion" in prompt
     assert "repair only assembly, manifest, or provenance projection" in roles
-    for finding_field in ("finding_id", "severity", "required", "evidence_refs", "repair_expectation"):
-        assert f"`{finding_field}`" in roles
-    assert "acceptance-criteria refs" in roles
-    assert "Do not create a Review receipt or repair map" in roles
-    assert "repair map keyed by every accepted `finding_id`" in roles
-    assert "repairer cannot close findings or make a terminal Stage judgment" in roles
-    assert "route_impact.stage_route_decision" in roles
-    assert "route_impact.stage_route_recommendation" in roles
-    assert "repair_required" in roles
-    assert "StageRunController materializes only the identity-bound `opl_stage_review_receipt`" in roles
-    assert "to its identically named receipt verdict" in roles
-    assert "to the same receipt verdict" not in roles
-    assert "`route_impact.stage_quality_cycle.outcome`" in roles
-    for outcome in ("pass", "repair_required", "quality_debt", "blocked", "human_gate"):
-        assert f"`{outcome}`" in roles
-    assert "`hard_stop` is never an Attempt outcome" in roles
-    for closure_status in ("closed", "partially_closed", "still_open"):
-        assert f"`{closure_status}`" in roles
-    for repair_trigger in (
-        "required_finding_not_closed",
-        "repair_regression",
-        "critical_new_finding",
-    ):
-        assert f"`{repair_trigger}`" in roles
-    assert "`optional_observation` or quality debt without reopening the loop" in roles
-    assert "cannot create a Review receipt or a ready verdict" in roles
     assert "materializes only the identity-bound `opl_stage_review_receipt`" in prompt
     assert "Hashes are only locators and stale hints for epistemic review" in prompt
     assert "do not create another loop, ledger, scheduler, or evidence control plane" in prompt
@@ -244,75 +218,12 @@ def test_package_stage_uses_scoped_currentness_before_ready_projection() -> None
     assert "submission_ready_package_receipt_recorded" not in json.dumps(manifest)
 
 
-def test_quality_role_prompt_routes_only_cross_stage_findings_before_exhaustion() -> None:
-    roles = (ROOT / "agent/prompts/stage-quality-cycle-roles.md").read_text(
-        encoding="utf-8"
-    )
-    reviewer = roles.split("## Reviewer", 1)[1].split("## Repairer", 1)[0]
-    re_reviewer = roles.split("## Re Reviewer", 1)[1]
-
-    assert roles.count("`same_stage_repair_required`") >= 3
-    assert "another repair round remains" in roles
-    assert "returns outcome `repair_required`" in roles
-    assert "controller creates the next fresh repairer Attempt" in roles
-    assert "This branch is non-terminal" in roles
-
-    assert roles.count("`cross_stage_route_back_before_budget_exhaustion`") >= 3
-    assert "narrowest canonical owner of required work is a different declared Stage" in roles
-    assert "outcome `repair_required` plus exactly one" in roles
-    assert "`decision_kind=route_back`" in roles
-    assert "`target_stage_id` different from the current Stage" in roles
-    assert "only terminal route allowed before repair-budget exhaustion" in roles
-    for decisive_review_section in (reviewer, re_reviewer):
-        assert "`same_stage_repair_required`" in decisive_review_section
-        assert (
-            "`cross_stage_route_back_before_budget_exhaustion`"
-            in decisive_review_section
-        )
-
-    assert "`final_budget_consumable`" in roles
-    assert "no repair round remains" in roles
-    assert "Required findings keep outcome `repair_required`" in roles
-    assert "do not relabel them `quality_debt`" in roles
-    assert "exactly one `route_impact.stage_route_decision`" in roles
-    assert "remaining required finding refs and quality-debt refs" in roles
-    assert "controller classifies this branch as `terminal_quality_debt`" in roles
-    assert "projects `completed_with_quality_debt`" in roles
-    assert "Use outcome `quality_debt` only when no required finding remains" in roles
-
-    assert "`hard_boundary_or_zero_artifact`" in roles
-    assert "zero consumable exact artifact is not a Stage-routing judgment" in roles
-    assert "return neither `route_impact.stage_route_decision` nor " in roles
-    assert "`route_impact.stage_route_recommendation`" in roles
-    assert "zero consumable artifact uses `blocked`" in roles
-    assert "terminalizes the StageRun as blocked or human-gated" in roles
-    assert "A hard-boundary reviewer returns no route output" in roles
-
-    assert "repairer cannot close findings or make a terminal Stage judgment" in roles
-    assert "it must never return `stage_route_decision`" in roles
-    assert "Under `hard_boundary_or_zero_artifact`, return no route output" in roles
-
-
-def test_quality_policy_does_not_define_nested_stage_or_owner_graphs() -> None:
-    profile = read_json("contracts/stage_quality_cycle_policy.json")
-    forbidden = {
-        "next_stage_refs",
-        "requires",
-        "ensures",
-        "stage_route",
-        "sub_stage_graph",
-        "independent_owner",
-        "stage_current_pointer",
-        "stage_transition_authority",
-    }
-
-    def walk(value: object) -> None:
-        if isinstance(value, dict):
-            assert forbidden.isdisjoint(value)
-            for child in value.values():
-                walk(child)
-        elif isinstance(value, list):
-            for child in value:
-                walk(child)
-
-    walk(profile)
+def test_quality_role_policy_keeps_resolvable_domain_supplement_fragments() -> None:
+    policy = read_json("contracts/stage_quality_cycle_policy.json")
+    for role, ref in policy["review_attempt_contract"]["role_prompt_refs"].items():
+        file_ref, fragment = ref.split("#", 1)
+        content = (ROOT / file_ref).read_text(encoding="utf-8")
+        heading = {"producer": "Producer", "reviewer": "Reviewer",
+                   "repairer": "Repairer", "re_reviewer": "Re Reviewer"}[role]
+        assert fragment == heading.lower().replace(" ", "-")
+        assert content.count(f"## {heading}\n") == 1

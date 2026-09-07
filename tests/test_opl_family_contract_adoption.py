@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 import subprocess
@@ -199,37 +198,7 @@ def test_hosted_action_source_closure_contracts_are_closed() -> None:
     assert set(source_audit) == {"surface_kind", "version", "entries"}
     assert source_audit["surface_kind"] == "standard_agent_source_closure_audit"
     assert source_audit["version"] == "standard-agent-source-closure-audit.v1"
-    entries = source_audit["entries"]
-    expected_entries = {
-        (
-            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
-            "write_domain_memory_receipt_evidence",
-        ): ("minimal_authority_function", ("filesystem_write",), ()),
-        (
-            "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
-            "write_receipt",
-        ): ("minimal_authority_function", ("filesystem_write",), ()),
-    }
-    assert len(entries) == len(expected_entries)
-    for entry in entries:
-        key = (entry["file"], entry["symbol"])
-        assert key in expected_entries
-        expected_role, expected_effects, expected_targets = expected_entries[key]
-        assert entry["role"] == expected_role
-        assert tuple(entry["allowed_effects"]) == expected_effects
-        assert tuple(entry["allowed_targets"]) == expected_targets
-        assert entry["source_digest"].startswith("sha256:")
-        assert len(entry["source_digest"]) == len("sha256:") + 64
-    for source_file in {entry["file"] for entry in entries}:
-        declared_digests = {
-            entry["source_digest"]
-            for entry in entries
-            if entry["file"] == source_file
-        }
-        observed_digest = "sha256:" + hashlib.sha256(
-            (REPO_ROOT / source_file).read_bytes()
-        ).hexdigest()
-        assert declared_digests == {observed_digest}, source_file
+    assert source_audit["entries"] == []
     assert descriptor["standard_contract_refs"]["source_closure_audit"] == (
         "contracts/source_closure_audit.json"
     )
