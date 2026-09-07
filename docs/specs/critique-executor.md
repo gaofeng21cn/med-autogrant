@@ -1,10 +1,9 @@
-# Critique Executor Current Truth
+# Critique Executor
 
 Owner: `Med Auto Grant`
 Purpose: `critique_executor_vocabulary_active_spec`
 State: `active_current_spec`
 Machine boundary: 本文冻结 critique 的 domain vocabulary 与 OPL executor-client boundary。机器接口归 source、contracts、OPL `AgentExecutionRequest` / `AgentExecutionReceipt` 和 runtime receipts。
-Last reviewed: `2026-07-12`
 
 ## Current Route
 
@@ -61,6 +60,6 @@ executor 必须返回 canonical receipt，其中 `closeout_packet` 为：
 - `tests/test_ai_first_quality_boundary.py`
 - `tests/test_authoring_executor.py`
 - OPL standard-agent conformance / default-caller readback
-- source scan必须保持 repo-local Codex/OPL subprocess transport为 0
+- source scan 检查真实 executor 调用均经 OPL client，不能以文档中的计数替代调用链验证。
 
 这些结构与行为验证不证明 live grant ready、quality ready、provider long-soak 或 production readiness。

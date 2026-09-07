@@ -4,7 +4,6 @@ Owner: `Med Auto Grant`
 Purpose: `grant_strategy_memory_policy`
 State: `reference`
 Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、stage route reports、submission-ready package surfaces、`contracts/runtime-program/current-program.json`、`contracts/memory_descriptor.json` 与 `contracts/runtime-program/domain-memory-seed-fixture.json`。
-Last reviewed: `2026-06-12`
 
 ## 结论
 
@@ -76,7 +75,7 @@ OPL 可以索引 memory refs、携带 stage knowledge refs、展示 consumed-mem
 
 MAG 保留 memory body、accept/reject decision、writeback receipt、fundability/quality 影响判断和 owner receipt。真实 memory writeback 只在 MAG accept/reject 后写入 workspace/runtime artifact root；repo source 只保存 descriptor、schema、locator、fixture 模板和 proof surface。
 
-Family-level governance 参考：`/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.md`。
+跨仓 memory transport 与索引规则从 [Framework 文档](https://github.com/gaofeng21cn/one-person-lab/tree/main/docs)读取；本页持有 MAG strategy memory 的领域分工。
 
 ## 非目标
 

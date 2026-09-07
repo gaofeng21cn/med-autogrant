@@ -1,16 +1,6 @@
-# References 索引
+# 专项参考
 
-Owner: `Med Auto Grant`
-Purpose: `reference_index`
-State: `reference`
-Machine boundary: 本文是人读参考索引。机器可读面必须使用 contracts、schemas、source path 或语义化 `human_doc:*` 标识。
+本目录只保留跨正文需要单独查阅的支持材料，当前实现和状态分别由[架构](../architecture.md)与[状态](../status.md)负责。
 
-本目录承载 `Med Auto Grant` 的参考材料。
-
-Reference notes 不能替代当前产品真相。MAG 当前 grant product truth 继续以核心文档、active specs 和 `contracts/runtime-program/current-program.json` 为准。
-
-当前参考入口：
-
-- [Grant Strategy Memory Policy](./grant_strategy_memory_policy.md)：说明 fundability、specific aims、reviewer grammar、template strategy 等经验如何以自然语言 memory 形式沉淀，同时保持 quality/controller/export surface 的结构化权威。
-- [OPL Family Contract Adoption](./integration/opl-family-contract-adoption.md)：说明 MAG 如何向 OPL stage-led、以 Agent executor 为最小执行单位 runtime framework 暴露 descriptor/projection，同时保留 grant truth、quality、route 和 export authority。
-- [Med Auto Grant 理想目标态](./med-auto-grant-ideal-state.md)：说明 MAG 作为 OPL-compatible grant domain agent 的 north-star 目标态，以及 app skill、domain package、OPL hosted path、workspace/runtime artifact root 之间的 owner 边界。
+- [Grant Strategy Memory](./grant_strategy_memory_policy.md)：哪些经验适合复用，如何保持 stage retrieval、accept/reject 与当前 grant verdict 分离。
+- [Primary Skill 与 Plugin Carrier](./primary-skill-plugin-carrier-boundary.md)：canonical Skill 和安装所需实体投影的关系。

@@ -12,7 +12,7 @@
 - Materialize package refs only through MAG owner authority.
 - Bind exact refs and hashes for all four final package artifacts as transport identity and separate release-integrity evidence; use `contracts/epistemic_review_scope_profile.json` to review only stale semantic dependency scopes before MAG owner authority evaluates local `submission_ready`.
 - Keep local repair to assembly, manifest, and provenance projection; route upstream content, evidence, quality-closure, attachment-owner, or export-verdict defects to their earliest owning Stage.
-- Return exact blockers for real artifact, quality, provenance, or authority gaps; use `human_gate_ref` for human portal actions.
+- Return quality debt and a repair target for artifact, quality, or provenance gaps; reserve typed blockers for real hard boundaries and use `human_gate_ref` for human portal actions.
 
 ## Exit Conditions
 
@@ -40,7 +40,7 @@
 
 - OPL role: lifecycle shell, Stage Review receipt materializer, and package ref consumer.
 - OPL artifact lifecycle may carry refs and receipts only; MAG owns package authority and export verdict.
-- Allowed action refs: `build_submission_ready_package`, `inspect_progress`.
+- Hosted actions are declared by this Stage's `allowed_action_refs` in `agent/stages/manifest.json`.
 
 ## Non-Pass Signals
 

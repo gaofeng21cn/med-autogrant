@@ -21,7 +21,7 @@
   "source_refs": {
     "opl_projection_ref": "agent/principles/opl-standard-agent-principles.md",
     "domain_specialization_ref": "agent/principles/domain-specialization.md",
-    "domain_specific_principles_ref": "agent/principles/med-autogrant-principles.md",
+    "domain_specific_principles_ref": "agent/principles/domain-specialization.md",
     "stage_manifest_ref": "agent/stages/manifest.json",
     "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
     "pack_compiler_input_ref": "contracts/pack_compiler_input.json",

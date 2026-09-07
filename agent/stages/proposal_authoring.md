@@ -34,7 +34,7 @@
 
 - OPL role: attempt lifecycle, handoff, and projection support.
 - Generated surfaces may invoke MAG handlers but cannot store canonical grant body content or mutate package artifacts without MAG receipt.
-- Allowed action refs: `open_grant_user_loop`, `build_direct_entry`.
+- Hosted actions are declared by this Stage's `allowed_action_refs` in `agent/stages/manifest.json`.
 
 ## Non-Pass Signals
 

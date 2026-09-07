@@ -10,9 +10,9 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - OPL canonical agent id 与 OPL Agent Package id 都是 `mag`，kind 固定为 `agent`；唯一
   OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`，MAG
   owner 只推进自己的 `latest-stable`。`med-autogrant` 是 repo、Python distribution 与
-  plugin/skill carrier locator，`medautogrant` 是 module/CLI locator。载体名不得注册为
+  plugin/skill carrier locator，`med_autogrant` 是 Python module，`medautogrant` 是 CLI locator。载体名不得注册为
   第二个 package identity 或 OCI package coordinate。
-- 正式 repo-local entry 是 `medautogrant` CLI、`MedAutoGrantDomainEntry` 和 direct domain handler。
+- 用户入口是 primary Skill 和 OPL-generated actions；`medautogrant` CLI、`MedAutoGrantDomainEntry` 和 direct domain handler 是 repo-local authority targets。
 - CLI command metadata 只声明 parser 字段；执行必须走显式静态 dispatch，不得向 argparse 注入 callable handler，不得在 command spec保存 runtime method，也不得使用 `getattr`/字符串反射执行命令。
 - `MCP` 仍是 `descriptor_only=true`、`public_runtime=false` 的协议投影，不是当前 public runtime。
 
@@ -24,7 +24,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
 - Domain handler dispatch 只允许三项 action；新增 action 必须先证明属于 MAG authority，而非 generic platform shell。
 - `agent/stages/manifest.json` 只声明 stage scope。`semantic_route_decision_owner=decisive_codex_attempt` 选择前进、重复、跳过或 route-back 到任一 declared stage；`stage_transition_materialization_owner=opl_stage_run_controller` 只校验并物化 transition。静态 transition table、oracle fixture、program guard 或 controller 不得成为 grant-semantic route authority。
 - Stage Pack v2 的 manifest allow-list、closed action catalog 与 pack input 必须保持 parity。每个 public hosted action 必须使用 exact `stage_binding`，其 `stage_route` 精确覆盖 manifest 中声明该 action 的 Stage，并按 `next_stage_refs` 排序；progress/cockpit 观察面归 OPL generated read model，不得作为 MAG read-only action 回流 Stage allow-list。
-- Human gate closeout 使用 OPL 标准 `completed_and_wait_owner` + `human_gate_ref`；`typed_blocker_ref` 只用于真实语义或 authority 缺口，不能包装等待人类决定或 portal 操作。
+- Human gate closeout 使用 OPL 标准 `completed_and_wait_owner` + `human_gate_ref`。`typed_blocker_ref` 只用于 executor unavailable、wrong-target identity/currentness、真实 authority/安全/权限、不可逆动作或显式 owner/human 停止决定；普通语义证据不足形成质量债或 route-back，不能包装等待人类决定或 portal 操作。
 - Workspace route recommendation 同样遵守该语义：人工决定返回 `human_gate_ref`，普通 repair/rollback 返回 `route_back_ref`。
 
 ## OPL 边界

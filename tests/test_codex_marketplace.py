@@ -6,7 +6,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
-README_PATH = REPO_ROOT / "README.md"
 
 
 def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
@@ -51,22 +50,3 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
         carrier_descriptor["capability_dependencies"]
         == owner_descriptor["capability_dependencies"]
     )
-
-
-def test_readme_separates_codex_carrier_install_from_opl_package_readiness() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
-
-    for command in (
-        "codex plugin marketplace add .",
-        "codex plugin marketplace list --json",
-        "codex plugin list --marketplace med-autogrant --available --json",
-        "codex plugin add med-autogrant@med-autogrant --json",
-        "codex plugin list --marketplace med-autogrant --json",
-        "codex plugin remove med-autogrant@med-autogrant --json",
-        "codex plugin marketplace remove med-autogrant --json",
-        "opl packages status mag --json",
-    ):
-        assert command in readme
-
-    assert "does not prove that the full OPL Package or runtime is ready" in readme
-    assert "does not grant OPL Package transaction or receipt authority" in readme

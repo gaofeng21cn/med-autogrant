@@ -28,13 +28,13 @@
 
 - Intake can be reviewed by checking whether another executor can reconstruct call requirements and gaps from refs alone.
 - Required gates: `memory_and_receipts` and `authority_boundaries`.
-- A missing source or eligibility uncertainty blocks the next stage until made explicit.
+- Missing source or eligibility evidence stays explicit as quality debt and a repair target; only a real identity, authority, safety, executor, irreversible-action, or human-decision boundary stops the affected operation.
 
 ## OPL Role Boundary
 
 - OPL role: descriptor, queue, wakeup, handoff, receipt, and projection consumer.
 - OPL cannot write grant truth, choose a new locked call, or infer readiness from descriptor validation.
-- Allowed action refs: `inspect_progress`, `inspect_cockpit`.
+- Hosted actions are declared by this Stage's `allowed_action_refs` in `agent/stages/manifest.json`; progress and cockpit are OPL-generated read models.
 
 ## Non-Pass Signals
 

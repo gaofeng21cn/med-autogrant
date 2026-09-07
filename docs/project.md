@@ -1,65 +1,19 @@
-# 项目概览
+# 项目定位
 
-Owner: `Med Auto Grant`
-Purpose: `project_role_and_boundary`
-State: `current`
-Machine boundary: 本文是人读项目概览。机器真相归 `contracts/runtime-program/current-program.json`、根层 contracts、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
+Med Auto Grant（MAG）服务申请人侧的医学基金申请：围绕同一 funding call，完成材料理解、可资助性判断、specific aims、正文、独立评审、修订和本地交付包。它不承担研究执行、论文投稿或基金评审机构的决定。
 
-## 定位
+用户入口是安装后的 `med-autogrant` Skill 和 OPL-generated actions。`mag` 是稳定 Agent/Package identity；仓库、distribution 和 Skill locator 为 `med-autogrant`，Python module 为 `med_autogrant`，CLI 为 `medautogrant`。入口条件见[产品入口](./product/README.md)，安装见[仓库首页](../README.zh-CN.md)。
 
-`Med Auto Grant` 是独立的医学基金申请 domain agent。它的 OPL canonical agent id 与 OPL Agent Package id 都是 `mag`，唯一 OCI Package repository 是 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`；`med-autogrant` 只作为仓库、Python distribution 与 plugin/skill carrier locator，`medautogrant` 只作为 module/CLI locator。
+## 业务范围
 
-生态定位遵循 `OPL Base ~= R`、`OPL App ~= RStudio`、`OPL Package ~= R Package`。
-MAG 是 `OPL Package(kind=agent)`，自己定义 executor-neutral identity、capabilities、
-required/optional dependency intent、grant business task 与 typed views。Codex-first 是当前
-最低成本实现路径，不是 MAG identity 或长期生态边界。
+申请人提供 funding call、履历与团队条件、论文和预实验、当前草稿与交付要求。MAG 将它们组织为可追踪的 claim/evidence、strategy、aims、draft、critique、revision 和 package；每次修订沿用当前申请任务身份，改变目标基金须遵守明确的人工作业决定。
 
-长期形态固定为：
+支持的 profile 由 [grant_family_registry.py](../src/med_autogrant/grant_family_registry.py) 定义，当前含 NSFC、NIH R21 和 Wellcome；真实资格、期限和格式仍须读取本次 call。评审权重是 profile 的报告字段，不是固定认知顺序或自动资助裁决算法。
 
-`Declarative Grant Pack + OPL generated/hosted surfaces + minimal MAG authority functions`
+正文达到可评审质量、本地包通过 export gate、外部 portal 已提交是不同结果。形式补件默认作为独立待办；直接影响科学成立性的缺口须回到正文或其证据 owner。外部提交、签字与认证保持 human-owned。
 
-Temporal 持有 execution facts；OPL 持有 generic runtime、stage attempt lifecycle、
-queue/wakeup、retry/resume、attempt ledger、carrier readback 聚合、generated caller 与
-App/workbench shell。MAG 持有 grant business lifecycle、grant truth、
-fundability/quality/export verdict、submission package authority、memory accept/reject、
-owner receipt、typed blocker 与 grant-native helper。领域语义 route 由
-`semantic_route_decision_owner=decisive_codex_attempt` 给出；
-`stage_transition_materialization_owner=opl_stage_run_controller` 只校验并物化该决定，
-不取得 grant-semantic approval authority。
+## 目标与边界
 
-## 当前入口
+MAG 的长期形态是 `Declarative Grant Pack + OPL generated/hosted surfaces + minimal MAG authority functions`。它独立拥有领域判断、artifact/package、memory 决策与 owner receipt；Framework 提供通用运行和投影，App 提供用户界面。具体分层由[架构](./architecture.md)解释。
 
-- `medautogrant` grouped CLI
-- `MedAutoGrantDomainEntry`
-- `domain-handler export`
-- `domain-handler dispatch`
-- `agent/primary_skill/SKILL.md`
-
-Domain handler dispatch 提供 `domain-memory/propose`、`domain-memory/decide`、`stage-attempt/closeout`。Product、status、user-loop 与 workbench 由 OPL/App generated surfaces 提供。
-
-所有 executor kind 由 MAG 组装 grant prompt 和 domain payload，再交给 OPL Python
-executor client；MAG 不实现 Codex/OPL subprocess、timeout、process cleanup 或 receipt
-transport，只解析 canonical receipt 和 typed grant closeout。`opl packages
-install|update|uninstall mag` 是 Framework 聚合的稳定用户动作入口，实际 bytes 与
-lifecycle 由 carrier 承担。目标发布权威是 MAG owner 独立推进本包 GHCR
-`latest-stable`；其 live 迁移状态以 [当前状态](./status.md) 为准。Codex Plugin 只投影
-Plugin/config/cache，不能单独证明完整 MAG runtime installed。`mas-scholar-skills` 是
-MAG 的 required hard dependency；缺失或不可调用只让 MAG fail closed，不阻断无关
-Package，也不做 provider version/ABI/lock/payload/digest 求解。MAG owner 定义
-activation、health、grant task 与 typed-view 接口，carrier 执行，Framework 聚合 fresh
-readback，App 只消费。本仓不提供用户目录 symlink/marketplace mutation。
-
-## 目标
-
-- 在同一 funding call 下保持 workspace、draft、route、quality 与 package identity 稳定。
-- 让 direct path 与 OPL-hosted path 回到同一 MAG authority surface。
-- 让 OPL 只消费 descriptor、refs、receipt 与 blocker，不读取或改写 grant/memory/artifact/package body。
-- 保持 submission-ready package fail closed；它不等于外部 portal 已提交。
-
-## 下一跳
-
-- [当前状态](./status.md)
-- [架构](./architecture.md)
-- [不变量](./invariants.md)
-- [决策](./decisions.md)
-- [当前计划](./active/mag-ideal-state-cross-repo-gap-plan.md)
+目标是同一申请任务在 direct authority target 与 hosted path 之间保留同一 workspace、artifact identity 和领域判断，并能用真实独立评审和交付回执证明结果。当前实现与尚未取得的运行证据见[状态](./status.md)；本页不声明 production readiness。

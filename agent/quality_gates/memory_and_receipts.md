@@ -10,7 +10,7 @@ This gate ensures grant strategy memory and owner receipts remain MAG-owned, bod
 - OPL memory transport may carry body-free refs, locator results, and writeback proposals.
 - OPL cannot store memory bodies, accept/reject memory, or turn memory transport into grant truth.
 - Strategy memory is advisory-by-default and claim-gated-only: it may inform Codex reasoning, reviewer-risk attention, and route-back suggestions, but it cannot authorize fundability, quality, export, package, submission, owner receipt, or typed blocker claims.
-- Missing or stale memory should normally produce advisory notes, route-back suggestions, or reviewer attention. It fails closed only when a memory-derived claim is being used for a hard owner gate or when memory conflicts with locked source/call/owner evidence.
+- Missing, stale, or conflicting memory produces advisory notes, rejects unsupported claims, and routes repair to the memory owner. Only a real identity/currentness, authority/safety, irreversible-action, unavailable-executor, or explicit owner/human boundary stops the affected operation; conflict alone does not stop ordinary Stage work.
 
 ## Receipt Rules
 

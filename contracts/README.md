@@ -29,8 +29,8 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 
 OPL Pack 从 declarative stage manifest 生成 `family_stage_control_plane`，并托管 CLI/MCP/skill/product/status/user-loop/workbench caller。MAG 持有 grant truth、memory/artifact/package body、verdict、receipt 与 typed blocker authority。
 
-OPL Package 的跨仓目标与删除门禁归
-[App 跨仓总体迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md)。
+OPL Package 的跨仓产品目标见
+[App 文档](https://github.com/gaofeng21cn/one-person-lab-app/tree/main/docs)，Framework 实现由其合同和源码持有。
 本文只解释当前 MAG machine surface；文档更新不表示迁移完成。
 
 ## MAG Authority

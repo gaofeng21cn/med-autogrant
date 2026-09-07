@@ -11,6 +11,7 @@ MAG adopts the OPL principles as a grant-authoring Foundry Agent:
 - MAG owns grant truth, fundability strategy, proposal quality, export/package verdicts, grant memory accept/reject decisions, owner receipts, and typed blockers.
 - OPL may host the stage runtime, generated surfaces, refs-only workspace/source locator, and conformance readbacks. It does not write grant truth, sign owner receipts, create MAG typed blockers, or authorize submission readiness.
 - Grant authoring remains AI-first expert work. Scripts and contracts materialize refs, compare structure, and enforce authority gates; fundability and submission closeout remain MAG-owner gated.
+- Stage prompts, professional skills, quality gates, knowledge, and bounded tools form the declarative grant pack; `src/med_autogrant/` supplies minimal authority functions and native helpers. Scorecards and read models organize evidence without deciding grant readiness.
 - Generated interfaces and Agent Lab evidence are readback and handoff surfaces. They cannot claim fundability ready, submission ready, domain ready, or production ready without the required MAG owner evidence.
 
 This specialization keeps MAG's grant reasoning AI-first while preventing OPL intake, generated descriptors, or capability packaging from becoming grant authority.

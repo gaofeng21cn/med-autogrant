@@ -36,7 +36,7 @@
 
 - OPL role: descriptor and receipt consumer.
 - OPL can carry refs and attempts, but cannot override MAG fundability judgment.
-- Allowed action refs: `open_grant_user_loop`, `inspect_progress`.
+- Hosted actions are declared by this Stage's `allowed_action_refs` in `agent/stages/manifest.json`.
 
 ## Non-Pass Signals
 

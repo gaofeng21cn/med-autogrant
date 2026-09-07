@@ -9,7 +9,7 @@ Machine boundary: 本文是当前证据缺口索引。机器状态归 root contr
 
 MAG 当前由 Declarative Grant Pack、OPL generated/hosted surfaces 和最小 MAG authority functions 组成。仓内结构清理已经关闭，`contracts/runtime-program/current-program.json` 的当前 tranche 是 `external_owner_evidence_gated`。
 
-Stage repair 与 Meta Review route-back 预算由 `contracts/stage_quality_cycle_policy.json` 声明，由 OPL StageRun 执行并回读。当前仓库没有待实现的本地结构 gap。
+本页只持有外部验收所需证据，不对尚未重新验证的本地实现作全面无缺口声明。当前结构由 `contracts/stage_quality_cycle_policy.json`、source 和 fresh OPL readback 证明。
 
 ## 开放证据
 
@@ -29,10 +29,10 @@ Stage repair 与 Meta Review route-back 预算由 `contracts/stage_quality_cycle
 
 1. 校验 StageRun/Attempt、workspace、artifact 与 owner identity。
 2. 更新对应 owner surface：`contracts/live_stage_run_progress_evidence.json` 或 `contracts/production_acceptance/mag-production-acceptance.json`。
-3. 同步本表与 `docs/status.md` 中直接受影响的状态。
+3. 更新本表的缺口和关闭条件；只有结论改变时更新 `docs/status.md` 摘要，不复制本表。
 4. 运行 lane-specific validator、`./scripts/verify.sh` 和相关 OPL readback。
 
-跨仓 Package 组合迁移的阶段、顺序和验收由 App 的 [总体迁移 SSOT](https://github.com/gaofeng21cn/one-person-lab-app/blob/main/docs/active/opl-package-platform-composition-migration.md) 持有。
+跨仓 Package 产品目标见 [App 文档](https://github.com/gaofeng21cn/one-person-lab-app/tree/main/docs)；本页只跟踪 MAG owner evidence。
 
 ## 结构回读
 

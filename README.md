@@ -2,203 +2,60 @@
   <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant logo" width="132" />
 </p>
 
-<p align="center">
-  <a href="./README.md"><strong>English</strong></a> | <a href="./README.zh-CN.md">中文</a>
-</p>
-
-<!--
-Owner: Med Auto Grant
-Purpose: public repository entry
-State: current_public
-Machine boundary: Human-readable entry only. Machine truth remains in current-program, root contracts, schemas, source, CLI/API behavior, runtime receipts, and grant workspace artifacts.
--->
+[English](./README.md) | [中文](./README.zh-CN.md)
 
 # Med Auto Grant
 
-**An AI grant-writing workspace for medical teams, keeping topic framing, body drafting, critique, revision, and review-package delivery on one traceable application line.**
-
-A medical grant proposal is more than a form to fill in. A review-ready application needs the target call, research foundation, scientific question, technical route, applicant fit, and reviewer concerns to stay aligned across many rounds of work.
-
-Once AI moves from "polish this paragraph" to "help me finish this proposal," several problems show up quickly:
-
-- The funding call is fixed, but how should prior papers, pilot evidence, and applicant strengths become one clear scientific story?
-- After many revisions, which version solved which problem, and which hard issues remain open?
-- Can the system review the draft like a grant reviewer and turn critique into the next revision?
-- Can portal forms and objective supplements stay separate from the scientific body instead of blocking the writing loop?
-- Can longer writing and revision work continue while the user is away, with progress and blockers left behind for review?
-
-`Med Auto Grant` is built around those questions. For a specified funding task, it keeps material organization, proposal drafting, reviewer-style critique, revision rounds, and review-package delivery inside one workspace so a draft can move toward a version worth showing to experts.
-
-It does not treat grant writing as fixed-template filling. A proposal can keep comparing narrative options, checking claims against evidence, absorbing reviewer-style critique, and producing the next stronger body and review package under the same funding call.
-
-<table>
-  <tr>
-    <td width="33%" valign="top">
-      <strong>Who It Serves</strong><br/>
-      Doctors, PIs, faculty members, and medical research teams preparing researcher-led medical grant applications
-    </td>
-    <td width="33%" valign="top">
-      <strong>What It Organizes</strong><br/>
-      A specified funding call, prior work, pilot evidence, draft versions, review comments, and review-package files inside one workspace
-    </td>
-    <td width="33%" valign="top">
-      <strong>How To Start</strong><br/>
-      Tell it the target funding call, your current draft/materials, scientific claims to defend, and the review package you need
-    </td>
-  </tr>
-</table>
+Med Auto Grant helps applicants plan, write, review, revise, and assemble medical grant proposals around one funding call. It keeps source evidence, scientific questions, applicant fit, draft versions, reviewer findings, and local deliverables in the same grant workspace.
 
 <p align="center">
-  <img src="assets/branding/medautogrant-overview-v3.png" alt="Med Auto Grant journey from idea to submission package" width="100%" />
+  <img src="assets/branding/medautogrant-overview-v3.png" alt="Med Auto Grant journey from idea to local submission package" width="100%" />
 </p>
 
-## Core Highlights
+## Start A Grant Task
 
-**Continuous Writing Around One Funding Call**<br/>
-It does not give generic advice. It keeps working under the same target call, organizing materials, rewriting the body, closing issues, and advancing versions.
+Provide the target funding call, applicant/team materials, prior papers or pilot evidence, current draft, and the result you need. For example:
 
-**From Materials To A Review Package**<br/>
-Papers, pilot evidence, applicant background, and constraints are shaped into title, abstract, aims, research plan, technical route, and applicant narrative, then collected into a review-ready proposal package.
+> Use this NSFC call and draft to revise the aims and methods, review the scientific argument independently, and produce a reviewable proposal package without changing the target call.
 
-**Reviewer-Style Critique That Turns Into Revision**<br/>
-Each round can examine scientific question, significance, novelty, technical route, applicant fit, and evidence gaps, then turn the critique into the next draft.
+The installed `med-autogrant` Skill selects the OPL-generated action. The default action continues the grant workflow; bounded authoring requires accepted upstream context, and local package export requires an explicit request, output directory, and the export human gate. See [entry boundaries](./docs/product/README.md).
 
-**Traceable Progress And Versions**<br/>
-The workspace keeps drafts, comments, version changes, quality scorecards, and evidence-gap reports together so the team can see where the proposal stands.
+Scientific review readiness, local submission-package readiness, and external portal submission are separate results. Formal supplements remain explicit follow-up work unless they affect scientific validity. Portal upload, signatures, certification, and final submission remain human-authorized actions.
 
-**Scientific Writing And Portal Supplements Stay Separate**<br/>
-Portal submission, formal forms, and objective supplements are tracked as their own follow-up work. The default focus is to make the scientific body reviewable first.
+## Install The Codex Carrier
 
-**Room For Judgment And Revision**<br/>
-The system does not mechanically revise in a fixed order. It can generate options, compare versions, locate hard weaknesses, rewrite weak sections, and keep the change history plus quality movement in one workspace.
+This repository supplies the Codex plugin carrier `med-autogrant`; the OPL Agent/Package identity is `mag`. From a clone:
 
-## One-Sentence Quick Start
+```bash
+codex plugin marketplace add .
+codex plugin marketplace list --json
+codex plugin list --marketplace med-autogrant --available --json
+codex plugin add med-autogrant@med-autogrant --json
+codex plugin list --marketplace med-autogrant --json
+```
 
-You can start with prompts like:
+Start a new Codex App task or CLI session to load the installed Skill. To remove this carrier and its marketplace:
 
-- "Use this NSFC call and this draft to rebuild title, abstract, aims, and methods so the scientific story is internally consistent."
-- "Review this current draft for claim-evidence gaps and rewrite the weak sections without changing the target funding call."
-- "Review this draft like a grant reviewer, tell me the biggest weaknesses, and show me how to revise them."
+```bash
+codex plugin remove med-autogrant@med-autogrant --json
+codex plugin marketplace remove med-autogrant --json
+```
 
-## What It Helps With
+These commands manage only the Codex carrier. They do not prove Framework availability, required ScholarSkills callability, complete runtime installation, grant quality, or production readiness. Read the full Package state through a current OPL Base:
 
-- Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan under a specified funding call.
-- Keeping revision rounds, reviewer-style critique, and version changes traceable inside one workspace.
-- Comparing proposal quality across versions through structured scorecards, issue closure, and evidence-gap reports.
-- Running longer writing and revision cycles that can continue, roll back, or stop with a blocker report.
-- Delivering a scientifically complete review-ready package before portal-facing formal checks.
-- Tracking formal/objective supplements as explicit follow-up work, instead of blocking body authoring by default.
-- Comparing narrative options, evidence support, and reviewer-style critique inside the same funding task, then producing the next more-reviewable body draft.
+```bash
+opl packages status mag --json
+```
 
-## How It Works
+Follow the returned owner action when runtime or dependency evidence is missing. An unavailable `packages` command indicates that the current OPL Base must be checked; a successful plugin install is not full Package readiness.
 
-- Applicants provide the target funding call, existing evidence, constraints, and final judgment.
-- The AI operator helps with scientific structure, option comparison, drafting, critique, and revision within that call.
-- The workspace keeps comments, versions, and deliverable files together so the proposal line stays reviewable.
-- New intake workspaces are directory scaffolds: `workspace.json` is the canonical document, while lightweight contracts/artifacts can be Git-tracked and local runtime outputs remain ignored.
+## Project And Development
 
-## Current Boundary
+MAG owns grant judgment, artifacts/packages, strategy-memory decisions, and owner receipts. OPL owns generic runtime, executor transport, generated actions/status, and recovery; the App consumes those surfaces. Implementation and open evidence are described in [status](./docs/status.md), not inferred from the repository version.
 
-- `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
-- In the OPL family, MAG is an `OPL Package(kind=agent)`: MAG owns its
-  executor-neutral identity, capabilities, dependency intent, grant task model,
-  typed views, and grant authority. OPL supplies generic runtime, carrier
-  aggregation, generated wrappers, and hosted surfaces.
-- Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach stable capabilities through that skill.
-- MAG owns the grant-writing work itself: funding-call understanding, proposal structure, scientific questions, evidence organization, drafting, revision, and review-ready delivery packages. One Person Lab handles hosted runtime, progress display, recovery/retry, and the cross-agent product entry.
-- It can be used as the Grant Foundry inside One Person Lab, and it can also be called directly by Codex or another agent through stable capability entries.
-- MAG task scope is locked to body authoring for a specified funding call.
-- Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
-- Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
-- Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
-- External funding portal submission stays under human supervision.
-
-<details>
-  <summary><strong>Technical OPL / executor boundary</strong></summary>
-
-- `OPL` can host MAG as an external domain agent and provide stage scheduling, wakeups, handoffs, receipts, retries, and projections.
-- MAG keeps the grant-facing authority: grant truth, fundability and writing-quality judgment, route evidence and constraints, and submission/export authority. A decisive Codex Attempt supplies the semantic Stage route; the OPL StageRun controller only validates and materializes that transition.
-- `Codex CLI` is the current first-class executor and the Codex plugin is its
-  default carrier projection. Neither defines MAG Package identity or complete
-  installed truth; changing an executor or carrier must not discard MAG
-  preferences, grant tasks, dependencies, or typed views.
-- The MAG owner is the sole publication authority for complete Package bytes
-  and its GHCR `latest-stable`; this boundary does not claim that the live
-  channel migration is already complete. Ordinary dependency composition
-  checks required or optional identity presence and callability, not a shared
-  release cohort or cross-Package version lock.
-- `mas-scholar-skills` is a required MAG dependency, evaluated by identity
-  presence and callability. Missing or uncallable provider state blocks MAG
-  readiness without affecting unrelated Packages or introducing cross-Package
-  version solving.
-- MAG owns its runtime activation, health, grant task, and typed-view
-  interfaces. Carriers execute them, the Framework aggregates fresh readback,
-  and the App only consumes that projection.
-- The full technical boundary, current entry matrix, contract refs, and proof surfaces are maintained in the [Docs Guide](./docs/README.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
-
-</details>
-
-## How To Read This Repository
-
-1. Potential users should start here, then continue to the [Docs Guide](./docs/README.md), [Domain Positioning](./docs/public/domain-positioning.md), and [MVP Scope](./docs/public/mvp-scope.md).
-2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
-3. Developers and maintainers should continue into `docs/active/`, `docs/specs/`, and `docs/references/`; completed work remains available in Git history.
-
-## For Codex / Agents
-
-<details>
-  <summary><strong>Install or hand this repo to Codex and other agents</strong></summary>
-
-- This repo contains the Codex plugin carrier `med-autogrant`; the OPL Package identity remains `mag`. Installing the carrier makes its bundled skill discoverable to Codex, but does not prove that the full OPL Package or runtime is ready.
-- From a clone of this repository, add its repo marketplace, inspect the available entry, install the plugin, and verify the installed readback:
-
-  ```bash
-  codex plugin marketplace add .
-  codex plugin marketplace list --json
-  codex plugin list --marketplace med-autogrant --available --json
-  codex plugin add med-autogrant@med-autogrant --json
-  codex plugin list --marketplace med-autogrant --json
-  ```
-
-- Start a new Codex App task or CLI session after installation so the bundled skill is loaded. To remove the isolated carrier and its configured marketplace:
-
-  ```bash
-  codex plugin remove med-autogrant@med-autogrant --json
-  codex plugin marketplace remove med-autogrant --json
-  ```
-
-- The commands above only manage the Codex plugin carrier. They do not install or validate the OPL Framework, dependencies, activation, runtime health, complete installed truth, or grant-workspace readiness, and this repo marketplace does not grant OPL Package transaction or receipt authority.
-- For the full OPL Package and runtime readback, use the current OPL Base that provides the Package command surface:
-
-  ```bash
-  opl packages status mag --json
-  ```
-
-  Treat a missing `packages` command as an outdated or incomplete OPL Base, not as MAG readiness. Follow the returned owner route instead of inferring readiness from a successful Codex plugin install.
-- Read the [Docs Guide](./docs/README.md) first, then [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json).
-- Before changing routes, public wording, or operator commands, use [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the current technical truth set.
-- Direct MAG use and OPL-hosted use must converge on the same MAG-owned route, workspace, quality, and export surfaces.
-- Use the repo-local clean runner commands described in the Docs Guide and contracts when inspecting command surfaces or exporting handler data.
-
-</details>
-
-## Maintainer Verification
-
-- Use `./scripts/verify.sh` for the default local check. It is a thin public wrapper; Makefile `test-*` targets own lane composition, and the default lane collects the fast non-regression core once.
-- `./scripts/verify.sh` checks repo hygiene without deleting ignored local artifacts. Use `./scripts/verify.sh cleanup` when you intentionally want to remove ignored cache/build byproducts.
-- Makefile Python and pytest lanes run through `scripts/run-python-clean.sh` / `scripts/run-pytest-clean.sh`, which route bytecode and pytest cache outside the checkout.
-- Use `./scripts/verify.sh smoke` for the wrapper smoke lane, or `make test-cli-smoke` for the bare pytest smoke target.
-- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and regression coverage. Product-entry cases live under `tests/product_entry_cases/`.
-- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repository, contract-structure, and full-suite checks. The meta lane is read-only; repository cleanup is explicit through `./scripts/verify.sh cleanup`.
-
-## Further Reading
-
-- [Docs Guide](./docs/README.md)
-- [Domain Positioning](./docs/public/domain-positioning.md)
-- [MVP Scope](./docs/public/mvp-scope.md)
-- [Project](./docs/project.md)
-- [Status](./docs/status.md)
+- [Project scope](./docs/project.md)
+- [Documentation and verification](./docs/README.md)
 - [Architecture](./docs/architecture.md)
-- [Invariants](./docs/invariants.md)
-- [Decisions](./docs/decisions.md)
-- [Contracts Overview](./contracts/README.md)
+- [Machine contracts](./contracts/README.md)
+
+For local checks run `./scripts/verify.sh`; focused and full lanes, clean-runner requirements, and documentation lifecycle are explained in the [documentation guide](./docs/README.md#验证).

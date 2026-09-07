@@ -1,14 +1,5 @@
-# 公开文档
+# 公开阅读入口
 
-Owner: `Med Auto Grant`
-Purpose: `public_narrative_index`
-State: `active_support`
-Machine boundary: 人读公开索引。产品真相继续归核心文档、contracts、source、runtime evidence 与 grant artifacts。
+本页只导航公开读者；安装与使用由[中文首页](../../README.zh-CN.md)和[English README](../../README.md)负责，业务定位与支持边界由[项目定位](../project.md)负责。
 
-本目录是 OPL-family canonical 目录中承接 MAG 仓库首页之后公开叙事的位置。当前公开补充文档固定为 `docs/public/domain-positioning.md` 和 `docs/public/mvp-scope.md`。
-
-当前入口先看：
-
-- [仓库首页](../../README.md)
-- [领域定位](../public/domain-positioning.md)
-- [MVP 范围](../public/mvp-scope.md)
+当前实现与未经验证的运行结论见[状态](../status.md)。早期 MVP 规划和已完成发布过程从 Git 读取，不维护第二份产品范围或版本清单。
