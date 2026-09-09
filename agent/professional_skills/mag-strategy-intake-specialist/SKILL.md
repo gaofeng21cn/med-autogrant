@@ -76,7 +76,11 @@ Operate as the strategy and intake specialist for locked or candidate MAG grant 
 
 ## Stage Prompt Boundary
 
-- Stage prompts declare output refs, handoff shape, and blocker enums. The decisive Codex Attempt makes the semantic route decision; OPL materializes it and MAG retains domain authority.
+- Stage main prompts own the current question, substantive task, use of this
+  method, accepted result, and continuation judgment. The decisive Codex Attempt
+  makes the semantic route decision; OPL materializes it and MAG retains domain
+  authority. Apply the relevant method to that task rather than restarting the
+  whole intake-to-aims workflow whenever this Skill is selected.
 - This skill supplies professional strategy judgment; it does not write owner receipts, mutate grant truth, decide memory accept/reject, authorize quality/export/submission readiness, or claim domain readiness.
 - Proposal authoring must preserve the accepted strategy and aims, or route back here with the exact blocker.
 

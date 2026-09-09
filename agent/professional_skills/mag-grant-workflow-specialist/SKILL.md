@@ -22,7 +22,10 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Outputs
 
-- Draft or revision instructions for proposal sections tied to accepted structure and source refs.
+- Source-grounded draft or revision content for the requested proposal sections,
+  tied to accepted structure and source refs. Return writing instructions only
+  when the current Stage asks for planning; the authoring Stage integrates
+  content candidates through MAG's authorized artifact path.
 - Unsupported-claim list, citation/source needs, known weak arguments, reviewer-facing frame, and reviewer-facing handoff.
 - Reviewer-style critique with issue severity, evidence, affected section, required fix, and closure criterion.
 - Rebuttal or repair plan mapping each concern to response, proposal delta, source evidence, critique-as-repair-hint, closure criterion, residual risk, or route-back.
@@ -72,7 +75,10 @@ Operate as the proposal workflow specialist after strategy and aims are accepted
 
 ## Stage Prompt Boundary
 
-- The decisive Codex Attempt owns semantic route selection. The OPL StageRun controller only validates and materializes the transition. Stage prompts provide grant judgment context, artifact refs, handoff refs, export verdict shape, and blocker enums.
+- The Stage main prompt owns the current goal, substantive task, professional
+  method selection, accepted output, and continuation judgment. This Skill
+  supplies reusable drafting, critique, and package-audit methods. The decisive
+  Codex Attempt selects the semantic route; OPL validates and materializes it.
 - This skill supplies proposal workflow judgment; it does not approve aims, sign quality/export verdicts, write owner receipts, mutate grant truth, or claim domain/submission readiness.
 - Package work proceeds from the best readable grant artifact. Missing quality verdict refs, corrupt output, or zero readable output become quality debt plus a consumable diagnostic and close submission/export/ready claims without stopping the next stage; only authority, safety/permission, identity/currentness, unavailable executor, irreversible action, or explicit human authority hard-stops work. With no readable artifact, report diagnostic/recovery work only; a completed content or package audit requires inspecting an actual readable artifact.
 

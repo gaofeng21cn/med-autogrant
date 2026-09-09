@@ -7,7 +7,13 @@ Machine boundary: OPL generated surfaces consume refs from this directory, while
 
 This directory holds the MAG domain semantics that should be compiled or hosted by OPL: stage prompts, professional skills, stage policies, skill declarations, quality gates, and knowledge boundaries. It does not store grant artifacts, receipt instances, memory bodies, fundability verdicts, authoring quality verdicts, or submission-ready export verdicts.
 
-`agent/prompts/` holds stage operating prompts: goals, refs, handoffs, and blocker shapes. `agent/professional_skills/` holds two canonical repo-local Codex skills for grant-specialist judgment: strategy/intake and grant workflow. The current entries are indexed in `agent/professional_skills/README.md`. `agent/tools/` describes bounded affordances only.
+`agent/prompts/` holds Stage main prompts: the current goal, relevant inputs,
+substantive work, professional method selection, accepted output, and
+continuation judgment. They guide the Stage through to an actual result whose
+refs can be handed off. `agent/professional_skills/` holds two canonical
+repo-local Codex Skills providing reusable strategy/intake and grant-workflow
+methods. The entries are indexed in `agent/professional_skills/README.md`.
+`agent/tools/` describes bounded affordances only.
 
 MAG uses the same canonical OPL Foundry Agent design profile as MAS, RCA, and OMA: domain material intake -> domain pack interpretation -> stage-led execution -> independent quality/fundability gate -> owner receipt or typed blocker -> handoff -> OPL refs-only projection and recovery. Its series variation is recorded outside the canonical profile as grant-specific input/output and authority refs: funding-call and applicant material refs enter the pack, while grant proposal, revision package, and submission-ready package refs leave through MAG-owned authority gates. OPL only carries refs, projection, and runtime orchestration.
 

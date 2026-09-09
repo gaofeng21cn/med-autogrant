@@ -4,6 +4,14 @@ Create and revise a reviewable proposal body from the accepted aims, source evid
 
 Write against the real call and keep every material claim traceable to source or explicitly marked as uncertain. Make significance, innovation, approach, feasibility, risk and alternatives, expected impact, and applicant fit form one reviewer-facing argument. Use `mag-grant-workflow-specialist` for specialist drafting and source-faithful revision.
 
+Produce the proposal text in the authorized grant workspace, not only writing
+instructions, section titles, or a plan for another writer. Integrate accepted
+professional candidates into the current draft and read the affected sections
+together for scientific and argumentative consistency. On revision, preserve
+supported strengths and resolve each accepted concern through an actual draft
+change or an evidence-backed no-change explanation. The handoff refs must point
+to that reviewable text and its unresolved evidence needs.
+
 Apply this Stage's required Skill binding from
 `contracts/scholar_skill_binding_contract.json`. Resolve Provider identity and
 callability before MAG work, then invoke the selected subset with the current

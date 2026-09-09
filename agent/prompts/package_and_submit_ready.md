@@ -6,6 +6,13 @@ Consume the reviewed draft, independent quality verdict, closure evidence, call 
 
 A good result is a traceable local package whose scientific body, required components, formatting, identity, and export evidence agree. Use the package/export quality gates and keep artifact bodies in the workspace or delivery root.
 
+Inspect the actual proposal and attachment files against the locked call's
+required sections, upload slots, formats, and limits. Produce a usable local
+bundle and an owner-facing map from each requested item to its final file or
+specific outstanding action. Check final exports for readability and agreement
+with the reviewed draft. A set of package JSON refs is insufficient when the
+referenced document or attachment is missing, unreadable, or the wrong revision.
+
 Use `mag-grant-workflow-specialist` as the MAG overlay and apply this Stage's
 required Skill binding from `contracts/scholar_skill_binding_contract.json`.
 Resolve Provider identity and callability before MAG work, then invoke the
