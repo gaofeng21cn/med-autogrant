@@ -22,32 +22,20 @@ Med Auto Grant 围绕同一 funding call，帮助申请人规划、撰写、独�
 
 科学上可评审、本地提交包已就绪和外部门户已提交是不同结果。形式补件作为明确待办，除非直接影响科学成立性。门户上传、签字、认证和最终提交仍须人工授权。
 
-## 安装 Codex Carrier
+## 安装
 
-本仓提供 Codex plugin carrier `med-autogrant`；OPL Agent/Package identity 为 `mag`。在克隆仓库中执行：
-
-```bash
-codex plugin marketplace add .
-codex plugin marketplace list --json
-codex plugin list --marketplace med-autogrant --available --json
-codex plugin add med-autogrant@med-autogrant --json
-codex plugin list --marketplace med-autogrant --json
-```
-
-安装后新开 Codex App 任务或 CLI session，以加载 Skill。移除本 carrier 及其 marketplace：
+通过 OPL 的标准软件包入口安装：
 
 ```bash
-codex plugin remove med-autogrant@med-autogrant --json
-codex plugin marketplace remove med-autogrant --json
-```
-
-这些命令只管理 Codex carrier，不能证明 Framework 可用、required ScholarSkills 可调用、完整 runtime 已安装或基金质量/生产验收已通过。使用当前 OPL Base 读取完整 Package 状态：
-
-```bash
+opl packages install mag --json
 opl packages status --package-id mag --json
 ```
 
-Runtime 或依赖证据不足时，沿返回的 owner action 处理。`packages` 命令不存在时需检查当前 OPL Base；plugin 安装成功不等于完整 Package ready。
+正式发布渠道为 `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`，不可变版本用于精确引用，`latest-stable` 指向当前版本。OPL 与原生插件管理器负责安装和更新；不通过独立 GitHub Release 页面或附件分发。
+
+运行需要 `mas-scholar-skills`；安装时由软件包依赖关系处理。
+
+安装后新建任务以加载专业技能。软件包安装、运行可用性和领域验收分别记录；具体边界见[当前状态](./docs/status.md)。
 
 ## 项目与开发
 

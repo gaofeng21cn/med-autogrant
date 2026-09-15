@@ -22,32 +22,20 @@ The installed `med-autogrant` Skill selects the OPL-generated action. The defaul
 
 Scientific review readiness, local submission-package readiness, and external portal submission are separate results. Formal supplements remain explicit follow-up work unless they affect scientific validity. Portal upload, signatures, certification, and final submission remain human-authorized actions.
 
-## Install The Codex Carrier
+## Installation
 
-This repository supplies the Codex plugin carrier `med-autogrant`; the OPL Agent/Package identity is `mag`. From a clone:
-
-```bash
-codex plugin marketplace add .
-codex plugin marketplace list --json
-codex plugin list --marketplace med-autogrant --available --json
-codex plugin add med-autogrant@med-autogrant --json
-codex plugin list --marketplace med-autogrant --json
-```
-
-Start a new Codex App task or CLI session to load the installed Skill. To remove this carrier and its marketplace:
+Install through the standard OPL Package entry:
 
 ```bash
-codex plugin remove med-autogrant@med-autogrant --json
-codex plugin marketplace remove med-autogrant --json
-```
-
-These commands manage only the Codex carrier. They do not prove Framework availability, required ScholarSkills callability, complete runtime installation, grant quality, or production readiness. Read the full Package state through a current OPL Base:
-
-```bash
+opl packages install mag --json
 opl packages status --package-id mag --json
 ```
 
-Follow the returned owner action when runtime or dependency evidence is missing. An unavailable `packages` command indicates that the current OPL Base must be checked; a successful plugin install is not full Package readiness.
+The publication channel is `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`. Immutable versions identify exact releases; `latest-stable` selects the current version. OPL and the native plugin manager handle installation and updates. Separate GitHub Release pages and attachments are not used for distribution.
+
+Runtime use requires `mas-scholar-skills`, resolved through the declared Package dependency.
+
+Start a new task after installation to load the professional skills. Package installation, runtime callability, and domain acceptance remain separate; see [Current Status](./docs/status.md).
 
 ## Project And Development
 
