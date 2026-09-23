@@ -21,6 +21,11 @@
     "workspace_binding": {
       "locator_surface_kind": "med_autogrant_workspace_input",
       "default_profile_id": "one_off",
+      "shared_resources": [
+        { "path": "shared/sources", "role": "source_intake" },
+        { "path": "shared/memory", "role": "memory_root" },
+        { "path": "shared/style_system", "role": "style_system" }
+      ],
       "workspace_kind": "grant_authoring_workspace",
       "project_kind": "grant_project",
       "project_collection_label": "deliverables",
