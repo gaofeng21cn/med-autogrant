@@ -115,6 +115,7 @@ def discover_funding_landscape(
     discovery_input: dict[str, Any],
     *,
     fetch_text: FetchText | None = None,
+    default_fetch_text: FetchText | None = None,
     cached_snapshot: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _validate_discovery_input(discovery_input)
@@ -134,7 +135,8 @@ def discover_funding_landscape(
     }
     if discovery_source == "official_live":
         catalog, source_entries = _build_official_live_catalog(
-            fetch_text=fetch_text or _fetch_url_text,
+            fetch_text=fetch_text
+            or (default_fetch_text if default_fetch_text is not None else _fetch_url_text),
             include_funders=include_funders,
         )
     elif discovery_source == "official_cached":
@@ -216,12 +218,14 @@ def build_funding_landscape_cache(
     discovery_input: dict[str, Any],
     *,
     fetch_text: FetchText | None = None,
+    default_fetch_text: FetchText | None = None,
     existing_snapshot: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _validate_discovery_input(discovery_input)
     include_funders = _normalize_optional_string_list(discovery_input.get("include_funders"))
     catalog, source_entries = _build_official_live_catalog(
-        fetch_text=fetch_text or _fetch_url_text,
+        fetch_text=fetch_text
+        or (default_fetch_text if default_fetch_text is not None else _fetch_url_text),
         include_funders=include_funders,
     )
     existing_sources = _index_existing_sources(existing_snapshot)

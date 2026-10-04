@@ -57,7 +57,8 @@ def discover_funding_landscape(
 ) -> dict[str, Any]:
     return _discover_funding_landscape(
         discovery_input,
-        fetch_text=fetch_text or _fetch_url_text,
+        fetch_text=fetch_text,
+        default_fetch_text=_fetch_url_text,
         cached_snapshot=cached_snapshot,
     )
 
@@ -70,7 +71,8 @@ def build_funding_landscape_cache(
 ) -> dict[str, Any]:
     return _build_funding_landscape_cache(
         discovery_input,
-        fetch_text=fetch_text or _fetch_url_text,
+        fetch_text=fetch_text,
+        default_fetch_text=_fetch_url_text,
         existing_snapshot=existing_snapshot,
     )
 
