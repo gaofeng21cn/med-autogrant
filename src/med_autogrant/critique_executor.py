@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import json
 import re
 from copy import deepcopy
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +18,19 @@ from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
+from med_autogrant.critique_executor_parts.context_prompt import (
+    build_critique_context as _build_critique_context_impl,
+    build_critique_prompt as _build_critique_prompt_impl,
+)
+from med_autogrant.critique_executor_parts.mentor_evidence import (
+    build_independent_review_evidence as _build_independent_review_evidence_impl,
+    normalize_mentor_critique as _normalize_mentor_critique_impl,
+)
+from med_autogrant.critique_executor_parts.revision_plan import (
+    EXECUTABLE_REVISION_OPERATIONS,
+    normalize_revision_plan as _normalize_revision_plan_impl,
+    validate_revision_item as _validate_revision_item_impl,
+)
 
 
 DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli"
@@ -28,9 +39,6 @@ SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     DEFAULT_CRITIQUE_EXECUTOR_KIND,
     HERMES_AGENT_EXECUTOR_KIND,
 )
-
-EXECUTABLE_REVISION_OPERATIONS = ("replace_draft_section", "replace_draft_sections")
-
 
 def build_critique_execution_document(
     *,
@@ -132,163 +140,23 @@ def _build_critique_context(
     document: dict[str, Any],
     state: Any,
 ) -> dict[str, Any]:
-    lifecycle_stage = str(document.get("lifecycle_stage") or "").strip()
-    if lifecycle_stage not in {"drafting", "revision"}:
-        raise WorkspaceStateError(
-            f"execute-critique-pass 只允许从 drafting 或 revision 进入，当前为 {lifecycle_stage or 'unknown'}。",
-            errors=[],
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-
-    if state.selected_question is None or state.active_argument_chain is None or state.active_fit_mapping is None:
-        raise WorkspaceStateError(
-            "critique pass 缺少 question / argument / fit 上下文。",
-            errors=[],
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-    if state.active_draft is None:
-        raise WorkspaceStateError(
-            "critique pass 缺少 active draft。",
-            errors=[],
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-    if lifecycle_stage == "revision":
-        if state.active_revision_plan is None or state.active_critique is None:
-            raise WorkspaceStateError(
-                "revision -> critique re-review 缺少 active revision / critique 上下文。",
-                errors=[],
-                grant_run_id=document.get("grant_run_id"),
-                workspace_id=document.get("workspace_id"),
-                lifecycle_stage=document.get("lifecycle_stage"),
-            )
-        if state.active_revision_plan.get("execution_status") != "completed":
-            raise WorkspaceStateError(
-                "revision -> critique re-review 要求当前 active RevisionPlan.execution_status=completed。",
-                errors=[],
-                grant_run_id=document.get("grant_run_id"),
-                workspace_id=document.get("workspace_id"),
-                lifecycle_stage=document.get("lifecycle_stage"),
-            )
-        if state.active_draft.get("status") != "revised":
-            raise WorkspaceStateError(
-                "revision -> critique re-review 要求当前 active draft.status=revised。",
-                errors=[],
-                grant_run_id=document.get("grant_run_id"),
-                workspace_id=document.get("workspace_id"),
-                lifecycle_stage=document.get("lifecycle_stage"),
-            )
-
-    existing_critique_ids = [
-        item.get("critique_id")
-        for item in document.get("mentor_critiques", [])
-        if isinstance(item, dict) and isinstance(item.get("critique_id"), str)
-    ]
-    existing_revision_plan_ids = [
-        item.get("revision_plan_id")
-        for item in document.get("revision_plans", [])
-        if isinstance(item, dict) and isinstance(item.get("revision_plan_id"), str)
-    ]
-    section_keys = [
-        section.get("section_key")
-        for section in state.active_draft.get("sections", [])
-        if isinstance(section, dict) and isinstance(section.get("section_key"), str)
-    ]
-    known_ids = sorted(_collect_known_ids(document))
-    return {
-        "document": document,
-        "lifecycle_stage": lifecycle_stage,
-        "grant_run_id": document["grant_run_id"],
-        "workspace_id": document["workspace_id"],
-        "draft_id": state.active_draft["draft_id"],
-        "draft_version_label": state.active_draft["version_label"],
-        "selected_question": state.selected_question,
-        "active_argument_chain": state.active_argument_chain,
-        "active_fit_mapping": state.active_fit_mapping,
-        "active_draft": state.active_draft,
-        "active_revision_plan": state.active_revision_plan,
-        "active_critique": state.active_critique,
-        "existing_critique_ids": existing_critique_ids,
-        "existing_revision_plan_ids": existing_revision_plan_ids,
-        "section_keys": section_keys,
-        "known_ids": known_ids,
-        "next_critique_id": _next_versioned_id("critique", existing_critique_ids),
-        "next_revision_plan_id": _next_versioned_id("revision", existing_revision_plan_ids),
-    }
+    return _build_critique_context_impl(
+        document=document,
+        state=state,
+        collect_known_ids=_collect_known_ids,
+        next_versioned_id=_next_versioned_id,
+    )
 
 
 def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -> str:
-    input_file = Path(input_path).expanduser().resolve()
-    mentor_schema = (SchemaStore().root / "mentor-critique.schema.json").resolve()
-    revision_schema = (SchemaStore().root / "revision-plan.schema.json").resolve()
-    critique_policy = resolve_critique_policy_from_document(_require_object(context, "document"))
-    policy_lines = build_policy_prompt_lines(critique_policy)
-    weight_contract = build_weight_contract(critique_policy)
-    weight_split = ", ".join(f"{field}={weight}" for field, weight in weight_contract.items())
-    weighted_score_fields = " / ".join(weight_contract)
-    reviewed_revision_id = None
-    if isinstance(context["active_revision_plan"], dict) and context["lifecycle_stage"] == "revision":
-        reviewed_revision_id = context["active_revision_plan"]["revision_plan_id"]
-
-    return "\n".join(
-        [
-            "You are executing the MedAutoGrant critique pass.",
-            "Read the workspace JSON and the two schema files from disk before you answer.",
-            "Do not modify any files. Return JSON only, with no markdown fences.",
-            "",
-            f"Workspace file: {input_file}",
-            f"MentorCritique schema: {mentor_schema}",
-            f"RevisionPlan schema: {revision_schema}",
-            "",
-            "Output contract:",
-            (
-                'Return exactly one JSON object shaped as '
-                '{"surface_kind":"domain_stage_closeout_packet",'
-                '"route_id":"critique","domain_output_kind":"mag_critique_output",'
-                '"domain_output":{...}}.'
-            ),
-            'domain_output must contain exactly the keys "mentor_critique" and "revision_plan".',
-            "",
-            "Critique policy/persona contract:",
-            *policy_lines,
-            "",
-            "Hard constraints:",
-            f"- lifecycle stage entering critique pass: {context['lifecycle_stage']}",
-            f"- draft_id must be {context['draft_id']}",
-            f"- next critique_id should be {context['next_critique_id']}",
-            f"- next revision_plan_id should be {context['next_revision_plan_id']}",
-            f"- current scientific question must stay exactly: {context['selected_question']['core_question']}",
-            f"- current draft version_label is {context['draft_version_label']}",
-            f"- allowed draft section keys: {json.dumps(context['section_keys'], ensure_ascii=False)}",
-            f"- known object ids for required_input_ids / linked_object_ids: {json.dumps(context['known_ids'], ensure_ascii=False)}",
-            "- choose repair actions and scope from the actual diagnosis; cross-section restructuring and upstream route-back are allowed when the argument cannot be repaired locally",
-            "- target_ref and required_input_ids must make every proposed repair traceable to the affected artifact and known evidence",
-            "- every planned repair needs a directly applicable mutation_payload; choose section scope or whole-draft sections scope from the diagnosis and attached schema",
-            f"- preserve these profile reporting weights in the schema fields: {weight_split}",
-            (
-                f"- mentor_critique.{weighted_score_fields} must each be "
-                "an object with exactly weight, score, judgment"
-            ),
-            "- do not emit rationale or verdict inside these weighted score blocks",
-            "- do not invent comparison_summary for a planned revision plan",
-            "- set revision_plan.execution_status to planned",
-            "- revision_plan.pre_revision_version_label must equal the current draft version_label",
-            "- revision_plan.post_revision_version_label must be a new non-empty version label different from the current one",
-            (
-                f"- mentor_critique.reviewed_revision_plan_id must be {reviewed_revision_id}"
-                if reviewed_revision_id is not None
-                else "- omit mentor_critique.reviewed_revision_plan_id for the first critique pass"
-            ),
-            "",
-            "Quality goal:",
-            "- produce an independent reviewer judgment over the whole proposal, not a weighted checklist traversal",
-            "- produce the smallest coherent repair plan; prefer cross-section coherence over a fixed mutation taxonomy",
-        ]
+    return _build_critique_prompt_impl(
+        context=context,
+        input_path=input_path,
+        require_object=_require_object,
+        resolve_policy=resolve_critique_policy_from_document,
+        build_policy_lines=build_policy_prompt_lines,
+        build_weights=build_weight_contract,
+        schema_store_factory=SchemaStore,
     )
 
 
@@ -299,38 +167,16 @@ def _normalize_mentor_critique(
     executor_payload: dict[str, Any],
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    critique = deepcopy(payload)
-    metadata = dict(critique.get("metadata") or {})
-    executor_kind = str(executor_payload.get("kind") or "").strip()
-    critique["critique_id"] = critique_context["next_critique_id"]
-    if executor_kind == "hermes_agent":
-        metadata["owner"] = "OPL executor client critique receipt owner"
-    else:
-        metadata["owner"] = "Codex CLI critique executor"
-    metadata["independent_review_evidence"] = _build_independent_review_evidence(
+    return _normalize_mentor_critique_impl(
         critique_context=critique_context,
-        critique_id=critique["critique_id"],
+        critique_policy=critique_policy,
         executor_payload=executor_payload,
-        owner=metadata["owner"],
+        payload=payload,
+        build_weights=build_weight_contract,
+        require_object=_require_object,
+        validate_schema_payload=_validate_schema_payload,
+        build_independent_review_evidence=_build_independent_review_evidence,
     )
-    critique["metadata"] = metadata
-    critique["draft_id"] = critique_context["draft_id"]
-    critique["current_scientific_question"] = critique_context["selected_question"]["core_question"]
-    if critique_context["lifecycle_stage"] == "revision":
-        critique["reviewed_revision_plan_id"] = critique_context["active_revision_plan"]["revision_plan_id"]
-    else:
-        critique.pop("reviewed_revision_plan_id", None)
-    for field_name, expected_weight in build_weight_contract(critique_policy).items():
-        criterion = _require_object(critique, field_name)
-        criterion["weight"] = expected_weight
-    _validate_schema_payload(
-        critique,
-        schema_file="mentor-critique.schema.json",
-        grant_run_id=critique_context["grant_run_id"],
-        workspace_id=critique_context["workspace_id"],
-        lifecycle_stage=critique_context["lifecycle_stage"],
-    )
-    return critique
 
 
 def _build_independent_review_evidence(
@@ -340,25 +186,12 @@ def _build_independent_review_evidence(
     executor_payload: dict[str, Any],
     owner: str,
 ) -> dict[str, Any]:
-    executor_kind = str(executor_payload.get("kind") or "").strip()
-    session_id = executor_payload.get("session_id")
-    execution_attempt_ref = (
-        f"draft_artifact::{critique_context['grant_run_id']}::{critique_context['draft_id']}"
+    return _build_independent_review_evidence_impl(
+        critique_context=critique_context,
+        critique_id=critique_id,
+        executor_payload=executor_payload,
+        owner=owner,
     )
-    if isinstance(session_id, str) and session_id.strip():
-        review_receipt_ref = f"opl_agent_execution_receipt::{session_id.strip()}"
-        reviewer_agent_ref = f"{executor_kind}::{session_id.strip()}"
-    else:
-        review_receipt_ref = f"mentor_critiques::{critique_id}::metadata.independent_review_evidence"
-        reviewer_agent_ref = "codex_cli::critique_executor"
-    return {
-        "execution_attempt_ref": execution_attempt_ref,
-        "review_attempt_ref": f"mentor_critiques::{critique_id}",
-        "review_receipt_ref": review_receipt_ref,
-        "no_shared_context_verified": True,
-        "reviewer_owner": owner,
-        "reviewer_agent_ref": reviewer_agent_ref,
-    }
 
 
 def _normalize_revision_plan(
@@ -367,52 +200,13 @@ def _normalize_revision_plan(
     critique: dict[str, Any],
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    revision_plan = deepcopy(payload)
-    revision_plan["revision_plan_id"] = critique_context["next_revision_plan_id"]
-    revision_plan["draft_id"] = critique_context["draft_id"]
-    revision_plan["critique_id"] = critique["critique_id"]
-    revision_plan["execution_status"] = "planned"
-    revision_plan["pre_revision_version_label"] = critique_context["draft_version_label"]
-    revision_plan.pop("comparison_summary", None)
-    post_revision_version_label = revision_plan.get("post_revision_version_label")
-    if (
-        not isinstance(post_revision_version_label, str)
-        or not post_revision_version_label.strip()
-        or post_revision_version_label == critique_context["draft_version_label"]
-    ):
-        raise WorkspaceStateError(
-            "critique pass 生成的 post_revision_version_label 必须为新的非空版本号。",
-            errors=[],
-            grant_run_id=critique_context["grant_run_id"],
-            workspace_id=critique_context["workspace_id"],
-            lifecycle_stage=critique_context["lifecycle_stage"],
-        )
-    items = revision_plan.get("items")
-    if not isinstance(items, list) or not items:
-        raise WorkspaceStateError(
-            "critique pass 生成的 RevisionPlan.items 必须为非空列表。",
-            errors=[],
-            grant_run_id=critique_context["grant_run_id"],
-            workspace_id=critique_context["workspace_id"],
-            lifecycle_stage=critique_context["lifecycle_stage"],
-        )
-    for item in items:
-        _validate_revision_item(
-            item,
-            section_keys=set(critique_context["section_keys"]),
-            known_ids=set(critique_context["known_ids"]),
-            grant_run_id=critique_context["grant_run_id"],
-            workspace_id=critique_context["workspace_id"],
-            lifecycle_stage=critique_context["lifecycle_stage"],
-        )
-    _validate_schema_payload(
-        revision_plan,
-        schema_file="revision-plan.schema.json",
-        grant_run_id=critique_context["grant_run_id"],
-        workspace_id=critique_context["workspace_id"],
-        lifecycle_stage=critique_context["lifecycle_stage"],
+    return _normalize_revision_plan_impl(
+        critique_context=critique_context,
+        critique=critique,
+        payload=payload,
+        validate_revision_item=_validate_revision_item,
+        validate_schema_payload=_validate_schema_payload,
     )
-    return revision_plan
 
 
 def _validate_schema_payload(
@@ -442,100 +236,15 @@ def _validate_revision_item(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    if not isinstance(item, dict):
-        raise WorkspaceStateError(
-            "critique pass 生成的 RevisionPlan.items[] 必须都是 object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    action_type = item.get("action_type")
-    if not isinstance(action_type, str) or not action_type.strip():
-        raise WorkspaceStateError(
-            "critique pass 的 revision item.action_type 必须为非空专业修订标签。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    target_ref = item.get("target_ref")
-    if not isinstance(target_ref, str) or not target_ref.strip():
-        raise WorkspaceStateError(
-            "critique pass 的 revision item.target_ref 必须为非空 artifact ref。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    mutation_payload = item.get("mutation_payload")
-    if not isinstance(mutation_payload, dict):
-        raise WorkspaceStateError(
-            "critique pass 的 revision item 必须包含 mutation_payload。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    operation = mutation_payload.get("operation")
-    if operation not in EXECUTABLE_REVISION_OPERATIONS:
-        raise WorkspaceStateError(
-            f"critique pass 的 mutation_payload.operation 必须属于 {EXECUTABLE_REVISION_OPERATIONS}。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    if operation == "replace_draft_section":
-        if not target_ref.startswith("section:"):
-            raise WorkspaceStateError("section repair 的 target_ref 必须形如 section:<section_key>。")
-        section_key = target_ref.split(":", 1)[1]
-        if section_key not in section_keys:
-            raise WorkspaceStateError(f"critique pass 不能把 revision item 指向不存在的 section: {section_key}")
-        if mutation_payload.get("target_section_key") != section_key:
-            raise WorkspaceStateError("mutation_payload.target_section_key 必须与 section target_ref 一致。")
-        if not isinstance(mutation_payload.get("replacement_text"), str) or not mutation_payload["replacement_text"].strip():
-            raise WorkspaceStateError("section repair 必须提供 replacement_text。")
-    else:
-        if not target_ref.startswith("draft:"):
-            raise WorkspaceStateError("whole-draft repair 的 target_ref 必须形如 draft:<draft_id>。")
-        replacement_sections = mutation_payload.get("replacement_sections")
-        if not isinstance(replacement_sections, list) or not replacement_sections:
-            raise WorkspaceStateError("whole-draft repair 必须提供非空 replacement_sections。")
-    linked_object_ids = mutation_payload.get("linked_object_ids")
-    required_input_ids = item.get("required_input_ids")
-    if not isinstance(linked_object_ids, list) or not isinstance(required_input_ids, list):
-        raise WorkspaceStateError(
-            "critique pass 的 linked_object_ids / required_input_ids 必须为列表。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    unknown_ids = [
-        ref_id
-        for ref_id in linked_object_ids
-        if not isinstance(ref_id, str) or not ref_id or ref_id not in known_ids
-    ]
-    if unknown_ids:
-        raise WorkspaceStateError(
-            f"critique pass 的 linked_object_ids 引用了未知对象: {unknown_ids}",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-    missing_required_inputs = [
-        ref_id for ref_id in required_input_ids if ref_id not in linked_object_ids
-    ]
-    if missing_required_inputs:
-        raise WorkspaceStateError(
-            "critique pass 的 linked_object_ids 必须覆盖 required_input_ids。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
+    return _validate_revision_item_impl(
+        item,
+        section_keys=section_keys,
+        known_ids=known_ids,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        executable_revision_operations=EXECUTABLE_REVISION_OPERATIONS,
+    )
 
 
 def _require_object(payload: dict[str, Any], key: str) -> dict[str, Any]:
