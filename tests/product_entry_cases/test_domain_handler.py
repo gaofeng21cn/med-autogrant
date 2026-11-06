@@ -96,6 +96,8 @@ def test_domain_handler_writes_memory_decision_receipt_refs_only(tmp_path: Path)
         {
             "task_id": "memory-proposal-1",
             "action": "domain-memory/propose",
+            "workspace_root": str(tmp_path.parent),
+            "project_root": str(tmp_path),
             "input_path": str(CRITIQUE_EXAMPLE_PATH),
             "stage_id": "review_and_rebuttal",
             "source_ref": "runtime-closeout://grant-run/example",
@@ -123,7 +125,7 @@ def test_domain_handler_writes_memory_decision_receipt_refs_only(tmp_path: Path)
 
     decision = dispatch_domain_handler_task(task_path=decision_task)
     result = decision["domain_handler_dispatch"]["result"]
-    assert result["write_policy"] == "runtime_store_only_no_repo_write"
+    assert result["write_policy"] == "owner_decision_then_project_markdown_and_opl_catalog"
     assert result["receipt_evidence"]["contains_memory_body"] is False
     assert Path(result["receipt_evidence"]["receipt_instance_ref"]).is_file()
 

@@ -71,6 +71,8 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
     def test_writes_accepted_runtime_receipt_instance_without_memory_body(self) -> None:
         proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
+            workspace_root=CRITIQUE_EXAMPLE_PATH.parent.parent,
+            project_root=CRITIQUE_EXAMPLE_PATH.parent,
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Keep reusable reviewer risk framing as strategy memory.",
@@ -110,6 +112,8 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
     def test_writes_rejected_runtime_receipt_instance_without_memory_body(self) -> None:
         proposal_payload = build_domain_memory_writeback_proposal(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
+            workspace_root=CRITIQUE_EXAMPLE_PATH.parent.parent,
+            project_root=CRITIQUE_EXAMPLE_PATH.parent,
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Do not store this text in the receipt evidence.",

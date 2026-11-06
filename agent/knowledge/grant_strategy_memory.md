@@ -8,9 +8,9 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 
 ## Owned Content
 
-- Strategy memory bodies are MAG-owned and workspace/runtime-state backed.
+- Reusable grant methods belong in the versioned Agent knowledge pack. Applicant, call and proposal lessons belong in their authorized workspace or project layer.
 - Memory may describe funder fit, prior reviewer risks, applicant evidence, successful framing, rejected directions, and package lessons.
-- Repo source carries descriptor refs, locator templates, consumed-memory proof refs, writeback proposal refs, and receipt refs only.
+- OPL owns the common catalog, layer boundaries, recall and consumed-body receipts; MAG owns grant-specific acceptance and rejection.
 
 ## Stage Use
 
@@ -28,7 +28,7 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 
 ## Forbidden Uses
 
-- Do not store memory bodies in `agent/`, `contracts/`, OPL generated surfaces, or docs as machine truth.
+- Do not store private applicant or project facts in the distributable Agent package. Markdown in agent/knowledge/ is reusable context, not a quality verdict.
 - Do not let memory override funding-call guidance, eligibility, source evidence, or owner receipts.
 - Do not claim memory acceptance from locator success alone.
 - Do not turn accepted memory into a numeric fundability score, default route, package/export verdict, or submission-ready claim.

@@ -10,6 +10,7 @@ FIELD_ARGUMENTS: dict[str, tuple[tuple[str, ...], dict[str, Any]]] = {
     "input_path": (("--input",), {}),
     "previous_input_path": (("--previous-input",), {}),
     "output_path": (("--output",), {}),
+    "project_root": (("--project-root",), {}),
     "workspace_root": (("--workspace-root",), {}),
     "initialize_git": (("--no-git",), {"action": "store_false", "default": True}),
     "output_dir": (("--output-dir",), {}),

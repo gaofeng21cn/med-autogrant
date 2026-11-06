@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -33,18 +34,19 @@ STAGE_IDS = (
 def build_domain_memory_writeback_proposal(
     *,
     input_path: str | Path,
+    workspace_root: str | Path,
+    project_root: str | Path,
     stage_id: str,
     lesson_summary: str,
     source_ref: str,
     proposal_id: str | None = None,
-    grant_run_id: str | None = None,
 ) -> dict[str, Any]:
     resolved_stage_id = _require_stage_id(stage_id)
     resolved_lesson_summary = _require_nonempty_string(lesson_summary, field_name="lesson_summary")
     resolved_source_ref = _require_nonempty_string(source_ref, field_name="source_ref")
     resolved_input_path = Path(input_path).expanduser().resolve()
-    resolved_proposal_id = proposal_id or f"{resolved_stage_id}-writeback-proposal"
-    grant_run_segment = grant_run_id or "<grant_run_id>"
+    resolved_proposal_id = _safe_id(proposal_id or f"{resolved_stage_id}-writeback-proposal")
+    scope = _project_scope(workspace_root, project_root)
     proposal = {
         "surface_kind": DOMAIN_MEMORY_WRITEBACK_PROPOSAL_KIND,
         "proposal_id": _require_nonempty_string(resolved_proposal_id, field_name="proposal_id"),
@@ -53,7 +55,9 @@ def build_domain_memory_writeback_proposal(
         "stage_id": resolved_stage_id,
         "memory_role": "strategy_context",
         "policy_ref": DOMAIN_MEMORY_POLICY_REF,
-        "descriptor_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+        "catalog_ref": "memory/opl_durable_knowledge_catalog.json",
+        "target_layer": "workspace_project",
+        "target_scope": scope,
         "stage_descriptor_ref": _stage_descriptor_ref(resolved_stage_id),
         "source_locator": {
             "locator_kind": "workspace_or_runtime_ref",
@@ -62,15 +66,9 @@ def build_domain_memory_writeback_proposal(
             "repo_tracked": False,
         },
         "lesson_summary": resolved_lesson_summary,
-        "write_policy": "runtime_store_only_no_repo_write",
-        "proposal_ref": (
-            "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
-            f"writeback-proposals/{grant_run_segment}/{resolved_proposal_id}.json"
-        ),
-        "decision_receipt_ref": (
-            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-            f"{grant_run_segment}/memory-writeback-decisions/{resolved_proposal_id}.json"
-        ),
+        "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+        "proposal_ref": f"memory/proposals/{resolved_proposal_id}.json",
+        "decision_receipt_ref": f"receipts/domain-memory/{resolved_proposal_id}.json",
         "authority_boundary": _memory_authority_boundary(),
     }
     return {
@@ -104,19 +102,15 @@ def build_domain_memory_writeback_decision(
         )
     )
     resolved_reason = _require_nonempty_string(decision_reason, field_name="decision_reason")
-    resolved_memory_id = memory_id or proposal_id
-    accepted_memory_ref = (
-        "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
-        f"accepted/{resolved_memory_id}.json"
-    )
-    rejected_memory_ref = (
-        "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
-        f"rejected/{proposal_id}.json"
-    )
-    decision_receipt_ref = (
-        "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-        f"<grant_run_id>/memory-writeback-decisions/{proposal_id}.json"
-    )
+    proposal_id = _safe_id(proposal_id)
+    resolved_memory_id = _safe_id(memory_id or proposal_id)
+    target_scope = proposal_body.get("target_scope")
+    if not isinstance(target_scope, Mapping) or proposal_body.get("target_layer") != "workspace_project":
+        raise WorkspaceStateError("domain memory proposal requires an explicit project scope.")
+    scope = _project_scope(target_scope.get("workspace_root"), target_scope.get("project_root"))
+    accepted_memory_ref = f"memory/{resolved_memory_id}.md"
+    decision_receipt_ref = f"receipts/domain-memory/{proposal_id}.json"
+    rejected_memory_ref = decision_receipt_ref
     receipt_projection = {
         "surface_kind": DOMAIN_MEMORY_OPERATOR_RECEIPT_PROJECTION_KIND,
         "projection_id": "mag.domain_memory.operator_receipt_projection.v1",
@@ -137,13 +131,17 @@ def build_domain_memory_writeback_decision(
         "decision": resolved_decision,
         "decision_owner": TARGET_DOMAIN_ID,
         "decision_reason": resolved_reason,
+        "target_layer": "workspace_project",
+        "target_scope": scope,
+        "catalog_ref": "memory/opl_durable_knowledge_catalog.json",
+        "knowledge_persistence": "pending_owner_markdown_and_catalog_update" if resolved_decision == "accepted" else "not_applicable",
         "policy_ref": DOMAIN_MEMORY_POLICY_REF,
         "stage_id": stage_id,
         "accepted_memory_ref": accepted_memory_ref if resolved_decision == "accepted" else None,
         "rejected_memory_ref": rejected_memory_ref if resolved_decision == "rejected" else None,
         "decision_receipt_ref": decision_receipt_ref,
         "operator_receipt_projection": receipt_projection,
-        "write_policy": "runtime_store_only_no_repo_write",
+        "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
         "authority_boundary": _memory_authority_boundary(),
     }
     return {
@@ -188,6 +186,7 @@ def write_domain_memory_receipt_evidence(
         if runtime_root is not None
         else resolve_runtime_state_root()
     )
+    proposal_id = _safe_id(proposal_id)
     receipt_path = resolved_runtime_root / "receipts" / "domain-memory" / f"{proposal_id}.json"
     receipt = {
         "surface_kind": DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
@@ -205,13 +204,14 @@ def write_domain_memory_receipt_evidence(
             "policy_ref",
             context="domain_memory_writeback_decision",
         ),
-        "receipt_ref": receipt_ref,
+        "receipt_ref": str(receipt_path),
+        "declared_receipt_ref": receipt_ref,
         "receipt_instance_ref": str(receipt_path),
         "accepted_memory_ref": decision_body.get("accepted_memory_ref") if decision == "accepted" else None,
         "rejected_memory_ref": decision_body.get("rejected_memory_ref") if decision == "rejected" else None,
         "source_refs": [
-            "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
-            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py#write_domain_memory_receipt_evidence",
+            "contracts/durable_knowledge_catalog.json",
             "/product_entry_manifest/owner_receipt_contract",
         ],
         "artifact_mutation": "none",
@@ -251,10 +251,10 @@ def build_domain_memory_operator_projection_contract() -> dict[str, Any]:
         "projection_id": "mag.domain_memory.operator_receipt_projection.v1",
         "maps_to_opl_contract": "opl_family_product_operator_projection.v1",
         "source_refs": [
-            "/product_entry_manifest/domain_memory_descriptor_locator",
-            "/product_entry_manifest/domain_memory_descriptor_locator/writeback_proposal_generator",
-            "/product_entry_manifest/domain_memory_descriptor_locator/accept_reject_command",
-            "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+            "contracts/durable_knowledge_catalog.json",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py#build_domain_memory_writeback_proposal",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py#build_domain_memory_writeback_decision",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py#write_domain_memory_receipt_evidence",
         ],
         "receipt_content_policy": "receipt_refs_and_decision_metadata_only_no_memory_body",
         "operator_fields": [
@@ -327,3 +327,19 @@ def _memory_authority_boundary() -> dict[str, Any]:
         "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
         "opl_role": "receipt_ref_and_operator_projection_consumer_only",
     }
+
+
+def _safe_id(value: str) -> str:
+    if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._-]*", value):
+        raise WorkspaceStateError("domain memory id must be a filename-safe identifier.")
+    return value
+
+
+def _project_scope(workspace_root: Any, project_root: Any) -> dict[str, str]:
+    if not workspace_root or not project_root:
+        raise WorkspaceStateError("domain memory requires workspace_root and project_root.")
+    workspace = Path(workspace_root).expanduser().resolve(strict=True)
+    project = Path(project_root).expanduser().resolve(strict=True)
+    if not workspace.is_dir() or not project.is_dir() or workspace == project or workspace not in project.parents:
+        raise WorkspaceStateError("domain memory project must be a distinct directory inside its workspace.")
+    return {"workspace_root": str(workspace), "project_root": str(project)}

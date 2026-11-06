@@ -3,7 +3,7 @@
 Owner: `Med Auto Grant`
 Purpose: `grant_strategy_memory_policy`
 State: `reference`
-Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、stage route reports、submission-ready package surfaces、`contracts/runtime-program/current-program.json`、`contracts/memory_descriptor.json` 与 `contracts/runtime-program/domain-memory-seed-fixture.json`。
+Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、stage route reports、submission-ready package surfaces、`contracts/runtime-program/current-program.json`、`contracts/durable_knowledge_catalog.json`。
 
 ## 结论
 
@@ -71,9 +71,11 @@ Memory 应小批量、按 stage 检索：
 
 ## OPL 边界
 
-OPL 可以索引 memory refs、携带 stage knowledge refs、展示 consumed-memory provenance、路由 writeback receipts。OPL 不持有 MAG grant strategy content、fundability judgment、authoring quality verdict 或 submission-ready export authority。
+OPL 可以索引 memory refs、携带 stage knowledge refs、展示 consumed-memory provenance、路由 writeback receipts。OPL 不取得 MAG grant strategy 的语义 authority、fundability judgment、authoring quality verdict 或 submission-ready export authority。
 
-MAG 保留 memory body、accept/reject decision、writeback receipt、fundability/quality 影响判断和 owner receipt。真实 memory writeback 只在 MAG accept/reject 后写入 workspace/runtime artifact root；repo source 只保存 descriptor、schema、locator、fixture 模板和 proof surface。
+MAG 保留 memory body、accept/reject decision、writeback receipt、fundability/quality 影响判断和 owner receipt。通用策略正文在 agent/knowledge/，由统一 catalog 管理。团队经验进入 workspace 的 shared/memory/；项目经验进入授权项目的 memory/；当前 call 要求进入项目 state/。三者各用 opl_durable_knowledge_catalog.json。OPL 为 StageRun 绑定受控正文快照，公开投影只含 refs。
+
+MAG proposal/decision 命令要求明确 workspace 与 project 根，只产生候选和语义决定，receipt writer 只记录决定。接受不表示知识已写入：owner 需在目标 Markdown 与统一目录中应用并校验，才可由 OPL 召回。跨项目推广需另行审阅，不自动写入 Agent 包。
 
 跨仓 memory transport 与索引规则从 [Framework 文档](https://github.com/gaofeng21cn/one-person-lab/tree/main/docs)读取；本页持有 MAG strategy memory 的领域分工。
 

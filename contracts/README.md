@@ -38,7 +38,7 @@ OPL Package 的跨仓产品目标见
 - `functional_privatization_audit.json`：七项 retained authority/refs adapter 的逐文件分类与 bridge gate。Declarative pack inventory 位于 `pack_compiler_input.json#declarative_domain_pack`。
 - `owner_receipt_contract.json`：`domain_owner_receipt`、`typed_blocker`、`no_regression_evidence`。
 - `epistemic_review_scope_profile.json`：`package_and_submit_ready` 的 grant content、methodology、reference、display、export 与 package dependency graph；hash 仅作 locator/stale hint，exact-byte release integrity 单独建模。
-- `memory_descriptor.json`、`artifact_locator_contract.json`：body-free locator/refs contract。
+- `durable_knowledge_catalog.json`、`artifact_locator_contract.json`：body-free locator/refs contract。
 - `production_acceptance/mag-production-acceptance.json`：provenance-only acceptance tail；不是 live readiness。
 - `live_stage_run_progress_evidence.json`：真实 owner refs 与 typed blocker source。
 

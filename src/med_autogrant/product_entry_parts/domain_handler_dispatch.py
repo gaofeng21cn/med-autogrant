@@ -57,6 +57,8 @@ def _dispatch_domain_memory_proposal(
         stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
         source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
         lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="domain_handler_task"),
+        workspace_root=_require_nonempty_string_from_mapping(task, "workspace_root", context="domain_handler_task"),
+        project_root=_require_nonempty_string_from_mapping(task, "project_root", context="domain_handler_task"),
         proposal_id=_optional_nonempty_string(task.get("proposal_id")),
     )
     return _dispatch_payload(
@@ -68,7 +70,7 @@ def _dispatch_domain_memory_proposal(
         result={
             "surface_kind": "domain_handler_domain_memory_writeback_proposal_result",
             "proposal": proposal["domain_memory_writeback_proposal"],
-            "write_policy": "runtime_store_only_no_repo_write",
+            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
         },
         executed_command=None,
     )
@@ -100,7 +102,7 @@ def _dispatch_domain_memory_decision(
             "surface_kind": "domain_handler_domain_memory_writeback_decision_result",
             "decision": decision["domain_memory_writeback_decision"],
             "receipt_evidence": receipt_evidence["domain_memory_receipt_evidence"],
-            "write_policy": "runtime_store_only_no_repo_write",
+            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
         },
         executed_command=None,
     )

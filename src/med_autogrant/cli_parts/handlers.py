@@ -36,7 +36,7 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
     ),
     "product-domain-memory-proposal": DirectCommandSpec(
         "生成 MAG-owned domain memory writeback proposal projection。",
-        ("input_path", "stage_id", "source_ref", "lesson_summary"),
+        ("input_path", "workspace_root", "project_root", "stage_id", "source_ref", "lesson_summary"),
         ("proposal_id",),
     ),
     "product-domain-memory-decision": DirectCommandSpec(
@@ -87,6 +87,8 @@ def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
             stage_id=values["stage_id"],
             source_ref=values["source_ref"],
             lesson_summary=values["lesson_summary"],
+            workspace_root=values["workspace_root"],
+            project_root=values["project_root"],
             proposal_id=values.get("proposal_id"),
         )
     if command == "product-domain-memory-decision":
