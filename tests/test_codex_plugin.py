@@ -71,7 +71,7 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
     )
     version = pyproject_data["project"]["version"]
 
-    assert version == "0.3.15"
+    assert version == "0.3.16"
     assert f'__version__ = "{version}"' in init_text
     assert plugin_manifest["version"] == version
     assert package_manifest["version"] == version
@@ -163,45 +163,58 @@ def test_native_carrier_projects_descriptor_neutral_mag_owner_contract() -> None
 
     owner_dependency = owner_manifest["capability_dependencies"][0]
     expected_presence = "required" if owner_dependency["required"] else "optional"
-    assert carrier_descriptor == {
-        "surface_kind": owner_manifest["surface_kind"],
-        "kind": "agent",
-        "agent_id": owner_manifest["agent_id"],
-        "package_id": owner_manifest["package_id"],
-        "domain_id": "med-autogrant",
-        "display_name": owner_manifest["display_name"],
-        "presentation": owner_manifest["presentation"],
-        "publisher": owner_manifest["publisher"],
-        "version": owner_manifest["version"],
-        "source": owner_manifest["source"],
-        "carrier_source_role": owner_manifest["carrier_source_role"],
-        "schema_ref": owner_manifest["schema_ref"],
-        "domain_descriptor_ref": "contracts/domain_descriptor.json",
-        "task_provider_ref": (
-            "contracts/domain_descriptor.json"
-            "#/standard_agent_interface/stage_catalog"
-        ),
-        "action_catalog_ref": "contracts/action_catalog.json",
-        "view_refs": [],
-        "entrypoints": [],
-        "codex_surface": {
-            "plugin_id": owner_manifest["codex_surface"]["plugin_id"],
-            "plugin_source_path": ".",
-            "configured_codex_plugin_carrier": owner_manifest["codex_surface"][
-                "configured_codex_plugin_carrier"
-            ],
-            "required_skill_ids": owner_manifest["codex_surface"][
-                "required_skill_ids"
-            ],
-        },
-        "requires": [
-            {
-                "package_id": owner_dependency["package_id"],
-                "presence": expected_presence,
-            }
-        ],
-        "capability_dependencies": owner_manifest["capability_dependencies"],
+    projected_fields = (
+        "surface_kind",
+        "agent_id",
+        "package_id",
+        "display_name",
+        "presentation",
+        "publisher",
+        "version",
+        "source",
+        "carrier_source_role",
+        "schema_ref",
+    )
+    assert {
+        field: carrier_descriptor[field] for field in projected_fields
+    } == {
+        field: owner_manifest[field] for field in projected_fields
     }
+    assert carrier_descriptor["kind"] == "agent"
+    assert carrier_descriptor["domain_id"] == "med-autogrant"
+    assert carrier_descriptor["domain_descriptor_ref"] == "contracts/domain_descriptor.json"
+    assert carrier_descriptor["task_provider_ref"] == (
+        "contracts/domain_descriptor.json"
+        "#/standard_agent_interface/stage_catalog"
+    )
+    assert carrier_descriptor["action_catalog_ref"] == "contracts/action_catalog.json"
+    assert carrier_descriptor["view_refs"] == []
+    assert carrier_descriptor["entrypoints"] == []
+    assert carrier_descriptor["requires"] == [
+        {
+            "package_id": owner_dependency["package_id"],
+            "presence": expected_presence,
+        }
+    ]
+    assert (
+        carrier_descriptor["capability_dependencies"]
+        == owner_manifest["capability_dependencies"]
+    )
+    carrier_surface = carrier_descriptor["codex_surface"]
+    owner_surface = owner_manifest["codex_surface"]
+    assert carrier_surface["plugin_id"] == owner_surface["plugin_id"]
+    assert carrier_surface["plugin_source_path"] == "."
+    assert (
+        carrier_surface["configured_codex_plugin_carrier"]
+        == owner_surface["configured_codex_plugin_carrier"]
+    )
+    assert carrier_surface["required_skill_ids"] == owner_surface["required_skill_ids"]
+    assert carrier_surface["app_contribution_abi"] == owner_surface["app_contribution_abi"]
+    assert (
+        carrier_surface["app_contribution_adapter"]
+        == owner_surface["app_contribution_adapter"]
+    )
+    assert carrier_descriptor["app_contributions"] == owner_manifest["app_contributions"]
     assert carrier_descriptor["version"] == plugin_manifest["version"]
     assert carrier_descriptor["codex_surface"]["plugin_id"] == plugin_manifest["name"]
     assert (REPO_ROOT / carrier_descriptor["domain_descriptor_ref"]).is_file()
