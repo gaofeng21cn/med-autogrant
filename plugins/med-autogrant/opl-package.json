@@ -56,6 +56,71 @@
     },
     "required_skill_ids": [
       "med-autogrant"
+    ],
+    "app_contribution_abi": {
+      "schema_version": "opl-package-app-contribution-cli.v1",
+      "transport": "stdin_json_stdout_json",
+      "argv": ["opl", "app", "contribution", "adapter", "--stdin"],
+      "request_schema": "opl-package-app-contribution-request.v1",
+      "response_schema": "opl-package-app-contribution-response.v1"
+    },
+    "app_contribution_adapter": {
+      "manifest": "app-contribution-adapter.json"
+    }
+  },
+  "app_contributions": {
+    "schema_version": "opl-app-contributions.v1",
+    "views": [
+      {
+        "view_id": "mag.workspace.route",
+        "view_type": "task_board",
+        "title_i18n": {
+          "zh-CN": "基金工作区阶段",
+          "en-US": "Grant workspace route"
+        },
+        "data_ref": "mag.workspace.v1#route",
+        "command_ids": [],
+        "empty_state_i18n": {
+          "zh-CN": "选择一个基金工作区后读取当前阶段",
+          "en-US": "Select a grant workspace to inspect its current stage"
+        }
+      },
+      {
+        "view_id": "mag.workspace.quality",
+        "view_type": "artifact_view",
+        "title_i18n": {
+          "zh-CN": "基金申请质量",
+          "en-US": "Grant quality"
+        },
+        "data_ref": "mag.workspace.v1#quality",
+        "command_ids": [],
+        "empty_state_i18n": {
+          "zh-CN": "选择一个基金质量产物后读取评分",
+          "en-US": "Select a grant quality artifact to inspect its assessment"
+        }
+      }
+    ],
+    "commands": [],
+    "badges": [],
+    "ui": [
+      {
+        "contribution_id": "mag.workspace.route",
+        "slot": "runtime.detail",
+        "contribution_kind": "view",
+        "trust_tier": "declarative",
+        "scope": "work_item",
+        "sort_order": 410,
+        "view_id": "mag.workspace.route"
+      },
+      {
+        "contribution_id": "mag.workspace.quality",
+        "slot": "settings.section",
+        "contribution_kind": "view",
+        "trust_tier": "declarative",
+        "scope": "root",
+        "sort_order": 411,
+        "view_id": "mag.workspace.quality"
+      }
     ]
   },
   "requires": [
