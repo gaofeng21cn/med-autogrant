@@ -9,7 +9,10 @@
     "semantic_route_decision_owner": "decisive_codex_attempt",
     "stage_transition_materialization_owner": "opl_stage_run_controller",
     "primary_only_decisive_attempt_role": "producer",
-    "formal_review_decisive_attempt_roles": ["reviewer", "re_reviewer"],
+    "formal_review_decisive_attempt_roles": [
+      "reviewer",
+      "re_reviewer"
+    ],
     "repairer_can_be_decisive_attempt": false,
     "codex_may_advance_skip_repeat_reverse_or_route_back": true,
     "any_declared_stage_may_start_from_any_prior_stage_result": true,
@@ -47,13 +50,30 @@
         "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/call_and_candidate_intake",
-      "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
-      "quality_gate_refs": ["agent/quality_gates/memory_and_receipts.md", "agent/quality_gates/authority_boundaries.md"],
-      "allowed_action_refs": ["open_grant_user_loop"],
-      "requires": ["grant_request_received"],
-      "ensures": ["call_candidate_intake_ready"],
-      "next_stage_refs": ["fundability_strategy"],
-      "trust_lane": "domain_agent"
+      "knowledge_refs": [
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md"
+      ],
+      "allowed_action_refs": [
+        "open_grant_user_loop"
+      ],
+      "requires": [
+        "grant_request_received"
+      ],
+      "ensures": [
+        "call_candidate_intake_ready"
+      ],
+      "next_stage_refs": [
+        "fundability_strategy"
+      ],
+      "trust_lane": "domain_agent",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     },
     {
       "stage_id": "fundability_strategy",
@@ -71,13 +91,30 @@
         "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/fundability_strategy",
-      "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
-      "quality_gate_refs": ["agent/quality_gates/fundability.md", "agent/quality_gates/authority_boundaries.md"],
-      "allowed_action_refs": ["open_grant_user_loop"],
-      "requires": ["call_candidate_intake_ready"],
-      "ensures": ["fundability_strategy_gate_recorded"],
-      "next_stage_refs": ["specific_aims_and_structure"],
-      "trust_lane": "ai_decision"
+      "knowledge_refs": [
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/authority_boundaries.md"
+      ],
+      "allowed_action_refs": [
+        "open_grant_user_loop"
+      ],
+      "requires": [
+        "call_candidate_intake_ready"
+      ],
+      "ensures": [
+        "fundability_strategy_gate_recorded"
+      ],
+      "next_stage_refs": [
+        "specific_aims_and_structure"
+      ],
+      "trust_lane": "ai_decision",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     },
     {
       "stage_id": "specific_aims_and_structure",
@@ -95,13 +132,30 @@
         "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/specific_aims_and_structure",
-      "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
-      "quality_gate_refs": ["agent/quality_gates/fundability.md", "agent/quality_gates/quality.md"],
-      "allowed_action_refs": ["open_grant_user_loop"],
-      "requires": ["fundability_strategy_gate_recorded"],
-      "ensures": ["specific_aims_structure_accepted"],
-      "next_stage_refs": ["proposal_authoring"],
-      "trust_lane": "ai_decision"
+      "knowledge_refs": [
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/quality.md"
+      ],
+      "allowed_action_refs": [
+        "open_grant_user_loop"
+      ],
+      "requires": [
+        "fundability_strategy_gate_recorded"
+      ],
+      "ensures": [
+        "specific_aims_structure_accepted"
+      ],
+      "next_stage_refs": [
+        "proposal_authoring"
+      ],
+      "trust_lane": "ai_decision",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     },
     {
       "stage_id": "proposal_authoring",
@@ -119,13 +173,31 @@
         "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/proposal_authoring",
-      "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/package_authority.md"],
-      "quality_gate_refs": ["agent/quality_gates/quality.md", "agent/quality_gates/authority_boundaries.md"],
-      "allowed_action_refs": ["open_grant_user_loop", "build_direct_entry"],
-      "requires": ["specific_aims_structure_accepted"],
-      "ensures": ["proposal_draft_reviewable"],
-      "next_stage_refs": ["review_and_rebuttal"],
-      "trust_lane": "codex_executor"
+      "knowledge_refs": [
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/package_authority.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/authority_boundaries.md"
+      ],
+      "allowed_action_refs": [
+        "open_grant_user_loop",
+        "build_direct_entry"
+      ],
+      "requires": [
+        "specific_aims_structure_accepted"
+      ],
+      "ensures": [
+        "proposal_draft_reviewable"
+      ],
+      "next_stage_refs": [
+        "review_and_rebuttal"
+      ],
+      "trust_lane": "codex_executor",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     },
     {
       "stage_id": "review_and_rebuttal",
@@ -144,13 +216,31 @@
         "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/review_and_rebuttal",
-      "knowledge_refs": ["agent/knowledge/grant_strategy_memory.md", "agent/knowledge/owner_receipt_boundary.md"],
-      "quality_gate_refs": ["agent/quality_gates/quality.md", "agent/quality_gates/fundability.md", "agent/quality_gates/authority_boundaries.md"],
-      "allowed_action_refs": ["open_grant_user_loop"],
-      "requires": ["proposal_draft_reviewable"],
-      "ensures": ["grant_review_gate_receipt_recorded"],
-      "next_stage_refs": ["package_and_submit_ready"],
-      "trust_lane": "ai_decision"
+      "knowledge_refs": [
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/authority_boundaries.md"
+      ],
+      "allowed_action_refs": [
+        "open_grant_user_loop"
+      ],
+      "requires": [
+        "proposal_draft_reviewable"
+      ],
+      "ensures": [
+        "grant_review_gate_receipt_recorded"
+      ],
+      "next_stage_refs": [
+        "package_and_submit_ready"
+      ],
+      "trust_lane": "ai_decision",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     },
     {
       "stage_id": "package_and_submit_ready",
@@ -168,10 +258,21 @@
         "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
       ],
       "stage_quality_cycle_policy_ref": "contracts/stage_quality_cycle_policy.json#/stages/package_and_submit_ready",
-      "knowledge_refs": ["agent/knowledge/package_authority.md", "agent/knowledge/owner_receipt_boundary.md"],
-      "quality_gate_refs": ["agent/quality_gates/export_and_package.md", "agent/quality_gates/quality.md", "agent/quality_gates/authority_boundaries.md"],
-      "allowed_action_refs": ["build_submission_ready_package"],
-      "requires": ["grant_review_gate_receipt_recorded"],
+      "knowledge_refs": [
+        "agent/knowledge/package_authority.md",
+        "agent/knowledge/owner_receipt_boundary.md"
+      ],
+      "quality_gate_refs": [
+        "agent/quality_gates/export_and_package.md",
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/authority_boundaries.md"
+      ],
+      "allowed_action_refs": [
+        "build_submission_ready_package"
+      ],
+      "requires": [
+        "grant_review_gate_receipt_recorded"
+      ],
       "ensures": [
         "submission_ready_package_candidate_ref_recorded",
         "opl_stage_review_receipt_ref_recorded",
@@ -184,7 +285,10 @@
         "issues_quality_export_publication_or_ready_claim": true,
         "downstream_owner_retains_acceptance": true
       },
-      "trust_lane": "human_gate"
+      "trust_lane": "human_gate",
+      "policy_refs": [
+        "agent/policies/grant-authority-policy.md"
+      ]
     }
   ],
   "authority_boundary": {

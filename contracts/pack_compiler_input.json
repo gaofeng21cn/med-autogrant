@@ -59,7 +59,9 @@
     "agent/quality_gates/authority_boundaries.md",
     "agent/knowledge/grant_strategy_memory.md",
     "agent/knowledge/package_authority.md",
-    "agent/knowledge/owner_receipt_boundary.md"
+    "agent/knowledge/owner_receipt_boundary.md",
+    "agent/policies/grant-authority-policy.md",
+    "contracts/durable_knowledge_catalog.json"
   ],
   "minimal_authority_functions": [
     "fundability_verdict",

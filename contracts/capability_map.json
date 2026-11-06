@@ -637,6 +637,77 @@
         "can_write_owner_receipt_body": false,
         "can_create_typed_blocker": false
       }
+    },
+    {
+      "capability_id": "med-autogrant.authority.policy_pack",
+      "surface_role": "policy_pack",
+      "capability_kind": "reference_pack",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/policies/grant-authority-policy.md",
+        "role": "domain_policy_pack"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "repo_path",
+          "ref": "agent/policies/grant-authority-policy.md",
+          "role": "policy_pack"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "domain_agent_builtin",
+      "canonical_target_paths": [
+        "agent/policies/grant-authority-policy.md"
+      ],
+      "improvement_tokens": [
+        "policy_pack_quality",
+        "authority_boundary_traceability"
+      ],
+      "stage_refs": [
+        "call_and_candidate_intake",
+        "fundability_strategy",
+        "specific_aims_and_structure",
+        "proposal_authoring",
+        "review_and_rebuttal",
+        "package_and_submit_ready"
+      ],
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "quality_or_export_verdict"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false,
+        "can_write_domain_truth": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      }
     }
   ],
   "resolver_index": {
