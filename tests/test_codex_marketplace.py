@@ -50,3 +50,19 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
         carrier_descriptor["capability_dependencies"]
         == owner_descriptor["capability_dependencies"]
     )
+    assert carrier_descriptor["app_contributions"] == owner_descriptor["app_contributions"]
+    assert (
+        carrier_descriptor["codex_surface"]["app_contribution_adapter"]
+        == owner_descriptor["codex_surface"]["app_contribution_adapter"]
+    )
+    owner_adapter = json.loads(
+        (REPO_ROOT / "app-contribution-adapter.json").read_text(encoding="utf-8")
+    )
+    carrier_adapter = json.loads(
+        (plugin_root / "app-contribution-adapter.json").read_text(encoding="utf-8")
+    )
+    assert carrier_adapter == owner_adapter
+    assert {
+        entry["kind"] for entry in owner_adapter["reads"].values()
+    } == {"json_file"}
+    assert not owner_adapter["actions"]
