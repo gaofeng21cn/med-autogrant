@@ -4,13 +4,13 @@
     "mag.workspace.v1#route": {
       "kind": "json_file",
       "root": "profile",
-      "path": "${input.workspace_path}",
+      "path": "${input.workspace_file}",
       "transform": "grant_workspace",
       "input_schema": {
         "type": "object",
-        "required": ["workspace_path"],
+        "required": ["workspace_file"],
         "properties": {
-          "workspace_path": {
+          "workspace_file": {
             "type": "string",
             "title": "Grant workspace JSON",
             "description": "Workspace-relative path to one MAG owner workspace JSON document."
