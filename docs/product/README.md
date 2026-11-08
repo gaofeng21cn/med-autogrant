@@ -22,6 +22,10 @@ MAG 的 service-safe、executor-routing 和 product-entry schemas 仍描述 doma
 
 ## 产品投影
 
+Mini App 使用 [Framework 统一工作入口规范](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/mcp-apps/SPEC.md)。当前注册工作区和精确任务身份随入口传递；MAG 的 canonical `workspace.json` 是阶段、当前草稿和领域评审证据的读取来源。显式选择其他 workspace 或质量文件用于导入与审阅，不能按文件更新时间猜测当前申请。存在多个候选时由用户或 Agent 明确选择。
+
+阶段与质量视图共用同一申请上下文，保留草稿、评审、证据和质量债的 owner 原义。页面打开和刷新只读；开展或继续工作仍走本页的 OPL-generated action。共享界面、连接与凭证由 Framework、Studio 和 Connect 负责，MAG 不维护第二套调度、会话或凭据状态。
+
 Status、progress、cockpit、direct-entry、user-loop、session 和 workbench 从 [generated surface handoff](../../contracts/generated_surface_handoff.json)、Stage/action descriptor 与 runtime refs 投影。它们展示 owner answer、freshness、next action 与 human gate，并调用 MAG target；grant body、verdict 和 owner receipt 的写入仍归 MAG。
 
 长期工作台按 Status、Workspace、Quality、Artifacts、Memory 与 Attention 组织申请任务。这是产品组织目标，不表示本仓已实现独立 GUI，也不构成部署或持续 App 消费证据。当前缺口统一见[外部证据](../active/mag-ideal-state-cross-repo-gap-plan.md)。

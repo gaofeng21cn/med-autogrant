@@ -8,10 +8,10 @@
       "transform": "grant_workspace",
       "input_schema": {
         "type": "object",
-        "required": ["workspace_file"],
         "properties": {
           "workspace_file": {
             "type": "string",
+            "default": "workspace.json",
             "title": "Grant workspace JSON",
             "description": "Workspace-relative path to one MAG owner workspace JSON document."
           }
@@ -26,12 +26,12 @@
       "transform": "artifact_status",
       "input_schema": {
         "type": "object",
-        "required": ["quality_path"],
         "properties": {
           "quality_path": {
             "type": "string",
-            "title": "Grant quality artifact",
-            "description": "Workspace-relative path to one MAG owner quality artifact JSON document."
+            "default": "workspace.json",
+            "title": "Grant assessment source",
+            "description": "Uses the current workspace's owner-authored draft, critique and revision evidence by default. Select an exact quality artifact to inspect an exported scorecard."
           }
         },
         "additionalProperties": false

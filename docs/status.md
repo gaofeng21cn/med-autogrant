@@ -14,7 +14,7 @@
 | 通用 transport | [executor client](../src/med_autogrant/domain_executor_client.py) 与 funding source 调用 OPL Python helpers |
 | Package dependency | `mas-scholar-skills` 为 required dependency；manifest 声明不能代替 provider 实际 presence/callability |
 | 结构证据 | [conformance profile](../contracts/standard_agent_conformance_profile.json)、[source closure audit](../contracts/source_closure_audit.json)，需 fresh scanner 才能判断当前检查结果 |
-| MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 通过共享宿主读取 owner JSON；`workspace_path` 选择已登记的工作区目录，`workspace_file` 指定其中的 MAG 工作区 JSON 文件，`quality_path` 指定质量产物 |
+| MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 默认读取已登记工作区的 canonical `workspace.json`，阶段与质量视图共用当前申请和评审证据；`workspace_file`、`quality_path` 可显式选择其他 owner 文件，不推断未保存的质量评分 |
 
 仓内仍有 `hermes_agent` 的显式 critique executor 分支和行为测试；默认 executor 为 `codex_cli`。这仅说明当前 MAG 源码接受的请求类型，不证明任何外部 executor 已安装或可用。详见 [executor 边界](./specs/critique-executor.md)。
 

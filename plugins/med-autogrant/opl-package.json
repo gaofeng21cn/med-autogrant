@@ -95,8 +95,8 @@
         "data_ref": "mag.workspace.v1#quality",
         "command_ids": [],
         "empty_state_i18n": {
-          "zh-CN": "选择一个基金质量产物后读取评分",
-          "en-US": "Select a grant quality artifact to inspect its assessment"
+          "zh-CN": "选择基金工作区，查看当前草稿与评审证据",
+          "en-US": "Select a grant workspace to inspect the current draft and review evidence"
         }
       }
     ],
