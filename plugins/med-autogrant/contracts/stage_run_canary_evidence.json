@@ -1,0 +1,123 @@
+{
+  "surface_kind": "opl_stage_run_controlled_canary_evidence",
+  "version": "stage-run-controlled-canary.v1",
+  "domain_id": "med-autogrant",
+  "canary_id": "mag.stage_run.controlled_canary.specific_aims_and_structure.v1",
+  "stage_id": "specific_aims_and_structure",
+  "evidence_scope": "controlled_fixture_not_live_domain_progress",
+  "stage_run_ref": "stage-run-fixture:mag/specific_aims_and_structure/controlled-canary/2026-06-05",
+  "stage_manifest_ref": "stage-manifest-fixture:mag/specific_aims_and_structure/controlled-canary/manifest",
+  "current_pointer_ref": "current-pointer-fixture:mag/specific_aims_and_structure/controlled-canary/current",
+  "strategy_trace": {
+    "candidate_generation": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/candidate-direction-and-section-variants"
+      ],
+      "evidence_role": "candidate_grant_direction_and_section_variant_refs"
+    },
+    "grounded_reflection": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/reflection-review"
+      ],
+      "evidence_role": "reflection_and_review_refs"
+    },
+    "comparative_selection": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/ranking-selection"
+      ],
+      "evidence_role": "ranking_and_selection_refs"
+    },
+    "evolution_and_revision": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/revision-lineage"
+      ],
+      "evidence_role": "revision_and_evolution_lineage_refs"
+    },
+    "strategy_retrospective": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/strategy-retrospective"
+      ],
+      "evidence_role": "strategy_retrospective_refs"
+    },
+    "independent_quality_gate": {
+      "refs": [
+        "gate-ref:mag/stage-run-canary/specific_aims_and_structure/independent-fundability-review-gate"
+      ],
+      "evidence_role": "independent_fundability_and_review_gate_ref"
+    }
+  },
+  "role_artifact_refs": {
+    "candidate_pool_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/candidate-pool",
+    "reflection_review_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/reflection-review",
+    "ranking_selection_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/ranking-selection",
+    "revision_lineage_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/revision-lineage",
+    "strategy_retrospective_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/strategy-retrospective",
+    "independent_gate_ref": "gate-ref:mag/stage-run-canary/specific_aims_and_structure/independent-fundability-review-gate"
+  },
+  "closeout": {
+    "terminal_outcome": "owner_receipt",
+    "owner_receipt_ref": "receipt-ref:mag/stage-run-canary/specific_aims_and_structure/owner-receipt",
+    "typed_blocker_ref": null,
+    "same_attempt_self_review": false
+  },
+  "operator_summary": {
+    "surface_kind": "stage_run_controlled_canary_operator_summary",
+    "status": "fixture_closeout_ref_recorded",
+    "read_root": "stage_run_current_owner_delta",
+    "progress_delta_classification": "controlled_fixture_owner_receipt_ref",
+    "stage_run_ref": "stage-run-fixture:mag/specific_aims_and_structure/controlled-canary/2026-06-05",
+    "stage_manifest_ref": "stage-manifest-fixture:mag/specific_aims_and_structure/controlled-canary/manifest",
+    "current_owner_delta_ref": "current-pointer-fixture:mag/specific_aims_and_structure/controlled-canary/current",
+    "closeout_ref": "receipt-ref:mag/stage-run-canary/specific_aims_and_structure/owner-receipt",
+    "accepted_claims": [
+      "controlled_fixture_shape_declared",
+      "strategy_trace_refs_present",
+      "role_artifact_refs_present",
+      "owner_receipt_ref_present"
+    ],
+    "operator_action": "audit_fixture_boundary_only"
+  },
+  "overclaim_boundary": {
+    "accepted_evidence_scope": "controlled_fixture_not_live_domain_progress",
+    "can_claim_live_domain_progress": false,
+    "can_claim_stage_complete": false,
+    "can_claim_grant_ready": false,
+    "can_claim_fundability_ready": false,
+    "can_claim_authoring_quality_ready": false,
+    "can_claim_artifact_ready": false,
+    "can_claim_package_fresh": false,
+    "can_claim_submission_ready": false,
+    "can_claim_production_ready": false,
+    "can_authorize_external_submission": false,
+    "forbidden_claims": [
+      "live_domain_progress",
+      "stage_complete",
+      "grant_ready",
+      "fundability_ready",
+      "authoring_quality_ready",
+      "artifact_ready",
+      "package_fresh",
+      "submission_ready",
+      "production_ready",
+      "external_submission_authorized"
+    ]
+  },
+  "tool_affordance_boundary": {
+    "tool_refs_are_affordances": true,
+    "tool_refs_define_workflow": false,
+    "tool_refs_can_sign_receipt_or_quality_gate": false
+  },
+  "authority_boundary": {
+    "refs_only": true,
+    "controlled_canary_claims_live_domain_progress": false,
+    "provider_completion_counts_as_closeout": false,
+    "file_presence_counts_as_closeout": false,
+    "read_model_counts_as_closeout": false,
+    "conformance_pass_counts_as_closeout": false,
+    "opl_can_write_domain_truth": false,
+    "opl_can_mutate_artifact_body": false,
+    "opl_can_sign_owner_receipt": false,
+    "opl_can_create_typed_blocker": false,
+    "opl_can_authorize_quality_or_export": false
+  }
+}

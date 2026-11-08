@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/project-profile-selection.schema.json",
+  "title": "ProjectProfileSelection",
+  "type": "object",
+  "$defs": {
+    "selectionReason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "field",
+        "matched",
+        "observed",
+        "expected_any_of"
+      ],
+      "properties": {
+        "rule_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "field": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "matched": {
+          "type": "boolean"
+        },
+        "observed": {
+          "type": [
+            "string",
+            "array"
+          ],
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "expected_any_of": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "selectionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision",
+        "selected_profile_preset_id",
+        "selected_funding_opportunity_id",
+        "reason_codes",
+        "evaluated_profile_preset_count",
+        "evaluated_funding_opportunity_count"
+      ],
+      "properties": {
+        "decision": {
+          "const": "selected"
+        },
+        "selected_profile_preset_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "selected_funding_opportunity_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "reason_codes": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "evaluated_profile_preset_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evaluated_funding_opportunity_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "opportunityCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brief_id",
+        "match_score",
+        "reasons",
+        "funding_opportunity"
+      ],
+      "properties": {
+        "brief_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "match_score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/selectionReason"
+          }
+        },
+        "funding_opportunity": {
+          "$ref": "funding-opportunity-brief.schema.json"
+        }
+      }
+    },
+    "candidateProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preset_id",
+        "profile_id",
+        "profile_label",
+        "best_match_score",
+        "compatible_funding_opportunities",
+        "blocked_funding_opportunities"
+      ],
+      "properties": {
+        "preset_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "profile_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "profile_label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "best_match_score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "compatible_funding_opportunities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/opportunityCandidate"
+          }
+        },
+        "blocked_funding_opportunities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/opportunityCandidate"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "surface_kind",
+    "selection_version",
+    "selection_input_id",
+    "selection_summary",
+    "recommended_project_profile",
+    "recommended_funding_opportunity",
+    "candidate_profiles"
+  ],
+  "properties": {
+    "surface_kind": {
+      "const": "project_profile_selection"
+    },
+    "selection_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "selection_input_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "selection_summary": {
+      "$ref": "#/$defs/selectionSummary"
+    },
+    "recommended_project_profile": {
+      "$ref": "project-profile.schema.json"
+    },
+    "recommended_funding_opportunity": {
+      "$ref": "funding-opportunity-brief.schema.json"
+    },
+    "candidate_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/candidateProfile"
+      }
+    }
+  }
+}

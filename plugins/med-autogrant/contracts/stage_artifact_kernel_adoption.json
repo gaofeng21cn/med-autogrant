@@ -1,0 +1,129 @@
+{
+  "surface_kind": "opl_stage_artifact_kernel_adoption",
+  "version": "opl-stage-artifact-kernel-adoption.v1",
+  "owner": "med-autogrant",
+  "domain_id": "med-autogrant",
+  "kernel_contract_ref": "contracts/opl-framework/stage-artifact-runtime-contract.json",
+  "stage_folder_unit": [
+    "Stage Folder",
+    "Manifest",
+    "Receipt",
+    "current pointer"
+  ],
+  "terminal_states": [
+    "success",
+    "blocked",
+    "skipped",
+    "deferred"
+  ],
+  "required_ref_fields": [
+    "stage_folder_contract_ref",
+    "stage_json_ref",
+    "attempt_json_ref",
+    "manifest_ref",
+    "receipt_ref",
+    "current_pointer_ref",
+    "canonical_artifact_ref",
+    "export_ref",
+    "lineage_ref",
+    "retention_ref"
+  ],
+  "kernel_refs": {
+    "physical_stage_folder_source_of_truth": true,
+    "derived_index_rebuildable": true,
+    "manifest_receipt_hash_required": true
+  },
+  "state_index_kernel_adoption": {
+    "surface_kind": "opl_state_index_kernel_sidecar_adoption",
+    "version": "opl-state-index-kernel-sidecar-adoption.v1",
+    "state_index_kernel_owner": "one-person-lab",
+    "sqlite_sidecar_owner": "one-person-lab",
+    "sqlite_migration_required": false,
+    "mag_consumption_role": "opaque_refs_only_sidecar_index_consumer",
+    "index_authority": "derived_refs_only_no_domain_body_authority",
+    "source_of_truth": "physical_stage_folder_files_and_mag_owned_artifact_files",
+    "derived_index_rebuildable": true,
+    "consumed_index_refs": [
+      "stage_folder_ref_index",
+      "manifest_ref_index",
+      "receipt_ref_index",
+      "current_pointer_ref_index",
+      "canonical_artifact_ref_index",
+      "export_ref_index",
+      "lineage_ref_index",
+      "retention_ref_index",
+      "conformance_ref_index"
+    ],
+    "forbidden_sqlite_payloads": [
+      "grant_body",
+      "grant_strategy_memory_body",
+      "fundability_verdict_body",
+      "authoring_quality_verdict_body",
+      "submission_ready_export_verdict_body",
+      "package_body",
+      "artifact_body"
+    ],
+    "forbidden_mag_owner_roles": [
+      "generic_sqlite_owner",
+      "generic_state_index_kernel_owner",
+      "generic_runtime_owner",
+      "generic_lifecycle_owner",
+      "generic_queue_owner",
+      "generic_read_model_owner"
+    ],
+    "authority_boundary": {
+      "mag_can_write_sqlite_sidecar_index": false,
+      "mag_can_store_grant_body_in_sqlite": false,
+      "mag_can_store_memory_body_in_sqlite": false,
+      "mag_can_store_verdict_body_in_sqlite": false,
+      "mag_can_store_package_body_in_sqlite": false,
+      "opl_can_read_grant_body_from_index": false,
+      "opl_can_read_memory_body_from_index": false,
+      "opl_can_read_verdict_body_from_index": false,
+      "opl_can_read_package_body_from_index": false
+    }
+  },
+  "domain_pack_binding": {
+    "accepted_source_refs": [
+      "agent/stages/manifest.json",
+      "/product_entry_manifest/family_stage_control_plane",
+      "contracts/foundry_agent_series.json",
+      "contracts/artifact_locator_contract.json",
+      "contracts/owner_receipt_contract.json"
+    ],
+    "domain_output_roles_are_interface": true,
+    "file_name_is_not_interface": true,
+    "domain_truth_owner": "med-autogrant"
+  },
+  "projection_boundary": {
+    "derived_projection_refs": [
+      "stage_native_artifact_contract",
+      "package_lifecycle_handoff_projection",
+      "stage_folder_lifecycle_projection",
+      "app_workbench_artifact_drilldown"
+    ],
+    "file_presence_only_counts_as": "orphan_or_historical",
+    "provider_completion_counts_as_progress": false,
+    "derived_index_authority": "physical_stage_folder_refs_only_no_package_body"
+  },
+  "authority_boundary": {
+    "opl_can_create_domain_owner_receipt": false,
+    "opl_can_write_domain_truth": false,
+    "opl_can_write_memory_body": false,
+    "opl_can_mutate_domain_artifact_body": false,
+    "opl_can_authorize_quality_or_export": false
+  },
+  "domain_authority_retained": [
+    "grant_truth",
+    "fundability_verdict",
+    "authoring_quality_verdict",
+    "submission_export_authority",
+    "grant_strategy_memory_accept_reject",
+    "owner_receipt",
+    "typed_blocker"
+  ],
+  "notes": [
+    "MAG maps each grant stage output role to OPL physical Stage Folder Kernel refs.",
+    "package lifecycle handoff exports current, canonical, export, lineage, retention and conformance refs without package bodies or readiness claims."
+  ]
+}

@@ -32,7 +32,7 @@
 
 ## 验证
 
-`scripts/verify.sh` 是公开 wrapper，[Makefile](../Makefile)持有 lane 组合。Python/pytest 经 clean runner 将 cache/bytecode 放在 checkout 外；需要 Framework helpers 时使用显式 `OPL_FRAMEWORK_ROOT` 或已安装的 `opl` launcher。
+`scripts/verify.sh` 是源码仓库的公开 wrapper，[Makefile](https://github.com/gaofeng21cn/med-autogrant/blob/main/Makefile)持有 lane 组合。Python/pytest 经 clean runner 将 cache/bytecode 放在 checkout 外；需要 Framework helpers 时使用显式 `OPL_FRAMEWORK_ROOT` 或已安装的 `opl` launcher。
 
 ```bash
 ./scripts/verify.sh

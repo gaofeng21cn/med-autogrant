@@ -1,0 +1,104 @@
+{
+  "surface_kind": "opl_durable_knowledge_catalog",
+  "version": "durable-knowledge-catalog.v1",
+  "owner": "one-person-lab",
+  "domain_id": "med-autogrant",
+  "items": [
+    {
+      "surface_kind": "opl_durable_knowledge_item",
+      "version": "durable-knowledge-item.v1",
+      "knowledge_id": "med-autogrant.grant_strategy_memory",
+      "title": "Grant Strategy Memory",
+      "layer": "agent_pack",
+      "owner": "med-autogrant",
+      "body_ref": {
+        "kind": "repo_path",
+        "ref": "agent/knowledge/grant_strategy_memory.md",
+        "sha256": "sha256:c4f3ef330c6344a64a4ecfeebeeddf8f8130e94308ac8aefa32f2e4d76b3cb01"
+      },
+      "applicability": {
+        "domains": [
+          "med-autogrant"
+        ],
+        "stages": [
+          "call_and_candidate_intake",
+          "fundability_strategy",
+          "specific_aims_and_structure",
+          "proposal_authoring",
+          "review_and_rebuttal"
+        ]
+      },
+      "status": "active",
+      "reviewed_at": "2026-11-06T00:00:00+08:00",
+      "next_review_at": "2027-05-06T00:00:00+08:00",
+      "freshness_policy": "review_when_sources_or_applicability_change; exclude_after_next_review_at",
+      "authority_boundary": {
+        "semantic_body_owner": "med-autogrant",
+        "opl_role": "catalog_recall_and_receipt_projection_only"
+      }
+    },
+    {
+      "surface_kind": "opl_durable_knowledge_item",
+      "version": "durable-knowledge-item.v1",
+      "knowledge_id": "med-autogrant.owner_receipt_boundary",
+      "title": "Owner Receipt Boundary",
+      "layer": "agent_pack",
+      "owner": "med-autogrant",
+      "body_ref": {
+        "kind": "repo_path",
+        "ref": "agent/knowledge/owner_receipt_boundary.md",
+        "sha256": "sha256:ec4e50556721a1265203bd00f90d1dbfe58fa1f2dbead04962d62471bc34f14d"
+      },
+      "applicability": {
+        "domains": [
+          "med-autogrant"
+        ],
+        "stages": [
+          "call_and_candidate_intake",
+          "fundability_strategy",
+          "specific_aims_and_structure",
+          "review_and_rebuttal",
+          "package_and_submit_ready"
+        ]
+      },
+      "status": "active",
+      "reviewed_at": "2026-11-06T00:00:00+08:00",
+      "next_review_at": "2027-05-06T00:00:00+08:00",
+      "freshness_policy": "review_when_sources_or_applicability_change; exclude_after_next_review_at",
+      "authority_boundary": {
+        "semantic_body_owner": "med-autogrant",
+        "opl_role": "catalog_recall_and_receipt_projection_only"
+      }
+    },
+    {
+      "surface_kind": "opl_durable_knowledge_item",
+      "version": "durable-knowledge-item.v1",
+      "knowledge_id": "med-autogrant.package_authority",
+      "title": "Package Authority",
+      "layer": "agent_pack",
+      "owner": "med-autogrant",
+      "body_ref": {
+        "kind": "repo_path",
+        "ref": "agent/knowledge/package_authority.md",
+        "sha256": "sha256:cb2d6b4e51ba265d87211301fe995cf3d9a8be7ffe40503b2a72f38b91a46cf0"
+      },
+      "applicability": {
+        "domains": [
+          "med-autogrant"
+        ],
+        "stages": [
+          "proposal_authoring",
+          "package_and_submit_ready"
+        ]
+      },
+      "status": "active",
+      "reviewed_at": "2026-11-06T00:00:00+08:00",
+      "next_review_at": "2027-05-06T00:00:00+08:00",
+      "freshness_policy": "review_when_sources_or_applicability_change; exclude_after_next_review_at",
+      "authority_boundary": {
+        "semantic_body_owner": "med-autogrant",
+        "opl_role": "catalog_recall_and_receipt_projection_only"
+      }
+    }
+  ]
+}

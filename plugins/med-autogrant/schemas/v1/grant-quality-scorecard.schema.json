@@ -1,0 +1,525 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-quality-scorecard.schema.json",
+  "title": "Grant Quality Scorecard Surface",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "nullableIndependentReviewEvidence": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/independentReviewEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "closureAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "summary",
+        "target_stage",
+        "source_surface"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "continue_mainline",
+            "rollback_upstream",
+            "reselect_project_profile",
+            "fail_closed"
+          ]
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "evidenceObligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obligation_id",
+        "summary",
+        "required_input_ids",
+        "evidence_refs",
+        "satisfaction_criteria",
+        "source_surface"
+      ],
+      "properties": {
+        "obligation_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "satisfaction_criteria": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "lineageBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anchor_kind",
+        "anchor_ref",
+        "source_surface",
+        "target_stage",
+        "required_input_ids"
+      ],
+      "properties": {
+        "anchor_kind": {
+          "type": "string",
+          "enum": [
+            "revision_item",
+            "critique_repair",
+            "required_input_set",
+            "closure_action",
+            "summary_fallback"
+          ]
+        },
+        "anchor_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "trackedIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "lineage_id",
+        "lineage_basis",
+        "dimension_id",
+        "summary",
+        "status",
+        "severity",
+        "source_surface",
+        "rollback_stage",
+        "closure_status",
+        "blocking_reason",
+        "evidence_obligations",
+        "recommended_closure_action"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_basis": {
+          "$ref": "#/$defs/lineageBasis"
+        },
+        "dimension_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "const": "open"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "gap"
+          ]
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "rollback_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "closure_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "evidence_required"
+          ]
+        },
+        "blocking_reason": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "evidence_obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceObligation"
+          }
+        },
+        "recommended_closure_action": {
+          "$ref": "#/$defs/closureAction"
+        }
+      }
+    },
+    "evidenceSupplyQueueItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "gap_kind",
+        "gap_summary",
+        "supply_status",
+        "controller_action_hint",
+        "required_input_ids",
+        "linked_issue_ids",
+        "linked_issue_summaries",
+        "blocking_reasons",
+        "supply_actions",
+        "evidence_refs",
+        "source_surfaces"
+      ],
+      "properties": {
+        "gap_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "gap_kind": {
+          "type": "string",
+          "enum": [
+            "hard_blocker",
+            "evidence_gap",
+            "mixed_gap",
+            "funding_profile_mismatch"
+          ]
+        },
+        "gap_summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "supply_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "evidence_required",
+            "mixed",
+            "reselection_required"
+          ]
+        },
+        "controller_action_hint": {
+          "$ref": "#/$defs/closureAction"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "linked_issue_summaries": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "blocking_reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "supply_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceObligation"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "source_surfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimension_id",
+        "label",
+        "status",
+        "score",
+        "summary",
+        "blocking_issues",
+        "evidence_gaps",
+        "evidence_refs",
+        "rollback_stage"
+      ],
+      "properties": {
+        "dimension_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "watch",
+            "fragile",
+            "blocked"
+          ]
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "blocking_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "rollback_stage": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "loopGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "recommended_stage",
+        "reason"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "ready_for_submission",
+            "continue",
+            "rollback_required"
+          ]
+        },
+        "recommended_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "grantQualityScorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "scorecard_version",
+        "workspace_surface_kind",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "draft_id",
+        "assessment_owner",
+        "ai_reviewer_required",
+        "review_artifact_ref",
+        "independent_review_evidence",
+        "ai_reviewer_blocker_reason",
+        "overall_status",
+        "overall_score",
+        "summary",
+        "dimensions",
+        "unresolved_hard_issues",
+        "tracked_issues",
+        "evidence_supply_queue",
+        "loop_gate"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_quality_scorecard"
+        },
+        "scorecard_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "draft_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "assessment_owner": {
+          "type": "string",
+          "enum": [
+            "ai_reviewer_backed",
+            "projection_only"
+          ]
+        },
+        "ai_reviewer_required": {
+          "type": "boolean"
+        },
+        "review_artifact_ref": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "independent_review_evidence": {
+          "$ref": "#/$defs/nullableIndependentReviewEvidence"
+        },
+        "ai_reviewer_blocker_reason": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "overall_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "near_submission_candidate",
+            "submission_grade_candidate"
+          ]
+        },
+        "overall_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dimension"
+          }
+        },
+        "unresolved_hard_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "tracked_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/trackedIssue"
+          }
+        },
+        "evidence_supply_queue": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceSupplyQueueItem"
+          }
+        },
+        "loop_gate": {
+          "$ref": "#/$defs/loopGate"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_quality_scorecard"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-quality-scorecard"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_quality_scorecard": {
+      "$ref": "#/$defs/grantQualityScorecard"
+    }
+  }
+}

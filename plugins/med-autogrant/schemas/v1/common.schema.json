@@ -1,0 +1,1147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/common.schema.json",
+  "title": "Med Auto Grant Common Types",
+  "type": "object",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "default": []
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "human_in_the_loop",
+        "mixed"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "created_at",
+        "updated_at",
+        "source_mode"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "v1"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source_mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "owner": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "independent_review_evidence": {
+          "$ref": "#/$defs/independentReviewEvidence"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "independentReviewEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_attempt_ref",
+        "review_attempt_ref",
+        "review_receipt_ref",
+        "no_shared_context_verified"
+      ],
+      "properties": {
+        "execution_attempt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "review_attempt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "review_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "no_shared_context_verified": {
+          "type": "boolean",
+          "const": true
+        },
+        "reviewer_owner": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "reviewer_agent_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "reviewer_owner"
+          ]
+        },
+        {
+          "required": [
+            "reviewer_agent_ref"
+          ]
+        }
+      ]
+    },
+    "evidencePointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "label",
+        "source_type"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "publication",
+            "project",
+            "preliminary_result",
+            "external_reference",
+            "cv_item",
+            "draft_section",
+            "other"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "criterionAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "weight",
+        "judgment"
+      ],
+      "properties": {
+        "weight": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "judgment": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "blocking_issues": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "familyReferenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref"
+      ],
+      "properties": {
+        "ref_kind": {
+          "type": "string",
+          "enum": [
+            "repo_path",
+            "json_pointer",
+            "workspace_locator",
+            "external_url"
+          ]
+        },
+        "ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "familyGatePreview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id"
+      ],
+      "properties": {
+        "gate_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "approved",
+            "rejected",
+            "changes_requested"
+          ]
+        },
+        "review_surface": {
+          "$ref": "#/$defs/familyReferenceRef"
+        }
+      }
+    },
+    "familyActionGraphNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "node_kind",
+        "title"
+      ],
+      "properties": {
+        "node_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "node_kind": {
+          "type": "string",
+          "enum": [
+            "intake",
+            "research",
+            "authoring",
+            "audit",
+            "review",
+            "publish",
+            "operator_step",
+            "controller",
+            "tool_call"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "executor_hint": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "produces_checkpoint": {
+          "type": "boolean"
+        }
+      }
+    },
+    "familyActionGraphEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "to": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "on": {
+          "type": "string",
+          "enum": [
+            "success",
+            "failure",
+            "decision",
+            "manual_resume"
+          ]
+        },
+        "condition": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "familyActionGraphHumanGateBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "trigger_nodes"
+      ],
+      "properties": {
+        "gate_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trigger_nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "blocking": {
+          "type": "boolean"
+        }
+      }
+    },
+    "familyActionGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "graph_id",
+        "target_domain_id",
+        "graph_kind",
+        "nodes",
+        "edges",
+        "entry_nodes"
+      ],
+      "properties": {
+        "version": {
+          "const": "family-action-graph.v1"
+        },
+        "graph_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "target_domain_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "graph_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "graph_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/familyActionGraphNode"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyActionGraphEdge"
+          }
+        },
+        "entry_nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "exit_nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "human_gates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyActionGraphHumanGateBinding"
+          }
+        },
+        "checkpoint_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "none",
+                "node_boundary",
+                "explicit_nodes"
+              ]
+            },
+            "checkpoint_nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        "notes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "familyResumeContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "session_locator_field"
+      ],
+      "properties": {
+        "surface_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "session_locator_field": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "checkpoint_locator_field": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "evidenceTrustLevel": {
+      "type": "string",
+      "enum": [
+        "trusted",
+        "usable_with_verification",
+        "reference_only",
+        "stale_or_conflicting",
+        "missing_context"
+      ]
+    },
+    "familyTrustRankedEvidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref",
+        "trust_rank"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trust_rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trust_note": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "supports": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "familyGroundingScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_kind",
+        "summary",
+        "scope_refs"
+      ],
+      "properties": {
+        "scope_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "scope_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        }
+      }
+    },
+    "familyIntakeEvidenceAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "verdict": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "audited_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "summary_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        }
+      }
+    },
+    "familyIntakeEvidenceCompanion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "target_domain_id",
+        "intake_audit",
+        "trust_ranked_evidence_refs",
+        "grounding_scope"
+      ],
+      "properties": {
+        "version": {
+          "const": "family-intake-evidence-companion.v1"
+        },
+        "target_domain_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "intake_audit": {
+          "$ref": "#/$defs/familyIntakeEvidenceAudit"
+        },
+        "trust_ranked_evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/familyTrustRankedEvidenceRef"
+          }
+        },
+        "grounding_scope": {
+          "$ref": "#/$defs/familyGroundingScope"
+        },
+        "human_gate_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        },
+        "checkpoint_lineage_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        }
+      }
+    },
+    "projectProfileTemplateProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "template_label",
+        "required_section_strategy",
+        "narrative_style"
+      ],
+      "properties": {
+        "template_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_section_strategy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "narrative_style": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileCollaborationPreferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collaboration_mode",
+        "author_touchpoints",
+        "evidence_policy",
+        "drafting_voice"
+      ],
+      "properties": {
+        "collaboration_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "author_touchpoints": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "drafting_voice": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileCritiquePolicyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preset_id",
+        "policy_id"
+      ],
+      "properties": {
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "policy_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileFamilyCompatibilityHook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "opportunity_field",
+        "allowed_values"
+      ],
+      "properties": {
+        "rule_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "opportunity_field": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "allowed_values": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceQualityBar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_score",
+        "blocker_policy",
+        "required_signal_coverage"
+      ],
+      "properties": {
+        "minimum_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "blocker_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_signal_coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceRouteBackAdvisory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "suggested_route_back_stage",
+        "advisory_trigger",
+        "semantic_route_decision_owner",
+        "stage_transition_materialization_owner",
+        "binding"
+      ],
+      "properties": {
+        "suggested_route_back_stage": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "advisory_trigger": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "semantic_route_decision_owner": {
+          "const": "decisive_codex_attempt"
+        },
+        "stage_transition_materialization_owner": {
+          "const": "opl_stage_run_controller"
+        },
+        "binding": {
+          "const": false
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceEvidenceEscalationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger",
+        "escalation_action",
+        "required_evidence_types"
+      ],
+      "properties": {
+        "trigger": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "escalation_action": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_evidence_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceReadyClaimPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_claim",
+        "requires_zero_blockers_for_claim",
+        "requires_zero_evidence_gaps_for_claim",
+        "blocks_stage_transition"
+      ],
+      "properties": {
+        "target_claim": {
+          "type": "string",
+          "enum": [
+            "submission_grade_candidate",
+            "near_submission_candidate"
+          ]
+        },
+        "requires_zero_blockers_for_claim": {
+          "type": "boolean"
+        },
+        "requires_zero_evidence_gaps_for_claim": {
+          "type": "boolean"
+        },
+        "blocks_stage_transition": {
+          "const": false
+        },
+        "acceptance_criteria": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "projectProfileFamilyGovernancePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_tranche",
+        "quality_checkpoint_hint",
+        "quality_bar",
+        "route_back_advisory",
+        "evidence_escalation_policy",
+        "ready_claim_policy"
+      ],
+      "properties": {
+        "default_tranche": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "quality_checkpoint_hint": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "quality_bar": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceQualityBar"
+        },
+        "route_back_advisory": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceRouteBackAdvisory"
+        },
+        "evidence_escalation_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceEvidenceEscalationPolicy"
+        },
+        "ready_claim_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceReadyClaimPolicy"
+        }
+      }
+    },
+    "projectProfileFamilyGrammarTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "family_label",
+        "funder",
+        "admission_status",
+        "template_strategy",
+        "review_grammar",
+        "evidence_policy",
+        "governance_policy",
+        "family_compatibility_hooks",
+        "governance_entry_points"
+      ],
+      "properties": {
+        "family_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "family_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "admission_status": {
+          "type": "string",
+          "enum": [
+            "admitted",
+            "placeholder"
+          ]
+        },
+        "template_strategy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required_section_strategy",
+            "narrative_style"
+          ],
+          "properties": {
+            "required_section_strategy": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "narrative_style": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "review_grammar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_focus",
+            "critique_policy"
+          ],
+          "properties": {
+            "review_focus": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "critique_policy": {
+              "$ref": "#/$defs/projectProfileCritiquePolicyRef"
+            }
+          }
+        },
+        "evidence_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_id"
+          ],
+          "properties": {
+            "policy_id": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "governance_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernancePolicy"
+        },
+        "family_compatibility_hooks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/projectProfileFamilyCompatibilityHook"
+          }
+        },
+        "governance_entry_points": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "projectProfileGrantFamilyGrammar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "family_label",
+        "funder",
+        "admission_status",
+        "template_strategy",
+        "review_grammar",
+        "evidence_policy",
+        "governance_policy",
+        "family_compatibility_hooks",
+        "governance_entry_points"
+      ],
+      "properties": {
+        "family_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "family_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "admission_status": {
+          "type": "string",
+          "enum": [
+            "admitted",
+            "placeholder"
+          ]
+        },
+        "template_strategy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required_section_strategy",
+            "narrative_style"
+          ],
+          "properties": {
+            "required_section_strategy": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "narrative_style": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "review_grammar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_focus",
+            "critique_policy"
+          ],
+          "properties": {
+            "review_focus": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "critique_policy": {
+              "$ref": "#/$defs/projectProfileCritiquePolicyRef"
+            }
+          }
+        },
+        "evidence_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_id"
+          ],
+          "properties": {
+            "policy_id": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "governance_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernancePolicy"
+        },
+        "family_compatibility_hooks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/projectProfileFamilyCompatibilityHook"
+          }
+        },
+        "governance_entry_points": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "projectProfileSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "preset_id",
+        "profile_label",
+        "project_kind",
+        "template_family",
+        "selection_mode",
+        "summary",
+        "funding_program",
+        "funder",
+        "program_family",
+        "template_id",
+        "template_label",
+        "collaboration_mode",
+        "author_touchpoints",
+        "evidence_policy",
+        "drafting_voice",
+        "critique_policy_preset_id",
+        "critique_policy_id"
+      ],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "profile_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "project_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "selection_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "program_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "collaboration_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "author_touchpoints": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "drafting_voice": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "critique_policy_preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "critique_policy_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "family_grammar_trace": {
+          "$ref": "#/$defs/projectProfileFamilyGrammarTrace"
+        },
+        "grant_family_grammar": {
+          "$ref": "#/$defs/projectProfileGrantFamilyGrammar"
+        }
+      }
+    },
+    "projectProfileCompanion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "profile_id",
+        "preset_id",
+        "profile_label",
+        "funding_program",
+        "funder",
+        "program_family",
+        "template_profile",
+        "collaboration_preferences",
+        "critique_policy",
+        "profile_ref",
+        "funding_opportunity_ref"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "project_profile_companion"
+        },
+        "version": {
+          "type": "integer",
+          "const": 1
+        },
+        "profile_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "profile_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "program_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "template_id",
+            "template_label"
+          ],
+          "properties": {
+            "template_id": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "template_label": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "collaboration_preferences": {
+          "$ref": "#/$defs/projectProfileCollaborationPreferences"
+        },
+        "critique_policy": {
+          "$ref": "#/$defs/projectProfileCritiquePolicyRef"
+        },
+        "profile_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        },
+        "funding_opportunity_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        }
+      }
+    },
+    "familyOrchestrationCompanion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_graph_ref",
+        "human_gates",
+        "resume_contract",
+        "action_graph"
+      ],
+      "properties": {
+        "action_graph_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        },
+        "human_gates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyGatePreview"
+          }
+        },
+        "resume_contract": {
+          "$ref": "#/$defs/familyResumeContract"
+        },
+        "action_graph": {
+          "$ref": "#/$defs/familyActionGraph"
+        },
+        "event_envelope_surface": {
+          "$ref": "#/$defs/familyReferenceRef"
+        },
+        "checkpoint_lineage_surface": {
+          "$ref": "#/$defs/familyReferenceRef"
+        },
+        "intake_evidence_companion": {
+          "$ref": "#/$defs/familyIntakeEvidenceCompanion"
+        },
+        "project_profile_companion": {
+          "$ref": "#/$defs/projectProfileCompanion"
+        }
+      }
+    }
+  }
+}

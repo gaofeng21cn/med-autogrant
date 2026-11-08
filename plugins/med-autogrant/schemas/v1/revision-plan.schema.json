@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/revision-plan.schema.json",
+  "title": "RevisionPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "revision_plan_id",
+    "draft_id",
+    "critique_id",
+    "items"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "revision_plan_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "critique_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "execution_status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "completed"
+      ]
+    },
+    "pre_revision_version_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "post_revision_version_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "comparison_summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "priority",
+          "action_type",
+          "target_ref",
+          "action",
+          "done_criteria",
+          "required_input_ids"
+        ],
+        "properties": {
+          "item_id": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "p0",
+              "p1",
+              "p2"
+            ]
+          },
+          "action_type": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "target_ref": {
+            "type": "string"
+          },
+          "action": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "done_criteria": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "required_input_ids": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          },
+          "mutation_payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "linked_object_ids"
+            ],
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "replace_draft_section",
+                  "replace_draft_sections"
+                ]
+              },
+              "target_section_key": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "replacement_text": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "replacement_core_claim": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "linked_object_ids": {
+                "$ref": "common.schema.json#/$defs/stringList"
+              },
+              "replacement_sections": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["section_key", "section_title", "text", "linked_object_ids"],
+                  "properties": {
+                    "section_key": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "section_title": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "text": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "linked_object_ids": { "$ref": "common.schema.json#/$defs/stringList" }
+                  }
+                }
+              },
+              "replacement_outline": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["section_key", "section_title", "core_claim", "linked_object_ids"],
+                  "properties": {
+                    "section_key": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "section_title": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "core_claim": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+                    "linked_object_ids": { "$ref": "common.schema.json#/$defs/stringList" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "next_review_focus": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

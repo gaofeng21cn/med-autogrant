@@ -1,0 +1,183 @@
+{
+  "surface_kind": "mag_scholar_skill_binding_contract",
+  "version": "mag-scholar-skill-binding.v3",
+  "consumer_agent_id": "mag",
+  "provider_package_id": "mas-scholar-skills",
+  "consumer_profile_id": "mag-medical-grant.v1",
+  "capability_abi": "mas-scholar-skills.v1",
+  "enhancement_kind": "required_dependency",
+  "handoff_mode": "refs_only",
+  "provider_required": true,
+  "eligible_export_ids": [
+    "medical-research-lit",
+    "medical-statistical-review",
+    "medical-methodology-planner",
+    "medical-evidence-integrity-reviewer",
+    "medical-evidence-synthesis-and-claim-map",
+    "medical-reference-integrity-auditor"
+  ],
+  "eligible_module_ids": [
+    "mas-scholar-skills.lit",
+    "mas-scholar-skills.stats",
+    "mas-scholar-skills.review",
+    "mas-scholar-skills.data",
+    "mas-scholar-skills.reference-provider-adapters",
+    "mas-scholar-skills.scientific-search-adapters"
+  ],
+  "stage_bindings": {
+    "call_and_candidate_intake": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-reference-integrity-auditor"
+    ],
+    "fundability_strategy": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "specific_aims_and_structure": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map"
+    ],
+    "proposal_authoring": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "review_and_rebuttal": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "package_and_submit_ready": [
+      "medical-reference-integrity-auditor"
+    ]
+  },
+  "direct_route_bindings": {
+    "strategy_authoring": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "direction_screening": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "question_refinement": [
+      "medical-research-lit",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map"
+    ],
+    "argument_building": [
+      "medical-research-lit",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "fit_alignment": [
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer"
+    ],
+    "outline": [
+      "medical-methodology-planner",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ],
+    "drafting": [
+      "medical-research-lit",
+      "medical-statistical-review",
+      "medical-methodology-planner",
+      "medical-evidence-integrity-reviewer",
+      "medical-evidence-synthesis-and-claim-map",
+      "medical-reference-integrity-auditor"
+    ]
+  },
+  "invocation_policy": {
+    "selection": "stage_or_direct_route_declared_required_subset_only",
+    "invocation": "invoke_required_provider_before_mag_stage_or_direct_route",
+    "inputs": [
+      "current_grant_artifact_ref",
+      "source_pack_ref",
+      "epistemic_scope_ref"
+    ],
+    "accepted_candidate_outputs": [
+      "source_pack_ref",
+      "candidate_refs",
+      "owner_gate_handoff_ref",
+      "route_back_candidate"
+    ],
+    "candidate_consumption": "mag_owner_surface_must_consume_reject_or_route_back",
+    "provider_completion_is_mag_completion": false,
+    "provider_gap_is_hard_stop": true,
+    "provider_gap_can_create_typed_blocker": false,
+    "provider_gap_can_select_stage_route": false,
+    "provider_gap_action": "fail_closed_mag_admission_launch_and_readiness"
+  },
+  "availability_policy": {
+    "usable_observation": "available_compatible",
+    "known_non_usable_observations": [
+      "missing",
+      "incompatible",
+      "disabled",
+      "unmaterialized",
+      "unobserved"
+    ],
+    "available_compatible_action": "select_required_declared_skills",
+    "other_observation_action": "fail_closed_mag_dependency",
+    "accepted_gap_outputs": [
+      "diagnostic",
+      "typed_blocker_ref"
+    ],
+    "quality_hint_is_advisory": false,
+    "blocks_mag_install": true,
+    "blocks_stage_launch": true,
+    "blocks_stage_route": true,
+    "blocks_operational_readiness": true,
+    "blocks_grant_core": true,
+    "blocks_fundability_core": true,
+    "blocks_quality_core": true,
+    "blocks_export_core": true,
+    "creates_typed_blocker": false
+  },
+  "authority_boundary": {
+    "can_write_mag_grant_truth": false,
+    "can_mutate_mag_grant_artifact": false,
+    "can_issue_mag_fundability_verdict": false,
+    "can_issue_mag_quality_verdict": false,
+    "can_issue_mag_export_verdict": false,
+    "can_sign_mag_owner_receipt": false,
+    "can_create_mag_typed_blocker": false,
+    "can_claim_mag_readiness": false,
+    "can_gate_mag_install": false,
+    "can_gate_mag_stage_route": false,
+    "can_gate_mag_operational_readiness": false
+  },
+  "forbidden_candidate_claims": [
+    "fundability_verdict",
+    "quality_verdict",
+    "export_verdict",
+    "submission_ready",
+    "grant_ready",
+    "operational_readiness",
+    "stage_route_decision",
+    "owner_receipt",
+    "typed_blocker"
+  ]
+}

@@ -241,7 +241,7 @@ def test_native_carrier_projects_descriptor_neutral_mag_owner_contract() -> None
     )
 
 
-def test_nested_native_carrier_keeps_hosted_runtime_owned_by_the_repo() -> None:
+def test_nested_native_carrier_contains_domain_runtime_and_stage_resources() -> None:
     marketplace = json.loads(
         (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").read_text(
             encoding="utf-8"
@@ -255,12 +255,12 @@ def test_nested_native_carrier_keeps_hosted_runtime_owned_by_the_repo() -> None:
     )
     owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     domain_descriptor = json.loads(
-        (REPO_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
+        (PLUGIN_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
             encoding="utf-8"
         )
     )
     action_catalog = json.loads(
-        (REPO_ROOT / owner_manifest["action_catalog_ref"]).read_text(
+        (PLUGIN_ROOT / owner_manifest["action_catalog_ref"]).read_text(
             encoding="utf-8"
         )
     )
@@ -273,7 +273,7 @@ def test_nested_native_carrier_keeps_hosted_runtime_owned_by_the_repo() -> None:
     stage_manifest_ref = domain_descriptor["standard_agent_interface"]["stage_catalog"][
         "relative_path"
     ]
-    assert (REPO_ROOT / stage_manifest_ref).is_file()
+    assert (PLUGIN_ROOT / stage_manifest_ref).is_file()
     assert all(
         action["execution_binding"]["stage_manifest_ref"] == stage_manifest_ref
         for action in action_catalog["actions"]
@@ -282,7 +282,12 @@ def test_nested_native_carrier_keeps_hosted_runtime_owned_by_the_repo() -> None:
         "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
     ):
-        assert (REPO_ROOT / hosted_runtime_ref).is_file()
+        assert (PLUGIN_ROOT / hosted_runtime_ref).is_file()
+    pack = json.loads((PLUGIN_ROOT / "contracts/pack_compiler_input.json").read_text())
+    for resource in pack["required_domain_pack_paths"]:
+        assert (PLUGIN_ROOT / resource).is_file()
+    assert (PLUGIN_ROOT / "schemas/v1/nsfc-workspace.schema.json").is_file()
+    assert (PLUGIN_ROOT / "contracts/runtime-program/current-program.json").is_file()
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:

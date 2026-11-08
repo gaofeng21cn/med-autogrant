@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/track-record.schema.json",
+  "title": "TrackRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "track_record_id",
+    "representative_outputs"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "track_record_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "representative_outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "output_id",
+          "title",
+          "output_type",
+          "relevance_summary"
+        ],
+        "properties": {
+          "output_id": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "output_type": {
+            "type": "string",
+            "enum": [
+              "paper",
+              "preprint",
+              "dataset",
+              "software",
+              "patent",
+              "award",
+              "other"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 1900
+          },
+          "relevance_summary": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "evidence": {
+            "$ref": "common.schema.json#/$defs/evidencePointer"
+          }
+        }
+      }
+    },
+    "prior_grants": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "awards": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

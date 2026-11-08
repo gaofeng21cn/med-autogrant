@@ -18,7 +18,7 @@ User -> primary Skill / OPL-generated action
 | `contracts/`、`schemas/` | Package、action、workspace、artifact、memory、review 和 receipt 的机器接口 |
 | `src/med_autogrant/` | direct domain entry、authority function、refs adapter 与 grant-native helper |
 | `runtime/` | runtime-facing descriptor/declaration；不保存运行输出或执行通用 scheduler |
-| `plugins/med-autogrant/` | Codex 原生安装所需的 carrier source；[canonical Skill 投影](./references/primary-skill-plugin-carrier-boundary.md) |
+| `plugins/med-autogrant/` | Codex 原生安装所需的完整 carrier：Skill、领域代码、合同和资源按根目录布局生成；[投影边界与命令](./references/primary-skill-plugin-carrier-boundary.md) |
 
 [pack compiler input](../contracts/pack_compiler_input.json) 与 [source closure audit](../contracts/source_closure_audit.json) 声明实际 pack/source 分类。Framework 从 Stage manifest 和 action catalog 生成入口和 read model；MAG 不保存第二份 generated stage control plane。
 

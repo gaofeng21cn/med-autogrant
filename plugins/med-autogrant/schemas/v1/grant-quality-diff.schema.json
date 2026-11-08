@@ -1,0 +1,525 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-quality-diff.schema.json",
+  "title": "Grant Quality Diff Surface",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loopGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "recommended_stage",
+        "reason"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "ready_for_submission",
+            "continue",
+            "rollback_required"
+          ]
+        },
+        "recommended_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "lineageBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anchor_kind",
+        "anchor_ref",
+        "source_surface",
+        "target_stage",
+        "required_input_ids"
+      ],
+      "properties": {
+        "anchor_kind": {
+          "type": "string",
+          "enum": [
+            "revision_item",
+            "critique_repair",
+            "required_input_set",
+            "closure_action",
+            "summary_fallback"
+          ]
+        },
+        "anchor_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "controllerActionHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "summary",
+        "target_stage",
+        "source_surface"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "continue_mainline",
+            "rollback_upstream",
+            "reselect_project_profile",
+            "fail_closed"
+          ]
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "nullableControllerActionHint": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/controllerActionHint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "dimensionDelta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimension_id",
+        "label",
+        "current_score",
+        "previous_score",
+        "score_delta",
+        "current_status",
+        "previous_status"
+      ],
+      "properties": {
+        "dimension_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_score": {
+          "type": "integer"
+        },
+        "previous_score": {
+          "type": "integer"
+        },
+        "score_delta": {
+          "type": "integer"
+        },
+        "current_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "previous_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "issueClosureProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "lineage_id",
+        "lineage_basis",
+        "previous_issue_id",
+        "current_issue_id",
+        "previous_summary",
+        "current_summary",
+        "dimension_id",
+        "summary",
+        "severity",
+        "transition",
+        "previous_closure_status",
+        "current_closure_status",
+        "blocking_reason",
+        "closure_delta"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_basis": {
+          "$ref": "#/$defs/lineageBasis"
+        },
+        "previous_issue_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_issue_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_summary": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_summary": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "dimension_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "gap"
+          ]
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "closed",
+            "still_open",
+            "newly_opened"
+          ]
+        },
+        "previous_closure_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_closure_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "blocking_reason": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "closure_delta": {
+          "type": "string",
+          "enum": [
+            "issue_closed",
+            "unchanged",
+            "progressed",
+            "regressed",
+            "new_blocker_opened",
+            "new_gap_opened"
+          ]
+        }
+      }
+    },
+    "issueProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closed_issues",
+        "remaining_open_issues",
+        "newly_opened_issues",
+        "issue_closure_progress"
+      ],
+      "properties": {
+        "closed_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "remaining_open_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "newly_opened_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "issue_closure_progress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueClosureProgress"
+          }
+        }
+      }
+    },
+    "evidenceSupplyGapProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "transition",
+        "previous_gap_kind",
+        "current_gap_kind",
+        "previous_supply_status",
+        "current_supply_status",
+        "previous_required_input_ids",
+        "current_required_input_ids",
+        "previous_linked_issue_ids",
+        "current_linked_issue_ids",
+        "previous_controller_action_hint",
+        "current_controller_action_hint",
+        "supply_delta"
+      ],
+      "properties": {
+        "gap_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "closed",
+            "still_open",
+            "newly_opened"
+          ]
+        },
+        "previous_gap_kind": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_gap_kind": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_supply_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_supply_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "current_required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "previous_linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "current_linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "previous_controller_action_hint": {
+          "$ref": "#/$defs/nullableControllerActionHint"
+        },
+        "current_controller_action_hint": {
+          "$ref": "#/$defs/nullableControllerActionHint"
+        },
+        "supply_delta": {
+          "type": "string",
+          "enum": [
+            "supply_closed",
+            "new_gap_opened",
+            "progressed",
+            "regressed",
+            "unchanged"
+          ]
+        }
+      }
+    },
+    "evidenceSupplyProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closed_gaps",
+        "remaining_open_gaps",
+        "newly_opened_gaps",
+        "gap_progress"
+      ],
+      "properties": {
+        "closed_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "remaining_open_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "newly_opened_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "gap_progress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceSupplyGapProgress"
+          }
+        }
+      }
+    },
+    "grantQualityDiff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "diff_version",
+        "workspace_surface_kind",
+        "current_workspace_id",
+        "previous_workspace_id",
+        "current_lifecycle_stage",
+        "previous_lifecycle_stage",
+        "current_overall_status",
+        "previous_overall_status",
+        "current_overall_score",
+        "previous_overall_score",
+        "score_delta",
+        "overall_progression",
+        "dimension_deltas",
+        "issue_progress",
+        "evidence_supply_progress",
+        "current_loop_gate",
+        "previous_loop_gate"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_quality_diff"
+        },
+        "diff_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "current_workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "previous_workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "previous_lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_overall_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "previous_overall_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_overall_score": {
+          "type": "integer"
+        },
+        "previous_overall_score": {
+          "type": "integer"
+        },
+        "score_delta": {
+          "type": "integer"
+        },
+        "overall_progression": {
+          "type": "string",
+          "enum": [
+            "improved",
+            "mixed",
+            "stable",
+            "regressed"
+          ]
+        },
+        "dimension_deltas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dimensionDelta"
+          }
+        },
+        "issue_progress": {
+          "$ref": "#/$defs/issueProgress"
+        },
+        "evidence_supply_progress": {
+          "$ref": "#/$defs/evidenceSupplyProgress"
+        },
+        "current_loop_gate": {
+          "$ref": "#/$defs/loopGate"
+        },
+        "previous_loop_gate": {
+          "$ref": "#/$defs/loopGate"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "previous_input_path",
+    "grant_quality_diff"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-quality-diff"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "previous_input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_quality_diff": {
+      "$ref": "#/$defs/grantQualityDiff"
+    }
+  }
+}

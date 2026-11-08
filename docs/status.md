@@ -13,6 +13,7 @@
 | 直接 authority target | `medautogrant`、`MedAutoGrantDomainEntry` 和 [domain handler contract](../src/med_autogrant/product_entry_parts/domain_handler_contract.py)；不作为 Skill 的默认用户入口 |
 | 通用 transport | [executor client](../src/med_autogrant/domain_executor_client.py) 与 funding source 调用 OPL Python helpers |
 | Package dependency | `mas-scholar-skills` 为 required dependency；manifest 声明不能代替 provider 实际 presence/callability |
+| 原生载荷 | `plugins/med-autogrant/` 含可重复生成的领域代码、Stage、合同、Schema、Skill 参考文档及 App adapter；安装后相对资源引用以 carrier 根目录解析 |
 | 结构证据 | [conformance profile](../contracts/standard_agent_conformance_profile.json)、[source closure audit](../contracts/source_closure_audit.json)，需 fresh scanner 才能判断当前检查结果 |
 | MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 默认读取已登记工作区的 canonical `workspace.json`，阶段与质量视图共用当前申请和评审证据；`workspace_file`、`quality_path` 可显式选择其他 owner 文件，不推断未保存的质量评分 |
 

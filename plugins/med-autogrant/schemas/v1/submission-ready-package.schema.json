@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/submission-ready-package.schema.json",
+  "title": "Med Auto Grant Submission-Ready Package",
+  "type": "object",
+  "$defs": {
+    "blockingIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "severity",
+        "message"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "const": "blocking"
+        },
+        "message": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "mechanicalPackageCompleteness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "passed",
+        "blocking_issue_count",
+        "blocking_issue_ids"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "blocked"
+          ]
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "blocking_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_issue_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "handoffReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "exact_artifact_hashes_required",
+        "ready_claim_authorized",
+        "decisive_attempt_roles",
+        "review_receipt_surface_kind",
+        "review_receipt_materializer",
+        "local_readiness_authority_owner",
+        "local_readiness_requirement_mode",
+        "local_readiness_contract_ref",
+        "local_readiness_required_ref_kinds",
+        "epistemic_review_scope_profile_ref",
+        "required_current_epistemic_scope_ids",
+        "reviewed_artifact_hashes_role",
+        "hash_change_alone_invalidates_epistemic_review",
+        "release_integrity_contract_ref",
+        "release_integrity_separate"
+      ],
+      "properties": {
+        "status": {
+          "const": "pending_fresh_review"
+        },
+        "exact_artifact_hashes_required": {
+          "const": true
+        },
+        "ready_claim_authorized": {
+          "const": false
+        },
+        "decisive_attempt_roles": {
+          "const": [
+            "reviewer",
+            "re_reviewer"
+          ]
+        },
+        "review_receipt_surface_kind": {
+          "const": "opl_stage_review_receipt"
+        },
+        "review_receipt_materializer": {
+          "const": "opl_stage_run_controller"
+        },
+        "local_readiness_authority_owner": {
+          "const": "med-autogrant"
+        },
+        "local_readiness_requirement_mode": {
+          "const": "all_of"
+        },
+        "local_readiness_contract_ref": {
+          "const": "contracts/owner_receipt_contract.json#/local_submission_ready_projection_contract"
+        },
+        "local_readiness_required_ref_kinds": {
+          "const": [
+            "opl_stage_review_receipt",
+            "submission_ready_export_verdict"
+          ]
+        },
+        "epistemic_review_scope_profile_ref": {
+          "const": "contracts/epistemic_review_scope_profile.json"
+        },
+        "required_current_epistemic_scope_ids": {
+          "const": [
+            "mag:package_and_submit_ready:grant_content",
+            "mag:package_and_submit_ready:grant_methodology",
+            "mag:package_and_submit_ready:grant_reference",
+            "mag:package_and_submit_ready:grant_display",
+            "mag:package_and_submit_ready:grant_export",
+            "mag:package_and_submit_ready:grant_package"
+          ]
+        },
+        "reviewed_artifact_hashes_role": {
+          "const": "transport_identity_locator_and_stale_hint_only"
+        },
+        "hash_change_alone_invalidates_epistemic_review": {
+          "const": false
+        },
+        "release_integrity_contract_ref": {
+          "const": "contracts/epistemic_review_scope_profile.json#/release_integrity"
+        },
+        "release_integrity_separate": {
+          "const": true
+        }
+      }
+    },
+    "submissionReadyExportVerdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "export_verdict_ref",
+        "verdict_state",
+        "owner",
+        "source_kind",
+        "provenance_ref"
+      ],
+      "properties": {
+        "export_verdict_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "verdict_state": {
+          "type": "string",
+          "enum": [
+            "submission_ready",
+            "blocked"
+          ]
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "mag_owner_receipt",
+            "mag_owner_export_artifact",
+            "mag_owner_typed_blocker"
+          ]
+        },
+        "provenance_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_kind": {
+                "const": "mag_owner_typed_blocker"
+              }
+            },
+            "required": [
+              "source_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verdict_state": {
+                "const": "blocked"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "auditSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_status",
+        "draft_status",
+        "presubmission_frozen",
+        "mandatory_sections",
+        "matched_mandatory_sections",
+        "missing_mandatory_sections",
+        "preliminary_evidence_count",
+        "unresolved_evidence_gap_count",
+        "representative_output_count",
+        "active_project_count",
+        "blocking_issue_count"
+      ],
+      "properties": {
+        "checkpoint_status": {
+          "$ref": "product-entry.schema.json#/$defs/checkpointStatus"
+        },
+        "draft_status": {
+          "type": "string",
+          "enum": [
+            "revised",
+            "frozen"
+          ]
+        },
+        "presubmission_frozen": {
+          "type": "boolean"
+        },
+        "mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "matched_mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "missing_mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "preliminary_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_evidence_gap_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "representative_output_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "active_project_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "artifactManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_bundle_kind",
+        "artifact_bundle_manifest",
+        "final_package_kind",
+        "final_package_manifest",
+        "hosted_contract_bundle_kind",
+        "hosted_execution_identity"
+      ],
+      "properties": {
+        "artifact_bundle_kind": {
+          "const": "artifact_bundle"
+        },
+        "artifact_bundle_manifest": {
+          "type": "object"
+        },
+        "final_package_kind": {
+          "const": "final_package"
+        },
+        "final_package_manifest": {
+          "type": "object"
+        },
+        "hosted_contract_bundle_kind": {
+          "const": "hosted_contract_bundle"
+        },
+        "hosted_execution_identity": {
+          "$ref": "hosted-contract-bundle.schema.json#/$defs/executionIdentity"
+        }
+      }
+    },
+    "evidenceIndexItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "title",
+        "source_type",
+        "supports",
+        "gaps"
+      ],
+      "properties": {
+        "item_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supports": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "gaps": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "formalChecklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "passed",
+        "detail"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "detail": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "submissionDossier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_title",
+        "final_draft_markdown",
+        "evidence_index",
+        "formal_checklist"
+      ],
+      "properties": {
+        "project_title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "final_draft_markdown": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "evidence_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceIndexItem"
+          }
+        },
+        "formal_checklist": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/formalChecklistItem"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "package_version",
+    "package_kind",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "program_id",
+    "lifecycle_stage",
+    "automation_scope",
+    "readiness_verdict",
+    "fully_automatic",
+    "submission_ready",
+    "external_submission_performed",
+    "handoff_review",
+    "mechanical_package_completeness",
+    "submission_ready_export_verdict",
+    "audit_summary",
+    "artifact_manifest",
+    "submission_dossier",
+    "blocking_issues"
+  ],
+  "properties": {
+    "package_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "package_kind": {
+      "const": "submission_ready_package"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "program_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "lifecycle_stage": {
+      "const": "frozen"
+    },
+    "automation_scope": {
+      "const": "local_submission_package"
+    },
+    "readiness_verdict": {
+      "type": "string",
+      "enum": [
+        "candidate_ready_for_review",
+        "candidate_blocked"
+      ]
+    },
+    "fully_automatic": {
+      "type": "boolean"
+    },
+    "submission_ready": {
+      "const": false
+    },
+    "external_submission_performed": {
+      "const": false
+    },
+    "handoff_review": {
+      "$ref": "#/$defs/handoffReview"
+    },
+    "mechanical_package_completeness": {
+      "$ref": "#/$defs/mechanicalPackageCompleteness"
+    },
+    "submission_ready_export_verdict": {
+      "$ref": "#/$defs/submissionReadyExportVerdict"
+    },
+    "audit_summary": {
+      "$ref": "#/$defs/auditSummary"
+    },
+    "artifact_manifest": {
+      "$ref": "#/$defs/artifactManifest"
+    },
+    "submission_dossier": {
+      "$ref": "#/$defs/submissionDossier"
+    },
+    "blocking_issues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockingIssue"
+      }
+    }
+  }
+}

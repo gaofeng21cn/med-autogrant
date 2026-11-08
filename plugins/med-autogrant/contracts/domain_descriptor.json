@@ -1,0 +1,93 @@
+{
+  "authority_boundary": {
+    "domain_owns_truth_quality_artifact_memory_and_receipts": true,
+    "domain_truth_owner": "med-autogrant",
+    "opl_can_authorize_quality_or_export": false,
+    "opl_can_write_domain_truth": false,
+    "opl_can_write_memory_body": false
+  },
+  "domain_id": "med-autogrant",
+  "domain_label": "Med Auto Grant",
+  "domain_repo_can_own_generated_surface": false,
+  "generated_surface_owner": "one-person-lab",
+  "package_role": "opl_standard_domain_agent",
+  "schema_version": 1,
+  "dispatch_evidence_projection": {
+    "work_item_id_field": "grant_run_id",
+    "result_collections": []
+  },
+  "standard_agent_interface": {
+    "version": "opl_standard_agent_interface.v1",
+    "workspace_binding": {
+      "locator_surface_kind": "med_autogrant_workspace_input",
+      "default_profile_id": "one_off",
+      "shared_resources": [
+        { "path": "shared/sources", "role": "source_intake" },
+        { "path": "shared/memory", "role": "memory_root" },
+        { "path": "shared/style_system", "role": "style_system" }
+      ],
+      "workspace_kind": "grant_authoring_workspace",
+      "project_kind": "grant_project",
+      "project_collection_label": "deliverables",
+      "default_workspace_id": "grant-workspace",
+      "default_project_id": "grant-001",
+      "required_locator_fields": [
+        "input_path"
+      ],
+      "optional_locator_fields": []
+    },
+    "stage_catalog": {
+      "source_kind": "agent_repo_relative_json",
+      "relative_path": "agent/stages/manifest.json",
+      "items_pointer": "/stages",
+      "field_map": {
+        "stage_id": "stage_id",
+        "display_name": "title",
+        "display_names": "display_names"
+      }
+    },
+    "runtime": {
+      "runtime_domain_id": "medautogrant",
+      "registration_ref": "contracts/generated_surface_handoff.json#/domain_handler_targets"
+    },
+    "progress": {
+      "deliverable_delta_aliases": [
+        "grant_work_progress"
+      ],
+      "platform_delta_aliases": [
+        "platform_evidence_progress"
+      ]
+    },
+    "routing": {
+      "explicit_aliases": [
+        "mag",
+        "medautogrant",
+        "med-autogrant",
+        "grant"
+      ],
+      "workstream_ids": [
+        "grant_ops"
+      ],
+      "intent_signals": [
+        "grant",
+        "proposal",
+        "fundability",
+        "grant_application"
+      ],
+      "ambiguity_policy": "require_explicit_workstream"
+    }
+  },
+  "standard_contract_refs": {
+    "action_catalog": "contracts/action_catalog.json",
+    "agent_lab_handoff": "contracts/agent_lab_handoff.json",
+    "foundry_agent_series": "contracts/foundry_agent_series.json",
+    "foundry_agent_series_policy_release": "contracts/opl-framework/foundry-agent-series-policy-release.json",
+    "functional_privatization_audit": "contracts/functional_privatization_audit.json",
+    "generated_surface_handoff": "contracts/generated_surface_handoff.json",
+    "source_closure_audit": "contracts/source_closure_audit.json",
+    "oma_handoff_refs": "contracts/oma_handoff_refs.json",
+    "pack_compiler_input": "contracts/pack_compiler_input.json",
+    "stage_manifest": "agent/stages/manifest.json"
+  },
+  "surface_kind": "domain_agent_descriptor"
+}

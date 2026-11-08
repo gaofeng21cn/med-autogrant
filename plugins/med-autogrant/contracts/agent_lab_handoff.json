@@ -1,0 +1,58 @@
+{
+  "surface_kind": "mag_agent_lab_handoff.v1",
+  "schema_version": 2,
+  "domain_id": "med-autogrant",
+  "owner": "med-autogrant",
+  "consumer": "opl-meta-agent",
+  "consumer_contract": "agent:evidence",
+  "state": "refs_only_handoff_available",
+  "payload_policy": "refs_only_no_body_material",
+  "accepted_payload_classes": [
+    "domain_owner_receipt_ref",
+    "typed_blocker_ref",
+    "no_regression_evidence_ref",
+    "human_gate_ref",
+    "quality_or_export_receipt_ref"
+  ],
+  "forbidden_payload_classes": [
+    "grant_truth_body",
+    "memory_body",
+    "artifact_body",
+    "package_body",
+    "verdict_body",
+    "runtime_state_body"
+  ],
+  "handoff_refs": {
+    "agent_lab_handoff": {
+      "domain_handler_ref": "src/med_autogrant/product_entry_parts/domain_handler.py",
+      "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+      "live_progress_ref": "contracts/live_stage_run_progress_evidence.json",
+      "production_acceptance_provenance_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+    },
+    "real_target_patch_loop_closeout": {
+      "state": "retired_patch_provenance_not_active_worktree_authority",
+      "current_owner_ref": "contracts/live_stage_run_progress_evidence.json#/typed_blocker",
+      "can_authorize_patch_absorption": false,
+      "can_authorize_domain_ready": false
+    },
+    "typed_blocker": {
+      "accepted_return_shapes": [
+        "domain_owner_receipt_ref",
+        "typed_blocker_ref",
+        "no_regression_evidence_ref"
+      ],
+      "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    }
+  },
+  "authority_boundary": {
+    "oma_consumes_mag_refs_only": true,
+    "oma_can_write_grant_truth": false,
+    "oma_can_write_memory_body": false,
+    "oma_can_write_artifact_body": false,
+    "oma_can_issue_owner_receipt": false,
+    "oma_can_create_typed_blocker": false,
+    "oma_can_declare_quality_ready": false,
+    "oma_can_declare_export_ready": false,
+    "oma_can_declare_domain_ready": false
+  }
+}

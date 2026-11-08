@@ -1,0 +1,751 @@
+{
+  "surface_kind": "opl_standard_agent_capability_map",
+  "schema_version": "standard-agent-capability-map.v1",
+  "domain_id": "med-autogrant",
+  "domain_label": "Med Auto Grant",
+  "owner": "med-autogrant",
+  "state": "active_contract",
+  "schema_ref": "contracts/opl-framework/standard-agent-capability-map.schema.json",
+  "map_ref": "contracts/capability_map.json",
+  "resolver_policy": "resolver_index_only_no_domain_truth",
+  "capability_map_role": "single_source_locator_index_for_stage_prompt_skill_tool_knowledge_gate_eval_refs",
+  "capability_pack": {
+    "pack_id": "med-autogrant.capability_pack.v1",
+    "pack_root_ref": "agent/",
+    "map_ref": "contracts/capability_map.json",
+    "pack_role": "declarative_domain_capability_pack",
+    "capability_pack_can_claim_domain_ready": false
+  },
+  "capabilities": [
+    {
+      "capability_id": "med-autogrant.primary_skill",
+      "surface_role": "primary_skill",
+      "capability_kind": "primary_skill",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/primary_skill/SKILL.md",
+        "role": "standard_opl_primary_skill_source"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "repo_path",
+          "ref": "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+          "role": "codex_plugin_materialized_carrier"
+        },
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/opl_agent_package_manifest.json",
+          "role": "plugin_carrier_boundary"
+        }
+      ],
+      "sync_policy": "repo_local_standard_primary_skill_with_materialized_plugin_carrier",
+      "externalization_reason": "The rich app skill is the canonical standard OPL primary skill source; the plugin path is a byte-identical materialized Codex carrier and does not own MAG truth.",
+      "carrier_projection_contract": {
+        "canonical_source": "agent/primary_skill/SKILL.md",
+        "carrier_skill_ref": "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+        "carrier_materialization": "materialized_full_skill_copy",
+        "codex_install_requires_real_skill_md": true,
+        "plugin_skill_must_remain_real_file": true,
+        "carrier_role": "transport_install_detail_not_agent_membership_or_status",
+        "authority": false,
+        "carrier_can_override_canonical_source": false,
+        "carrier_can_claim_agent_membership_or_status": false,
+        "carrier_is_domain_truth_source": false
+      },
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "primary_skill_quality",
+        "app_skill_boundary_quality"
+      ],
+      "canonical_target_paths": [
+        "agent/primary_skill/SKILL.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "global_codex_skill_registry",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.call-intake.stage_prompt",
+      "surface_role": "stage_prompt",
+      "capability_kind": "stage_prompt",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/prompts/call_and_candidate_intake.md",
+        "role": "stage_prompt_source"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "family_stage_control_plane_prompt_refs"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "stage_path_quality",
+        "stage_prompt_quality"
+      ],
+      "canonical_target_paths": [
+        "agent/prompts/call_and_candidate_intake.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.strategy-intake.professional_skill",
+      "surface_role": "professional_skill",
+      "capability_kind": "professional_skill",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md",
+        "role": "professional_skill_source"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "family_stage_control_plane_skill_refs"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "professional_skill_quality",
+        "grant_strategy_intake_quality"
+      ],
+      "exposure_layer": "repo_internal_professional_skill",
+      "codex_default_exposure": false,
+      "allowed_exposure_scopes": [
+        "domain_runtime_stage"
+      ],
+      "codex_visibility_policy": "not_registered_as_global_codex_skill",
+      "exposure_owner": "med-autogrant",
+      "canonical_target_paths": [
+        "agent/professional_skills/mag-strategy-intake-specialist/SKILL.md"
+      ],
+      "forbidden_surfaces": [
+        "global_codex_skill_registry",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
+      "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
+    },
+    {
+      "capability_id": "med-autogrant.grant-workflow.professional_skill",
+      "surface_role": "professional_skill",
+      "capability_kind": "professional_skill",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md",
+        "role": "professional_skill_source"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "family_stage_control_plane_skill_refs"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "professional_skill_quality",
+        "grant_workflow_quality"
+      ],
+      "exposure_layer": "repo_internal_professional_skill",
+      "codex_default_exposure": false,
+      "allowed_exposure_scopes": [
+        "domain_runtime_stage"
+      ],
+      "codex_visibility_policy": "not_registered_as_global_codex_skill",
+      "exposure_owner": "med-autogrant",
+      "canonical_target_paths": [
+        "agent/professional_skills/mag-grant-workflow-specialist/SKILL.md"
+      ],
+      "forbidden_surfaces": [
+        "global_codex_skill_registry",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
+      "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
+    },
+    {
+      "capability_id": "med-autogrant.shared-scholar-skills.required-dependency",
+      "surface_role": "professional_skill",
+      "capability_kind": "contract_module",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "contracts/scholar_skill_binding_contract.json",
+        "role": "required_consumer_profile_binding_contract"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
+          "role": "required_runtime_dependency"
+        },
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "mag_stage_overlay_skill_refs"
+        }
+      ],
+      "sync_policy": "required_provider_identity_and_callability_no_cross_package_solver",
+      "externalization_reason": "The provider package owns specialist Skill bodies; MAG owns only the required refs-only binding, Stage selection, candidate consumption, and grant authority. Missing or incompatible provider state blocks MAG admission, launch, route, and readiness without blocking unrelated Packages.",
+      "provider_owner": "mas-scholar-skills",
+      "provider_package_id": "mas-scholar-skills",
+      "consumer_profile_id": "mag-medical-grant.v1",
+      "eligible_skill_ids": [
+        "medical-research-lit",
+        "medical-statistical-review",
+        "medical-methodology-planner",
+        "medical-evidence-integrity-reviewer",
+        "medical-evidence-synthesis-and-claim-map",
+        "medical-reference-integrity-auditor"
+      ],
+      "stage_binding_ref": "contracts/scholar_skill_binding_contract.json#/stage_bindings",
+      "direct_route_binding_ref": "contracts/scholar_skill_binding_contract.json#/direct_route_bindings",
+      "availability_policy_ref": "contracts/scholar_skill_binding_contract.json#/availability_policy",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false,
+        "can_gate_mag_install": false,
+        "can_gate_mag_stage_route": false,
+        "can_gate_mag_operational_readiness": false
+      },
+      "improvement_tokens": [
+        "required_professional_skill_binding_quality",
+        "grant_candidate_ref_consumption_quality"
+      ],
+      "exposure_layer": "required_external_professional_skill_dependency",
+      "codex_default_exposure": false,
+      "allowed_exposure_scopes": [
+        "domain_runtime_stage",
+        "direct_authoring_route"
+      ],
+      "codex_visibility_policy": "required_identity_and_callability_before_mag_owner_core",
+      "exposure_owner": "one-person-lab",
+      "canonical_target_paths": [
+        "contracts/scholar_skill_binding_contract.json"
+      ],
+      "forbidden_surfaces": [
+        "copied_provider_skill_bodies",
+        "hard_install_or_runtime_dependency",
+        "typed_blocker_on_provider_gap",
+        "operational_readiness_gate",
+        "mas_agent_runtime",
+        "grant_truth",
+        "fundability_or_quality_or_export_verdict",
+        "owner_receipts",
+        "typed_blockers",
+        "runtime_queue_or_provider_attempt",
+        "domain_ready_claim"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      },
+      "owner_closeout_boundary_ref": "contracts/capability_map.json#/authority_boundary"
+    },
+    {
+      "capability_id": "med-autogrant.domain-affordances.tool_connector",
+      "surface_role": "tool_connector",
+      "capability_kind": "tool_connector",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/tools/domain_affordances.md",
+        "role": "tool_affordance_catalog"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/action_catalog.json",
+          "role": "mag_action_catalog"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_or_opl_connect_when_externalized",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "tool_connector_quality",
+        "grant_affordance_routing"
+      ],
+      "canonical_target_paths": [
+        "agent/tools/domain_affordances.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.grant-strategy.knowledge_pack",
+      "surface_role": "knowledge_pack",
+      "capability_kind": "reference_pack",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/knowledge/grant_strategy_memory.md",
+        "role": "domain_knowledge_pack"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "external_capability_ref",
+          "ref": "opl_generated:product_entry_manifest#/family_stage_control_plane/stages",
+          "role": "family_stage_control_plane_knowledge_refs"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "knowledge_pack_quality",
+        "grant_strategy_memory_quality"
+      ],
+      "canonical_target_paths": [
+        "agent/knowledge/grant_strategy_memory.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.quality.quality_gate",
+      "surface_role": "quality_gate",
+      "capability_kind": "reference_pack",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/quality_gates/quality.md",
+        "role": "quality_gate_ref"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/live_stage_run_progress_evidence.json",
+          "role": "domain_owner_evidence_refs"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "quality_gate_quality",
+        "grant_quality_boundary"
+      ],
+      "canonical_target_paths": [
+        "agent/quality_gates/quality.md"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.live-evidence.eval_suite",
+      "surface_role": "eval_suite",
+      "capability_kind": "contract_module",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "contracts/live_stage_run_progress_evidence.json",
+        "role": "eval_suite_contract"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "contract_ref",
+          "ref": "contracts/live_stage_run_progress_evidence.json",
+          "role": "refs_only_live_evidence_contract"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "repo-owned standard OPL agent capability locator; resolver metadata only, not domain truth or readiness evidence",
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "improvement_tokens": [
+        "eval_suite_quality",
+        "live_evidence_boundary"
+      ],
+      "canonical_target_paths": [
+        "contracts/live_stage_run_progress_evidence.json"
+      ],
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "human_gate_body",
+        "runtime_queue",
+        "quality_or_export_verdict",
+        "domain_readiness_claim"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false
+      }
+    },
+    {
+      "capability_id": "med-autogrant.authority.policy_pack",
+      "surface_role": "policy_pack",
+      "capability_kind": "reference_pack",
+      "canonical_owner": "med-autogrant",
+      "physical_source_ref": {
+        "ref_kind": "repo_path",
+        "ref": "agent/policies/grant-authority-policy.md",
+        "role": "domain_policy_pack"
+      },
+      "runtime_projection_refs": [
+        {
+          "ref_kind": "repo_path",
+          "ref": "agent/policies/grant-authority-policy.md",
+          "role": "policy_pack"
+        }
+      ],
+      "sync_policy": "domain_agent_builtin_refs_only",
+      "externalization_reason": "domain_agent_builtin",
+      "canonical_target_paths": [
+        "agent/policies/grant-authority-policy.md"
+      ],
+      "improvement_tokens": [
+        "policy_pack_quality",
+        "authority_boundary_traceability"
+      ],
+      "stage_refs": [
+        "call_and_candidate_intake",
+        "fundability_strategy",
+        "specific_aims_and_structure",
+        "proposal_authoring",
+        "review_and_rebuttal",
+        "package_and_submit_ready"
+      ],
+      "authority_boundary": {
+        "can_write_domain_truth": false,
+        "can_write_memory_body": false,
+        "can_mutate_artifact_body": false,
+        "can_sign_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_authorize_quality_or_export": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      },
+      "verification_refs": [
+        "rtk ./scripts/verify.sh",
+        "opl:agents-scaffold-validate"
+      ],
+      "forbidden_surfaces": [
+        "domain_truth",
+        "memory_body",
+        "artifact_body",
+        "owner_receipt_body",
+        "typed_blocker_body",
+        "quality_or_export_verdict"
+      ],
+      "owner_closeout_boundary": {
+        "owner": "med-autogrant",
+        "required_return_shapes": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref"
+        ],
+        "can_write_owner_receipt_body": false,
+        "can_create_typed_blocker": false,
+        "can_write_domain_truth": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false
+      }
+    }
+  ],
+  "resolver_index": {
+    "primary_skill_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=primary_skill"
+    ],
+    "stage_prompt_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=stage_prompt"
+    ],
+    "professional_skill_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=professional_skill"
+    ],
+    "required_professional_skill_dependency_refs": [
+      "contracts/capability_map.json#/capabilities?capability_id=med-autogrant.shared-scholar-skills.required-dependency"
+    ],
+    "tool_connector_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=tool_connector"
+    ],
+    "knowledge_pack_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=knowledge_pack"
+    ],
+    "quality_gate_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=quality_gate"
+    ],
+    "eval_suite_refs": [
+      "contracts/capability_map.json#/capabilities?surface_role=eval_suite"
+    ]
+  },
+  "authority_boundary": {
+    "can_write_domain_truth": false,
+    "can_write_memory_body": false,
+    "can_mutate_artifact_body": false,
+    "can_sign_owner_receipt": false,
+    "can_create_typed_blocker": false,
+    "can_authorize_quality_or_export": false,
+    "can_claim_domain_ready": false,
+    "can_claim_production_ready": false,
+    "map_is_resolver_index_only": true,
+    "map_can_be_used_as_domain_truth": false
+  }
+}

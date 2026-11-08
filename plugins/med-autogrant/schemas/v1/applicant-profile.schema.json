@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/applicant-profile.schema.json",
+  "title": "ApplicantProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "applicant_id",
+    "applicant_name",
+    "institution",
+    "career_stage",
+    "research_domains",
+    "methods_stack"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "applicant_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "applicant_name": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "institution": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "career_stage": {
+      "type": "string",
+      "enum": [
+        "phd_candidate",
+        "postdoc",
+        "attending",
+        "faculty",
+        "pi",
+        "other"
+      ]
+    },
+    "research_domains": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "clinical_domains": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "methods_stack": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "training_background": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "strengths": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "constraints": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

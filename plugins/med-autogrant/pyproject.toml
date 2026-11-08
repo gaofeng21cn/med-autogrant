@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "med-autogrant"
+version = "0.3.18"
+description = "Medical grant planning, writing, review, and revision for funding applications."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+authors = [
+  { name = "Gao Feng" }
+]
+dependencies = []
+
+[project.scripts]
+medautogrant = "med_autogrant.cli:entrypoint"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+cache_dir = "/tmp/med-autogrant-pytest-cache"
+markers = [
+  "meta: repo-tracked program control and repository hygiene checks",
+  "smoke: minimal default CLI/product entry health checks",
+  "integration: cross-surface integration checks that are broader than unit contracts",
+  "regression: heavier matrix, provenance oracle, runtime/export, and product regression checks",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9,<10",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["med_autogrant*"]

@@ -1,0 +1,224 @@
+{
+  "surface_kind": "family_action_catalog",
+  "version": "family-action-catalog.v2",
+  "catalog_id": "med_autogrant_action_catalog",
+  "target_domain_id": "med-autogrant",
+  "owner": "med-autogrant",
+  "authority_boundary": {
+    "domain_truth_owner": "med-autogrant",
+    "opl_role": "projection_consumer_only",
+    "write_policy": "no_domain_truth_writes",
+    "opl_can_write_domain_truth": false,
+    "opl_can_write_memory_body": false,
+    "opl_can_mutate_domain_artifact_body": false,
+    "opl_can_authorize_quality_or_export": false,
+    "provider_completion_is_domain_completion": false
+  },
+  "actions": [
+    {
+      "action_id": "open_grant_user_loop",
+      "title": "Open MAG user loop",
+      "summary": "Enter the current MAG grant workflow and continue the same funding-call authoring loop.",
+      "owner": "med-autogrant",
+      "effect": "mutating",
+      "execution_binding": {
+        "kind": "stage_binding",
+        "stage_manifest_ref": "agent/stages/manifest.json"
+      },
+      "input_schema_ref": "contracts/schemas/open-grant-user-loop.input.schema.json",
+      "output_schema_ref": "schemas/v1/grant-user-loop.schema.json",
+      "required_fields": [
+        "input_path",
+        "task_intent"
+      ],
+      "optional_fields": [],
+      "workspace_locator_fields": [
+        "input_path"
+      ],
+      "human_gate_ids": [],
+      "stage_route": {
+        "entry_stage_ref": "call_and_candidate_intake",
+        "required_stage_refs": [
+          "call_and_candidate_intake",
+          "fundability_strategy",
+          "specific_aims_and_structure",
+          "proposal_authoring",
+          "review_and_rebuttal"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "review_and_rebuttal"
+        ],
+        "route_policy": "ai_selected_progress_route"
+      },
+      "supported_surfaces": {
+        "cli": {},
+        "mcp": {
+          "tool_name": "mag_open_grant_user_loop",
+          "descriptor_only": true,
+          "public_runtime": false
+        },
+        "skill": {
+          "command_contract_id": "mag.open_grant_user_loop"
+        },
+        "product_entry": {
+          "action_key": "open_grant_user_loop"
+        },
+        "openai": {
+          "tool_name": "mag_open_grant_user_loop"
+        },
+        "ai_sdk": {
+          "tool_name": "mag_open_grant_user_loop"
+        }
+      },
+      "authority_boundary": {
+        "domain_truth_owner": "med-autogrant",
+        "quality_verdict_owner": "med-autogrant",
+        "artifact_authority_owner": "med-autogrant",
+        "opl_role": "projection_consumer_only",
+        "write_policy": "no_domain_truth_writes",
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_mutate_domain_artifact_body": false,
+        "opl_can_authorize_quality_or_export": false,
+        "provider_completion_is_domain_completion": false
+      }
+    },
+    {
+      "action_id": "build_direct_entry",
+      "title": "Build MAG direct entry",
+      "summary": "Enter proposal authoring directly with the current MAG workspace and task intent.",
+      "owner": "med-autogrant",
+      "effect": "mutating",
+      "execution_binding": {
+        "kind": "stage_binding",
+        "stage_manifest_ref": "agent/stages/manifest.json"
+      },
+      "input_schema_ref": "contracts/schemas/build-direct-entry.input.schema.json",
+      "output_schema_ref": "schemas/v1/grant-direct-entry.schema.json",
+      "required_fields": [
+        "input_path",
+        "task_intent"
+      ],
+      "optional_fields": [],
+      "workspace_locator_fields": [
+        "input_path"
+      ],
+      "human_gate_ids": [],
+      "stage_route": {
+        "entry_stage_ref": "proposal_authoring",
+        "required_stage_refs": [
+          "proposal_authoring"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "proposal_authoring"
+        ],
+        "route_policy": "ai_selected_progress_route"
+      },
+      "supported_surfaces": {
+        "cli": {},
+        "mcp": {
+          "tool_name": "mag_build_direct_entry",
+          "descriptor_only": true,
+          "public_runtime": false
+        },
+        "skill": {
+          "command_contract_id": "mag.build_direct_entry"
+        },
+        "product_entry": {
+          "action_key": "build_direct_entry"
+        },
+        "openai": {
+          "tool_name": "mag_build_direct_entry"
+        },
+        "ai_sdk": {
+          "tool_name": "mag_build_direct_entry"
+        }
+      },
+      "authority_boundary": {
+        "domain_truth_owner": "med-autogrant",
+        "quality_verdict_owner": "med-autogrant",
+        "artifact_authority_owner": "med-autogrant",
+        "opl_role": "projection_consumer_only",
+        "write_policy": "no_domain_truth_writes",
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_mutate_domain_artifact_body": false,
+        "opl_can_authorize_quality_or_export": false,
+        "provider_completion_is_domain_completion": false
+      }
+    },
+    {
+      "action_id": "build_submission_ready_package",
+      "title": "Build MAG submission-ready package",
+      "summary": "Apply MAG package and export authority to materialize a local submission-ready package behind the human export gate.",
+      "owner": "med-autogrant",
+      "effect": "mutating",
+      "execution_binding": {
+        "kind": "stage_binding",
+        "stage_manifest_ref": "agent/stages/manifest.json"
+      },
+      "input_schema_ref": "contracts/schemas/build-submission-ready-package.input.schema.json",
+      "output_schema_ref": "schemas/v1/submission-ready-package.schema.json",
+      "required_fields": [
+        "input_path",
+        "output_dir"
+      ],
+      "optional_fields": [],
+      "workspace_locator_fields": [
+        "input_path"
+      ],
+      "human_gate_ids": [
+        "submission_ready_export_gate"
+      ],
+      "stage_route": {
+        "entry_stage_ref": "package_and_submit_ready",
+        "required_stage_refs": [
+          "package_and_submit_ready"
+        ],
+        "optional_stage_refs": [],
+        "terminal_stage_refs": [
+          "package_and_submit_ready"
+        ],
+        "route_policy": "ai_selected_progress_route"
+      },
+      "supported_surfaces": {
+        "cli": {},
+        "mcp": {
+          "tool_name": "mag_build_submission_ready_package",
+          "descriptor_only": true,
+          "public_runtime": false
+        },
+        "skill": {
+          "command_contract_id": "mag.build_submission_ready_package"
+        },
+        "product_entry": {
+          "action_key": "build_submission_ready_package"
+        },
+        "openai": {
+          "tool_name": "mag_build_submission_ready_package"
+        },
+        "ai_sdk": {
+          "tool_name": "mag_build_submission_ready_package"
+        }
+      },
+      "authority_boundary": {
+        "domain_truth_owner": "med-autogrant",
+        "quality_verdict_owner": "med-autogrant",
+        "artifact_authority_owner": "med-autogrant",
+        "opl_role": "projection_consumer_only",
+        "write_policy": "no_domain_truth_writes",
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_mutate_domain_artifact_body": false,
+        "opl_can_authorize_quality_or_export": false,
+        "provider_completion_is_domain_completion": false
+      }
+    }
+  ],
+  "notes": [
+    "OPL derives CLI, MCP, skill, product-entry, OpenAI, AI SDK, status, and workbench surfaces from this catalog.",
+    "Progress and cockpit are OPL-generated read models, not public MAG action bindings."
+  ]
+}

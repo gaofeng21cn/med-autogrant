@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-person-lab.local/contracts/med-autogrant/actions/build-submission-ready-package.input.schema.json",
+  "title": "Build MAG submission-ready package input",
+  "description": "Inputs accepted by the OPL-hosted MAG package and export-gate action.",
+  "type": "object",
+  "required": [
+    "input_path",
+    "output_dir"
+  ],
+  "properties": {
+    "input_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_dir": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

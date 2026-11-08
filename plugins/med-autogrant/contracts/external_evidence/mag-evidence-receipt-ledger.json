@@ -1,0 +1,56 @@
+{
+  "surface_kind": "mag_external_evidence_receipt_ledger.v1",
+  "surface_id": "mag.external_evidence_receipt_ledger",
+  "domain_id": "med-autogrant",
+  "owner": "med-autogrant",
+  "state": "refs_only_provenance_with_open_live_evidence_gates",
+  "domain_owned_typed_blocker_request_ids": [
+    "live_stage_run_progress",
+    "submission_ready_export_gate",
+    "temporal_provider_long_soak_window"
+  ],
+  "remaining_real_evidence_gap_ids": [
+    "real_opl_hosted_grant_stage_attempt",
+    "submission_ready_human_gate_receipt",
+    "temporal_provider_long_soak_window_evidence",
+    "owner_acceptance_or_production_success_rate_evidence"
+  ],
+  "first_live_production_evidence": {
+    "state": "provenance_only_not_currentness_or_readiness",
+    "owner_receipt_ref": "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08",
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15",
+    "no_regression_ref": "no-regression:mag/owner-chain-live-progress/quality-package-fail-closed/2026-06-15"
+  },
+  "grant_stage_controlled_attempt_closeout": {
+    "state": "typed_blocker_recorded_not_ready_claim",
+    "required_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "no_regression_evidence_ref"
+    ],
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "live_progress_ref": "contracts/live_stage_run_progress_evidence.json"
+  },
+  "owner_chain_live_progress_evidence_lane": {
+    "state": "owner_refs_recorded_with_open_gates",
+    "evidence_ref": "contracts/live_stage_run_progress_evidence.json#/domain_owner_chain_scaleout",
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15",
+    "counts_as_domain_ready": false,
+    "counts_as_production_ready": false
+  },
+  "verification_refs": [
+    "jq empty contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "scripts/verify.sh"
+  ],
+  "authority_boundary": {
+    "repo_tracks_receipt_instance_body": false,
+    "repo_tracks_grant_truth_body": false,
+    "repo_tracks_memory_body": false,
+    "repo_tracks_artifact_body": false,
+    "opl_can_sign_owner_receipt": false,
+    "opl_can_create_typed_blocker": false,
+    "opl_can_authorize_quality_or_export": false,
+    "ledger_can_claim_grant_ready": false,
+    "ledger_can_claim_production_ready": false
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "surface_kind": "mag_production_acceptance_evidence.v1",
+  "surface_id": "mag.production_acceptance.provenance",
+  "domain_id": "med-autogrant",
+  "domain_owner": "med-autogrant",
+  "evidence_tail_status": "domain_owned_typed_blocker",
+  "state": "provenance_only_not_live_progress_or_readiness",
+  "refs": {
+    "current_program_ref": "contracts/runtime-program/current-program.json",
+    "live_stage_run_progress_ref": "contracts/live_stage_run_progress_evidence.json",
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "typed_blocker_refs": [
+      "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15"
+    ]
+  },
+  "closure_evidence": {
+    "state": "typed_blocker_open",
+    "domain_owned_closing_ref": null,
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-15",
+    "accepted_return_shape": "typed_blocker",
+    "typed_blocker_kind": "missing_real_live_stage_run_progress_prerequisites",
+    "counts_as_live_progress": false,
+    "counts_as_readiness": false
+  },
+  "grant_receipt_chain": {
+    "accepted_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "no_regression_evidence_ref"
+    ],
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "provider_completion_counts_as_domain_completion": false
+  },
+  "live_stage_run_progress_tail_policy": {
+    "role": "provenance_only_not_live_owner_closing_ref",
+    "live_progress_source_ref": "contracts/live_stage_run_progress_evidence.json",
+    "domain_owned_closing_ref": null
+  },
+  "authority_boundary": {
+    "opl_can_authorize_grant_domain_ready": false,
+    "opl_can_authorize_fundability_ready": false,
+    "opl_can_authorize_review_ready": false,
+    "opl_can_authorize_submission_ready": false,
+    "provider_completion_equals_domain_ready": false,
+    "structural_conformance_equals_domain_ready": false
+  },
+  "forbidden_claims": [
+    "grant_ready",
+    "fundability_ready",
+    "quality_ready",
+    "export_ready",
+    "submission_ready",
+    "production_ready"
+  ]
+}

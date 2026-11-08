@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/scientific-question-card.schema.json",
+  "title": "ScientificQuestionCard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "question_id",
+    "parent_direction_id",
+    "knowledge_boundary",
+    "unknown_mechanism",
+    "core_question",
+    "falsifiable_statement",
+    "proposed_breakthrough_angle",
+    "why_not_engineering"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "question_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "parent_direction_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "phenomenon": {
+      "type": "string"
+    },
+    "knowledge_boundary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "unknown_mechanism": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "core_question": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "subquestions": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "falsifiable_statement": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "proposed_breakthrough_angle": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "why_not_engineering": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "why_now": {
+      "type": "string"
+    },
+    "linked_evidence_ids": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

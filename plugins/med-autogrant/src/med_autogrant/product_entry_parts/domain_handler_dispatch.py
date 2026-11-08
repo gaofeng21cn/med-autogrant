@@ -1,0 +1,258 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, Mapping
+
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
+)
+from med_autogrant.product_entry_parts.primitives import (
+    TARGET_DOMAIN_ID,
+    _read_json_mapping,
+    _require_nonempty_string,
+    _require_nonempty_string_from_mapping,
+)
+from med_autogrant.product_entry_parts.domain_handler_contract import (
+    ALLOWED_ACTIONS,
+    DOMAIN_HANDLER_ADAPTER_ID,
+    DOMAIN_HANDLER_DISPATCH_KIND,
+    DOMAIN_HANDLER_VERSION,
+)
+from med_autogrant.product_entry_parts.typed_blocker_projection import (
+    build_typed_blocker_projection,
+)
+from med_autogrant.product_entry_parts.owner_receipt_writers import write_owner_receipt_evidence
+from med_autogrant.workspace_types import WorkspaceStateError
+
+
+def dispatch_domain_handler_task(
+    *,
+    task_path: str | Path,
+) -> dict[str, Any]:
+    resolved_task_path = Path(task_path).expanduser().resolve()
+    task = _read_json_mapping(resolved_task_path, context="domain_handler_task")
+    action = _require_nonempty_string_from_mapping(task, "action", context="domain_handler_task")
+    if action not in ALLOWED_ACTIONS:
+        raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
+    input_path = _require_nonempty_string_from_mapping(task, "input_path", context="domain_handler_task")
+    if action == "domain-memory/propose":
+        return _dispatch_domain_memory_proposal(task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "domain-memory/decide":
+        return _dispatch_domain_memory_decision(task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "stage-attempt/closeout":
+        return _dispatch_stage_attempt_closeout(task=task, input_path=input_path, task_path=resolved_task_path)
+    raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
+
+
+def _dispatch_domain_memory_proposal(
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    proposal = build_domain_memory_writeback_proposal(
+        input_path=input_path,
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
+        lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="domain_handler_task"),
+        workspace_root=_require_nonempty_string_from_mapping(task, "workspace_root", context="domain_handler_task"),
+        project_root=_require_nonempty_string_from_mapping(task, "project_root", context="domain_handler_task"),
+        proposal_id=_optional_nonempty_string(task.get("proposal_id")),
+    )
+    return _dispatch_payload(
+        action="domain-memory/propose",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "domain_handler_domain_memory_writeback_proposal_result",
+            "proposal": proposal["domain_memory_writeback_proposal"],
+            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_domain_memory_decision(
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    decision = build_domain_memory_writeback_decision(
+        proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="domain_handler_task"),
+        decision=_require_nonempty_string_from_mapping(task, "decision", context="domain_handler_task"),
+        decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="domain_handler_task"),
+        memory_id=_optional_nonempty_string(task.get("memory_id")),
+    )
+    receipt_evidence = write_domain_memory_receipt_evidence(
+        decision_payload=decision,
+        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
+    )
+    return _dispatch_payload(
+        action="domain-memory/decide",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "domain_handler_domain_memory_writeback_decision_result",
+            "decision": decision["domain_memory_writeback_decision"],
+            "receipt_evidence": receipt_evidence["domain_memory_receipt_evidence"],
+            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_stage_attempt_closeout(
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    closeout_refs = _stage_attempt_closeout_refs(task)
+    receipt_evidence = write_owner_receipt_evidence(
+        input_path=input_path,
+        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
+        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="domain_handler_task"),
+        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
+        receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
+        closeout_refs=closeout_refs,
+    )
+    receipt = receipt_evidence["owner_receipt_evidence"]
+    receipt_refs = _stage_attempt_receipt_refs(receipt)
+    return _dispatch_payload(
+        action="stage-attempt/closeout",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "domain_handler_stage_attempt_closeout_result",
+            "return_shape": receipt["receipt_shape"],
+            "receipt_ref": receipt["receipt_instance_ref"],
+            "receipt_refs": receipt_refs,
+            "closeout_refs": closeout_refs,
+            "source_refs": list(receipt["source_refs"]),
+            "consumed_memory_refs": _optional_string_list(task.get("consumed_memory_refs")),
+            "writeback_receipt_refs": _optional_string_list(task.get("writeback_receipt_refs")),
+            "owner_receipt_evidence": receipt,
+            "write_policy": "runtime_receipt_instance_only_no_repo_write",
+            "typed_blocker": _typed_blocker_for_receipt(
+                receipt,
+                blocker_kind="mag_stage_attempt_owner_receipt_required",
+            ),
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_payload(
+    *,
+    action: str,
+    task: Mapping[str, Any],
+    task_path: Path,
+    input_path: str,
+    status: str,
+    result: Mapping[str, Any],
+    executed_command: str | None,
+) -> dict[str, Any]:
+    return {
+        "ok": True,
+        "command": "domain-handler-dispatch",
+        "domain_handler_dispatch": {
+            "surface_kind": DOMAIN_HANDLER_DISPATCH_KIND,
+            "schema_version": DOMAIN_HANDLER_VERSION,
+            "adapter_id": DOMAIN_HANDLER_ADAPTER_ID,
+            "task_id": _optional_nonempty_string(task.get("task_id")) or f"{action}:{task_path.name}",
+            "action": action,
+            "status": status,
+            "target_domain_id": TARGET_DOMAIN_ID,
+            "caller_boundary": {
+                "direct_handler_owner": TARGET_DOMAIN_ID,
+                "generated_caller_owner": "one-person-lab",
+                "mag_role": "grant_authority_action_target",
+            },
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "task_path": str(task_path),
+            "executed_by_domain_handler": action in ALLOWED_ACTIONS,
+            "executed_command": executed_command,
+            "result": dict(result),
+            "receipt_refs": _receipt_refs_for_task(
+                task=task,
+                action=action,
+                input_path=input_path,
+            ),
+            "guardrails": {
+                "allowed_actions": sorted(ALLOWED_ACTIONS),
+                "domain_truth_owner": TARGET_DOMAIN_ID,
+                "opl_role": "generated_hosted_caller_runtime_and_lifecycle_owner",
+            },
+        },
+    }
+
+
+def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str) -> dict[str, Any] | None:
+    return build_typed_blocker_projection(receipt, blocker_kind=blocker_kind)
+
+
+def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "ai_route_policy_ref": _optional_nonempty_string(task.get("ai_route_policy_ref"))
+        or "/product_entry_manifest/ai_route_policy",
+        "domain_handler_stage_attempt_closeout_action": "stage-attempt/closeout",
+    }
+
+
+def _stage_attempt_receipt_refs(receipt: Mapping[str, Any]) -> dict[str, Any]:
+    refs = {
+        "owner_receipt_ref": receipt["receipt_instance_ref"],
+        "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
+        "source_ref": receipt["source_ref"],
+        "opl_consumes_receipt_ref_only": True,
+    }
+    if receipt.get("receipt_shape") == "no_regression_evidence":
+        refs["no_regression_evidence_ref"] = receipt["receipt_instance_ref"]
+    return refs
+
+
+def _optional_nonempty_string(value: Any) -> str | None:
+    if value is None:
+        return None
+    return _require_nonempty_string(value, field_name="task_id", context="domain_handler_task")
+
+
+def _optional_string_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise WorkspaceStateError("domain_handler_task refs 必须是 string list。")
+    refs: list[str] = []
+    for item in value:
+        refs.append(_require_nonempty_string(item, field_name="ref", context="domain_handler_task"))
+    return refs
+
+
+def _receipt_refs_for_task(
+    *,
+    task: Mapping[str, Any],
+    action: str,
+    input_path: str,
+) -> dict[str, Any]:
+    task_id = _optional_nonempty_string(task.get("task_id")) or f"{action}:ad-hoc"
+    return {
+        "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+        "domain_handler_dispatch_receipt_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+            f"domain_handler-dispatch/{task_id}.json"
+        ),
+        "input_path": str(Path(input_path).expanduser().resolve()),
+        "write_policy": "receipt_ref_only_no_domain_truth_mutation",
+        "opl_consumes_receipt_ref_only": True,
+    }
