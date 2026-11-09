@@ -4,7 +4,9 @@ import re
 from pathlib import Path
 from typing import Any, Mapping
 
+import opl_framework
 from opl_framework.json_io import write_json_object_atomic
+from opl_framework.schema_validation import SchemaSubsetValidator
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
@@ -14,6 +16,7 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string_from_mapping,
 )
 from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.schema_loader import SchemaStore
 
 
 DOMAIN_MEMORY_WRITEBACK_PROPOSAL_KIND = "mag_domain_memory_writeback_proposal"
@@ -163,6 +166,25 @@ def build_domain_memory_writeback_decision(
         "command": "domain-memory-writeback-decision",
         "domain_memory_writeback_decision": decision_payload,
     }
+
+
+def export_framework_knowledge_writeback_proposal(*, proposal_path: str | Path) -> dict[str, Any]:
+    """Export the exact Framework proposal contract, without MAG envelope metadata."""
+    payload = _read_json_mapping(Path(proposal_path).expanduser().resolve(), context="domain_memory_writeback_proposal")
+    proposal = _require_proposal_body(payload)
+    framework_root = Path(opl_framework.__file__).resolve().parents[2]
+    store = SchemaStore(root=framework_root / "contracts" / "opl-framework")
+    schema_file = "knowledge-writeback-proposal.schema.json"
+    try:
+        schema = store.load_json(schema_file)
+        exported = {field: proposal[field] for field in schema["required"] if field in proposal}
+        issues = SchemaSubsetValidator(store).validate(exported, schema_file)
+    except (OSError, ValueError, KeyError) as exc:
+        raise WorkspaceStateError("Framework knowledge writeback proposal contract is unavailable.") from exc
+    if issues:
+        details = "; ".join(f"{issue.path}: {issue.message}" for issue in issues)
+        raise WorkspaceStateError(f"Framework knowledge writeback proposal is invalid: {details}")
+    return exported
 
 
 def write_domain_memory_receipt_evidence(

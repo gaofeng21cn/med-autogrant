@@ -83,6 +83,19 @@ MAG proposal/decision 命令只产生候选和语义决定，receipt writer 记�
 
 跨仓知识归属、来源与记忆规则以 [Framework SSOT](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/policies/knowledge-source-and-memory-policy.md) 为准；本页持有 MAG strategy memory 的领域分工。`target_scope` 只声明建议归属，不授予读取或写入该范围的权限；真实权限与主源位置由已授权来源登记决定。
 
+## 写回提案交接
+
+`authority memory-proposal` 输出 MAG envelope，含 stage、知识 ID、执行项目和领域决定信息。交给 Framework 前，运行 `authority memory-export`：它从当前 Framework 安装读取 `knowledge-writeback-proposal.schema.json`，按正式合同校验并只输出六字段 JSON，可直接用作 `opl knowledge propose --proposal` 的输入。导出不写知识正文，也不表示接受决定。
+
+例如 `mag-proposal.json` 是已保存的 `authority memory-proposal --json` 输出，`replacement.md` 是待审阅的完整替换正文，`grant.reviewer-risk-framing` 已在工作区授权来源登记中。来源须启用 `writable`，对应 grant 的 `write_domains` 明确包含 `med-autogrant`；读取权限不自动授予写入权限。
+
+```bash
+medautogrant authority memory-export --proposal /private/task/mag-proposal.json --json > /private/task/framework-proposal.json
+opl knowledge propose --workspace /private/grant-workspace --project /private/grant-workspace/projects/grant-001 --domain med-autogrant --id grant.reviewer-risk-framing --proposal /private/task/framework-proposal.json --body /private/task/replacement.md --json
+```
+
+后续以 `knowledge propose` 返回的 proposal ID 进入 Framework `knowledge review` 和 `knowledge apply`，精确绑定本次来源版本与替换正文。MAG 的语义接受记录可作为审阅依据，不能替代 Framework 对该不可变提案的接受记录。此接口处理 owner、topic、project 来源；product 方法更新通过 Agent 源码审阅、catalog 摘要更新与发布完成，不能通过私人来源写回接口修改产品包。
+
 ## 非目标
 
 - cross-funder recipe engine；

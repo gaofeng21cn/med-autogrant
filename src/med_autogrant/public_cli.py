@@ -38,6 +38,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "domain-handler-dispatch": ("domain-handler", "dispatch"),
     "product-domain-memory-proposal": ("authority", "memory-proposal"),
     "product-domain-memory-decision": ("authority", "memory-decision"),
+    "product-domain-memory-export": ("authority", "memory-export"),
     "product-domain-memory-receipt-evidence": ("authority", "memory-receipt-evidence"),
     "product-owner-receipt-evidence": ("authority", "owner-receipt-evidence"),
     "execute-strategy-authoring-pass": ("pass", "strategy-authoring"),

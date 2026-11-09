@@ -11,6 +11,7 @@ from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_d
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
+    export_framework_knowledge_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
 from med_autogrant.product_entry_parts.owner_receipt_writers import (
@@ -43,6 +44,10 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
     "product-domain-memory-decision": DirectCommandSpec(
         "生成 MAG-owned domain memory accept/reject decision projection。",
         ("proposal_path", "decision", "decision_reason"),
+    ),
+    "product-domain-memory-export": DirectCommandSpec(
+        "导出已校验的 Framework 六字段 knowledge writeback proposal JSON。",
+        ("proposal_path",),
     ),
     "product-domain-memory-receipt-evidence": DirectCommandSpec(
         "把 MAG-owned domain memory accept/reject decision 写成 runtime receipt evidence。",
@@ -103,6 +108,8 @@ def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
             decision=values["decision"],
             decision_reason=values["decision_reason"],
         )
+    if command == "product-domain-memory-export":
+        return export_framework_knowledge_writeback_proposal(proposal_path=values["proposal_path"])
     if command == "product-domain-memory-receipt-evidence":
         return write_domain_memory_receipt_evidence(
             decision_payload=values["decision_payload"],

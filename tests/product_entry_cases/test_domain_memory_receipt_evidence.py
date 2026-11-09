@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import tempfile
+from contextlib import redirect_stdout
+from io import StringIO
 
 import json
 import unittest
@@ -10,9 +12,11 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
+    export_framework_knowledge_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.cli import main
 
 
 CRITIQUE_EXAMPLE_PATH = (
@@ -183,7 +187,27 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             self.assertEqual(source.read_text(encoding="utf-8"), "Existing canonical team knowledge.")
             self.assertFalse((project / "memory").exists())
 
+            proposal_path = self._write_proposal(payload)
+            stdout = StringIO()
+            with redirect_stdout(stdout):
+                exit_code = main(["authority", "memory-export", "--proposal", str(proposal_path), "--json"])
+            self.assertEqual(exit_code, 0)
+            exported = json.loads(stdout.getvalue())
+            self.assertEqual(set(exported), {
+                "source_refs", "target_scope", "content_kind", "proposed_rule_or_mechanism",
+                "evidence_class", "review_requirement",
+            })
+            self.assertEqual(exported["target_scope"], {"kind": "topic", "id": "team.grant-strategy"})
+            self.assertEqual(exported["proposed_rule_or_mechanism"], "Refine the grant-topic reviewer strategy.")
+            self.assertEqual(source.read_text(encoding="utf-8"), "Existing canonical team knowledge.")
+
+            proposal["target_scope"] = {"kind": "product", "id": "med-autogrant"}
+            with self.assertRaisesRegex(WorkspaceStateError, "Framework knowledge writeback proposal is invalid"):
+                export_framework_knowledge_writeback_proposal(proposal_path=self._write_proposal(payload))
+
             proposal["target_scope"] = {"kind": "topic", "id": "team.grant-strategy", "root": str(workspace)}
+            with self.assertRaisesRegex(WorkspaceStateError, "Framework knowledge writeback proposal is invalid"):
+                export_framework_knowledge_writeback_proposal(proposal_path=self._write_proposal(payload))
             with self.assertRaisesRegex(WorkspaceStateError, "target_scope requires kind and id"):
                 build_domain_memory_writeback_decision(
                     proposal_path=self._write_proposal(payload),
