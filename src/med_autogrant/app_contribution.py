@@ -64,9 +64,10 @@ def review_notes(input_path: str | Path, revision: str | None = None) -> list[di
     for path in sorted(root.glob("*.json")) if root.is_dir() else []:
         if path.is_symlink():
             raise WorkspaceStateError("审阅意见文件不能为符号链接。")
-        note = _object(path)
+        note, artifact_hash = _snapshot(path)
         if note.get("source_ref") == str(source):
-            notes.append({**note, "artifact_ref": str(path), "matches_current_revision": note.get("revision") == revision})
+            notes.append({**note, "artifact_ref": str(path), "artifact_hash": artifact_hash,
+                          "matches_current_revision": note.get("revision") == revision})
     return notes
 
 
@@ -78,9 +79,10 @@ def current_review_feedback(input_path: str | Path, document: dict[str, Any]) ->
     source = _source(candidate)
     if not _notes_root(source).is_dir():
         return []
-    if _object(source) != document:
+    current, revision = _snapshot(source)
+    if current != document:
         raise WorkspaceStateError("审阅输入已变化，请重新读取原申请后继续。")
-    return [note for note in review_notes(source) if note["matches_current_revision"]
+    return [note for note in review_notes(source, revision) if note["matches_current_revision"]
             and note.get("workspace_id") == document.get("workspace_id")
             and note.get("grant_run_id") == document.get("grant_run_id")]
 
@@ -194,5 +196,19 @@ def read_contribution(root: Path, value: dict[str, Any], view: str) -> dict[str,
             "review_notes": review_notes(source, revision), "mentor_critiques": document.get("mentor_critiques", []),
             "revision_plans": document.get("revision_plans", []), "actions": [{"action_ref": NOTE_ACTION, "input": defaults}],
             "next_action": {"title": "审阅意见交回当前基金任务", "summary": "记录意见后在原任务继续；下一次 critique 读取当前版本意见。"}}
+    if identity:
+        item["work_item_identity"] = dict(identity)
+        item["read_input"]["work_item_identity"] = dict(identity)
+        item["review_context"] = {
+            "work_item_identity": dict(identity), "artifact_refs": [ref],
+            "artifact_hashes": [revision], "revision": revision, "source_refs": [str(source)],
+        }
+        for note in item["review_notes"]:
+            note_ref = str(Path(note["artifact_ref"]).relative_to(root))
+            note["review_context"] = {
+                "work_item_identity": dict(identity), "artifact_refs": [ref, note_ref],
+                "artifact_hashes": [note["revision"], note["artifact_hash"]],
+                "revision": note["revision"], "source_refs": [str(source)],
+            }
     return {"state": "ready", "data": {"items": [item], "command_inputs": {NOTE_ACTION: {"input_schema": NOTE_SCHEMA}},
             "domain_quality_approved": False}}

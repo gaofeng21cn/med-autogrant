@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from unittest.mock import patch
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -118,3 +120,49 @@ def test_source_and_carrier_commands_share_owner_and_no_ui_cli(workspace: Path) 
                              input=json.dumps({**value, 'workspace_id': 'bad'}), text=True, capture_output=True, env=env, check=True)
     assert json.loads(invalid.stdout)['ok'] is False
     assert json.loads(invalid.stdout)['ref'] == NOTE_ACTION
+
+
+def test_handoff_context_binds_supplied_identity_and_exact_source_and_note(workspace: Path) -> None:
+    identity = {"agent_id": "mag", "domain_id": "med-autogrant", "work_item_id": "nsfc-demo-001",
+                "domain_work_item_id": "nsfc-demo-001", "work_item_scope_id": "scope-mag-demo",
+                "identity_state": "resolved"}
+    saved = record(workspace, note_input(workspace))
+    item = read_contribution(workspace, {"work_item_identity": identity}, "route")["data"]["items"][0]
+    assert item["read_input"]["work_item_identity"] == identity
+    assert item["review_context"]["work_item_identity"] == identity
+    assert item["review_context"]["artifact_refs"] == ["workspace.json"]
+    context = item["review_notes"][0]["review_context"]
+    assert context["work_item_identity"] == identity
+    assert context["artifact_refs"] == ["workspace.json", "runtime/review-feedback/review-1.json"]
+    assert context["artifact_hashes"] == [
+        "sha256:" + hashlib.sha256((workspace / ref).read_bytes()).hexdigest()
+        for ref in context["artifact_refs"]]
+    assert saved["artifact_ref"] == str(workspace / context["artifact_refs"][1])
+    assert "work_item_identity" not in saved["review_context"]
+    assert "review_context" not in read_contribution(workspace, {}, "route")["data"]["items"][0]
+
+
+def test_critique_feedback_keeps_the_already_read_candidate_during_source_switch(workspace: Path) -> None:
+    from med_autogrant import app_contribution as owner
+
+    source = workspace / "workspace.json"
+    original = json.loads(source.read_text())
+    first = record(workspace, note_input(workspace))
+    old_snapshot = owner._snapshot
+    switched = False
+
+    def switch_after_snapshot(path: Path):
+        nonlocal switched
+        snapshot = old_snapshot(path)
+        if path == source and not switched:
+            switched = True
+            newer = json.loads(source.read_text())
+            newer["application_drafts"][0]["version_label"] = "new-candidate"
+            source.write_text(json.dumps(newer))
+            record(workspace, {**note_input(workspace, "new-note"), "note": "仅对新版本的意见"})
+        return snapshot
+
+    with patch.object(owner, "_snapshot", side_effect=switch_after_snapshot):
+        feedback = current_review_feedback(source, original)
+    assert [note["artifact_ref"] for note in feedback] == [first["artifact_ref"]]
+    assert all(note["note"] != "仅对新版本的意见" for note in feedback)
