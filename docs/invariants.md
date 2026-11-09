@@ -51,7 +51,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
   carrier 执行，Framework 只聚合 fresh readback 和动作，App 只消费投影。
 - 通用 source fetch 调用 OPL HTTPS transport；MAG 持有 exact official URL allowlist、funding User-Agent 和领域解析语义。
 - MAG 不写 OPL stage attempt/current/terminal state，不拥有 Temporal worker，也不把 bounded controller 扩成 durable loop。
-- Generated caller 只能回到 MAG action target；不能读取 grant/memory/artifact/package body。
+- Generated caller 只能回到 MAG action target；公开接口与投影不携带 grant/memory/artifact/package body。获授权的私有阶段上下文由 Framework 按来源绑定冻结知识正文，不改变 MAG 语义 authority。
 
 ## Source 与状态
 

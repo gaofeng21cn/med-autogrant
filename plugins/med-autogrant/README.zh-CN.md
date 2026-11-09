@@ -41,6 +41,8 @@ opl packages status --package-id mag --json
 
 MAG 持有基金判断、artifact/package、策略记忆决定和 owner receipt；OPL 持有通用 runtime、executor transport、generated action/status 和恢复，App 消费这些表面。实现与未闭合证据见[状态](./docs/status.md)，不能从仓库版本推导运行结论。
 
+个人与团队知识继续在既有 Obsidian 等 Markdown 资料库维护；没有个人库时，普通工作目录承担同样的正文主源。MAG 按需绑定用户、主题和项目来源，Framework 冻结每个阶段实际使用的版本。通用产品方法随包维护，经接受的经验写回其唯一原文，具体规则见[知识政策](./docs/references/grant_strategy_memory_policy.md)。
+
 - [项目范围](./docs/project.md)
 - [文档与验证](./docs/README.md)
 - [架构](./docs/architecture.md)

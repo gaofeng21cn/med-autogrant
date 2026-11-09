@@ -28,12 +28,14 @@
       "input_schema_ref": "contracts/schemas/open-grant-user-loop.input.schema.json",
       "output_schema_ref": "schemas/v1/grant-user-loop.schema.json",
       "required_fields": [
+        "workspace_root",
+        "project_id",
         "input_path",
         "task_intent"
       ],
       "optional_fields": [],
       "workspace_locator_fields": [
-        "input_path"
+        "workspace_root"
       ],
       "human_gate_ids": [],
       "stage_route": {
@@ -82,6 +84,12 @@
         "opl_can_mutate_domain_artifact_body": false,
         "opl_can_authorize_quality_or_export": false,
         "provider_completion_is_domain_completion": false
+      },
+      "execution_scope": {
+        "kind": "work_item",
+        "alias_fields": [
+          "project_id"
+        ]
       }
     },
     {
@@ -97,12 +105,14 @@
       "input_schema_ref": "contracts/schemas/build-direct-entry.input.schema.json",
       "output_schema_ref": "schemas/v1/grant-direct-entry.schema.json",
       "required_fields": [
+        "workspace_root",
+        "project_id",
         "input_path",
         "task_intent"
       ],
       "optional_fields": [],
       "workspace_locator_fields": [
-        "input_path"
+        "workspace_root"
       ],
       "human_gate_ids": [],
       "stage_route": {
@@ -147,6 +157,12 @@
         "opl_can_mutate_domain_artifact_body": false,
         "opl_can_authorize_quality_or_export": false,
         "provider_completion_is_domain_completion": false
+      },
+      "execution_scope": {
+        "kind": "work_item",
+        "alias_fields": [
+          "project_id"
+        ]
       }
     },
     {
@@ -162,12 +178,14 @@
       "input_schema_ref": "contracts/schemas/build-submission-ready-package.input.schema.json",
       "output_schema_ref": "schemas/v1/submission-ready-package.schema.json",
       "required_fields": [
+        "workspace_root",
+        "project_id",
         "input_path",
         "output_dir"
       ],
       "optional_fields": [],
       "workspace_locator_fields": [
-        "input_path"
+        "workspace_root"
       ],
       "human_gate_ids": [
         "submission_ready_export_gate"
@@ -214,6 +232,12 @@
         "opl_can_mutate_domain_artifact_body": false,
         "opl_can_authorize_quality_or_export": false,
         "provider_completion_is_domain_completion": false
+      },
+      "execution_scope": {
+        "kind": "work_item",
+        "alias_fields": [
+          "project_id"
+        ]
       }
     }
   ],

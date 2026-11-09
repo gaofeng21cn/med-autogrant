@@ -11,6 +11,7 @@ from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_d
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
+    export_framework_knowledge_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
 from med_autogrant.product_entry_parts.owner_receipt_writers import (
@@ -36,13 +37,17 @@ DIRECT_CLI_COMMANDS: dict[str, DirectCommandSpec] = {
     ),
     "product-domain-memory-proposal": DirectCommandSpec(
         "生成 MAG-owned domain memory writeback proposal projection。",
-        ("input_path", "workspace_root", "project_root", "stage_id", "source_ref", "lesson_summary"),
+        ("input_path", "workspace_root", "project_root", "stage_id", "source_ref", "lesson_summary",
+         "knowledge_id", "scope_kind", "scope_id", "content_kind", "evidence_class", "review_requirement"),
         ("proposal_id",),
     ),
     "product-domain-memory-decision": DirectCommandSpec(
         "生成 MAG-owned domain memory accept/reject decision projection。",
         ("proposal_path", "decision", "decision_reason"),
-        ("memory_id",),
+    ),
+    "product-domain-memory-export": DirectCommandSpec(
+        "导出已校验的 Framework 六字段 knowledge writeback proposal JSON。",
+        ("proposal_path",),
     ),
     "product-domain-memory-receipt-evidence": DirectCommandSpec(
         "把 MAG-owned domain memory accept/reject decision 写成 runtime receipt evidence。",
@@ -87,6 +92,12 @@ def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
             stage_id=values["stage_id"],
             source_ref=values["source_ref"],
             lesson_summary=values["lesson_summary"],
+            knowledge_id=values["knowledge_id"],
+            scope_kind=values["scope_kind"],
+            scope_id=values["scope_id"],
+            content_kind=values["content_kind"],
+            evidence_class=values["evidence_class"],
+            review_requirement=values["review_requirement"],
             workspace_root=values["workspace_root"],
             project_root=values["project_root"],
             proposal_id=values.get("proposal_id"),
@@ -96,8 +107,9 @@ def handle_direct_command(args: argparse.Namespace) -> dict[str, Any]:
             proposal_path=values["proposal_path"],
             decision=values["decision"],
             decision_reason=values["decision_reason"],
-            memory_id=values.get("memory_id"),
         )
+    if command == "product-domain-memory-export":
+        return export_framework_knowledge_writeback_proposal(proposal_path=values["proposal_path"])
     if command == "product-domain-memory-receipt-evidence":
         return write_domain_memory_receipt_evidence(
             decision_payload=values["decision_payload"],

@@ -41,6 +41,8 @@ Start a new task after installation to load the professional skills. Package ins
 
 MAG owns grant judgment, artifacts/packages, strategy-memory decisions, and owner receipts. OPL owns generic runtime, executor transport, generated actions/status, and recovery; the App consumes those surfaces. Implementation and open evidence are described in [status](./docs/status.md), not inferred from the repository version.
 
+Personal and team knowledge stays in its existing Markdown library, including Obsidian, or in ordinary workspace files when no library is used. MAG binds the relevant owner, topic and project sources; Framework freezes the versions consumed by each stage. Product methods remain in the package, and accepted lessons return to their one canonical source. See the [knowledge policy](./docs/references/grant_strategy_memory_policy.md).
+
 - [Project scope](./docs/project.md)
 - [Documentation and verification](./docs/README.md)
 - [Architecture](./docs/architecture.md)

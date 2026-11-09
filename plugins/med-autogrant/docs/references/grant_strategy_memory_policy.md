@@ -73,11 +73,28 @@ Memory 应小批量、按 stage 检索：
 
 OPL 可以索引 memory refs、携带 stage knowledge refs、展示 consumed-memory provenance、路由 writeback receipts。OPL 不取得 MAG grant strategy 的语义 authority、fundability judgment、authoring quality verdict 或 submission-ready export authority。
 
-MAG 保留 memory body、accept/reject decision、writeback receipt、fundability/quality 影响判断和 owner receipt。通用策略正文在 agent/knowledge/，由统一 catalog 管理。团队经验进入 workspace 的 shared/memory/；项目经验进入授权项目的 memory/；当前 call 要求进入项目 state/。三者各用 opl_durable_knowledge_catalog.json。OPL 为 StageRun 绑定受控正文快照，公开投影只含 refs。
+MAG 保留策略正文的领域判断、accept/reject decision、fundability/quality 影响判断和 owner receipt。通用方法属于 product，用户或团队政策属于 owner，跨申请持续复用的研究方向与基金经验属于 topic，单次申请的设计和决定属于 project。`content_kind` 另行区分 mechanism、policy、state 和 decision；当前 call 要求是带时点的 state，不再是一种与项目并列的物理记忆层。
 
-MAG proposal/decision 命令要求明确 workspace 与 project 根，只产生候选和语义决定，receipt writer 只记录决定。接受不表示知识已写入：owner 需在目标 Markdown 与统一目录中应用并校验，才可由 OPL 召回。跨项目推广需另行审阅，不自动写入 Agent 包。
+用户已有 Obsidian 或其他 Markdown 资料库时，原正文继续由其既有目录维护，MAG 按授权绑定来源；没有个人库时，工作区普通 Markdown 直接承担正文主源。一个任务可同时使用个人库中的团队约束、研究主题经验与项目目录中的申请决策。目录路径不定义知识身份，不生成第二套可编辑个人记忆，也不强制中间全文投影。原始申请材料和不可再生的分析产物仍留业务工作区。
 
-跨仓 memory transport 与索引规则从 [Framework 文档](https://github.com/gaofeng21cn/one-person-lab/tree/main/docs)读取；本页持有 MAG strategy memory 的领域分工。
+OPL 提供共同的来源登记、版本与权限校验、有效性过滤、冻结快照和机械写回。生产、审阅与修复消费同一份阶段快照；公开投影只含 refs。来源改变、过期或撤权后，旧摘要和旧快照不能继续作为新任务的当前事实；申请人资格、call 截止与其他行动关键约束在相关行动前重新核验。可选策略经验缺失只形成质量缺口，必需事实缺失则阻断依赖它的决定。
+
+MAG proposal/decision 命令只产生候选和语义决定，receipt writer 记录决定。接受后，由有权维护者通过 Framework 共用写回能力应用到唯一原文，并回读来源版本和写回回执；接受记录不等于正文已持久化。跨项目或产品推广需明确目标范围与重新审阅，不自动把私人经验写入 Agent 包。用户直接编辑原文时，由共同来源机制识别差异并按已有授权复核，不要求用户手工计算哈希。
+
+跨仓知识归属、来源与记忆规则以 [Framework SSOT](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/policies/knowledge-source-and-memory-policy.md) 为准；本页持有 MAG strategy memory 的领域分工。`target_scope` 只声明建议归属，不授予读取或写入该范围的权限；真实权限与主源位置由已授权来源登记决定。
+
+## 写回提案交接
+
+`authority memory-proposal` 输出 MAG envelope，含 stage、知识 ID、执行项目和领域决定信息。交给 Framework 前，运行 `authority memory-export`：它从当前 Framework 安装读取 `knowledge-writeback-proposal.schema.json`，按正式合同校验并只输出六字段 JSON，可直接用作 `opl knowledge propose --proposal` 的输入。导出不写知识正文，也不表示接受决定。
+
+例如 `mag-proposal.json` 是已保存的 `authority memory-proposal --json` 输出，`replacement.md` 是待审阅的完整替换正文，`grant.reviewer-risk-framing` 已在工作区授权来源登记中。来源须启用 `writable`，对应 grant 的 `write_domains` 明确包含 `med-autogrant`；读取权限不自动授予写入权限。
+
+```bash
+medautogrant authority memory-export --proposal /private/task/mag-proposal.json --json > /private/task/framework-proposal.json
+opl knowledge propose --workspace /private/grant-workspace --project /private/grant-workspace/projects/grant-001 --domain med-autogrant --id grant.reviewer-risk-framing --proposal /private/task/framework-proposal.json --body /private/task/replacement.md --json
+```
+
+后续以 `knowledge propose` 返回的 proposal ID 进入 Framework `knowledge review` 和 `knowledge apply`，精确绑定本次来源版本与替换正文。MAG 的语义接受记录可作为审阅依据，不能替代 Framework 对该不可变提案的接受记录。此接口处理 owner、topic、project 来源；product 方法更新通过 Agent 源码审阅、catalog 摘要更新与发布完成，不能通过私人来源写回接口修改产品包。
 
 ## 非目标
 

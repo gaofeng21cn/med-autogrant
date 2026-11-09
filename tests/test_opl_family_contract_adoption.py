@@ -142,6 +142,7 @@ def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
             "owner",
             "effect",
             "execution_binding",
+            "execution_scope",
             "input_schema_ref",
             "output_schema_ref",
             "required_fields",
@@ -157,6 +158,9 @@ def test_hosted_action_stage_routes_match_manifest_action_coverage() -> None:
             "kind": "stage_binding",
             "stage_manifest_ref": "agent/stages/manifest.json",
         }
+        assert action["execution_scope"] == {"kind": "work_item", "alias_fields": ["project_id"]}
+        assert {"workspace_root", "project_id"} <= set(action["required_fields"])
+        assert action["workspace_locator_fields"] == ["workspace_root"]
         assert set(action["supported_surfaces"]) == {
             "cli",
             "mcp",

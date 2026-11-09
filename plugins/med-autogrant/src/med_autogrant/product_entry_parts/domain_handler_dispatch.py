@@ -57,6 +57,12 @@ def _dispatch_domain_memory_proposal(
         stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
         source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
         lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="domain_handler_task"),
+        knowledge_id=_require_nonempty_string_from_mapping(task, "knowledge_id", context="domain_handler_task"),
+        scope_kind=_require_nonempty_string_from_mapping(task, "scope_kind", context="domain_handler_task"),
+        scope_id=_require_nonempty_string_from_mapping(task, "scope_id", context="domain_handler_task"),
+        content_kind=_require_nonempty_string_from_mapping(task, "content_kind", context="domain_handler_task"),
+        evidence_class=_require_nonempty_string_from_mapping(task, "evidence_class", context="domain_handler_task"),
+        review_requirement=_require_nonempty_string_from_mapping(task, "review_requirement", context="domain_handler_task"),
         workspace_root=_require_nonempty_string_from_mapping(task, "workspace_root", context="domain_handler_task"),
         project_root=_require_nonempty_string_from_mapping(task, "project_root", context="domain_handler_task"),
         proposal_id=_optional_nonempty_string(task.get("proposal_id")),
@@ -70,7 +76,7 @@ def _dispatch_domain_memory_proposal(
         result={
             "surface_kind": "domain_handler_domain_memory_writeback_proposal_result",
             "proposal": proposal["domain_memory_writeback_proposal"],
-            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+            "write_policy": "owner_decision_then_framework_authorized_source_writeback",
         },
         executed_command=None,
     )
@@ -86,7 +92,6 @@ def _dispatch_domain_memory_decision(
         proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="domain_handler_task"),
         decision=_require_nonempty_string_from_mapping(task, "decision", context="domain_handler_task"),
         decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="domain_handler_task"),
-        memory_id=_optional_nonempty_string(task.get("memory_id")),
     )
     receipt_evidence = write_domain_memory_receipt_evidence(
         decision_payload=decision,
@@ -102,7 +107,7 @@ def _dispatch_domain_memory_decision(
             "surface_kind": "domain_handler_domain_memory_writeback_decision_result",
             "decision": decision["domain_memory_writeback_decision"],
             "receipt_evidence": receipt_evidence["domain_memory_receipt_evidence"],
-            "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+            "write_policy": "owner_decision_then_framework_authorized_source_writeback",
         },
         executed_command=None,
     )

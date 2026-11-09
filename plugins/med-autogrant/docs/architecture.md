@@ -36,16 +36,20 @@ Framework 聚合 `opl packages install|update|uninstall mag` 动作和 carrier r
 
 [domain descriptor](../contracts/domain_descriptor.json) 声明 workspace locator/topology、runtime identity/registration、progress alias 和 routing signal。Hosted actions 来自 closed [action catalog](../contracts/action_catalog.json) 的 `stage_binding` 与 exact input schemas；用户面详见[产品入口](./product/README.md)。
 
+Hosted action 同时要求正式 `workspace_root` 与 `project_id`；Framework 通过 `workspace_index.json#/projects` 解析项目根，绑定该项目可用的知识来源。`input_path` 仍是申请材料输入，不替代工作区或项目身份。知识提案的 `target_scope` 表示建议归属；它不能改变本次执行绑定或授予额外来源权限。
+
 Repo-local CLI 由声明式 parser metadata 与显式静态 dispatch 组成，最终调用同一 MAG authority target。`domain-handler export` 只输出 workspace identity/locator、action/Stage/handoff 与 authority/receipt refs；`domain-handler dispatch` 的允许动作由 [current-program](../contracts/runtime-program/current-program.json) 和 [handler contract](../src/med_autogrant/product_entry_parts/domain_handler_contract.py)持有，当前为 memory propose、memory decide 和 Stage closeout。
 
 MAG 只构造 grant prompt/domain payload 并解析 typed closeout。所有 executor request 经 `opl_framework.executor_client.run_agent_execution_request`；临时请求文件、subprocess、timeout/cleanup 和 canonical receipt envelope 由 OPL 持有。MAG 构建只收集 `med_autogrant*`，验证环境经 clean runner 定位 Framework helpers。Funding source 也调用 `opl_framework.source_transport.fetch_text`；MAG 持有 NIH/NSFC 官方 URL allowlist、User-Agent、HTML 解析与领域 provenance。
 
 ## 领域 Authority
 
-[pack compiler input](../contracts/pack_compiler_input.json) 定义 fundability、quality、export、package、memory accept/reject、owner receipt 与 grant-native helper 七项 authority。它们在 handler export 与审计合同间必须一致。OPL 可以运输、索引、恢复和投影 refs，不能写 grant/memory/package body、签 MAG owner receipt 或生成领域 verdict。
+[pack compiler input](../contracts/pack_compiler_input.json) 定义 fundability、quality、export、package、memory accept/reject、owner receipt 与 grant-native helper 七项 authority。它们在 handler export 与审计合同间必须一致。OPL 提供运输、索引、恢复、来源快照与已授权写回的机械能力；正文语义接受、MAG owner receipt 和领域 verdict 仍由相应 owner 负责。
 
 Decisive Codex Attempt 选择语义 route；OPL StageRun controller 校验角色、shape、evidence 与 declared target 后物化 transition。`ai_route_policy` 是声明式 route context，不是额外 authority。默认联合 authoring 与原子 route-back 见 [authoring](./specs/authoring.md)；独立评审和质量债见[质量边界](./specs/quality.md)。
 
 ## 数据与持久化
 
 Workspace 持有真实申请材料、正文、版本和结果；运行面持有 Attempt/queue/receipt 等执行事实。`grant_run_id`、`workspace_id`、`draft_id` 与 `program_id` 不互相替代。详细存储位置见[数据边界](./source/README.md)，durable runtime 责任见[运行模型](./runtime/README.md)，最终 package/portal 责任见[交付](./delivery/README.md)。
+
+知识归属采用 product、owner、topic、project 四种 scope；方法、政策、日期化状态和决策是独立的内容类型。个人库与工作目录可作为同等的 Markdown 主源，已有 Obsidian 正文按范围绑定而无需复制成另一套库。Framework 直接解析获授权来源并冻结当次版本，MAG 负责基金语义与更新提案；运行快照、索引和提案不成为第二正文主源。完整调用与接受规则见[策略记忆政策](./references/grant_strategy_memory_policy.md)。

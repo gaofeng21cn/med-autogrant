@@ -57,19 +57,34 @@ Do not expose repo-local CLI commands, `MedAutoGrantDomainEntry`, domain-handler
 - `docs/project.md`
 - `docs/status.md`
 
-## Durable Knowledge And Workspace Memory
+## Durable Knowledge And Source Ownership
 
-Use OPL knowledge recall with --repo <agent-root> --domain <domain-id>
---stage <stage-id> and the authorized --workspace and --project roots.
-The hosted StageRun binds this selection once for producer, reviewer and
-repair roles. Read selected bodies and cite knowledge IDs, layers and digests.
-Agent knowledge lives in agent/knowledge/, indexed by
-contracts/durable_knowledge_catalog.json. Owner/team constraints and accepted
-cross-project lessons live in shared/memory/; project decisions and lessons
-live in the authorized project's memory/; dated facts live in its state/.
-Each workspace layer uses opl_durable_knowledge_catalog.json.
-Review freshness and keep superseded entries out of active recall. A project
-result is a candidate lesson until its domain or project owner accepts the
-evidence and scope. Private project content is never automatically promoted
-into the distributable Agent package. OPL owns validation, scoped recall and
-receipts; domain owners retain semantic acceptance.
+Use Framework knowledge preparation and read-context with the authorized
+workspace and project bindings. Read the selected bodies and cite knowledge
+IDs, scopes and digests. The hosted StageRun freezes one selection for its
+producer, reviewer and repair roles; a receipt alone does not load the body.
+Hosted actions require workspace_root and project_id resolved from the
+workspace inventory; input_path identifies grant materials, not execution
+scope. A proposed target_scope never grants source access.
+
+Product methods live in agent/knowledge/, indexed by the v2
+contracts/durable_knowledge_catalog.json. Owner/team policies, reusable grant
+topic lessons and individual proposal decisions use separate owner, topic and
+project scopes. Their content_kind identifies mechanism, policy, state or
+decision independently of scope and storage. A current funding call can be a
+dated state item without becoming a new memory layer.
+
+Bind existing Obsidian or other Markdown sources in place. Without a personal
+library, the workspace's ordinary Markdown directories are the canonical
+sources; both modes can be mixed in one task. Do not create another editable
+personal library or a compulsory intermediate body projection. Framework
+owns source/version/access checks, snapshots and mechanical writeback; the
+knowledge owner retains the body, sharing decision and semantic acceptance.
+
+Keep expired, superseded, revoked or source-drifted items out of current use.
+Optional strategy gaps permit independent work; required applicant, call or
+owner constraints must be resolved before the dependent decision. Recheck
+action-critical constraints before export or another consequential action.
+Propose lessons to their actual owner and scope, then use the shared accepted
+writeback route. Acceptance alone does not prove persistence, and a private
+project result is never automatically promoted into the product package.
