@@ -8,6 +8,8 @@
 
 三个 action 都通过 Stage manifest 绑定执行，输入字段和允许阶段由各自 closed input schema 与 catalog 定义。OPL 的 hosted command 形态为：
 
+请求同时携带正式 `workspace_root` 和 `project_id`，项目必须存在于该工作区的 `workspace_index.json`。Framework 据此解析项目与可用知识范围；`input_path` 只定位本次申请材料，不代替项目身份。
+
 ```text
 opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>
 ```

@@ -102,6 +102,12 @@ def test_domain_handler_writes_memory_decision_receipt_refs_only(tmp_path: Path)
             "stage_id": "review_and_rebuttal",
             "source_ref": "runtime-closeout://grant-run/example",
             "lesson_summary": "Preserve reusable reviewer-risk framing.",
+            "knowledge_id": "grant.reviewer-risk-framing",
+            "scope_kind": "topic",
+            "scope_id": "team.grant-strategy",
+            "content_kind": "mechanism",
+            "evidence_class": "reviewed_project_experience",
+            "review_requirement": "Grant strategy owner accepts cross-project applicability.",
         },
     )
     proposal = dispatch_domain_handler_task(task_path=proposal_task)
@@ -125,7 +131,7 @@ def test_domain_handler_writes_memory_decision_receipt_refs_only(tmp_path: Path)
 
     decision = dispatch_domain_handler_task(task_path=decision_task)
     result = decision["domain_handler_dispatch"]["result"]
-    assert result["write_policy"] == "owner_decision_then_project_markdown_and_opl_catalog"
+    assert result["write_policy"] == "owner_decision_then_framework_authorized_source_writeback"
     assert result["receipt_evidence"]["contains_memory_body"] is False
     assert Path(result["receipt_evidence"]["receipt_instance_ref"]).is_file()
 

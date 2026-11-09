@@ -76,13 +76,18 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Keep reusable reviewer risk framing as strategy memory.",
+            knowledge_id="grant.reviewer-risk-framing",
+            scope_kind="topic",
+            scope_id="team.grant-strategy",
+            content_kind="mechanism",
+            evidence_class="reviewed_project_experience",
+            review_requirement="Grant strategy owner accepts cross-project applicability.",
             proposal_id="review-risk-framing",
         )
         decision_payload = build_domain_memory_writeback_decision(
             proposal_path=self._write_proposal(proposal_payload),
             decision="accepted",
             decision_reason="Reusable reviewer risk framing.",
-            memory_id="review-risk-framing",
         )
 
         with tempfile.TemporaryDirectory() as runtime_root:
@@ -102,7 +107,9 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             self.assertFalse(receipt["contains_memory_body"])
             self.assertFalse(receipt["contains_grant_artifact_content"])
             self.assertFalse(receipt["contains_quality_or_export_verdict"])
-            self.assertIsNotNone(receipt["accepted_memory_ref"])
+            self.assertEqual(receipt["accepted_knowledge_id"], "grant.reviewer-risk-framing")
+            self.assertEqual(receipt["target_scope"], {"kind": "topic", "id": "team.grant-strategy"})
+            self.assertEqual(receipt["knowledge_persistence"], "pending_authorized_source_writeback")
             self.assertIsNone(receipt["rejected_memory_ref"])
 
             receipt_instance = json.loads(receipt_path.read_text(encoding="utf-8"))
@@ -117,6 +124,12 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             stage_id="review_and_rebuttal",
             source_ref="runtime-closeout://grant-run/example",
             lesson_summary="Do not store this text in the receipt evidence.",
+            knowledge_id="grant.reviewer-risk-framing",
+            scope_kind="project",
+            scope_id="grant.example",
+            content_kind="decision",
+            evidence_class="project_observation",
+            review_requirement="Project owner reviews the observation.",
             proposal_id="reject-review-risk-framing",
         )
         decision_payload = build_domain_memory_writeback_decision(
@@ -135,7 +148,45 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             receipt_path = Path(receipt["receipt_instance_ref"])
             self.assertTrue(receipt_path.exists())
             self.assertEqual(receipt["decision"], "rejected")
-            self.assertIsNone(receipt["accepted_memory_ref"])
+            self.assertIsNone(receipt["accepted_knowledge_id"])
             self.assertIsNotNone(receipt["rejected_memory_ref"])
             self.assertFalse(receipt["contains_memory_body"])
             self.assertNotIn("lesson_summary", json.loads(receipt_path.read_text(encoding="utf-8")))
+
+    def test_topic_proposal_preserves_identity_without_prescribing_storage(self) -> None:
+        with tempfile.TemporaryDirectory() as root:
+            workspace = Path(root)
+            project = workspace / "projects" / "grant-a"
+            project.mkdir(parents=True)
+            source = workspace / "team-library" / "strategy.md"
+            source.parent.mkdir()
+            source.write_text("Existing canonical team knowledge.", encoding="utf-8")
+            payload = build_domain_memory_writeback_proposal(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                workspace_root=workspace,
+                project_root=project,
+                stage_id="review_and_rebuttal",
+                source_ref=str(source),
+                lesson_summary="Refine the grant-topic reviewer strategy.",
+                knowledge_id="team.grant-reviewer-strategy",
+                scope_kind="topic",
+                scope_id="team.grant-strategy",
+                content_kind="policy",
+                evidence_class="reviewed_project_experience",
+                review_requirement="Team owner accepts the topic update.",
+            )
+            proposal = payload["domain_memory_writeback_proposal"]
+            self.assertEqual(proposal["target_scope"], {"kind": "topic", "id": "team.grant-strategy"})
+            self.assertEqual(proposal["execution_scope"]["project_root"], str(project.resolve()))
+            self.assertNotIn("target_layer", proposal)
+            self.assertNotIn("catalog_ref", proposal)
+            self.assertEqual(source.read_text(encoding="utf-8"), "Existing canonical team knowledge.")
+            self.assertFalse((project / "memory").exists())
+
+            proposal["target_scope"] = {"kind": "topic", "id": "team.grant-strategy", "root": str(workspace)}
+            with self.assertRaisesRegex(WorkspaceStateError, "target_scope requires kind and id"):
+                build_domain_memory_writeback_decision(
+                    proposal_path=self._write_proposal(payload),
+                    decision="accepted",
+                    decision_reason="Must not smuggle a source locator into semantic scope.",
+                )

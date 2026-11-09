@@ -39,6 +39,12 @@ def build_domain_memory_writeback_proposal(
     stage_id: str,
     lesson_summary: str,
     source_ref: str,
+    knowledge_id: str,
+    scope_kind: str,
+    scope_id: str,
+    content_kind: str,
+    evidence_class: str,
+    review_requirement: str,
     proposal_id: str | None = None,
 ) -> dict[str, Any]:
     resolved_stage_id = _require_stage_id(stage_id)
@@ -46,18 +52,26 @@ def build_domain_memory_writeback_proposal(
     resolved_source_ref = _require_nonempty_string(source_ref, field_name="source_ref")
     resolved_input_path = Path(input_path).expanduser().resolve()
     resolved_proposal_id = _safe_id(proposal_id or f"{resolved_stage_id}-writeback-proposal")
-    scope = _project_scope(workspace_root, project_root)
+    execution_scope = _project_scope(workspace_root, project_root)
+    target_scope = _knowledge_scope({"kind": scope_kind, "id": scope_id})
+    resolved_knowledge_id = _knowledge_id(knowledge_id)
+    resolved_content_kind = _content_kind(content_kind)
     proposal = {
         "surface_kind": DOMAIN_MEMORY_WRITEBACK_PROPOSAL_KIND,
         "proposal_id": _require_nonempty_string(resolved_proposal_id, field_name="proposal_id"),
+        "knowledge_id": resolved_knowledge_id,
         "target_domain_id": TARGET_DOMAIN_ID,
         "decision_owner": TARGET_DOMAIN_ID,
         "stage_id": resolved_stage_id,
         "memory_role": "strategy_context",
         "policy_ref": DOMAIN_MEMORY_POLICY_REF,
-        "catalog_ref": "memory/opl_durable_knowledge_catalog.json",
-        "target_layer": "workspace_project",
-        "target_scope": scope,
+        "target_scope": target_scope,
+        "content_kind": resolved_content_kind,
+        "execution_scope": execution_scope,
+        "source_refs": [resolved_source_ref],
+        "proposed_rule_or_mechanism": resolved_lesson_summary,
+        "evidence_class": _require_nonempty_string(evidence_class, field_name="evidence_class"),
+        "review_requirement": _require_nonempty_string(review_requirement, field_name="review_requirement"),
         "stage_descriptor_ref": _stage_descriptor_ref(resolved_stage_id),
         "source_locator": {
             "locator_kind": "workspace_or_runtime_ref",
@@ -65,8 +79,7 @@ def build_domain_memory_writeback_proposal(
             "source_ref": resolved_source_ref,
             "repo_tracked": False,
         },
-        "lesson_summary": resolved_lesson_summary,
-        "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+        "write_policy": "owner_decision_then_framework_authorized_source_writeback",
         "proposal_ref": f"memory/proposals/{resolved_proposal_id}.json",
         "decision_receipt_ref": f"receipts/domain-memory/{resolved_proposal_id}.json",
         "authority_boundary": _memory_authority_boundary(),
@@ -84,7 +97,6 @@ def build_domain_memory_writeback_decision(
     proposal_path: str | Path,
     decision: str,
     decision_reason: str,
-    memory_id: str | None = None,
 ) -> dict[str, Any]:
     proposal = _read_json_mapping(Path(proposal_path).expanduser().resolve(), context="domain_memory_writeback_proposal")
     proposal_body = _require_proposal_body(proposal)
@@ -103,22 +115,23 @@ def build_domain_memory_writeback_decision(
     )
     resolved_reason = _require_nonempty_string(decision_reason, field_name="decision_reason")
     proposal_id = _safe_id(proposal_id)
-    resolved_memory_id = _safe_id(memory_id or proposal_id)
-    target_scope = proposal_body.get("target_scope")
-    if not isinstance(target_scope, Mapping) or proposal_body.get("target_layer") != "workspace_project":
-        raise WorkspaceStateError("domain memory proposal requires an explicit project scope.")
-    scope = _project_scope(target_scope.get("workspace_root"), target_scope.get("project_root"))
-    accepted_memory_ref = f"memory/{resolved_memory_id}.md"
+    resolved_knowledge_id = _knowledge_id(proposal_body.get("knowledge_id"))
+    target_scope = _knowledge_scope(proposal_body.get("target_scope"))
+    content_kind = _content_kind(proposal_body.get("content_kind"))
+    execution_scope = proposal_body.get("execution_scope")
+    if not isinstance(execution_scope, Mapping):
+        raise WorkspaceStateError("domain memory proposal requires an explicit execution scope.")
+    execution_scope = _project_scope(execution_scope.get("workspace_root"), execution_scope.get("project_root"))
     decision_receipt_ref = f"receipts/domain-memory/{proposal_id}.json"
     rejected_memory_ref = decision_receipt_ref
     receipt_projection = {
         "surface_kind": DOMAIN_MEMORY_OPERATOR_RECEIPT_PROJECTION_KIND,
-        "projection_id": "mag.domain_memory.operator_receipt_projection.v1",
+        "projection_id": "mag.domain_memory.operator_receipt_projection.v2",
         "proposal_id": proposal_id,
         "decision": resolved_decision,
         "stage_id": stage_id,
         "receipt_ref": decision_receipt_ref,
-        "accepted_memory_ref": accepted_memory_ref if resolved_decision == "accepted" else None,
+        "accepted_knowledge_id": resolved_knowledge_id if resolved_decision == "accepted" else None,
         "rejected_memory_ref": rejected_memory_ref if resolved_decision == "rejected" else None,
         "contains_memory_body": False,
         "contains_grant_artifact_content": False,
@@ -131,17 +144,18 @@ def build_domain_memory_writeback_decision(
         "decision": resolved_decision,
         "decision_owner": TARGET_DOMAIN_ID,
         "decision_reason": resolved_reason,
-        "target_layer": "workspace_project",
-        "target_scope": scope,
-        "catalog_ref": "memory/opl_durable_knowledge_catalog.json",
-        "knowledge_persistence": "pending_owner_markdown_and_catalog_update" if resolved_decision == "accepted" else "not_applicable",
+        "knowledge_id": resolved_knowledge_id,
+        "target_scope": target_scope,
+        "content_kind": content_kind,
+        "execution_scope": execution_scope,
+        "knowledge_persistence": "pending_authorized_source_writeback" if resolved_decision == "accepted" else "not_applicable",
         "policy_ref": DOMAIN_MEMORY_POLICY_REF,
         "stage_id": stage_id,
-        "accepted_memory_ref": accepted_memory_ref if resolved_decision == "accepted" else None,
+        "accepted_knowledge_id": resolved_knowledge_id if resolved_decision == "accepted" else None,
         "rejected_memory_ref": rejected_memory_ref if resolved_decision == "rejected" else None,
         "decision_receipt_ref": decision_receipt_ref,
         "operator_receipt_projection": receipt_projection,
-        "write_policy": "owner_decision_then_project_markdown_and_opl_catalog",
+        "write_policy": "owner_decision_then_framework_authorized_source_writeback",
         "authority_boundary": _memory_authority_boundary(),
     }
     return {
@@ -190,7 +204,7 @@ def write_domain_memory_receipt_evidence(
     receipt_path = resolved_runtime_root / "receipts" / "domain-memory" / f"{proposal_id}.json"
     receipt = {
         "surface_kind": DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
-        "version": "v1",
+        "version": "v2",
         "receipt_id": f"mag.domain_memory.receipt.{proposal_id}",
         "state": "runtime_receipt_instance_written",
         "owner": TARGET_DOMAIN_ID,
@@ -207,7 +221,11 @@ def write_domain_memory_receipt_evidence(
         "receipt_ref": str(receipt_path),
         "declared_receipt_ref": receipt_ref,
         "receipt_instance_ref": str(receipt_path),
-        "accepted_memory_ref": decision_body.get("accepted_memory_ref") if decision == "accepted" else None,
+        "knowledge_id": _knowledge_id(decision_body.get("knowledge_id")),
+        "target_scope": _knowledge_scope(decision_body.get("target_scope")),
+        "content_kind": _content_kind(decision_body.get("content_kind")),
+        "accepted_knowledge_id": decision_body.get("accepted_knowledge_id") if decision == "accepted" else None,
+        "knowledge_persistence": decision_body.get("knowledge_persistence"),
         "rejected_memory_ref": decision_body.get("rejected_memory_ref") if decision == "rejected" else None,
         "source_refs": [
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py#write_domain_memory_receipt_evidence",
@@ -248,7 +266,7 @@ def write_domain_memory_receipt_evidence(
 def build_domain_memory_operator_projection_contract() -> dict[str, Any]:
     return {
         "surface_kind": DOMAIN_MEMORY_OPERATOR_RECEIPT_PROJECTION_KIND,
-        "projection_id": "mag.domain_memory.operator_receipt_projection.v1",
+        "projection_id": "mag.domain_memory.operator_receipt_projection.v2",
         "maps_to_opl_contract": "opl_family_product_operator_projection.v1",
         "source_refs": [
             "contracts/durable_knowledge_catalog.json",
@@ -262,7 +280,7 @@ def build_domain_memory_operator_projection_contract() -> dict[str, Any]:
             "decision",
             "stage_id",
             "receipt_ref",
-            "accepted_memory_ref",
+            "accepted_knowledge_id",
             "rejected_memory_ref",
         ],
         "opl_consumption": {
@@ -332,6 +350,26 @@ def _memory_authority_boundary() -> dict[str, Any]:
 def _safe_id(value: str) -> str:
     if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._-]*", value):
         raise WorkspaceStateError("domain memory id must be a filename-safe identifier.")
+    return value
+
+
+def _knowledge_id(value: Any) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", value):
+        raise WorkspaceStateError("domain memory knowledge_id must be a stable lowercase identifier.")
+    return value
+
+
+def _knowledge_scope(value: Any) -> dict[str, str]:
+    if not isinstance(value, Mapping) or set(value) != {"kind", "id"}:
+        raise WorkspaceStateError("domain memory target_scope requires kind and id.")
+    if not isinstance(value["kind"], str) or value["kind"] not in {"product", "owner", "topic", "project"}:
+        raise WorkspaceStateError("domain memory target_scope kind is invalid.")
+    return {"kind": value["kind"], "id": _require_nonempty_string(value["id"], field_name="scope_id")}
+
+
+def _content_kind(value: Any) -> str:
+    if not isinstance(value, str) or value not in {"mechanism", "policy", "state", "decision"}:
+        raise WorkspaceStateError("domain memory content_kind is invalid.")
     return value
 
 

@@ -1,20 +1,19 @@
 {
   "surface_kind": "opl_durable_knowledge_catalog",
-  "version": "durable-knowledge-catalog.v1",
+  "version": "durable-knowledge-catalog.v2",
   "owner": "one-person-lab",
   "domain_id": "med-autogrant",
   "items": [
     {
       "surface_kind": "opl_durable_knowledge_item",
-      "version": "durable-knowledge-item.v1",
+      "version": "durable-knowledge-item.v2",
       "knowledge_id": "med-autogrant.grant_strategy_memory",
       "title": "Grant Strategy Memory",
-      "layer": "agent_pack",
       "owner": "med-autogrant",
       "body_ref": {
         "kind": "repo_path",
         "ref": "agent/knowledge/grant_strategy_memory.md",
-        "sha256": "sha256:c4f3ef330c6344a64a4ecfeebeeddf8f8130e94308ac8aefa32f2e4d76b3cb01"
+        "sha256": "sha256:f07e803d80d55b689592bb4ad1c3c03f48f7ed4b203d7d542d592933af5e5457"
       },
       "applicability": {
         "domains": [
@@ -35,14 +34,18 @@
       "authority_boundary": {
         "semantic_body_owner": "med-autogrant",
         "opl_role": "catalog_recall_and_receipt_projection_only"
-      }
+      },
+      "scope": {
+        "kind": "product",
+        "id": "med-autogrant"
+      },
+      "content_kind": "policy"
     },
     {
       "surface_kind": "opl_durable_knowledge_item",
-      "version": "durable-knowledge-item.v1",
+      "version": "durable-knowledge-item.v2",
       "knowledge_id": "med-autogrant.owner_receipt_boundary",
       "title": "Owner Receipt Boundary",
-      "layer": "agent_pack",
       "owner": "med-autogrant",
       "body_ref": {
         "kind": "repo_path",
@@ -68,14 +71,18 @@
       "authority_boundary": {
         "semantic_body_owner": "med-autogrant",
         "opl_role": "catalog_recall_and_receipt_projection_only"
-      }
+      },
+      "scope": {
+        "kind": "product",
+        "id": "med-autogrant"
+      },
+      "content_kind": "policy"
     },
     {
       "surface_kind": "opl_durable_knowledge_item",
-      "version": "durable-knowledge-item.v1",
+      "version": "durable-knowledge-item.v2",
       "knowledge_id": "med-autogrant.package_authority",
       "title": "Package Authority",
-      "layer": "agent_pack",
       "owner": "med-autogrant",
       "body_ref": {
         "kind": "repo_path",
@@ -98,7 +105,12 @@
       "authority_boundary": {
         "semantic_body_owner": "med-autogrant",
         "opl_role": "catalog_recall_and_receipt_projection_only"
-      }
+      },
+      "scope": {
+        "kind": "product",
+        "id": "med-autogrant"
+      },
+      "content_kind": "policy"
     }
   ]
 }

@@ -5,10 +5,21 @@
   "description": "Inputs accepted by the OPL-hosted MAG package and export-gate action.",
   "type": "object",
   "required": [
+    "workspace_root",
+    "project_id",
     "input_path",
     "output_dir"
   ],
   "properties": {
+    "workspace_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "description": "Exact project identity in the authorized workspace_index.json."
+    },
     "input_path": {
       "type": "string",
       "minLength": 1

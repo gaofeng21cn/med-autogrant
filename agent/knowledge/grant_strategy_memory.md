@@ -8,9 +8,9 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 
 ## Owned Content
 
-- Reusable grant methods belong in the versioned Agent knowledge pack. Applicant, call and proposal lessons belong in their authorized workspace or project layer.
+- Reusable grant methods belong in the product knowledge pack. Owner/team policies, ongoing grant-topic lessons and individual proposal decisions retain their respective owner, topic or project scope, independent of their Markdown location.
 - Memory may describe funder fit, prior reviewer risks, applicant evidence, successful framing, rejected directions, and package lessons.
-- OPL owns the common catalog, layer boundaries, recall and consumed-body receipts; MAG owns grant-specific acceptance and rejection.
+- OPL owns the common catalog, source/version/access checks, scoped recall and consumed-body receipts; MAG owns grant-specific acceptance and rejection. Existing personal-library sources stay canonical; ordinary workspace Markdown provides the same source role when no personal library is used.
 
 ## Stage Use
 
@@ -18,7 +18,7 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 - Fundability may accept, reject, or mark memory stale based on current call fit and reviewer risk.
 - Aims and authoring may use accepted memory as strategy guidance, never as substitute evidence.
 - Review may use memory to detect repeated weaknesses or prior closure patterns.
-- Missing or conflicting strategy memory never blocks ordinary stage work. Record it as stale/rejected context; only a wrong-target identity/currentness, authority/safety, irreversible action, or explicit owner gate can hard-stop.
+- Missing optional strategy memory does not block independent stage work. Missing, changed or revoked required applicant, funding-call or owner constraints block the decisions that depend on them; report the exact gap and continue work that does not need it. Current state and action-critical constraints require their own freshness checks.
 
 ## Accept/Reject Standard
 
@@ -37,6 +37,7 @@ Strategy memory is Markdown-first advisory context. It gives Codex prior fundabi
 
 - Any accepted/rejected memory must produce a body-free ref, decision state, source refs, reason, and MAG owner receipt or typed blocker.
 - Memory writeback proposals must preserve funding-call lock, applicant evidence context, reviewer risk, and quality closure semantics.
+- Accepted updates target the one canonical source through Framework's shared version-checked writeback route. Scope and content kind do not prescribe a second memory directory. Derived summaries retain the source revision and access boundary and are re-reviewed when that source changes.
 
 ## Review Questions
 

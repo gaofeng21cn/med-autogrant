@@ -22,9 +22,18 @@
       "locator_surface_kind": "med_autogrant_workspace_input",
       "default_profile_id": "one_off",
       "shared_resources": [
-        { "path": "shared/sources", "role": "source_intake" },
-        { "path": "shared/memory", "role": "memory_root" },
-        { "path": "shared/style_system", "role": "style_system" }
+        {
+          "path": "shared/sources",
+          "role": "source_intake"
+        },
+        {
+          "path": "shared/memory",
+          "role": "memory_root"
+        },
+        {
+          "path": "shared/style_system",
+          "role": "style_system"
+        }
       ],
       "workspace_kind": "grant_authoring_workspace",
       "project_kind": "grant_project",
@@ -32,9 +41,11 @@
       "default_workspace_id": "grant-workspace",
       "default_project_id": "grant-001",
       "required_locator_fields": [
-        "input_path"
+        "workspace_root"
       ],
-      "optional_locator_fields": []
+      "optional_locator_fields": [
+        "input_path"
+      ]
     },
     "stage_catalog": {
       "source_kind": "agent_repo_relative_json",
@@ -75,6 +86,22 @@
         "grant_application"
       ],
       "ambiguity_policy": "require_explicit_workstream"
+    },
+    "inventory_projection": {
+      "source_kind": "workspace_relative_json",
+      "relative_path": "workspace_index.json",
+      "items_pointer": "/projects",
+      "work_item_root_template": "projects/{project_id}",
+      "field_map": {
+        "work_item_id": "project_id",
+        "work_item_root": "project_root",
+        "business_status": "business_status",
+        "current_stage_id": "current_stage_id",
+        "current_stage_status": "current_stage_status",
+        "package_status": "package_status",
+        "lifecycle_ref": "project_index_ref",
+        "stage_index_ref": "stage_outputs_index_ref"
+      }
     }
   },
   "standard_contract_refs": {
