@@ -54,6 +54,20 @@ executor 必须返回 canonical receipt，其中 `closeout_packet` 为：
 
 缺少 receipt、executor kind 不一致、非零 exit code、closeout kind/route 不一致或 domain output 非 object 时，MAG fail closed；不得回退到 repo-local Codex transport。
 
+## 审阅反馈后的同申请续跑
+
+正式任务仍由原 OPL Task/StageRun 的 action 或 human gate 继续。维护者可通过以下现有 owner CLI 核对读取、记录和下一次 critique；`workspace.json` 为当前任务引用的同一申请，`--revision` 使用 `review-feedback` 的原样返回值：
+
+```bash
+medautogrant workspace review-feedback --input /path/to/workspace.json --json
+medautogrant workspace record-review --input /path/to/workspace.json --workspace-id "<workspace_id>" --grant-run-id "<grant_run_id>" --revision "sha256:<source_digest>" --request-id "<unique_review_id>" --note '请比较两组预实验，并明确主要终点。' --json
+medautogrant pass critique --input /path/to/workspace.json --output /path/to/reviewed-workspace.json --json
+```
+
+意见记录保留精确源版本和 `review_ref`。critique 将匹配版本的意见及引用送入原 OPL executor-client，随后通过原规范化、校验、输出路径产生新的 MentorCritique/RevisionPlan；输出保留原 `grant_run_id`、`workspace_id`、`draft_id`。这不是新建 Framework Task，也不自动完成 human gate 或开启 StageRun。原任务回读 `output_path` 与 `critique_execution` 后继续；正文质量和最终 export gate 仍由对应 owner 接受。
+
+`tests/test_app_contribution.py::test_recorded_feedback_continues_same_grant_through_actual_critique_cli` 运行真实 CLI parser、domain dispatch、critique 规范化与持久输出，仅以已有合成 executor receipt 替代外部模型调用。该用例检查意见进入执行 prompt、同申请身份延续、新评审实际写盘及预提交冻结仍为 false。
+
 ## Verification
 
 - `tests/test_critique_executor.py`

@@ -166,3 +166,51 @@ def test_critique_feedback_keeps_the_already_read_candidate_during_source_switch
         feedback = current_review_feedback(source, original)
     assert [note["artifact_ref"] for note in feedback] == [first["artifact_ref"]]
     assert all(note["note"] != "仅对新版本的意见" for note in feedback)
+
+
+def test_recorded_feedback_continues_same_grant_through_actual_critique_cli(workspace: Path, capsys) -> None:
+    from med_autogrant.cli import main
+    from med_autogrant.critique_executor import build_critique_execution_document
+    from test_critique_executor import CRITIQUE_PACKET_PATH, _closeout_packet, _codex_receipt
+
+    source = workspace / "workspace.json"
+    original = json.loads(source.read_text())
+    value = note_input(workspace)
+    assert main(["workspace", "record-review", "--input", str(source),
+                 "--workspace-id", value["workspace_id"], "--grant-run-id", value["grant_run_id"],
+                 "--revision", value["revision"], "--request-id", value["request_id"],
+                 "--note", value["note"], "--json"]) == 0
+    recorded = json.loads(capsys.readouterr().out)
+    assert main(["workspace", "review-feedback", "--input", str(source), "--json"]) == 0
+    readback = json.loads(capsys.readouterr().out)
+    assert readback["review_notes"][0]["artifact_ref"] == recorded["artifact_ref"]
+
+    observed = []
+
+    def fixture_executor(request: dict, *, timeout_seconds: float) -> dict:
+        observed.append(request)
+        receipt = _codex_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
+        receipt["cwd"] = request["cwd"]
+        return receipt
+
+    def critique_with_fixture(**kwargs):
+        return build_critique_execution_document(**kwargs, executor_runner=fixture_executor)
+
+    output = workspace / "reviewed-workspace.json"
+    with patch("med_autogrant.domain_runtime_parts.handoff_surfaces.build_critique_execution_document",
+               side_effect=critique_with_fixture):
+        assert main(["pass", "critique", "--input", str(source), "--output", str(output), "--json"]) == 0
+    result = json.loads(capsys.readouterr().out)
+    persisted = json.loads(output.read_text())
+    assert len(observed) == 1
+    assert value["note"] in observed[0]["prompt"]
+    assert recorded["artifact_ref"] in observed[0]["prompt"]
+    assert observed[0]["domain_payload"]["input_path"] == str(source)
+    for field in ("grant_run_id", "workspace_id"):
+        assert result[field] == persisted[field] == original[field]
+    assert result["draft_id"] == original["current_selection"]["active_draft_id"]
+    assert result["critique_execution"]["critique_id"] == persisted["mentor_critiques"][-1]["critique_id"]
+    assert persisted["current_selection"]["active_revision_plan_id"] == result["critique_execution"]["active_revision_plan_id"]
+    assert len(persisted["mentor_critiques"]) == len(original.get("mentor_critiques", [])) + 1
+    assert persisted["gates"]["presubmission_frozen"] is False
+    assert json.loads(source.read_text()) == original
