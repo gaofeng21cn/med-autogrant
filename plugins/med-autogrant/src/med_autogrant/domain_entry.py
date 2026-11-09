@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
+from med_autogrant.app_contribution import read_review, record_review
 from med_autogrant.domain_runtime_parts.authoring_surface import execute_freeze_pass
 from med_autogrant.domain_runtime_parts.handoff_surfaces import (
     build_artifact_bundle,
@@ -89,6 +90,10 @@ def _dispatch_runtime_command(
     command: str,
     runtime_kwargs: dict[str, Any],
 ) -> dict[str, Any]:
+    if command == "read-review-feedback":
+        return read_review(**runtime_kwargs)
+    if command == "record-review-feedback":
+        return record_review(**runtime_kwargs)
     if command == "validate-workspace":
         return MagDomainRuntime.validate_workspace(runtime, **runtime_kwargs)
     if command == "summarize-workspace":

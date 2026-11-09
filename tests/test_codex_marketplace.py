@@ -64,5 +64,8 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
     assert carrier_adapter == owner_adapter
     assert {
         entry["kind"] for entry in owner_adapter["reads"].values()
-    } == {"json_file"}
-    assert not owner_adapter["actions"]
+    } == {"command"}
+    for entry in owner_adapter["reads"].values():
+        assert entry["argv"][:2] == ["python3", "runtime/app_contribution.py"]
+        assert "transform" not in entry
+    assert set(owner_adapter["actions"]) == {"mag.workspace.v1#review.note"}

@@ -2,10 +2,15 @@
   "schema_version": "opl-package-app-contribution-adapter.v1",
   "reads": {
     "mag.workspace.v1#route": {
-      "kind": "json_file",
-      "root": "profile",
-      "path": "${input.workspace_file}",
-      "transform": "grant_workspace",
+      "kind": "command",
+      "cwd": "package",
+      "stdin": "input_json",
+      "passthrough": true,
+      "argv": [
+        "python3",
+        "runtime/app_contribution.py",
+        "route"
+      ],
       "input_schema": {
         "type": "object",
         "properties": {
@@ -20,10 +25,15 @@
       }
     },
     "mag.workspace.v1#quality": {
-      "kind": "json_file",
-      "root": "profile",
-      "path": "${input.quality_path}",
-      "transform": "artifact_status",
+      "kind": "command",
+      "cwd": "package",
+      "stdin": "input_json",
+      "passthrough": true,
+      "argv": [
+        "python3",
+        "runtime/app_contribution.py",
+        "quality"
+      ],
       "input_schema": {
         "type": "object",
         "properties": {
@@ -38,5 +48,17 @@
       }
     }
   },
-  "actions": {}
+  "actions": {
+    "mag.workspace.v1#review.note": {
+      "kind": "command",
+      "cwd": "package",
+      "stdin": "input_json",
+      "passthrough": true,
+      "argv": [
+        "python3",
+        "runtime/app_contribution.py",
+        "note"
+      ]
+    }
+  }
 }

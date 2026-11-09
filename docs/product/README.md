@@ -26,7 +26,11 @@ MAG 的 service-safe、executor-routing 和 product-entry schemas 仍描述 doma
 
 Mini App 使用 [Framework 统一工作入口规范](https://github.com/gaofeng21cn/one-person-lab/blob/main/docs/mcp-apps/SPEC.md)。当前注册工作区和精确任务身份随入口传递；MAG 的 canonical `workspace.json` 是阶段、当前草稿和领域评审证据的读取来源。显式选择其他 workspace 或质量文件用于导入与审阅，不能按文件更新时间猜测当前申请。存在多个候选时由用户或 Agent 明确选择。
 
-阶段与质量视图共用同一申请上下文，保留草稿、评审、证据和质量债的 owner 原义。页面打开和刷新只读；开展或继续工作仍走本页的 OPL-generated action。共享界面、连接与凭证由 Framework、Studio 和 Connect 负责，MAG 不维护第二套调度、会话或凭据状态。
+阶段与质量视图由 MAG owner 直接输出共享 renderer 可读的 items、artifacts、当前草稿、评审、revision plan 与精确 source revision；Framework 不解析基金领域 shape。页面打开和刷新只读。
+
+“记录审阅意见”将 workspace、grant run、草稿与源文件 SHA-256 绑定，保存在该申请目录的 `runtime/review-feedback/`。共享界面与 `medautogrant workspace record-review` 使用同一 owner 函数；`workspace review-feedback` 可回读同一记录。相同 request ID 和内容重试返回原记录，编号复用不同内容或新意见针对旧 revision 均被拒绝。源文件更新后旧意见仍可追溯，但不作为当前版本意见注入 critique。
+
+下一次现有 critique pass 会消费该申请当前 exact revision 的意见；意见本身不修改正文、不批准质量或导出。记录结果保留 `review_ref` 与 `stage_execution_started=false`；开展或继续工作仍由原任务的 OPL runtime action/human gate 驱动，再由原 MAG StageRun/Attempt 执行。共享界面、连接与凭证由 Framework、Studio 和 Connect 负责，MAG 不维护第二套调度、会话或凭据状态。
 
 Status、progress、cockpit、direct-entry、user-loop、session 和 workbench 从 [generated surface handoff](../../contracts/generated_surface_handoff.json)、Stage/action descriptor 与 runtime refs 投影。它们展示 owner answer、freshness、next action 与 human gate，并调用 MAG target；grant body、verdict 和 owner receipt 的写入仍归 MAG。
 

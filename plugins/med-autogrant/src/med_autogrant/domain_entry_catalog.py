@@ -12,6 +12,13 @@ class DomainEntryCommandSpec:
 
 
 SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
+    "read-review-feedback": DomainEntryCommandSpec(
+        ("input_path",), help_text="回读同一申请的版本绑定审阅意见。"
+    ),
+    "record-review-feedback": DomainEntryCommandSpec(
+        ("input_path", "workspace_id", "grant_run_id", "revision", "request_id", "note"),
+        help_text="记录所审申请版本的意见，供原任务继续消费；不批准质量或导出。",
+    ),
     "validate-workspace": DomainEntryCommandSpec(
         ("input_path",), help_text="校验 NSFC workspace。"
     ),

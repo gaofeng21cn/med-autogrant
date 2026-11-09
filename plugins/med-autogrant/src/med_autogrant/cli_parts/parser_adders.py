@@ -7,6 +7,11 @@ from typing import Any
 EXECUTOR_KIND_CHOICES = ("codex_cli", "hermes_agent")
 
 FIELD_ARGUMENTS: dict[str, tuple[tuple[str, ...], dict[str, Any]]] = {
+    "workspace_id": (("--workspace-id",), {}),
+    "grant_run_id": (("--grant-run-id",), {}),
+    "revision": (("--revision",), {}),
+    "request_id": (("--request-id",), {}),
+    "note": (("--note",), {}),
     "input_path": (("--input",), {}),
     "previous_input_path": (("--previous-input",), {}),
     "output_path": (("--output",), {}),

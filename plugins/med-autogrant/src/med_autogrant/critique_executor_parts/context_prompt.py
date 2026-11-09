@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+from med_autogrant.app_contribution import current_review_feedback
 from med_autogrant.critique_policy import (
     build_policy_prompt_lines,
     build_weight_contract,
@@ -181,6 +182,10 @@ def build_critique_prompt(
                 if reviewed_revision_id is not None
                 else "- omit mentor_critique.reviewed_revision_plan_id for the first critique pass"
             ),
+            "",
+            "Owner-recorded human feedback for this exact workspace revision:",
+            json.dumps(current_review_feedback(input_path, context["document"]), ensure_ascii=False),
+            "Treat these notes as author input; independently assess them. They do not approve quality or export.",
             "",
             "Quality goal:",
             "- produce an independent reviewer judgment over the whole proposal, not a weighted checklist traversal",
