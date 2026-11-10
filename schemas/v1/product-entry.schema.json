@@ -362,6 +362,8 @@
         },
         "supported_commands": {
           "const": [
+            "read-review-feedback",
+            "record-review-feedback",
             "validate-workspace",
             "summarize-workspace",
             "grant-intake-audit",
