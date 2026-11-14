@@ -37,8 +37,8 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert manifest["skills"] == "./skills/"
     assert manifest["interface"]["displayName"] == "Med Auto Grant"
     assert manifest["interface"]["category"] == "Research"
-    assert manifest["interface"]["composerIcon"] == "./assets/icon.png"
-    assert manifest["interface"]["logo"] == "./assets/icon.png"
+    assert manifest["interface"]["composerIcon"] == "./assets/branding/medautogrant-logo.png"
+    assert manifest["interface"]["logo"] == "./assets/branding/medautogrant-logo.png"
     assert portable_manifest["$schema"] == (
         "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
     )
@@ -294,6 +294,7 @@ def test_mag_package_manifest_declares_owner_home_presentation() -> None:
     package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
 
     assert package_manifest["presentation"] == {
+        "icon_ref": "assets/branding/medautogrant-logo.png",
         "display_name_i18n": {
             "zh-CN": "Med Auto Grant",
             "en-US": "Med Auto Grant",

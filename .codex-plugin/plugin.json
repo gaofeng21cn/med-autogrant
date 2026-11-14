@@ -1,6 +1,6 @@
 {
   "name": "med-autogrant",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Codex plugin shell for the Med Auto Grant grant-authoring domain app.",
   "author": {
     "name": "Gao Feng",
@@ -27,8 +27,8 @@
       "Write"
     ],
     "websiteURL": "https://github.com/gaofeng21cn/med-autogrant",
-    "composerIcon": "./plugins/med-autogrant/assets/icon.png",
-    "logo": "./plugins/med-autogrant/assets/icon.png",
+    "composerIcon": "./assets/branding/medautogrant-logo.png",
+    "logo": "./assets/branding/medautogrant-logo.png",
     "defaultPrompt": [
       "Inspect the current Med Auto Grant skill catalog for this workspace.",
       "Open the current Med Auto Grant status for this grant workspace.",

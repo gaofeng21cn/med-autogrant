@@ -2,9 +2,9 @@
   <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant logo" width="132" />
 </p>
 
-[English](./README.md) | [中文](./README.zh-CN.md)
+<p align="center"><strong>English</strong> | <a href="./README.zh-CN.md">中文</a></p>
 
-# Med Auto Grant
+<h1 align="center">Med Auto Grant</h1>
 
 Med Auto Grant helps applicants plan, write, review, revise, and assemble medical grant proposals around one funding call. It keeps source evidence, scientific questions, applicant fit, draft versions, reviewer findings, and local deliverables in the same grant workspace.
 

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant 标志" width="132" />
+  <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant logo" width="132" />
 </p>
 
-[English](./README.md) | [中文](./README.zh-CN.md)
+<p align="center"><a href="./README.md">English</a> | <strong>中文</strong></p>
 
-# Med Auto Grant
+<h1 align="center">Med Auto Grant</h1>
 
 Med Auto Grant 围绕同一 funding call，帮助申请人规划、撰写、独立评审、修订和组装医学基金申请。来源证据、科学问题、申请人适配、草稿版本、评审发现与本地交付物保存在同一申请工作区。
 
