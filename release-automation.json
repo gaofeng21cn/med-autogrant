@@ -11,6 +11,10 @@
     {
       "path": "pyproject.toml",
       "kind": "toml_project"
+    },
+    {
+      "path": "src/med_autogrant/__init__.py",
+      "kind": "python_version"
     }
   ]
 }
