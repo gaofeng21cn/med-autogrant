@@ -19,13 +19,15 @@ from med_autogrant.domain_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
     validate_schema_payload as _validate_schema_payload,
 )
-from med_autogrant.domain_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.funding_discovery_io import (
     _build_selection_input_from_discovery,
     _default_funding_landscape_cache_path,
     _derive_funding_landscape_diff_report_path,
-    _guard_workspace_output_identity,
     _load_existing_cache_snapshot,
     _load_funding_landscape_cache_if_needed,
+)
+from med_autogrant.domain_runtime_parts.io import (
+    _guard_workspace_output_identity,
     _load_json_object,
     _write_json_output,
     _write_revised_workspace_output,
