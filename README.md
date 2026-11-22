@@ -6,46 +6,24 @@
 
 <h1 align="center">Med Auto Grant</h1>
 
-Med Auto Grant helps applicants plan, write, review, revise, and assemble medical grant proposals around one funding call. It keeps source evidence, scientific questions, applicant fit, draft versions, reviewer findings, and local deliverables in the same grant workspace.
+Med Auto Grant helps medical research teams turn a research idea, team track record, and preliminary evidence into a reviewable application for one funding call.
 
 <p align="center">
-  <img src="assets/branding/medautogrant-overview-v3.png" alt="Med Auto Grant journey from idea to local submission package" width="100%" />
+  <img src="assets/branding/medautogrant-overview-v3.png" alt="From a funding call and research idea to the submission package" width="100%" />
 </p>
 
-## Start A Grant Task
+## Develop and review the same application
 
-Provide the target funding call, applicant/team materials, prior papers or pilot evidence, current draft, and the result you need. For example:
+Starting from the call and your existing material, MAG brings the scientific question, the team’s evidence, and the proposed aims together so you can decide which direction to pursue. Once you choose a direction, drafts, independent critiques, and the reasons for revisions stay with the same application. When you return to revise a section, you can build on the aims and materials you already accepted.
 
-> Use this NSFC call and draft to revise the aims and methods, review the scientific argument independently, and produce a reviewable proposal package without changing the target call.
+The applicant decides the scientific direction, what to adopt from review, and when to submit. MAG applies those decisions, prepares the local materials, and shows which arguments are ready for review, which attachments are outstanding, and whether the submission package is assembled. External uploads and signatures require the applicant’s authorization.
 
-The installed `med-autogrant` Skill selects the OPL-generated action. The default action continues the grant workflow; bounded authoring requires accepted upstream context, and local package export requires an explicit request, output directory, and the export human gate. See [entry boundaries](./docs/product/README.md).
+## Start with a call or a draft
 
-Scientific review readiness, local submission-package readiness, and external portal submission are separate results. Formal supplements remain explicit follow-up work unless they affect scientific validity. Portal upload, signatures, certification, and final submission remain human-authorized actions.
+> “Use this funding call and our draft to check whether the aims fit the team’s existing evidence. Review the argument independently, then give me a revision we can discuss.”
 
-## Installation
+## Get started
 
-Install through the standard OPL Package entry:
+Install **Med Auto Grant** from the OPL Software Center. Open or start an application and share the call, the material you have, and what you want to resolve in this round. [Usage guide](docs/product/README.md) · [Current status](docs/status.md)
 
-```bash
-opl packages install mag --json
-opl packages status --package-id mag --json
-```
-
-The publication channel is `ghcr.io/gaofeng21cn/one-person-lab-packages/mag`. Immutable versions identify exact releases; `latest-stable` selects the current version. OPL and the native plugin manager handle installation and updates. Separate GitHub Release pages and attachments are not used for distribution.
-
-Runtime use requires `mas-scholar-skills`, resolved through the declared Package dependency.
-
-Start a new task after installation to load the professional skills. Package installation, runtime callability, and domain acceptance remain separate; see [Current Status](./docs/status.md).
-
-## Project And Development
-
-MAG owns grant judgment, artifacts/packages, strategy-memory decisions, and owner receipts. OPL owns generic runtime, executor transport, generated actions/status, and recovery; the App consumes those surfaces. Implementation and open evidence are described in [status](./docs/status.md), not inferred from the repository version.
-
-Personal and team knowledge stays in its existing Markdown library, including Obsidian, or in ordinary workspace files when no library is used. MAG binds the relevant owner, topic and project sources; Framework freezes the versions consumed by each stage. Product methods remain in the package, and accepted lessons return to their one canonical source. See the [knowledge policy](./docs/references/grant_strategy_memory_policy.md).
-
-- [Project scope](./docs/project.md)
-- [Documentation and verification](./docs/README.md)
-- [Architecture](./docs/architecture.md)
-- [Machine contracts](./contracts/README.md)
-
-For local checks run `./scripts/verify.sh`; focused and full lanes, clean-runner requirements, and documentation lifecycle are explained in the [documentation guide](./docs/README.md#验证).
+[Project scope](docs/project.md) · [Documentation](docs/README.md) · [Managing knowledge and sources](docs/references/grant_strategy_memory_policy.md)
