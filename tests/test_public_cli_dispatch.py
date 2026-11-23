@@ -53,7 +53,7 @@ class PublicCliDispatchTest(unittest.TestCase):
 
             for argv, expected_request in cases:
                 with self.subTest(command=expected_request["command"]), patch(
-                    "med_autogrant.cli_parts.handlers.dispatch_domain_request"
+                    "med_autogrant.cli.dispatch_domain_request"
                 ) as dispatch:
                     dispatch.return_value = {
                         "ok": True,

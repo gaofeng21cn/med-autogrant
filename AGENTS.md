@@ -8,6 +8,7 @@
 - 文档职责和生命周期由 [docs/README.md](docs/README.md) 维护；当前实现归 `docs/status.md`，外部证据缺口归 `docs/active/`，根规则不覆盖机器合同。已替代文档直接删除并修复入链，历史由 Git 保存。
 - 跨仓平台实现与迁移分别由 [App 文档](https://github.com/gaofeng21cn/one-person-lab-app/tree/main/docs)和 [Framework 文档](https://github.com/gaofeng21cn/one-person-lab/tree/main/docs)持有；本仓只解释 MAG owner 边界，不复制其他仓的当前状态或兼容清单。
 - 默认验证运行 `scripts/verify.sh`；按影响选择 smoke、regression、structure 或 full lane。
+- 模块拆分以职责内聚和调用清晰为准，在日常开发与 PR 阶段维护，不靠机械行数阈值或周期拆文件脚本：既避免把不相关职责堆成巨石文件，也禁止制造嵌套 `*_parts/*_parts`、过薄胶水切片或大段回调参数转运；重构优先消除重复与化简调用链，来源不明或储备能力默认保留（无静态调用者只作调查信号）。
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph

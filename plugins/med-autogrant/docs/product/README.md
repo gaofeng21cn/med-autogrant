@@ -18,7 +18,7 @@ opl agents run --domain med-autogrant --action <action_id> --workspace <absolute
 
 ## 内部调用
 
-`medautogrant` grouped CLI、`MedAutoGrantDomainEntry` 与 `domain-handler export|dispatch` 是 generated caller 后面的 direct authority targets，不是 Skill 要求用户手工运行的默认入口。CLI 的实际 token、参数和静态分派由 [cli_parts](../../src/med_autogrant/cli_parts/) 和 [domain entry catalog](../../src/med_autogrant/domain_entry_catalog.py)持有；维护者使用 `--help` 与现有行为测试核对，不另抄完整命令目录。
+`medautogrant` grouped CLI、`MedAutoGrantDomainEntry` 与 `domain-handler export|dispatch` 是 generated caller 后面的 direct authority targets，不是 Skill 要求用户手工运行的默认入口。CLI 的实际 token、参数和静态分派由 [cli.py](../../src/med_autogrant/cli.py) 和 [domain entry catalog](../../src/med_autogrant/domain_entry_catalog.py)持有；维护者使用 `--help` 与现有行为测试核对，不另抄完整命令目录。
 
 MAG 的 service-safe、executor-routing 和 product-entry schemas 仍描述 domain entry spec、command contracts、workspace locator、runtime session envelope 与 domain payload；`/product_entry_manifest/*` 是 OPL-generated output 中的 JSON pointer，不代表 MAG 保存本地 manifest builder。
 
