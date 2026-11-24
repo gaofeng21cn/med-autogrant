@@ -1,19 +1,27 @@
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
-from unittest.mock import patch
 import hashlib
+import importlib.util
 import json
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from med_autogrant.app_contribution import NOTE_ACTION, current_review_feedback, read_contribution, record_review
-from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
+from med_autogrant.app_contribution import (
+    NOTE_ACTION,
+    current_review_feedback,
+    read_contribution,
+)
+from med_autogrant.critique_executor import (
+    _build_critique_context,
+    _build_critique_prompt,
+)
 from med_autogrant.domain_entry import dispatch_domain_request
 from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
@@ -103,9 +111,19 @@ def test_wrong_identity_path_escape_and_runtime_symlink_rejected(workspace: Path
         record(workspace, value)
 
 
-def test_source_and_carrier_commands_share_owner_and_no_ui_cli(workspace: Path) -> None:
+def _materialize_carrier_root(tmp_path: Path) -> Path:
+    spec = importlib.util.spec_from_file_location('carrier_test_helper', ROOT / 'tests' / '_carrier_test_helper.py')
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    carrier_root, _ = module.materialize_carrier_in_temp(ROOT, tmp_path / 'materialized-carrier')
+    return carrier_root
+
+
+def test_source_and_carrier_commands_share_owner_and_no_ui_cli(workspace: Path, tmp_path: Path) -> None:
     env = {**os.environ, 'OPL_PROFILE_WORKSPACE': str(workspace), 'PYTHONDONTWRITEBYTECODE': '1'}
-    for package_root in (ROOT, ROOT / 'plugins/med-autogrant'):
+    carrier_root = _materialize_carrier_root(tmp_path)
+    for package_root in (ROOT, carrier_root):
         read = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'route'], cwd=package_root,
                               input='{}', text=True, capture_output=True, env=env, check=True)
         item = json.loads(read.stdout)['data']['items'][0]
@@ -169,9 +187,14 @@ def test_critique_feedback_keeps_the_already_read_candidate_during_source_switch
 
 
 def test_recorded_feedback_continues_same_grant_through_actual_critique_cli(workspace: Path, capsys) -> None:
+    from test_critique_executor import (
+        CRITIQUE_PACKET_PATH,
+        _closeout_packet,
+        _codex_receipt,
+    )
+
     from med_autogrant.cli import main
     from med_autogrant.critique_executor import build_critique_execution_document
-    from test_critique_executor import CRITIQUE_PACKET_PATH, _closeout_packet, _codex_receipt
 
     source = workspace / "workspace.json"
     original = json.loads(source.read_text())

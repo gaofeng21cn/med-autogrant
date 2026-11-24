@@ -12,7 +12,10 @@ requires-python = ">=3.12"
 authors = [
   { name = "Gao Feng" }
 ]
-dependencies = []
+dependencies = [
+  "pydantic>=2.10,<3",
+  "jsonschema>=4.23,<5",
+]
 
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"

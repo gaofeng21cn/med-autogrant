@@ -13,7 +13,7 @@
 | 直接 authority target | `medautogrant`、`MedAutoGrantDomainEntry` 和 [domain handler contract](../src/med_autogrant/product_entry/domain_handler_contract.py)；不作为 Skill 的默认用户入口 |
 | 通用 transport | [executor client](../src/med_autogrant/domain_executor_client.py) 与 funding source 调用 OPL Python helpers |
 | Package dependency | `mas-scholar-skills` 为 required dependency；manifest 声明不能代替 provider 实际 presence/callability |
-| 原生载荷与环境诊断 | [carrier projection](../contracts/carrier_projection.json) 驱动 `plugins/med-autogrant/` 投影（含领域代码、Stage、合同、Schema、Skill 参考文档及 App adapter）；[pack doctor](../contracts/pack_doctor.json) 声明环境诊断与 CLI/模块前置检查 |
+| 原生载荷与环境诊断 | 单源根目录持有唯一受控实现，`plugins/med-autogrant/` 仅跟踪薄 carrier 壳；[carrier projection](../contracts/carrier_projection.json) 与 `scripts/sync_carrier.py` 驱动构建期自包含载体物化与 `--check` 校验；[pack doctor](../contracts/pack_doctor.json) 声明环境诊断与 CLI/模块前置检查 |
 | 结构证据 | [conformance profile](../contracts/standard_agent_conformance_profile.json)、[source closure audit](../contracts/source_closure_audit.json)，需 fresh scanner 才能判断当前检查结果 |
 | MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 通过 MAG owner 读取已登记工作区的 canonical `workspace.json`，直接输出通用审阅投影；`workspace_file`、`quality_path` 可显式选择其他 owner 文件。意见绑定 exact source revision，UI/CLI 同源保存、回读，由既有 critique 消费；任务继续仍走原 runtime action，不推断未保存的质量评分 |
 

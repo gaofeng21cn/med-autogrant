@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import shutil
 import subprocess
 import tomllib
@@ -14,6 +13,32 @@ TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
 }
 TRACKED_AGENT_STATE_ALLOWED_PATHS = {
     ".agents/plugins/marketplace.json",
+}
+TRACKED_THIN_CARRIER_ALLOWED_PATHS = {
+    "plugins/med-autogrant/.codex-plugin/plugin.json",
+    "plugins/med-autogrant/app-contribution-adapter.json",
+    "plugins/med-autogrant/assets/icon.png",
+    "plugins/med-autogrant/assets/icon.svg",
+    "plugins/med-autogrant/opl-package.json",
+    "plugins/med-autogrant/plugin.json",
+    "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+    "plugins/med-autogrant/skills/med-autogrant/agents/openai.yaml",
+}
+FORBIDDEN_TRACKED_CARRIER_MIRROR_PREFIXES = (
+    "plugins/med-autogrant/agent/",
+    "plugins/med-autogrant/assets/branding/",
+    "plugins/med-autogrant/contracts/",
+    "plugins/med-autogrant/docs/",
+    "plugins/med-autogrant/runtime/",
+    "plugins/med-autogrant/schemas/",
+    "plugins/med-autogrant/src/",
+)
+FORBIDDEN_TRACKED_CARRIER_MIRROR_FILES = {
+    "plugins/med-autogrant/LICENSE",
+    "plugins/med-autogrant/README.md",
+    "plugins/med-autogrant/README.zh-CN.md",
+    "plugins/med-autogrant/pyproject.toml",
+    "plugins/med-autogrant/uv.lock",
 }
 TRACKED_PATH_FORBIDDEN_PARTS = {
     ".agents",
@@ -106,6 +131,31 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(agent_paths, sorted(TRACKED_AGENT_STATE_ALLOWED_PATHS))
         self.assertTrue((REPO_ROOT / "plugins" / "med-autogrant" / ".codex-plugin" / "plugin.json").is_file())
+
+    def test_plugin_carrier_tracks_only_thin_shell_without_mirrored_subtrees(self) -> None:
+        carrier_paths = sorted(
+            path for path in _tracked_files() if path.startswith("plugins/med-autogrant/")
+        )
+        mirrored = [
+            path
+            for path in carrier_paths
+            if path in FORBIDDEN_TRACKED_CARRIER_MIRROR_FILES
+            or any(path.startswith(prefix) for prefix in FORBIDDEN_TRACKED_CARRIER_MIRROR_PREFIXES)
+            or path.endswith(".py")
+        ]
+        self.assertEqual(mirrored, [])
+        self.assertEqual(carrier_paths, sorted(TRACKED_THIN_CARRIER_ALLOWED_PATHS))
+        gitignore = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
+        for entry in (
+            "/plugins/med-autogrant/agent/",
+            "/plugins/med-autogrant/contracts/",
+            "/plugins/med-autogrant/schemas/",
+            "/plugins/med-autogrant/runtime/",
+            "/plugins/med-autogrant/src/",
+            "/plugins/med-autogrant/docs/",
+            "/plugins/med-autogrant/assets/branding/",
+        ):
+            self.assertIn(entry, gitignore)
 
     def test_framework_python_carrier_is_not_an_agent_dependency(self) -> None:
         pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))

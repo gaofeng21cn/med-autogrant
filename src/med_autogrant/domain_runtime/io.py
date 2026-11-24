@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any, Literal
 
-from med_autogrant.artifact_bundle_validation import _validate_required_artifact_bundle_fields
-from med_autogrant.control_plane import resolve_runtime_state_root
-from med_autogrant.final_package_validation import SUPPORTED_FINAL_PACKAGE_VERSION
-from med_autogrant.workspace import materialize_workspace_surfaces
-from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from jsonschema import Draft202012Validator, FormatChecker
 from opl_framework.json_io import (
     ExistingJsonIdentityMismatch,
     JsonObjectReadError,
@@ -16,8 +14,112 @@ from opl_framework.json_io import (
     read_json_object,
     write_json_object_atomic,
 )
-from .contracts import validate_schema_payload as _validate_schema_payload
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from referencing import Registry, Resource
+from referencing.jsonschema import DRAFT202012
+
+from med_autogrant.artifact_bundle_validation import (
+    _validate_required_artifact_bundle_fields,
+)
+from med_autogrant.control_plane import resolve_runtime_state_root
+from med_autogrant.final_package_validation import SUPPORTED_FINAL_PACKAGE_VERSION
+from med_autogrant.schema_loader import SchemaStore
+from med_autogrant.workspace import materialize_workspace_surfaces
+from med_autogrant.workspace_types import (
+    ValidationIssue,
+    WorkspaceFileError,
+    WorkspaceStateError,
+)
+
 from .shared import FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE
+
+
+class _ArtifactBundleEnvelope(BaseModel):
+    model_config = ConfigDict(extra="allow", strict=True)
+
+    bundle_kind: Literal["artifact_bundle"]
+    grant_run_id: Any = None
+    workspace_id: Any = None
+    draft_id: Any = None
+
+
+class _FinalPackageEnvelope(BaseModel):
+    model_config = ConfigDict(extra="allow", strict=True)
+
+    package_kind: Literal["final_package"]
+    package_version: Annotated[
+        int,
+        Field(
+            strict=True,
+            ge=SUPPORTED_FINAL_PACKAGE_VERSION,
+            le=SUPPORTED_FINAL_PACKAGE_VERSION,
+        ),
+    ]
+    grant_run_id: Any
+    workspace_id: Any
+    draft_id: Any
+    lifecycle_stage: Any
+    freeze_manifest: Any
+    lineage: Any
+    checkpoint_summary: Any
+
+
+_JSON_SCHEMA_FORMAT_CHECKER = FormatChecker()
+
+
+@_JSON_SCHEMA_FORMAT_CHECKER.checks("date-time", ValueError)
+def _check_iso8601_datetime(value: object) -> bool:
+    if not isinstance(value, str):
+        return True
+    if "T" not in value and "t" not in value:
+        raise ValueError("must be an ISO-8601 date-time string")
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        raise ValueError("date-time must include timezone offset")
+    return True
+
+
+@lru_cache(maxsize=4)
+def _schema_registry(schema_root: Path) -> Registry[Any]:
+    resources: list[tuple[str, Resource[Any]]] = []
+    for schema_path in sorted(schema_root.glob("*.schema.json")):
+        contents = json.loads(schema_path.read_text(encoding="utf-8"))
+        resource = Resource.from_contents(contents, default_specification=DRAFT202012)
+        schema_id = contents.get("$id")
+        if isinstance(schema_id, str) and schema_id:
+            resources.append((schema_id, resource))
+        resources.append((schema_path.name, resource))
+    return Registry().with_resources(resources)
+
+
+def _validate_json_schema_payload(
+    payload: dict[str, Any],
+    *,
+    schema_file: str,
+    context: str,
+) -> None:
+    store = SchemaStore()
+    schema = store.load_json(schema_file)
+    validator = Draft202012Validator(
+        schema,
+        registry=_schema_registry(store.root.resolve()),
+        format_checker=_JSON_SCHEMA_FORMAT_CHECKER,
+    )
+    raw_errors = sorted(validator.iter_errors(payload), key=lambda item: [str(part) for part in item.path])
+    if not raw_errors:
+        return
+    issues = [
+        ValidationIssue(
+            path=".".join(str(part) for part in err.path) or "$",
+            message=err.message,
+        )
+        for err in raw_errors
+    ]
+    detail = "; ".join(f"{issue.path}: {issue.message}" for issue in issues[:5])
+    if len(issues) > 5:
+        detail = f"{detail}; 其余 {len(issues) - 5} 项略"
+    raise WorkspaceStateError(f"{context} schema 校验失败: {detail}", errors=issues)
+
 
 def _read_active_draft_id(document: dict[str, Any]) -> str | None:
     selection = document.get("current_selection") or {}
@@ -234,24 +336,26 @@ def _read_artifact_bundle(
             lifecycle_stage=lifecycle_stage,
         )
 
-    if artifact_bundle.get("bundle_kind") != "artifact_bundle":
+    try:
+        envelope = _ArtifactBundleEnvelope.model_validate(artifact_bundle)
+    except ValidationError as exc:
         raise WorkspaceStateError(
             f"artifact bundle kind 非法: {artifact_bundle.get('bundle_kind')}",
             errors=[],
             grant_run_id=grant_run_id,
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
-        )
+        ) from exc
 
-    if (
-        artifact_bundle.get("grant_run_id") != grant_run_id
-        or artifact_bundle.get("workspace_id") != workspace_id
-        or artifact_bundle.get("draft_id") != draft_id
+    if (envelope.grant_run_id, envelope.workspace_id, envelope.draft_id) != (
+        grant_run_id,
+        workspace_id,
+        draft_id,
     ):
         raise WorkspaceStateError(
             (
                 "artifact bundle identity 不匹配: "
-                f"{artifact_bundle.get('grant_run_id')}/{artifact_bundle.get('workspace_id')}/{artifact_bundle.get('draft_id')} "
+                f"{envelope.grant_run_id}/{envelope.workspace_id}/{envelope.draft_id} "
                 f"!= {grant_run_id}/{workspace_id}/{draft_id}"
             ),
             errors=[],
@@ -281,27 +385,19 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
     if not isinstance(final_package, dict):
         raise WorkspaceStateError(f"final package 顶层必须是 JSON object: {resolved_final_package_path}")
 
-    if final_package.get("package_kind") != "final_package":
-        raise WorkspaceStateError(f"final package kind 非法: {final_package.get('package_kind')}")
+    try:
+        envelope = _FinalPackageEnvelope.model_validate(final_package)
+    except ValidationError as exc:
+        first_loc = exc.errors()[0].get("loc", ())
+        first_field = str(first_loc[0]) if first_loc else "package_kind"
+        if first_field == "package_kind":
+            raise WorkspaceStateError(f"final package kind 非法: {final_package.get('package_kind')}") from exc
+        raise WorkspaceStateError(f"final package 缺少字段: {first_field}") from exc
 
-    required_fields = (
-        "package_version",
-        "grant_run_id",
-        "workspace_id",
-        "draft_id",
-        "lifecycle_stage",
-        "freeze_manifest",
-        "lineage",
-        "checkpoint_summary",
-    )
-    for field in required_fields:
-        if field not in final_package:
-            raise WorkspaceStateError(f"final package 缺少字段: {field}")
-
-    package_version = final_package.get("package_version")
-    if not isinstance(package_version, int) or package_version != SUPPORTED_FINAL_PACKAGE_VERSION:
+    if envelope.package_version != SUPPORTED_FINAL_PACKAGE_VERSION:
         raise WorkspaceStateError("final package 缺少字段: package_version")
     return final_package
+
 
 def _guard_final_package_output_identity(
     output_path: Path,
@@ -449,7 +545,7 @@ def _load_funding_landscape_cache_if_needed(discovery_input: dict[str, Any]) -> 
     if not cache_path.exists():
         raise WorkspaceFileError(f"official_cached 模式缺少 funding cache: {cache_path}")
     snapshot = _load_json_object(cache_path, context="funding landscape cache")
-    _validate_schema_payload(
+    _validate_json_schema_payload(
         snapshot,
         schema_file=FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
         context="funding_landscape_cache",

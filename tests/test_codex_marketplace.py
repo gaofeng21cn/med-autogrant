@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
 
@@ -35,6 +34,9 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
     assert plugin_root.is_dir()
     assert plugin_manifest["name"] == "med-autogrant"
     assert plugin_manifest["interface"]["category"] == "Research"
+    assert plugin_manifest["interface"]["logo"] == "./assets/icon.png"
+    assert plugin_manifest["interface"]["composerIcon"] == "./assets/icon.png"
+    assert (plugin_root / "assets" / "icon.png").is_file()
     assert plugin_manifest["skills"] == "./skills/"
     carrier_descriptor = json.loads(
         (plugin_root / "opl-package.json").read_text(encoding="utf-8")
@@ -65,6 +67,7 @@ def test_repo_marketplace_exposes_the_existing_codex_plugin_carrier() -> None:
     assert {
         entry["kind"] for entry in owner_adapter["reads"].values()
     } == {"command"}
+    assert (REPO_ROOT / "runtime" / "app_contribution.py").is_file()
     for entry in owner_adapter["reads"].values():
         assert entry["argv"][:2] == ["python3", "runtime/app_contribution.py"]
         assert "transform" not in entry

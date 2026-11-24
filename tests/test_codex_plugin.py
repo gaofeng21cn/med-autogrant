@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import tomllib
 from pathlib import Path
-
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "med-autogrant"
@@ -37,8 +37,8 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert manifest["skills"] == "./skills/"
     assert manifest["interface"]["displayName"] == "Med Auto Grant"
     assert manifest["interface"]["category"] == "Research"
-    assert manifest["interface"]["composerIcon"] == "./assets/branding/medautogrant-logo.png"
-    assert manifest["interface"]["logo"] == "./assets/branding/medautogrant-logo.png"
+    assert manifest["interface"]["composerIcon"] == "./assets/icon.png"
+    assert manifest["interface"]["logo"] == "./assets/icon.png"
     assert portable_manifest["$schema"] == (
         "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
     )
@@ -241,7 +241,19 @@ def test_native_carrier_projects_descriptor_neutral_mag_owner_contract() -> None
     )
 
 
-def test_nested_native_carrier_contains_domain_runtime_and_stage_resources() -> None:
+def _load_sync_carrier_module():
+    spec = importlib.util.spec_from_file_location(
+        "carrier_test_helper", REPO_ROOT / "tests" / "_carrier_test_helper.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_nested_native_carrier_materializes_domain_runtime_and_stage_resources(
+    tmp_path: Path,
+) -> None:
     marketplace = json.loads(
         (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").read_text(
             encoding="utf-8"
@@ -255,12 +267,12 @@ def test_nested_native_carrier_contains_domain_runtime_and_stage_resources() -> 
     )
     owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
     domain_descriptor = json.loads(
-        (PLUGIN_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
+        (REPO_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
             encoding="utf-8"
         )
     )
     action_catalog = json.loads(
-        (PLUGIN_ROOT / owner_manifest["action_catalog_ref"]).read_text(
+        (REPO_ROOT / owner_manifest["action_catalog_ref"]).read_text(
             encoding="utf-8"
         )
     )
@@ -273,21 +285,35 @@ def test_nested_native_carrier_contains_domain_runtime_and_stage_resources() -> 
     stage_manifest_ref = domain_descriptor["standard_agent_interface"]["stage_catalog"][
         "relative_path"
     ]
-    assert (PLUGIN_ROOT / stage_manifest_ref).is_file()
     assert all(
         action["execution_binding"]["stage_manifest_ref"] == stage_manifest_ref
         for action in action_catalog["actions"]
     )
-    for hosted_runtime_ref in (
+
+    sync_carrier = _load_sync_carrier_module()
+    materialized_carrier, report = sync_carrier.materialize_carrier_in_temp(
+        REPO_ROOT, tmp_path / "carrier-stage"
+    )
+    assert report["pack_carrier_projection"]["status"] == "passed"
+
+    pack = json.loads((REPO_ROOT / "contracts/pack_compiler_input.json").read_text())
+    required_resources = (
+        owner_manifest["domain_descriptor_ref"],
+        owner_manifest["action_catalog_ref"],
+        stage_manifest_ref,
         "src/med_autogrant/product_entry/domain_handler.py",
         "src/med_autogrant/product_entry/domain_handler_dispatch.py",
-    ):
-        assert (PLUGIN_ROOT / hosted_runtime_ref).is_file()
-    pack = json.loads((PLUGIN_ROOT / "contracts/pack_compiler_input.json").read_text())
-    for resource in pack["required_domain_pack_paths"]:
-        assert (PLUGIN_ROOT / resource).is_file()
-    assert (PLUGIN_ROOT / "schemas/v1/nsfc-workspace.schema.json").is_file()
-    assert (PLUGIN_ROOT / "contracts/runtime-program/current-program.json").is_file()
+        "runtime/app_contribution.py",
+        "schemas/v1/nsfc-workspace.schema.json",
+        "contracts/runtime-program/current-program.json",
+        *pack["required_domain_pack_paths"],
+    )
+    for resource in required_resources:
+        canonical = REPO_ROOT / resource
+        projected = materialized_carrier / resource
+        assert canonical.is_file(), resource
+        assert projected.is_file(), resource
+        assert projected.read_bytes() == canonical.read_bytes(), resource
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:
