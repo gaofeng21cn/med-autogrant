@@ -115,7 +115,7 @@
       "classification": "minimal_authority_function",
       "standardization_layer": "authority_function_inventory",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
+        "src/med_autogrant/product_entry/domain_memory_runtime.py"
       ],
       "active_callers": [
         "domain-handler dispatch",
@@ -131,9 +131,9 @@
       "classification": "minimal_authority_function",
       "standardization_layer": "authority_function_inventory",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
-        "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
-        "src/med_autogrant/product_entry_parts/typed_blocker_projection.py"
+        "src/med_autogrant/product_entry/owner_receipt_common.py",
+        "src/med_autogrant/product_entry/owner_receipt_writers.py",
+        "src/med_autogrant/product_entry/typed_blocker_projection.py"
       ],
       "active_callers": [
         "domain-handler stage closeout",
@@ -153,10 +153,10 @@
         "src/med_autogrant/authoring_executor.py",
         "src/med_autogrant/authoring_executor_parts.py",
         "src/med_autogrant/critique_executor.py",
-        "src/med_autogrant/product_entry_parts/domain_handler.py",
-        "src/med_autogrant/product_entry_parts/domain_handler_contract.py",
-        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
-        "src/med_autogrant/product_entry_parts/primitives.py"
+        "src/med_autogrant/product_entry/domain_handler.py",
+        "src/med_autogrant/product_entry/domain_handler_contract.py",
+        "src/med_autogrant/product_entry/domain_handler_dispatch.py",
+        "src/med_autogrant/product_entry/primitives.py"
       ],
       "active_callers": [
         "MedAutoGrantDomainEntry",
@@ -169,8 +169,8 @@
       "cannot_absorb_reason": "OPL owns hosting, all executor transport, plugin lifecycle, and generic runtime; MAG still supplies grant prompts, typed domain outputs, and guarded authority targets.",
       "current_surface_refs": [
         "src/med_autogrant/cli.py",
-        "src/med_autogrant/product_entry_parts/domain_handler.py",
-        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
+        "src/med_autogrant/product_entry/domain_handler.py",
+        "src/med_autogrant/product_entry/domain_handler_dispatch.py",
         "contracts/generated_surface_handoff.json#/domain_handler_targets"
       ],
       "bridge_exit_gate": {

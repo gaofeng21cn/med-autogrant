@@ -72,7 +72,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertIn("identity", payload["error"])
 
     def test_invalid_built_contract_shape_is_rejected(self) -> None:
-        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
+        from med_autogrant.domain_runtime.substrate import MagDomainRuntime
         from med_autogrant.workspace import WorkspaceStateError
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -80,7 +80,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "hosted.json"
             build_final_package(self, FROZEN_EXAMPLE_PATH, final_path)
             with patch(
-                "med_autogrant.domain_runtime_parts.package_surface.build_hosted_contract_bundle_document",
+                "med_autogrant.domain_runtime.package_surface.build_hosted_contract_bundle_document",
                 return_value={"contract_version": 1, "bundle_kind": "hosted_contract_bundle"},
             ), self.assertRaises(WorkspaceStateError):
                 MagDomainRuntime().build_hosted_contract_bundle(

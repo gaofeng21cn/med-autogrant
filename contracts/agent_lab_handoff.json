@@ -24,7 +24,7 @@
   ],
   "handoff_refs": {
     "agent_lab_handoff": {
-      "domain_handler_ref": "src/med_autogrant/product_entry_parts/domain_handler.py",
+      "domain_handler_ref": "src/med_autogrant/product_entry/domain_handler.py",
       "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
       "live_progress_ref": "contracts/live_stage_run_progress_evidence.json",
       "production_acceptance_provenance_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"

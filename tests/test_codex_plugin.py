@@ -279,8 +279,8 @@ def test_nested_native_carrier_contains_domain_runtime_and_stage_resources() -> 
         for action in action_catalog["actions"]
     )
     for hosted_runtime_ref in (
-        "src/med_autogrant/product_entry_parts/domain_handler.py",
-        "src/med_autogrant/product_entry_parts/domain_handler_dispatch.py",
+        "src/med_autogrant/product_entry/domain_handler.py",
+        "src/med_autogrant/product_entry/domain_handler_dispatch.py",
     ):
         assert (PLUGIN_ROOT / hosted_runtime_ref).is_file()
     pack = json.loads((PLUGIN_ROOT / "contracts/pack_compiler_input.json").read_text())

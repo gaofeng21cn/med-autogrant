@@ -4,7 +4,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.domain_runtime_parts.io import (
+from med_autogrant.domain_runtime.io import (
     _guard_final_package_output_identity,
     _read_artifact_bundle,
     _write_final_package_output,

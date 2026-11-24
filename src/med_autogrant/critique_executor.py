@@ -13,7 +13,7 @@ from med_autogrant.critique_policy import (
     resolve_critique_policy_from_document,
 )
 from med_autogrant.domain_executor_client import ExecutorRunner, run_domain_executor
-from med_autogrant.domain_runtime_parts.contracts import validate_contract_schema
+from med_autogrant.domain_runtime.contracts import validate_contract_schema
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids

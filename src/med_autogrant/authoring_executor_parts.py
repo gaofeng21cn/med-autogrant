@@ -10,7 +10,7 @@ from med_autogrant.domain_executor_client import (
     ExecutorRunner,
     run_domain_executor,
 )
-from med_autogrant.domain_runtime_parts.contracts import (
+from med_autogrant.domain_runtime.contracts import (
     build_direct_scholar_skill_prompt_lines,
     validate_contract_schema,
 )

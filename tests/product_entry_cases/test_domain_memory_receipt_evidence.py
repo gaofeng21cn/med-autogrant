@@ -8,7 +8,7 @@ import json
 import unittest
 from pathlib import Path
 
-from med_autogrant.product_entry_parts.domain_memory_runtime import (
+from med_autogrant.product_entry.domain_memory_runtime import (
     DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,

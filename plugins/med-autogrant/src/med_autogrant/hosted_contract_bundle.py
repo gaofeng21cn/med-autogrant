@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.domain_runtime_parts.shared import (
+from med_autogrant.domain_runtime.shared import (
     DOMAIN_AUTHORITY_SURFACE_REF,
     GENERATED_SESSION_RESUME_SURFACE_REF,
     GENERATED_SESSION_SURFACE_REF,

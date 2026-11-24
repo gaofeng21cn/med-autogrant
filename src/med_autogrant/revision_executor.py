@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.ai_first_boundaries import active_ai_backed_critique_quality_context
-from med_autogrant.domain_runtime_parts.io import (
+from med_autogrant.domain_runtime.io import (
     _guard_revision_output_identity,
     _write_revised_workspace_output,
 )

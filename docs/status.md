@@ -10,7 +10,7 @@
 | --- | --- |
 | 用户入口 | [action catalog](../contracts/action_catalog.json) 的三个 Stage-bound action；[产品入口](./product.md)解释调用边界 |
 | 阶段语义 | [六阶段 manifest](../agent/stages/manifest.json)、对应 prompt/policy、[quality cycle](../contracts/stage_quality_cycle_policy.json) |
-| 直接 authority target | `medautogrant`、`MedAutoGrantDomainEntry` 和 [domain handler contract](../src/med_autogrant/product_entry_parts/domain_handler_contract.py)；不作为 Skill 的默认用户入口 |
+| 直接 authority target | `medautogrant`、`MedAutoGrantDomainEntry` 和 [domain handler contract](../src/med_autogrant/product_entry/domain_handler_contract.py)；不作为 Skill 的默认用户入口 |
 | 通用 transport | [executor client](../src/med_autogrant/domain_executor_client.py) 与 funding source 调用 OPL Python helpers |
 | Package dependency | `mas-scholar-skills` 为 required dependency；manifest 声明不能代替 provider 实际 presence/callability |
 | 原生载荷与环境诊断 | [carrier projection](../contracts/carrier_projection.json) 驱动 `plugins/med-autogrant/` 投影（含领域代码、Stage、合同、Schema、Skill 参考文档及 App adapter）；[pack doctor](../contracts/pack_doctor.json) 声明环境诊断与 CLI/模块前置检查 |

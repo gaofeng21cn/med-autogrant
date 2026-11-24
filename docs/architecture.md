@@ -41,7 +41,7 @@ Framework 聚合 `opl packages install|update|uninstall mag` 动作和 carrier r
 
 Hosted action 同时要求正式 `workspace_root` 与 `project_id`；Framework 通过 `workspace_index.json#/projects` 解析项目根，绑定该项目可用的知识来源。`input_path` 仍是申请材料输入，不替代工作区或项目身份。知识提案的 `target_scope` 表示建议归属；它不能改变本次执行绑定或授予额外来源权限。
 
-Repo-local CLI 由声明式 parser metadata 与显式静态 dispatch 组成，最终调用同一 MAG authority target。`domain-handler export` 只输出 workspace identity/locator、action/Stage/handoff 与 authority/receipt refs；`domain-handler dispatch` 的允许动作由 [current-program](../contracts/runtime-program/current-program.json) 和 [handler contract](../src/med_autogrant/product_entry_parts/domain_handler_contract.py)持有，当前为 memory propose、memory decide 和 Stage closeout。
+Repo-local CLI 由声明式 parser metadata 与显式静态 dispatch 组成，最终调用同一 MAG authority target。`domain-handler export` 只输出 workspace identity/locator、action/Stage/handoff 与 authority/receipt refs；`domain-handler dispatch` 的允许动作由 [current-program](../contracts/runtime-program/current-program.json) 和 [handler contract](../src/med_autogrant/product_entry/domain_handler_contract.py)持有，当前为 memory propose、memory decide 和 Stage closeout。
 
 MAG 只构造 grant prompt/domain payload 并解析 typed closeout。所有 executor request 经 `opl_framework.executor_client.run_agent_execution_request`；临时请求文件、subprocess、timeout/cleanup 和 canonical receipt envelope 由 OPL 持有。MAG 构建只收集 `med_autogrant*`，验证环境经 clean runner 定位 Framework helpers。Funding source 也调用 `opl_framework.source_transport.fetch_text`；MAG 持有 NIH/NSFC 官方 URL allowlist、User-Agent、HTML 解析与领域 provenance。
 

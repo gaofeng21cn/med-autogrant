@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
-from med_autogrant.product_entry_parts.domain_handler_contract import ALLOWED_ACTIONS
+from med_autogrant.product_entry.domain_handler import build_domain_handler_export
+from med_autogrant.product_entry.domain_handler_contract import ALLOWED_ACTIONS
 
 
 pytestmark = pytest.mark.meta

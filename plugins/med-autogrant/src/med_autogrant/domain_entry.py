@@ -4,8 +4,8 @@ from typing import Any, Mapping
 
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.app_contribution import read_review, record_review
-from med_autogrant.domain_runtime_parts.authoring_surface import execute_freeze_pass
-from med_autogrant.domain_runtime_parts.handoff_surfaces import (
+from med_autogrant.domain_runtime.authoring_surface import execute_freeze_pass
+from med_autogrant.domain_runtime.handoff_surfaces import (
     build_artifact_bundle,
     execute_argument_building_pass,
     execute_critique_pass,
@@ -17,17 +17,17 @@ from med_autogrant.domain_runtime_parts.handoff_surfaces import (
     execute_revision_pass,
     execute_strategy_authoring_pass,
 )
-from med_autogrant.domain_runtime_parts.package_surface import (
+from med_autogrant.domain_runtime.package_surface import (
     build_final_package,
     build_hosted_contract_bundle,
     build_submission_ready_package,
 )
-from med_autogrant.domain_runtime_parts.quality_surface import (
+from med_autogrant.domain_runtime.quality_surface import (
     grant_quality_closure_dossier,
     grant_quality_diff,
     grant_quality_scorecard,
 )
-from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
+from med_autogrant.domain_runtime.substrate import MagDomainRuntime
 from med_autogrant.workspace_types import WorkspaceStateError
 
 

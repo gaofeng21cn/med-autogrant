@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from med_autogrant.authoring_executor_parts import _build_direction_screening_prompt
-from med_autogrant.domain_runtime_parts.contracts import (
+from med_autogrant.domain_runtime.contracts import (
     build_direct_scholar_skill_prompt_lines,
     build_hosted_authoring_contract,
     read_scholar_skill_binding_contract,

@@ -7,9 +7,9 @@ from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime  # noqa: E402
-from med_autogrant.domain_runtime_parts.contracts import build_executor_routing_contract  # noqa: E402
-import med_autogrant.domain_runtime_parts.handoff_surfaces as handoff_surfaces  # noqa: E402
+from med_autogrant.domain_runtime.substrate import MagDomainRuntime  # noqa: E402
+from med_autogrant.domain_runtime.contracts import build_executor_routing_contract  # noqa: E402
+import med_autogrant.domain_runtime.handoff_surfaces as handoff_surfaces  # noqa: E402
 from med_autogrant.workspace_types import WorkspaceStateError  # noqa: E402
 
 

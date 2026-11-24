@@ -9,15 +9,15 @@ from typing import Any
 from med_autogrant.cli_rendering_parts import _render_text
 from med_autogrant.domain_entry import dispatch_domain_request
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
-from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export
-from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
-from med_autogrant.product_entry_parts.domain_memory_runtime import (
+from med_autogrant.product_entry.domain_handler import build_domain_handler_export
+from med_autogrant.product_entry.domain_handler_dispatch import dispatch_domain_handler_task
+from med_autogrant.product_entry.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
     export_framework_knowledge_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
-from med_autogrant.product_entry_parts.owner_receipt_writers import (
+from med_autogrant.product_entry.owner_receipt_writers import (
     write_owner_receipt_evidence,
 )
 from med_autogrant.public_cli import (

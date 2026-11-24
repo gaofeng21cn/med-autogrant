@@ -80,7 +80,7 @@
         "surface_id": "domain_handler",
         "classification": "domain_handler_target",
         "source_refs": [
-          "src/med_autogrant/product_entry_parts/domain_handler.py"
+          "src/med_autogrant/product_entry/domain_handler.py"
         ]
       },
       {
@@ -108,7 +108,7 @@
         "surface_id": "memory",
         "classification": "minimal_authority_function",
         "source_refs": [
-          "src/med_autogrant/product_entry_parts/domain_memory_runtime.py"
+          "src/med_autogrant/product_entry/domain_memory_runtime.py"
         ]
       },
       {

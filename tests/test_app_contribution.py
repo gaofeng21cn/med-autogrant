@@ -197,7 +197,7 @@ def test_recorded_feedback_continues_same_grant_through_actual_critique_cli(work
         return build_critique_execution_document(**kwargs, executor_runner=fixture_executor)
 
     output = workspace / "reviewed-workspace.json"
-    with patch("med_autogrant.domain_runtime_parts.handoff_surfaces.build_critique_execution_document",
+    with patch("med_autogrant.domain_runtime.handoff_surfaces.build_critique_execution_document",
                side_effect=critique_with_fixture):
         assert main(["pass", "critique", "--input", str(source), "--output", str(output), "--json"]) == 0
     result = json.loads(capsys.readouterr().out)

@@ -5,7 +5,7 @@ import unittest
 
 class ProductEntryTypedBlockerProjectionTest(unittest.TestCase):
     def test_non_typed_blocker_receipt_does_not_project_blocker_boundary(self) -> None:
-        from med_autogrant.product_entry_parts.typed_blocker_projection import (
+        from med_autogrant.product_entry.typed_blocker_projection import (
             build_typed_blocker_projection,
             package_submission_ready_human_gate_authority_boundary,
         )
@@ -24,7 +24,7 @@ class ProductEntryTypedBlockerProjectionTest(unittest.TestCase):
         self.assertEqual(package_submission_ready_human_gate_authority_boundary(receipt), {})
 
     def test_typed_blocker_projection_keeps_refs_only_owner_boundary(self) -> None:
-        from med_autogrant.product_entry_parts.typed_blocker_projection import (
+        from med_autogrant.product_entry.typed_blocker_projection import (
             build_typed_blocker_projection,
         )
 
@@ -53,7 +53,7 @@ class ProductEntryTypedBlockerProjectionTest(unittest.TestCase):
         self.assertEqual(projection["escalation_policy"]["route"], "mag_owner_surface")
 
     def test_package_submission_typed_blocker_requires_human_gate(self) -> None:
-        from med_autogrant.product_entry_parts.typed_blocker_projection import (
+        from med_autogrant.product_entry.typed_blocker_projection import (
             PACKAGE_SUBMISSION_READY_HUMAN_GATE_ID,
             build_typed_blocker_projection,
             package_submission_ready_human_gate_authority_boundary,
