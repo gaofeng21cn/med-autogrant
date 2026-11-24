@@ -7,7 +7,7 @@
     "typed_blocker",
     "no_regression_evidence"
   ],
-  "receipt_instance_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+  "receipt_instance_root": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/receipts/",
   "local_submission_ready_projection_contract": {
     "owner": "med-autogrant",
     "requirement_mode": "all_of",

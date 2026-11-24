@@ -1,0 +1,39 @@
+{
+  "schema_version": "opl_carrier_projection.v1",
+  "owner": "mag",
+  "carrier_root": "plugins/med-autogrant",
+  "resource_source_mode": "git_tracked",
+  "resource_roots": [
+    "agent",
+    "contracts",
+    "schemas",
+    "runtime",
+    "src/med_autogrant",
+    "docs"
+  ],
+  "exclude_basenames": [
+    ".gitkeep"
+  ],
+  "extra_files": [
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "pyproject.toml",
+    "uv.lock",
+    "assets/branding/medautogrant-logo.png",
+    "assets/branding/medautogrant-overview-v3.png"
+  ],
+  "file_aliases": [
+    {
+      "from": "agent/primary_skill/SKILL.md",
+      "to": "skills/med-autogrant/SKILL.md"
+    },
+    {
+      "from": "app-contribution-adapter.json",
+      "to": "app-contribution-adapter.json"
+    }
+  ],
+  "package_manifest_projection": {
+    "mode": "none"
+  }
+}

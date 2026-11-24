@@ -50,41 +50,6 @@ def _codex_receipt(packet: dict[str, object]) -> dict[str, object]:
     }
 
 
-def _hermes_receipt(packet: dict[str, object]) -> dict[str, object]:
-    event_stream = [{"type": "tool_complete", "tool": "read_file"}]
-    proof = {
-        "full_agent_loop_proved": True,
-        "session_id": "hermes-session-proof-001",
-        "api_calls": 2,
-        "tool_call_count": 1,
-        "event_count": 1,
-        "provider_reasoning_status": "unproven_custom_chat_completions",
-        "event_stream": event_stream,
-    }
-    return {
-        "surface_kind": "opl_agent_execution_receipt",
-        "executor_kind": "hermes_agent",
-        "mode": "agent_loop",
-        "event_summary": event_stream,
-        "exit_code": 0,
-        "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
-        "proof": proof,
-        "executor_contract": {
-            "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
-            "model": "gpt-5.4",
-            "provider": "custom",
-            "api_mode": "chat_completions",
-            "reasoning_effort": "xhigh",
-        },
-        "closeout_packet": {
-            "surface_kind": "domain_stage_closeout_packet",
-            "route_id": "critique",
-            "domain_output_kind": "mag_critique_output",
-            "domain_output": deepcopy(packet),
-        },
-    }
-
-
 class CritiqueExecutionDocumentTest(unittest.TestCase):
     def test_prompt_keeps_grant_review_policy_and_profile_resolution(self) -> None:
         from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
@@ -152,50 +117,31 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                 self.assertEqual(revision["execution_status"], "planned")
                 self.assertTrue(validate_workspace_document(workspace).ok)
 
-    def test_hermes_receipt_preserves_non_equivalence_and_review_receipt(self) -> None:
-        from med_autogrant.critique_executor import build_critique_execution_document
-        from med_autogrant.domain_executor_client import OPL_EXECUTOR_TIMEOUT_SECONDS
+    def test_retired_hermes_executor_fails_closed(self) -> None:
+        from med_autogrant.critique_executor import (
+            _resolve_critique_executor_kind,
+            build_critique_execution_document,
+        )
+        from med_autogrant.workspace import WorkspaceStateError
         from opl_framework.executor_client import run_agent_execution_request
 
         self.assertIs(
             build_critique_execution_document.__kwdefaults__["executor_runner"],
             run_agent_execution_request,
         )
-
-        observed: dict[str, object] = {}
-
-        def run_via_opl(request: dict[str, object], *, timeout_seconds: float) -> dict[str, object]:
-            observed["request"] = request
-            observed["timeout_seconds"] = timeout_seconds
-            return _hermes_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
-
-        payload = build_critique_execution_document(
-            document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
-            input_path=DRAFTING_EXAMPLE_PATH,
-            executor_kind="hermes_agent",
-            executor_runner=run_via_opl,
-        )
-        executor = payload["critique_execution"]["executor"]
-        evidence = payload["critique_workspace"]["mentor_critiques"][-1]["metadata"][
-            "independent_review_evidence"
-        ]
-
-        self.assertEqual(executor["kind"], "hermes_agent")
-        self.assertEqual(executor["adapter_owner"], "one-person-lab")
-        self.assertFalse(executor["fallback_allowed"])
-        self.assertEqual(executor["non_equivalence_notice"], "connectivity_lifecycle_receipt_audit_only")
-        self.assertTrue(executor["full_agent_loop_proved"])
-        self.assertEqual(evidence["review_receipt_ref"], "opl_agent_execution_receipt::hermes-session-proof-001")
-        self.assertEqual(observed["timeout_seconds"], OPL_EXECUTOR_TIMEOUT_SECONDS)
-        request = observed["request"]
-        self.assertIsInstance(request, dict)
-        self.assertEqual(request["executor_kind"], "hermes_agent")
-        self.assertEqual(request["mode"], "agent_loop")
-        self.assertEqual(request["cwd"], str(DRAFTING_EXAMPLE_PATH.resolve().parent))
-        self.assertEqual(request["domain_payload"]["route_id"], "critique")
+        with self.assertRaisesRegex(WorkspaceStateError, "hermes_agent 已退休"):
+            _resolve_critique_executor_kind("hermes_agent")
+        with self.assertRaisesRegex(WorkspaceStateError, "hermes_agent 已退休"):
+            build_critique_execution_document(
+                document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
+                input_path=DRAFTING_EXAMPLE_PATH,
+                executor_kind="hermes_agent",
+                executor_runner=lambda *_a, **_kw: _codex_receipt(_closeout_packet(CRITIQUE_PACKET_PATH)),
+            )
 
     def test_default_codex_critique_uses_the_same_opl_client_contract(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document
+        from med_autogrant.domain_executor_client import OPL_EXECUTOR_TIMEOUT_SECONDS
 
         observed: dict[str, object] = {}
 
@@ -217,7 +163,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(request["executor_kind"], "codex_cli")
         self.assertEqual(request["mode"], "structured_call")
         self.assertEqual(request["domain_payload"]["domain_output_kind"], "mag_critique_output")
-        self.assertEqual(observed["timeout_seconds"], 300.0)
+        self.assertEqual(observed["timeout_seconds"], OPL_EXECUTOR_TIMEOUT_SECONDS)
 
     def test_executor_selection_and_receipt_shape_fail_closed(self) -> None:
         from med_autogrant.critique_executor import (
@@ -227,17 +173,17 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         from med_autogrant.workspace import WorkspaceStateError
 
         self.assertEqual(_resolve_critique_executor_kind(None), "codex_cli")
-        self.assertEqual(_resolve_critique_executor_kind("hermes_agent"), "hermes_agent")
+        self.assertEqual(_resolve_critique_executor_kind("codex_cli"), "codex_cli")
         with self.assertRaisesRegex(WorkspaceStateError, "不支持该 executor_kind"):
             _resolve_critique_executor_kind("unsupported")
 
-        invalid_receipt = _hermes_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
+        invalid_receipt = _codex_receipt(_closeout_packet(CRITIQUE_PACKET_PATH))
         invalid_receipt.pop("surface_kind")
         with self.assertRaisesRegex(WorkspaceStateError, "surface_kind"):
             build_critique_execution_document(
                 document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
                 input_path=DRAFTING_EXAMPLE_PATH,
-                executor_kind="hermes_agent",
+                executor_kind="codex_cli",
                 executor_runner=lambda _request, *, timeout_seconds: invalid_receipt,
             )
 
@@ -248,7 +194,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
             build_critique_execution_document(
                 document=load_workspace_document(DRAFTING_EXAMPLE_PATH),
                 input_path=DRAFTING_EXAMPLE_PATH,
-                executor_kind="hermes_agent",
+                executor_kind="codex_cli",
                 executor_runner=timed_out,
             )
 

@@ -122,10 +122,10 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             MagDomainRuntime().execute_critique_pass(
                 input_path=str(RE_REVIEW_EXAMPLE_PATH),
                 output_path=str(Path(tmp_dir) / "critique.json"),
-                executor_kind="hermes_agent",
+                executor_kind="codex_cli",
             )
 
-        self.assertEqual(build_document.call_args.kwargs["executor_kind"], "hermes_agent")
+        self.assertEqual(build_document.call_args.kwargs["executor_kind"], "codex_cli")
 
     def test_critique_precondition_failure_keeps_route_authority_on_decisive_attempt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir, patch.object(

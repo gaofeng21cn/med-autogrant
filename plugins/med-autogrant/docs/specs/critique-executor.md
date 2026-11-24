@@ -12,17 +12,17 @@ Machine boundary: 本文冻结 critique 的 domain vocabulary 与 OPL executor-c
 - `route_id = critique`
 - command = `execute-critique-pass`
 - 默认 executor kind = `codex_cli`
-- 显式非默认 lane = `hermes_agent`
+- 已退休（fail-closed 拒绝）= `hermes_agent`
 - 其他 executor kind fail closed
 
-`codex_cli` 是默认 concrete executor，但 Codex transport 不归 MAG。默认与非默认 executor 都通过 `opl_framework.executor_client.run_agent_execution_request` 进入 OPL Runway。
+`codex_cli` 是默认 concrete executor，但 Codex transport 不归 MAG。executor 请求通过 `opl_framework.executor_client.run_agent_execution_request` 进入 OPL Runway。
 
 ## Owner Boundary
 
 OPL 持有：
 
 - `opl executor run --request`
-- Codex / Hermes 等 concrete executor discovery 与 subprocess
+- Codex 等 OPL 托管 concrete executor discovery 与 subprocess
 - timeout、process-group cleanup、JSON event/receipt envelope
 - canonical `AgentExecutionReceipt`
 

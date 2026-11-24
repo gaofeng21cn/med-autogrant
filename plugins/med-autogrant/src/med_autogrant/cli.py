@@ -30,7 +30,7 @@ from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
 
-EXECUTOR_KIND_CHOICES = ("codex_cli", "hermes_agent")
+EXECUTOR_KIND_CHOICES = ("codex_cli",)
 
 FIELD_ARGUMENTS: dict[str, tuple[tuple[str, ...], dict[str, Any]]] = {
     "workspace_id": (("--workspace-id",), {}),

@@ -25,12 +25,14 @@ def run_domain_executor(
     domain_output_kind: str,
     executor_runner: ExecutorRunner = run_agent_execution_request,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
+    if executor_kind == "hermes_agent":
+        raise WorkspaceStateError("hermes_agent 已退休，请通过 OPL codex_cli executor 执行。")
     resolved_input_path = Path(input_path).expanduser().resolve()
     try:
         receipt = executor_runner(
             {
                 "executor_kind": executor_kind,
-                "mode": "agent_loop" if executor_kind == "hermes_agent" else "structured_call",
+                "mode": "structured_call",
                 "prompt": prompt,
                 "cwd": str(resolved_input_path.parent),
                 "json": True,

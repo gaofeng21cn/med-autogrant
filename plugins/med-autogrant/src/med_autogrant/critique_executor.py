@@ -27,11 +27,8 @@ from opl_framework.review_provenance import (
 
 EXECUTABLE_REVISION_OPERATIONS = ("replace_draft_section", "replace_draft_sections")
 DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli"
-HERMES_AGENT_EXECUTOR_KIND = "hermes_agent"
-SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
-    DEFAULT_CRITIQUE_EXECUTOR_KIND,
-    HERMES_AGENT_EXECUTOR_KIND,
-)
+RETIRED_EXECUTOR_KINDS = ("hermes_agent",)
+SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (DEFAULT_CRITIQUE_EXECUTOR_KIND,)
 
 def build_critique_execution_document(
     *,
@@ -120,6 +117,10 @@ def _resolve_critique_executor_kind(executor_kind: str | None) -> str:
     if executor_kind is None:
         return DEFAULT_CRITIQUE_EXECUTOR_KIND
     normalized = str(executor_kind).strip()
+    if normalized in RETIRED_EXECUTOR_KINDS:
+        raise WorkspaceStateError(
+            f"{normalized} 已退休，仅保留只读 Git provenance；当前只允许 {', '.join(SUPPORTED_CRITIQUE_EXECUTOR_KINDS)}。"
+        )
     if normalized in SUPPORTED_CRITIQUE_EXECUTOR_KINDS:
         return normalized
     raise WorkspaceStateError(
@@ -306,12 +307,9 @@ def _normalize_mentor_critique(
 ) -> dict[str, Any]:
     critique = deepcopy(payload)
     metadata = dict(critique.get("metadata") or {})
-    executor_kind = str(executor_payload.get("kind") or "").strip()
     critique["critique_id"] = critique_context["next_critique_id"]
-    if executor_kind == "hermes_agent":
-        metadata["owner"] = "OPL executor client critique receipt owner"
-    else:
-        metadata["owner"] = "Codex CLI critique executor"
+    _ = str(executor_payload.get("kind") or "").strip()
+    metadata["owner"] = "Codex CLI critique executor"
     metadata["independent_review_evidence"] = _build_independent_review_evidence(
         critique_context=critique_context,
         critique_id=critique["critique_id"],

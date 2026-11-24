@@ -2,15 +2,23 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import fcntl
-import hashlib
 import json
-import os
 from pathlib import Path
-import re
-import tempfile
 import uuid
 from typing import Any
+
+from opl_framework.app_contribution import (
+    AppContributionError,
+    sha256_bytes,
+    verify_work_item_identity,
+)
+from opl_framework.review_feedback_store import (
+    ReviewFeedbackError,
+    list_feedback_notes,
+    record_feedback_note,
+    resolve_contained_path,
+    validate_feedback_id,
+)
 
 from med_autogrant.workspace_types import WorkspaceStateError
 
@@ -33,7 +41,7 @@ def _snapshot(path: Path) -> tuple[dict[str, Any], str]:
     value = json.loads(raw)
     if not isinstance(value, dict):
         raise WorkspaceStateError("审阅对象必须是 JSON object。")
-    return value, "sha256:" + hashlib.sha256(raw).hexdigest()
+    return value, sha256_bytes(raw)
 
 
 def _object(path: Path) -> dict[str, Any]:
@@ -41,7 +49,7 @@ def _object(path: Path) -> dict[str, Any]:
 
 
 def _revision(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_bytes(path.read_bytes())
 
 
 def _source(input_path: str | Path) -> Path:
@@ -50,24 +58,32 @@ def _source(input_path: str | Path) -> Path:
 
 
 def _notes_root(source: Path) -> Path:
-    root = (source.parent / "runtime/review-feedback").resolve()
-    if not root.is_relative_to(source.parent):
-        raise WorkspaceStateError("审阅意见目录必须在申请目录内。")
-    return root
+    try:
+        return resolve_contained_path(
+            source.parent,
+            "runtime/review-feedback",
+            container=source.parent,
+            must_exist=False,
+        )
+    except ReviewFeedbackError as error:
+        raise WorkspaceStateError("审阅意见目录必须在申请目录内。") from error
 
 
 def review_notes(input_path: str | Path, revision: str | None = None) -> list[dict[str, Any]]:
     source = _source(input_path)
     revision = revision or _revision(source)
     root = _notes_root(source)
+    try:
+        entries = list_feedback_notes(root, revision=revision, revision_field="revision", root=source.parent)
+    except ReviewFeedbackError as error:
+        if error.reason_code == "path_escape":
+            raise WorkspaceStateError("审阅意见文件不能为符号链接。") from error
+        raise WorkspaceStateError(str(error)) from error
     notes = []
-    for path in sorted(root.glob("*.json")) if root.is_dir() else []:
-        if path.is_symlink():
-            raise WorkspaceStateError("审阅意见文件不能为符号链接。")
-        note, artifact_hash = _snapshot(path)
+    for note in entries:
         if note.get("source_ref") == str(source):
-            notes.append({**note, "artifact_ref": str(path), "artifact_hash": artifact_hash,
-                          "matches_current_revision": note.get("revision") == revision})
+            artifact_hash = sha256_bytes(Path(note["artifact_ref"]).read_bytes())
+            notes.append({**note, "artifact_hash": artifact_hash})
     return notes
 
 
@@ -99,48 +115,50 @@ def record_review(*, input_path: str | Path, workspace_id: str, grant_run_id: st
                   revision: str, request_id: str, note: str) -> dict[str, Any]:
     if not isinstance(note, str) or not note.strip() or len(note) > 20000:
         raise WorkspaceStateError("审阅意见必须为 1–20000 字符。")
-    if not isinstance(request_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", request_id):
-        raise WorkspaceStateError("意见编号必须为 1–100 位字母、数字、下划线或短横线。")
+    try:
+        normalized_id = validate_feedback_id(request_id)
+    except ReviewFeedbackError as error:
+        raise WorkspaceStateError("意见编号必须为 1–100 位字母、数字、下划线或短横线。") from error
     source = _source(input_path)
     document = _object(source)
     for field, expected in (("workspace_id", workspace_id), ("grant_run_id", grant_run_id)):
         if not expected or document.get(field) != expected:
             raise WorkspaceStateError(f"所选申请与 {field} 不一致。")
     root = _notes_root(source)
-    root.mkdir(parents=True, exist_ok=True)
-    target = root / (request_id + ".json")
     identity = {"source_ref": str(source), "workspace_id": workspace_id, "grant_run_id": grant_run_id,
-                "revision": revision, "request_id": request_id, "note": note}
-    lock_path = root / ".write.lock"
-    if lock_path.is_symlink() or target.is_symlink():
-        raise WorkspaceStateError("审阅意见目标不能为符号链接。")
-    with lock_path.open("a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        if target.exists():
-            saved = _object(target)
-            if any(saved.get(key) != value for key, value in identity.items()):
-                raise WorkspaceStateError("意见编号已被不同输入使用。")
-        else:
-            document, current_revision = _snapshot(source)
-            if current_revision != revision:
-                raise WorkspaceStateError("申请或草稿已变化；刷新后针对当前版本记录意见。")
-            selection = document.get("current_selection") or {}
-            saved = {"schema": "mag_review_feedback/v1", **identity,
-                     "draft_id": selection.get("active_draft_id"),
-                     "revision_plan_id": selection.get("active_revision_plan_id"),
-                     "recorded_at": datetime.now(timezone.utc).isoformat(),
-                     "domain_quality_approved": False, "handoff_stage": "review_and_rebuttal"}
-            fd, temp_name = tempfile.mkstemp(prefix=".review-", suffix=".tmp", dir=root)
-            try:
-                with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                    json.dump(saved, handle, ensure_ascii=False, indent=2)
-                    handle.write("\n")
-                    handle.flush()
-                    os.fsync(handle.fileno())
-                os.replace(temp_name, target)
-            finally:
-                Path(temp_name).unlink(missing_ok=True)
-        saved = _object(target)
+                "revision": revision, "request_id": normalized_id, "note": note}
+
+    def _prepare_fresh_payload() -> dict[str, Any]:
+        fresh_document, current_revision = _snapshot(source)
+        if current_revision != revision:
+            raise WorkspaceStateError("申请或草稿已变化；刷新后针对当前版本记录意见。")
+        selection = fresh_document.get("current_selection") or {}
+        return {
+            "schema": "mag_review_feedback/v1",
+            **identity,
+            "draft_id": selection.get("active_draft_id"),
+            "revision_plan_id": selection.get("active_revision_plan_id"),
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+            "domain_quality_approved": False,
+            "handoff_stage": "review_and_rebuttal",
+        }
+
+    try:
+        target, saved, _ = record_feedback_note(
+            root,
+            request_id=normalized_id,
+            payload=identity,
+            identity_keys=tuple(identity.keys()),
+            root=source.parent,
+            lock=True,
+            before_create=_prepare_fresh_payload,
+        )
+    except ReviewFeedbackError as error:
+        if error.reason_code == "idempotency_conflict":
+            raise WorkspaceStateError("意见编号已被不同输入使用。") from error
+        if error.reason_code == "symlink_not_allowed":
+            raise WorkspaceStateError("审阅意见目标不能为符号链接。") from error
+        raise WorkspaceStateError(str(error)) from error
     return {"ok": True, "status": "recorded", "artifact_ref": str(target), "review_note": saved,
             "matches_current_revision": _revision(source) == revision,
             "workspace_id": workspace_id, "grant_run_id": grant_run_id,
@@ -154,8 +172,11 @@ def _selected_source(root: Path, value: dict[str, Any], view: str) -> Path:
     ref = value.get("quality_path" if view == "quality" else "workspace_file") or "workspace.json"
     if not isinstance(ref, str):
         raise WorkspaceStateError("申请文件路径必须为字符串。")
-    source = (root / ref).resolve(strict=True)
-    if not source.is_relative_to(root) or not source.is_file():
+    try:
+        source = resolve_contained_path(root, ref, container=root, must_exist=True)
+    except ReviewFeedbackError as error:
+        raise WorkspaceStateError("申请文件必须位于已登记工作区内。") from error
+    if not source.is_file():
         raise WorkspaceStateError("申请文件必须位于已登记工作区内。")
     return source
 
@@ -164,11 +185,24 @@ def read_contribution(root: Path, value: dict[str, Any], view: str) -> dict[str,
     root = root.resolve(strict=True)
     source = _selected_source(root, value, view)
     document, revision = _snapshot(source)
-    identity = value.get("work_item_identity") or {}
-    if not isinstance(identity, dict) or any(identity.get(k) not in (None, expected) for k, expected in (
-        ("agent_id", "mag"), ("domain_id", "med-autogrant"))):
-        raise WorkspaceStateError("所选任务不属于 MAG。")
-    work_item = identity.get("domain_work_item_id") or identity.get("work_item_id")
+    raw_identity = value.get("work_item_identity") or {}
+    expected_agents = (
+        ("mag",) if isinstance(raw_identity, dict) and raw_identity.get("agent_id") is not None else ()
+    )
+    expected_domains = (
+        ("med-autogrant",)
+        if isinstance(raw_identity, dict) and raw_identity.get("domain_id") is not None
+        else ()
+    )
+    try:
+        identity, work_item = verify_work_item_identity(
+            value,
+            expected_agent_ids=expected_agents,
+            expected_domain_ids=expected_domains,
+            require_resolved=False,
+        )
+    except AppContributionError as error:
+        raise WorkspaceStateError("所选任务不属于 MAG。") from error
     if work_item and work_item != document.get("workspace_id"):
         raise WorkspaceStateError("所选任务与申请工作区不一致。")
     ref = str(source.relative_to(root))

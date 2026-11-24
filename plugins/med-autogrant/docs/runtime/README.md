@@ -10,7 +10,7 @@ Decisive Codex Attempt 决定语义 route，OPL controller 校验并物化 trans
 | --- | --- |
 | 仓库 | source、schemas、contracts、声明式 agent pack、文档与 current-program pointer |
 | Grant workspace | `workspace.json`、source、draft、critique、revision、quality 和 package/receipt 结果；MAG 领域 owner |
-| 用户 runtime-state | `$CODEX_HOME/projects/med-autogrant/runtime-state/` 的 log、prompt、report、handoff 和本机 evidence |
+| 用户 runtime-state | `$OPL_STATE_DIR/domains/med-autogrant/runtime-state/` 的 log、prompt、report、handoff 和本机 evidence |
 | OPL/provider | durable execution facts、attempt ledger、queue、恢复与 operator projection |
 
 真实 workspace/artifact/receipt body 不写回开发仓库。运行状态、package 文件存在或 provider completion 不产生 grant/quality/export verdict。恢复后必须核对 workspace、Attempt 与 artifact identity，再消费 owner receipt；用户目录输出也不能单独证明 hosted default caller 或 production long-soak 已闭合。具体 source 存储规则见[数据边界](../source/README.md)。

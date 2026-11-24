@@ -96,7 +96,7 @@
       ],
       "properties": {
         "root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/"
+          "const": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/"
         },
         "session_state_owner": {
           "const": "one-person-lab"
@@ -108,16 +108,16 @@
           "const": "opl://generated-surfaces/mag/product-entry-session#resume"
         },
         "logs_root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/"
+          "const": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/logs/"
         },
         "reports_root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/"
+          "const": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/reports/<program_id>/"
         },
         "prompts_root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/"
+          "const": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/prompts/"
         },
         "handoff_state_root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/"
+          "const": "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/handoff_state/"
         },
         "non_repo_tracked": {
           "const": true

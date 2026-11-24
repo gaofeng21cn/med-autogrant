@@ -44,4 +44,4 @@ OPL Package 的跨仓产品目标见
 
 ## Runtime Boundary
 
-OPL/Temporal 持有 generic stage runtime、queue、attempt ledger、retry/resume、lifecycle transport 与 generated surfaces。MAG runtime state 写入 `$CODEX_HOME/projects/med-autogrant/runtime-state/` 或 workspace/artifact roots，不进入 repo source。
+OPL/Temporal 持有 generic stage runtime、queue、attempt ledger、retry/resume、lifecycle transport 与 generated surfaces。MAG runtime state 写入 `$OPL_STATE_DIR/domains/med-autogrant/runtime-state/` 或 workspace/artifact roots，不进入 repo source。
