@@ -283,54 +283,16 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "reviewer_agent_ref": "codex_cli::codex-session-1",
     }
 
-    hermes_proof = {
-        "full_agent_loop_proved": True,
-        "session_id": "session-1",
-        "api_calls": 1,
-        "tool_call_count": 1,
-        "event_count": 2,
-        "provider_reasoning_status": "unproven_custom_chat_completions",
-        "event_stream": [{"type": "tool_start", "tool": "read_file"}],
-    }
-    hermes_executor = project_agent_execution_receipt_metadata(
-        {
-            "surface_kind": "opl_agent_execution_receipt",
-            "executor_kind": "hermes_agent",
-            "mode": "agent_loop",
-            "cwd": "/tmp",
-            "prompt_preview": "prompt",
-            "session_id": "session-1",
-            "event_summary": [{"type": "tool_start", "tool": "read_file"}],
-            "stdout_preview": "{}",
-            "stderr_preview": "",
-            "exit_code": 0,
-            "closeout_packet": None,
-            "executor_contract": {
-                "entrypoint": "OPL AgentExecutionRequest -> AgentExecutionReceipt",
-                "model": "gpt-5.4",
-                "provider": "custom",
-                "api_mode": "chat_completions",
-                "reasoning_effort": "xhigh",
-            },
-            "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
-            "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
-            "proof": hermes_proof,
-        },
-        expected_executor_kind="hermes_agent",
-    )
-    hermes_critique = _normalize_mentor_critique(
-        critique_context=critique_context,
-        critique_policy=critique_policy,
-        executor_payload=hermes_executor,
-        payload=payload,
-    )
-    assert hermes_critique["metadata"]["owner"] == "OPL executor client critique receipt owner"
-    assert hermes_critique["metadata"]["independent_review_evidence"]["execution_attempt_ref"] == (
-        "draft_artifact::grant-run-1::draft-1"
-    )
-    assert hermes_critique["metadata"]["independent_review_evidence"]["review_receipt_ref"] == (
-        "opl_agent_execution_receipt::session-1"
-    )
-    assert hermes_critique["metadata"]["independent_review_evidence"]["reviewer_owner"] == (
-        "OPL executor client critique receipt owner"
-    )
+    from med_autogrant.domain_executor_client import run_domain_executor
+    from med_autogrant.workspace_types import WorkspaceStateError
+
+    with pytest.raises(WorkspaceStateError, match="hermes_agent 已退休"):
+        run_domain_executor(
+            prompt="prompt",
+            input_path=Path("/tmp/workspace.json"),
+            executor_kind="hermes_agent",
+            route_id="critique",
+            closeout_surface_kind="domain_stage_closeout_packet",
+            domain_output_kind="mag_critique_output",
+            executor_runner=lambda *_a, **_kw: {},
+        )

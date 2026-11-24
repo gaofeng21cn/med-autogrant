@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import Any
+
+from opl_framework.runtime_state_paths import (
+    domain_runtime_state_display_path,
+    resolve_domain_runtime_state_root,
+)
 
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
@@ -12,25 +16,15 @@ PROJECT_SLUG = "med-autogrant"
 CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH = Path("contracts") / "runtime-program" / "current-program.json"
 
 
-def resolve_codex_home() -> Path:
-    explicit_home = os.environ.get("CODEX_HOME", "").strip()
-    if explicit_home:
-        return Path(explicit_home).expanduser().resolve()
-    return (Path.home() / ".codex").resolve()
-
-
 def resolve_runtime_state_root() -> Path:
-    explicit_root = os.environ.get("MED_AUTOGRANT_RUNTIME_STATE_ROOT", "").strip()
-    if explicit_root:
-        return Path(explicit_root).expanduser().resolve()
-    return resolve_codex_home() / "projects" / PROJECT_SLUG / "runtime-state"
+    return resolve_domain_runtime_state_root(
+        PROJECT_SLUG,
+        explicit_env="MED_AUTOGRANT_RUNTIME_STATE_ROOT",
+    )
 
 
 def runtime_state_display_path(*segments: str) -> str:
-    base = Path("$CODEX_HOME") / "projects" / PROJECT_SLUG / "runtime-state"
-    if not segments:
-        return base.as_posix() + "/"
-    return base.joinpath(*segments).as_posix()
+    return domain_runtime_state_display_path(PROJECT_SLUG, *segments)
 
 
 def resolve_current_program_contract_path(*, repo_root: Path | None = None) -> Path:

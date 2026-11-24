@@ -17,7 +17,7 @@
 | 结构证据 | [conformance profile](../contracts/standard_agent_conformance_profile.json)、[source closure audit](../contracts/source_closure_audit.json)，需 fresh scanner 才能判断当前检查结果 |
 | MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 通过 MAG owner 读取已登记工作区的 canonical `workspace.json`，直接输出通用审阅投影；`workspace_file`、`quality_path` 可显式选择其他 owner 文件。意见绑定 exact source revision，UI/CLI 同源保存、回读，由既有 critique 消费；任务继续仍走原 runtime action，不推断未保存的质量评分 |
 
-仓内仍有 `hermes_agent` 的显式 critique executor 分支和行为测试；默认 executor 为 `codex_cli`。这仅说明当前 MAG 源码接受的请求类型，不证明任何外部 executor 已安装或可用。详见 [executor 边界](./specs/critique-executor.md)。
+原 `hermes_agent` critique executor 分支已按退役基线清理并 fail-closed 拒绝；当前仅接受 `codex_cli`（通过 OPL Runway `opl_framework.executor_client` 路由）。详见 [executor 边界](./specs/critique-executor.md)。
 
 ## 未闭合证据
 

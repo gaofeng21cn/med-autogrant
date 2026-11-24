@@ -23,6 +23,7 @@ from med_autogrant.product_entry_parts.domain_handler_contract import (
 from med_autogrant.product_entry_parts.typed_blocker_projection import (
     build_typed_blocker_projection,
 )
+from med_autogrant.control_plane import runtime_state_display_path
 from med_autogrant.product_entry_parts.owner_receipt_writers import write_owner_receipt_evidence
 from med_autogrant.workspace_types import WorkspaceStateError
 
@@ -251,11 +252,11 @@ def _receipt_refs_for_task(
     input_path: str,
 ) -> dict[str, Any]:
     task_id = _optional_nonempty_string(task.get("task_id")) or f"{action}:ad-hoc"
+    receipt_root = runtime_state_display_path("receipts").rstrip("/") + "/"
     return {
-        "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+        "receipt_root": receipt_root,
         "domain_handler_dispatch_receipt_ref": (
-            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-            f"domain_handler-dispatch/{task_id}.json"
+            f"{receipt_root}domain_handler-dispatch/{task_id}.json"
         ),
         "input_path": str(Path(input_path).expanduser().resolve()),
         "write_policy": "receipt_ref_only_no_domain_truth_mutation",

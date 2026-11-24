@@ -161,7 +161,7 @@ def _assert_hosted_runtime_contracts(
     )
 
     runtime_state = contract_bundle["runtime_state_contract"]
-    test_case.assertEqual(runtime_state["root"], "$CODEX_HOME/projects/med-autogrant/runtime-state/")
+    test_case.assertEqual(runtime_state["root"], "$OPL_STATE_DIR/domains/med-autogrant/runtime-state/")
     test_case.assertEqual(runtime_state["session_state_owner"], "one-person-lab")
     test_case.assertTrue(runtime_state["non_repo_tracked"])
 
