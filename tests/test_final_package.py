@@ -6,8 +6,7 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from support.cli import run_cli, run_json_cli  # noqa: E402
-
+from support.cli import run_cli, run_json_cli
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FREEZE_READY = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
@@ -207,6 +206,11 @@ class FinalPackageTest(unittest.TestCase):
                 [None],
                 "artifact bundle artifacts.selected_direction.required_evidence_ids[0] 非法",
             ),
+            (
+                ("selection", "unexpected_extra_field"),
+                "nope",
+                "artifact bundle selection.unexpected_extra_field 非法",
+            ),
         )
 
         for case_path, value, error in cases:
@@ -266,3 +270,18 @@ class FinalPackageTest(unittest.TestCase):
         self.assertIn(error, json.loads(stdout)["error"])
         if package_must_be_absent:
             self.assertFalse(package_path.exists())
+
+    def test_read_final_package_rejects_boolean_package_version(self) -> None:
+        from med_autogrant.domain_runtime.io import _read_final_package
+        from med_autogrant.workspace_types import WorkspaceStateError
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            bundle_path = Path(tmp_dir) / "bundle.json"
+            package_path = Path(tmp_dir) / "final.json"
+            self._build_bundle(FROZEN, bundle_path)
+            self._build_final(FROZEN, bundle_path, package_path)
+            package = json.loads(package_path.read_text(encoding="utf-8"))
+            package["package_version"] = True
+            package_path.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")
+            with self.assertRaisesRegex(WorkspaceStateError, "final package 缺少字段: package_version"):
+                _read_final_package(package_path)

@@ -18,7 +18,7 @@ User -> primary Skill / OPL-generated action
 | `contracts/`、`schemas/` | Package、action、workspace、artifact、memory、review 和 receipt 的机器接口 |
 | `src/med_autogrant/` | direct domain entry、authority function、refs adapter 与 grant-native helper |
 | `runtime/` | runtime-facing descriptor/declaration；不保存运行输出或执行通用 scheduler |
-| `plugins/med-autogrant/` | Codex 原生安装所需的完整 carrier：Skill、领域代码、合同和资源按根目录布局生成；见下文 Package、Carrier 与 Executor 边界 |
+| `plugins/med-autogrant/` | 单源仓库中的薄 carrier 壳（manifest、adapter、图标与主 Skill 入口）；其余领域代码、合同、Schema、文档与资源在构建/打包期按根目录单源物化，不入 Git 镜像 |
 
 [pack compiler input](../contracts/pack_compiler_input.json) 与 [source closure audit](../contracts/source_closure_audit.json) 声明实际 pack/source 分类。Framework 从 Stage manifest 和 action catalog 生成入口和 read model；MAG 不保存第二份 generated stage control plane。
 
@@ -27,7 +27,7 @@ User -> primary Skill / OPL-generated action
 MAG owner 定义 Package identity、capability/dependency intent、grant task 和 typed views。配置的 Codex carrier 与 GHCR publication locator 在 [Package manifest](../contracts/opl_agent_package_manifest.json)；安装字节、完整 runtime health 与 publication currentness 由实际 carrier/owner 回读。
 
 - **Primary Skill 与 Carrier 单源边界**：`agent/primary_skill/SKILL.md` 是 `contracts/capability_map.json` 声明的 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是满足 Codex plugin 安装发现所需的实体完整投影副本（`carrier_role=transport_install_detail_not_agent_membership_or_status`、`authority=false`），不构成第二套业务真相、agent membership 权威或 readiness 证据。
-- **声明式投影与同步**：修改 `agent/`、`contracts/`、`schemas/`、`runtime/`、`src/med_autogrant/`、`docs/` 等已跟踪源后，运行 `python3 scripts/sync_carrier.py`（依据 [carrier projection](../contracts/carrier_projection.json) 委托 Framework CLI 生成逐字节投影）；`python3 scripts/sync_carrier.py --check`（已纳入 `scripts/verify.sh structure`）校验资源存在性、字节一致性和删除残留。[pack doctor](../contracts/pack_doctor.json) 声明该包的本机环境依赖前置检查。
+- **单源布局与构建期载体物化**：仓库根目录 `agent/`、`contracts/`、`schemas/`、`runtime/`、`src/med_autogrant/`、`docs/` 是唯一受控源；Git 下 `plugins/med-autogrant/` 仅跟踪薄 carrier 壳文件（`plugin.json`、`.codex-plugin/plugin.json`、`opl-package.json`、`app-contribution-adapter.json`、`assets/icon.{png,svg}` 与 `skills/med-autogrant/`），所有镜像子目录均列入 `.gitignore`。运行 `python3 scripts/sync_carrier.py` 依据 [carrier projection](../contracts/carrier_projection.json) 调用 Framework CLI 在构建/打包期物化完整自包含载体；`scripts/verify.sh structure` 先按需物化再运行 `python3 scripts/sync_carrier.py --check` 校验字节一致性，并由 `tests/test_repository_hygiene.py` 守护零受控镜像残留。[pack doctor](../contracts/pack_doctor.json) 声明该包的本机环境依赖前置检查。
 
 `mas-scholar-skills` 是 required dependency。普通组合按 identity presence/callability 判断；缺失只阻断 MAG。manifest 仍携带 `version_requirement` 与 `capability_abi` 等 provider 描述字段，其存在不是跨包版本求解或已安装状态的证明。具体调用要求由 [Scholar binding](../contracts/scholar_skill_binding_contract.json) 持有。
 

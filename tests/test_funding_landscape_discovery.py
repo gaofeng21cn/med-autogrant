@@ -4,7 +4,7 @@ import copy
 import unittest
 from unittest.mock import patch
 
-from med_autogrant.funding_landscape_discovery import (  # noqa: E402
+from med_autogrant.funding_landscape_discovery import (
     OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
     OFFICIAL_NSFC_GUIDE_LIST_URL,
     OFFICIAL_NSFC_MEDICAL_GUIDE_URL,
@@ -191,3 +191,29 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
             },
             timeout=20,
         )
+
+    def test_cached_loader_validates_funding_landscape_cache_with_jsonschema(self) -> None:
+        import json
+        import tempfile
+        from pathlib import Path
+
+        from med_autogrant.domain_runtime.io import (
+            _load_funding_landscape_cache_if_needed,
+        )
+        from med_autogrant.workspace_types import WorkspaceStateError
+
+        snapshot = {**self.cache_snapshot(), "source_count": 1}
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            cache_path = Path(tmp_dir) / "cache.json"
+            cache_path.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")
+            loaded = _load_funding_landscape_cache_if_needed(
+                {"discovery_source": "official_cached", "cache_path": str(cache_path)}
+            )
+            self.assertEqual(loaded, snapshot)
+
+            bad_snapshot = {**snapshot, "refreshed_at": "not-a-timestamp"}
+            cache_path.write_text(json.dumps(bad_snapshot, ensure_ascii=False), encoding="utf-8")
+            with self.assertRaisesRegex(WorkspaceStateError, "funding_landscape_cache schema 校验失败"):
+                _load_funding_landscape_cache_if_needed(
+                    {"discovery_source": "official_cached", "cache_path": str(cache_path)}
+                )
