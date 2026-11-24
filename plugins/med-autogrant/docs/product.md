@@ -1,6 +1,6 @@
 # 用户入口
 
-本页负责用户 action、内部 authority target 和产品投影的区别。入口事实来自 [primary Skill](../../agent/primary_skill/SKILL.md)、[action catalog](../../contracts/action_catalog.json)与 [domain descriptor](../../contracts/domain_descriptor.json)。
+本页负责用户 action、内部 authority target 和产品投影的区别。入口事实来自 [primary Skill](../agent/primary_skill/SKILL.md)、[action catalog](../contracts/action_catalog.json) 与 [domain descriptor](../contracts/domain_descriptor.json)。
 
 ## 正式使用
 
@@ -18,7 +18,7 @@ opl agents run --domain med-autogrant --action <action_id> --workspace <absolute
 
 ## 内部调用
 
-`medautogrant` grouped CLI、`MedAutoGrantDomainEntry` 与 `domain-handler export|dispatch` 是 generated caller 后面的 direct authority targets，不是 Skill 要求用户手工运行的默认入口。CLI 的实际 token、参数和静态分派由 [cli.py](../../src/med_autogrant/cli.py) 和 [domain entry catalog](../../src/med_autogrant/domain_entry_catalog.py)持有；维护者使用 `--help` 与现有行为测试核对，不另抄完整命令目录。
+`medautogrant` grouped CLI、`MedAutoGrantDomainEntry` 与 `domain-handler export|dispatch` 是 generated caller 后面的 direct authority targets，不是 Skill 要求用户手工运行的默认入口。CLI 的实际 token、参数和静态分派由 [cli.py](../src/med_autogrant/cli.py) 和 [domain entry catalog](../src/med_autogrant/domain_entry_catalog.py) 持有；维护者使用 `--help` 与现有行为测试核对，不另抄完整命令目录。
 
 MAG 的 service-safe、executor-routing 和 product-entry schemas 仍描述 domain entry spec、command contracts、workspace locator、runtime session envelope 与 domain payload；`/product_entry_manifest/*` 是 OPL-generated output 中的 JSON pointer，不代表 MAG 保存本地 manifest builder。
 
@@ -32,6 +32,6 @@ Mini App 使用 [Framework 统一工作入口规范](https://github.com/gaofeng2
 
 下一次现有 critique pass 会消费该申请当前 exact revision 的意见；意见本身不修改正文、不批准质量或导出。记录结果保留 `review_ref` 与 `stage_execution_started=false`。在已解析任务身份的视图中，源文件和每条意见提供 `review_context`，原样携带 `work_item_identity`，以及一一对应的工作区相对 `artifact_refs` 与 `sha256:` 格式 `artifact_hashes`；原 runtime 的 human gate 使用该意见 ref 和 context 核对当前对象。无任务身份的 CLI 记录不伪造 runtime identity；开展或继续工作仍由原任务的 OPL runtime action/human gate 驱动，再由原 MAG StageRun/Attempt 执行。共享界面、连接与凭证由 Framework、Studio 和 Connect 负责，MAG 不维护第二套调度、会话或凭据状态。
 
-Status、progress、cockpit、direct-entry、user-loop、session 和 workbench 从 [generated surface handoff](../../contracts/generated_surface_handoff.json)、Stage/action descriptor 与 runtime refs 投影。它们展示 owner answer、freshness、next action 与 human gate，并调用 MAG target；grant body、verdict 和 owner receipt 的写入仍归 MAG。
+Status、progress、cockpit、direct-entry、user-loop、session 和 workbench 从 [generated surface handoff](../contracts/generated_surface_handoff.json)、Stage/action descriptor 与 runtime refs 投影。它们展示 owner answer、freshness、next action 与 human gate，并调用 MAG target；grant body、verdict 和 owner receipt 的写入仍归 MAG。
 
-长期工作台按 Status、Workspace、Quality、Artifacts、Memory 与 Attention 组织申请任务。这是产品组织目标，不表示本仓已实现独立 GUI，也不构成部署或持续 App 消费证据。当前缺口统一见[外部证据](../active/mag-ideal-state-cross-repo-gap-plan.md)。
+长期工作台按 Status、Workspace、Quality、Artifacts、Memory 与 Attention 组织申请任务。这是产品组织目标，不表示本仓已实现独立 GUI，也不构成部署或持续 App 消费证据。当前缺口统一见 [外部证据](./active/mag-ideal-state-cross-repo-gap-plan.md)。

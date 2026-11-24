@@ -24,6 +24,6 @@ The applicant decides the scientific direction, what to adopt from review, and w
 
 ## Get started
 
-Install **Med Auto Grant** from the OPL Software Center. Open or start an application and share the call, the material you have, and what you want to resolve in this round. [Usage guide](docs/product/README.md) · [Current status](docs/status.md)
+Install **Med Auto Grant** from the OPL Software Center. Open or start an application and share the call, the material you have, and what you want to resolve in this round. [Usage guide](docs/product.md) · [Current status](docs/status.md)
 
 [Project scope](docs/project.md) · [Documentation](docs/README.md) · [Managing knowledge and sources](docs/references/grant_strategy_memory_policy.md)

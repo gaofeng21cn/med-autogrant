@@ -11,8 +11,7 @@ Machine boundary: 本文冻结 critique 的 domain vocabulary 与 OPL executor-c
 
 - `route_id = critique`
 - command = `execute-critique-pass`
-- 默认 executor kind = `codex_cli`
-- 已退休（fail-closed 拒绝）= `hermes_agent`
+- 默认/唯一允许 executor kind = `codex_cli`
 - 其他 executor kind fail closed
 
 `codex_cli` 是默认 concrete executor，但 Codex transport 不归 MAG。executor 请求通过 `opl_framework.executor_client.run_agent_execution_request` 进入 OPL Runway。

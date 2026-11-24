@@ -18,13 +18,16 @@ User -> primary Skill / OPL-generated action
 | `contracts/`、`schemas/` | Package、action、workspace、artifact、memory、review 和 receipt 的机器接口 |
 | `src/med_autogrant/` | direct domain entry、authority function、refs adapter 与 grant-native helper |
 | `runtime/` | runtime-facing descriptor/declaration；不保存运行输出或执行通用 scheduler |
-| `plugins/med-autogrant/` | Codex 原生安装所需的完整 carrier：Skill、领域代码、合同和资源按根目录布局生成；[投影边界与命令](./references/primary-skill-plugin-carrier-boundary.md) |
+| `plugins/med-autogrant/` | Codex 原生安装所需的完整 carrier：Skill、领域代码、合同和资源按根目录布局生成；见下文 Package、Carrier 与 Executor 边界 |
 
 [pack compiler input](../contracts/pack_compiler_input.json) 与 [source closure audit](../contracts/source_closure_audit.json) 声明实际 pack/source 分类。Framework 从 Stage manifest 和 action catalog 生成入口和 read model；MAG 不保存第二份 generated stage control plane。
 
 ## Package、Carrier 与 Executor
 
 MAG owner 定义 Package identity、capability/dependency intent、grant task 和 typed views。配置的 Codex carrier 与 GHCR publication locator 在 [Package manifest](../contracts/opl_agent_package_manifest.json)；安装字节、完整 runtime health 与 publication currentness 由实际 carrier/owner 回读。
+
+- **Primary Skill 与 Carrier 单源边界**：`agent/primary_skill/SKILL.md` 是 `contracts/capability_map.json` 声明的 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是满足 Codex plugin 安装发现所需的实体完整投影副本（`carrier_role=transport_install_detail_not_agent_membership_or_status`、`authority=false`），不构成第二套业务真相、agent membership 权威或 readiness 证据。
+- **声明式投影与同步**：修改 `agent/`、`contracts/`、`schemas/`、`runtime/`、`src/med_autogrant/`、`docs/` 等已跟踪源后，运行 `python3 scripts/sync_carrier.py`（依据 [carrier projection](../contracts/carrier_projection.json) 委托 Framework CLI 生成逐字节投影）；`python3 scripts/sync_carrier.py --check`（已纳入 `scripts/verify.sh structure`）校验资源存在性、字节一致性和删除残留。[pack doctor](../contracts/pack_doctor.json) 声明该包的本机环境依赖前置检查。
 
 `mas-scholar-skills` 是 required dependency。普通组合按 identity presence/callability 判断；缺失只阻断 MAG。manifest 仍携带 `version_requirement` 与 `capability_abi` 等 provider 描述字段，其存在不是跨包版本求解或已安装状态的证明。具体调用要求由 [Scholar binding](../contracts/scholar_skill_binding_contract.json) 持有。
 
@@ -34,7 +37,7 @@ Framework 聚合 `opl packages install|update|uninstall mag` 动作和 carrier r
 
 ## 调用与执行
 
-[domain descriptor](../contracts/domain_descriptor.json) 声明 workspace locator/topology、runtime identity/registration、progress alias 和 routing signal。Hosted actions 来自 closed [action catalog](../contracts/action_catalog.json) 的 `stage_binding` 与 exact input schemas；用户面详见[产品入口](./product/README.md)。
+[domain descriptor](../contracts/domain_descriptor.json) 声明 workspace locator/topology、runtime identity/registration、progress alias 和 routing signal。Hosted actions 来自 closed [action catalog](../contracts/action_catalog.json) 的 `stage_binding` 与 exact input schemas；用户面详见[产品入口](./product.md)。
 
 Hosted action 同时要求正式 `workspace_root` 与 `project_id`；Framework 通过 `workspace_index.json#/projects` 解析项目根，绑定该项目可用的知识来源。`input_path` 仍是申请材料输入，不替代工作区或项目身份。知识提案的 `target_scope` 表示建议归属；它不能改变本次执行绑定或授予额外来源权限。
 
@@ -50,6 +53,6 @@ Decisive Codex Attempt 选择语义 route；OPL StageRun controller 校验角色
 
 ## 数据与持久化
 
-Workspace 持有真实申请材料、正文、版本和结果；运行面持有 Attempt/queue/receipt 等执行事实。`grant_run_id`、`workspace_id`、`draft_id` 与 `program_id` 不互相替代。详细存储位置见[数据边界](./source/README.md)，durable runtime 责任见[运行模型](./runtime/README.md)，最终 package/portal 责任见[交付](./delivery/README.md)。
+Workspace 持有真实申请材料、正文、版本和结果；运行面持有 Attempt/queue/receipt 等执行事实。`grant_run_id`、`workspace_id`、`draft_id` 与 `program_id` 不互相替代。存储位置与 durable runtime 责任见[运行与数据边界](./runtime.md)，最终 package/portal 责任见[交付边界](./delivery.md)。
 
 知识归属采用 product、owner、topic、project 四种 scope；方法、政策、日期化状态和决策是独立的内容类型。个人库与工作目录可作为同等的 Markdown 主源，已有 Obsidian 正文按范围绑定而无需复制成另一套库。Framework 直接解析获授权来源并冻结当次版本，MAG 负责基金语义与更新提案；运行快照、索引和提案不成为第二正文主源。完整调用与接受规则见[策略记忆政策](./references/grant_strategy_memory_policy.md)。

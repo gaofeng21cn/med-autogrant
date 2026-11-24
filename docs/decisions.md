@@ -14,7 +14,7 @@ CLI catalog 只声明 parser 字段与帮助；静态 dispatch 调用明确的 r
 
 同一生成上下文的自查不能证明独立 Review。Formal Review 使用新的 Attempt/session，缺陷回到最早能修复它的 Stage；repair 预算限制迭代成本，可消费 artifact 在预算耗尽后携质量债继续，不能因此获得 ready verdict。
 
-Package review 按声明的语义依赖失效，避免 wrapper/layout 变化迫使无关科学内容重复评审；exact-byte release integrity 独立保护最终文件身份。MAG owner 消费 current scoped evidence、identity-bound Review、release integrity 和 export verdict 后才决定本地 readiness，外部 portal 仍需独立人工授权。具体约束在[不变量](./invariants.md)与[交付](./delivery/README.md)。
+Package review 按声明的语义依赖失效，避免 wrapper/layout 变化迫使无关科学内容重复评审；exact-byte release integrity 独立保护最终文件身份。MAG owner 消费 current scoped evidence、identity-bound Review、release integrity 和 export verdict 后才决定本地 readiness，外部 portal 仍需独立人工授权。具体约束在[不变量](./invariants.md)与[交付边界](./delivery.md)。
 
 ## 专业依赖约束结果，不冻结思考顺序
 

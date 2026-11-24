@@ -6,18 +6,19 @@
 
 | 问题 | 唯一人读入口 |
 | --- | --- |
-| MAG 服务谁、做到哪里 | [项目定位](./project.md)；[首页](../README.zh-CN.md)负责安装和开始使用 |
+| MAG 服务谁、做到哪里 | [项目定位](./project.md)；[首页](../README.zh-CN.md) 负责安装和开始使用 |
 | 仓内已实现什么、哪些运行结论尚不能声明 | [当前状态](./status.md) |
-| 哪个组件或仓库负责什么 | [架构](./architecture.md) |
+| 哪个组件、Package Carrier 或仓库负责什么 | [架构](./architecture.md) |
 | 哪些约束不能被破坏 | [不变量](./invariants.md) |
 | 为什么采用这些设计 | [决策](./decisions.md) |
 | 还缺什么真实外部证据、由谁关闭 | [外部证据](./active/mag-ideal-state-cross-repo-gap-plan.md) |
-| 用户 action 与内部 target 如何区分 | [产品入口](./product/README.md) |
-| durable runtime 与本机状态如何分开 | [运行模型](./runtime/README.md) |
-| 工作区数据放在哪里 | [数据边界](./source/README.md) |
-| 本地 package 到人工 portal 的交付边界 | [交付](./delivery/README.md) |
-| authoring、review 与 executor 如何工作 | [技术规格](./specs/README.md) |
-| memory 与 Skill carrier 的专项说明 | [参考](./references/README.md) |
+| 用户 action 与内部 target 如何区分 | [产品入口](./product.md) |
+| durable runtime、本机状态与工作区数据如何分层 | [运行与数据边界](./runtime.md) |
+| 本地 package 到人工 portal 的交付边界 | [交付边界](./delivery.md) |
+| Authoring route 与工作区失效 | [Authoring](./specs/authoring.md) |
+| Critique executor 边界与审阅续跑 | [Critique Executor](./specs/critique-executor.md) |
+| AI-first 质量边界与修订规则 | [AI-first Quality](./specs/quality.md) |
+| Grant strategy memory 与写回交接 | [Strategy Memory 政策](./references/grant_strategy_memory_policy.md) |
 | 机器字段与定位符 | [contracts](../contracts/README.md) |
 
 ## 生命周期
@@ -32,7 +33,7 @@
 
 ## 验证
 
-`scripts/verify.sh` 是源码仓库的公开 wrapper，[Makefile](https://github.com/gaofeng21cn/med-autogrant/blob/main/Makefile)持有 lane 组合。Python/pytest 经 clean runner 将 cache/bytecode 放在 checkout 外；需要 Framework helpers 时使用显式 `OPL_FRAMEWORK_ROOT` 或已安装的 `opl` launcher。
+`scripts/verify.sh` 是源码仓库的公开 wrapper，[Makefile](../Makefile) 持有 lane 组合。Python/pytest 经 clean runner 将 cache/bytecode 放在 checkout 外；需要 Framework helpers 时使用显式 `OPL_FRAMEWORK_ROOT` 或已安装的 `opl` launcher。
 
 ```bash
 ./scripts/verify.sh

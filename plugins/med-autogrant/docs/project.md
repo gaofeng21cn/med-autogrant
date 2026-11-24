@@ -2,7 +2,7 @@
 
 Med Auto Grant（MAG）服务申请人侧的医学基金申请：围绕同一 funding call，完成材料理解、可资助性判断、specific aims、正文、独立评审、修订和本地交付包。它不承担研究执行、论文投稿或基金评审机构的决定。
 
-用户入口是安装后的 `med-autogrant` Skill 和 OPL-generated actions。`mag` 是稳定 Agent/Package identity；仓库、distribution 和 Skill locator 为 `med-autogrant`，Python module 为 `med_autogrant`，CLI 为 `medautogrant`。入口条件见[产品入口](./product/README.md)，安装见[仓库首页](../README.zh-CN.md)。
+用户入口是安装后的 `med-autogrant` Skill 和 OPL-generated actions。`mag` 是稳定 Agent/Package identity；仓库、distribution 和 Skill locator 为 `med-autogrant`，Python module 为 `med_autogrant`，CLI 为 `medautogrant`。入口条件见[产品入口](./product.md)，安装见[仓库首页](../README.zh-CN.md)。
 
 ## 业务范围
 

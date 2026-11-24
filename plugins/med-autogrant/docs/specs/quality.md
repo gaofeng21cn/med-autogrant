@@ -13,11 +13,11 @@ Machine boundary: 本文解释 AI-first quality ownership 与 projection boundar
 - `grant_quality_scorecard` 与 `grant_quality_closure_dossier` 是 AI-critique-backed aggregator；它们可以汇总完整度、结构评分、证据链接、lineage、queue 和 blocker。
 - scorecard 字段、schema 完整度、证据链接存在性和数字分数只是结构信号，不能独立把 workspace 提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
 - 缺少 active AI-backed critique 或等价 AI-authored quality assessment 时，scorecard 必须保持 `assessment_owner=projection_only` 和 `ai_reviewer_required=true`。
-- submission-ready package 的机械完整性只能写入 `mechanical_package_completeness`。Producer package 始终是 `submission_ready=false` 候选；最终 readiness 消费 current scoped evidence、绑定所审 artifact identity 的 Review、独立 exact-byte release integrity 和 MAG-owned export/owner verdict，详见[交付](../delivery/README.md)。
+- submission-ready package 的机械完整性只能写入 `mechanical_package_completeness`。Producer package 始终是 `submission_ready=false` 候选；最终 readiness 消费 current scoped evidence、绑定所审 artifact identity 的 Review、独立 exact-byte release integrity 和 MAG-owned export/owner verdict，详见[交付边界](../delivery.md)。
 
 ## 候选状态规则
 
-`grant-quality-scorecard` 聚合 workspace-version 的 AI review judgment 与机械结构信号；`grant-quality-closure-dossier` 从同一 scorecard 派生 closure packages；`grant-quality-diff` 比较 score、dimension、issue lineage 和 evidence movement，不建立第二条评分路径。它们的字段由 `schemas/v1/grant-quality-*.schema.json` 定义。多步 critique/revision 和 Stage residency、budget/retry/resume 归 [OPL 运行模型](../runtime/README.md)，MAG single-pass handler 只消费领域结果。
+`grant-quality-scorecard` 聚合 workspace-version 的 AI review judgment 与机械结构信号；`grant-quality-closure-dossier` 从同一 scorecard 派生 closure packages；`grant-quality-diff` 比较 score、dimension、issue lineage 和 evidence movement，不建立第二条评分路径。它们的字段由 `schemas/v1/grant-quality-*.schema.json` 定义。多步 critique/revision 和 Stage residency、budget/retry/resume 归 [运行与数据边界](../runtime.md)，MAG single-pass handler 只消费领域结果。
 
 只有 active critique provenance 由 AI reviewer 支撑时，才允许 candidate-ready 状态。
 

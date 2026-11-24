@@ -106,8 +106,6 @@ class MagDomainRuntime:
             "direct_domain_authority_adapter": "CLI",
             "default_stage_attempt_executor": "Codex CLI",
             "supported_protocol_layer": "MCP_DESCRIPTOR_ONLY",
-            "optional_proof_executor": "Hermes-Agent",
-            "optional_proof_executor_boundary": "explicit opt-in only",
             "domain_logic_modules": [
                 "workspace",
                 "stage_router",

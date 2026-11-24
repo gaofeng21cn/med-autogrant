@@ -24,6 +24,6 @@ Med Auto Grant 帮医学研究团队围绕一份基金指南，把研究构想�
 
 ## 开始使用
 
-在 OPL 软件中心安装 **Med Auto Grant**。打开或新建一项申请，给出基金指南、已有材料和这轮想解决的问题。[使用入口](docs/product/README.md) · [当前状态](docs/status.md)
+在 OPL 软件中心安装 **Med Auto Grant**。打开或新建一项申请，给出基金指南、已有材料和这轮想解决的问题。[使用入口](docs/product.md) · [当前状态](docs/status.md)
 
 [项目范围](docs/project.md) · [文档索引](docs/README.md) · [知识与资料维护](docs/references/grant_strategy_memory_policy.md)
