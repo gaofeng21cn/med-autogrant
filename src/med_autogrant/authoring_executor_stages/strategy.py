@@ -4,7 +4,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from opl_framework.executor_client import run_agent_execution_request
+from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
 from med_autogrant.authoring_executor_parts import (
     _build_strategy_authoring_prompt,

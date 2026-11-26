@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opl_framework.review_provenance import (
+from med_autogrant._opl_helpers.review_provenance import (
     DEFAULT_AI_REVIEWER_BACKED_OWNERS as AI_REVIEWER_BACKED_OWNERS,
     evaluate_independent_review_provenance,
     validate_independent_review_evidence,

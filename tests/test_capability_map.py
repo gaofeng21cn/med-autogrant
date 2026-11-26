@@ -93,7 +93,7 @@ def test_required_scholar_skills_binding_uses_standard_contract_module_enums() -
     } == {
         (
             "contract_ref",
-            "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
+            "opl-package.json#/dependencies/packages/0",
             "required_runtime_dependency",
         ),
         (

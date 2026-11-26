@@ -1,195 +1,195 @@
 {
-  "surface_kind": "opl_agent_package_manifest.v1",
-  "kind": "agent",
-  "agent_id": "mag",
-  "package_id": "mag",
-  "domain_id": "med-autogrant",
-  "display_name": "Med Auto Grant",
-  "presentation": {
-    "display_name_i18n": {
+  "schema_version": "opl.package.v2",
+  "identity": {
+    "id": "mag",
+    "version": "0.4.4",
+    "intent": "agent",
+    "name": {
       "zh-CN": "Med Auto Grant",
       "en-US": "Med Auto Grant"
     },
-    "description_i18n": {
+    "summary": {
       "zh-CN": "医学基金申请规划、撰写、评审与修订。",
       "en-US": "Medical grant application planning, writing, review, and revision."
     },
-    "session_routing_summary_i18n": {
+    "description": {
+      "zh-CN": "Adds a Codex plugin entry for Med Auto Grant with its owner contracts and hosted runtime source.",
+      "en-US": "Adds a Codex plugin entry for Med Auto Grant with its owner contracts and hosted runtime source."
+    },
+    "publisher": "one-person-lab",
+    "license": "Apache-2.0",
+    "icon": "assets/branding/medautogrant-logo.png",
+    "repository": "https://github.com/gaofeng21cn/med-autogrant",
+    "homepage": "https://github.com/gaofeng21cn/med-autogrant",
+    "keywords": [
+      "grant-authoring",
+      "codex",
+      "medical-grant",
+      "domain-agent"
+    ],
+    "routing_summary": {
+      "zh-CN": "医学基金申请规划、撰写、评审与修订。",
       "en-US": "Enter the current MAG grant workflow and continue the same funding-call authoring loop."
     },
+    "default_prompts": [
+      "Inspect the current Med Auto Grant skill catalog for this workspace.",
+      "Open the current Med Auto Grant status for this grant workspace.",
+      "Continue the active Med Auto Grant user loop with the current funding call."
+    ],
     "home_shortcuts": [
       {
-        "shortcut_id": "open_grant_user_loop",
-        "label_i18n": {
+        "id": "open_grant_user_loop",
+        "label": {
           "zh-CN": "开展基金申请工作",
           "en-US": "Open MAG user loop"
         },
         "default_visible": true,
-        "user_configurable": true,
-        "route": {
-          "route_kind": "agent_package_shortcut",
-          "executor": "codex_cli",
-          "codex_visible_entry": "med-autogrant"
+        "target": {
+          "kind": "agent",
+          "ref": "mag"
         }
-      }
-    ],
-    "icon_ref": "assets/branding/medautogrant-logo.png"
-  },
-  "publisher": "one-person-lab",
-  "version": "0.4.4",
-  "source": "first_party_repo_local",
-  "carrier_source_role": "codex_plugin_default_carrier_not_package_truth",
-  "schema_ref": "one-person-lab/contracts/opl-framework/agent-package-manifest.schema.json",
-  "domain_descriptor_ref": "contracts/domain_descriptor.json",
-  "task_provider_ref": "contracts/domain_descriptor.json#/standard_agent_interface/stage_catalog",
-  "action_catalog_ref": "contracts/action_catalog.json",
-  "view_refs": [],
-  "entrypoints": [],
-  "machine_boundary": "This repo-local sidecar declares OPL Agent Package identity, domain runtime refs, capability presence and callability, and native carrier locators. Per-Package owner publication and currentness remain external to this descriptor.",
-  "codex_surface": {
-    "plugin_id": "med-autogrant",
-    "plugin_source_path": ".",
-    "configured_codex_plugin_carrier": {
-      "kind": "codex_plugin_manager",
-      "plugin_selector": "med-autogrant@med-autogrant",
-      "executor_route": "codex_cli",
-      "marketplace_source": "gaofeng21cn/med-autogrant",
-      "publication_ref": "ghcr.io/gaofeng21cn/one-person-lab-packages/mag:latest-stable"
-    },
-    "standalone_distribution": "repo_carrier_source",
-    "required_skill_ids": [
-      "med-autogrant"
-    ],
-    "bundled_capability_package_ids": [
-      "mas-scholar-skills"
-    ],
-    "user_install_action_count": 1,
-    "app_contribution_abi": {
-      "schema_version": "opl-package-app-contribution-cli.v1",
-      "transport": "stdin_json_stdout_json",
-      "argv": [
-        "opl",
-        "app",
-        "contribution",
-        "adapter",
-        "--stdin"
-      ],
-      "request_schema": "opl-package-app-contribution-request.v1",
-      "response_schema": "opl-package-app-contribution-response.v1"
-    },
-    "app_contribution_adapter": {
-      "manifest": "app-contribution-adapter.json"
-    }
-  },
-  "app_contributions": {
-    "schema_version": "opl-app-contributions.v1",
-    "views": [
-      {
-        "view_id": "mag.workspace.route",
-        "view_type": "task_board",
-        "title_i18n": {
-          "zh-CN": "基金工作区阶段",
-          "en-US": "Grant workspace route"
-        },
-        "data_ref": "mag.workspace.v1#route",
-        "command_ids": [
-          "mag.review.note"
-        ],
-        "empty_state_i18n": {
-          "zh-CN": "选择一个基金工作区后读取当前阶段",
-          "en-US": "Select a grant workspace to inspect its current stage"
-        }
-      },
-      {
-        "view_id": "mag.workspace.quality",
-        "view_type": "artifact_view",
-        "title_i18n": {
-          "zh-CN": "基金申请质量",
-          "en-US": "Grant quality"
-        },
-        "data_ref": "mag.workspace.v1#quality",
-        "command_ids": [
-          "mag.review.note"
-        ],
-        "empty_state_i18n": {
-          "zh-CN": "选择基金工作区，查看当前草稿与评审证据",
-          "en-US": "Select a grant workspace to inspect the current draft and review evidence"
-        }
-      }
-    ],
-    "commands": [
-      {
-        "command_id": "mag.review.note",
-        "label_i18n": {
-          "zh-CN": "记录审阅意见",
-          "en-US": "Record review feedback"
-        },
-        "action_ref": "mag.workspace.v1#review.note",
-        "confirmation_required": true
-      }
-    ],
-    "badges": [],
-    "ui": [
-      {
-        "contribution_id": "mag.workspace.route",
-        "slot": "runtime.detail",
-        "contribution_kind": "view",
-        "trust_tier": "declarative",
-        "scope": "work_item",
-        "sort_order": 410,
-        "view_id": "mag.workspace.route"
-      },
-      {
-        "contribution_id": "mag.workspace.quality",
-        "slot": "settings.section",
-        "contribution_kind": "view",
-        "trust_tier": "declarative",
-        "scope": "root",
-        "sort_order": 411,
-        "view_id": "mag.workspace.quality"
       }
     ]
   },
-  "capability_dependencies": [
-    {
-      "module_id": "scholarskills",
-      "package_id": "mas-scholar-skills",
-      "kind": "framework_capability_package",
-      "required": true,
-      "dependency_kind": "hard_runtime_dependency",
-      "version_requirement": ">=0.2.25 <0.3.0",
-      "capability_abi": "mas-scholar-skills.v1",
-      "consumer_profile_id": "mag-medical-grant.v1",
-      "provider_manifest_ref": "mas-scholar-skills/contracts/opl_capability_package_manifest.json",
-      "required_export_ids": [
-        "medical-research-lit",
-        "medical-statistical-review",
-        "medical-methodology-planner",
-        "medical-evidence-integrity-reviewer",
-        "medical-evidence-synthesis-and-claim-map",
-        "medical-reference-integrity-auditor"
-      ],
-      "required_module_ids": [
-        "mas-scholar-skills.lit",
-        "mas-scholar-skills.stats",
-        "mas-scholar-skills.review",
-        "mas-scholar-skills.data",
-        "mas-scholar-skills.reference-provider-adapters",
-        "mas-scholar-skills.scientific-search-adapters"
-      ],
-      "availability_policy_ref": "contracts/scholar_skill_binding_contract.json#/availability_policy",
-      "authority_boundary": {
-        "can_write_domain_truth": false,
-        "can_sign_owner_receipt": false,
-        "can_create_typed_blocker": false,
-        "can_write_runtime_queue": false,
-        "can_claim_fundability_verdict": false,
-        "can_claim_quality_verdict": false,
-        "can_claim_export_readiness": false,
-        "can_gate_mag_install": false,
-        "can_gate_mag_stage_route": false,
-        "can_gate_mag_operational_readiness": false
+  "dependencies": {
+    "opl_base": "^2.0.0",
+    "packages": [
+      {
+        "id": "mas-scholar-skills",
+        "version": ">=0.2.25 <0.3.0",
+        "optional": false,
+        "required_capabilities": [
+          "medical-research-lit",
+          "medical-statistical-review",
+          "medical-methodology-planner",
+          "medical-evidence-integrity-reviewer",
+          "medical-evidence-synthesis-and-claim-map",
+          "medical-reference-integrity-auditor"
+        ]
       }
+    ],
+    "runtimes": [
+      {
+        "name": "python",
+        "version": ">=3.12"
+      }
+    ]
+  },
+  "permissions": {
+    "workspace": {
+      "access": "read_write",
+      "reason": {
+        "zh-CN": "读取基金申请工作区数据并写入草稿、评审意见与提交包",
+        "en-US": "Read grant workspace data and write drafts, review feedback, and submission packages"
+      }
+    },
+    "knowledge": [
+      {
+        "scope": "long_term_topic",
+        "access": "read",
+        "required": false,
+        "reason": {
+          "zh-CN": "按需引用个人策略记忆与基金规范",
+          "en-US": "Reference personal grant strategy notes and standards on demand"
+        }
+      }
+    ],
+    "network": "outbound_api",
+    "execution_mode": "local_subprocess"
+  },
+  "provides": {
+    "agent": {
+      "stages_ref": "agent/stages/manifest.json"
+    },
+    "skills": [
+      {
+        "id": "med-autogrant",
+        "path": "./skills/med-autogrant",
+        "exposure": "default"
+      }
+    ],
+    "contribution_handler": {
+      "kind": "cli",
+      "argv": [
+        "python3",
+        "./runtime/app_contribution.py"
+      ],
+      "transport": "stdin_json_stdout_json"
     }
-  ]
+  },
+  "ui": {
+    "declarative": {
+      "views": [
+        {
+          "id": "mag.workspace.route",
+          "view_type": "list_detail",
+          "slot": "runtime.detail",
+          "title": {
+            "zh-CN": "基金工作区阶段",
+            "en-US": "Grant workspace route"
+          },
+          "data_ref": "mag.workspace.v1#route",
+          "empty_state": {
+            "zh-CN": "选择一个基金工作区后读取当前阶段",
+            "en-US": "Select a grant workspace to inspect its current stage"
+          },
+          "actions": [
+            {
+              "id": "mag.review.note",
+              "label": {
+                "zh-CN": "记录审阅意见",
+                "en-US": "Record review feedback"
+              },
+              "action_ref": "mag.workspace.v1#review.note",
+              "confirm": true,
+              "effect_timing": "immediate"
+            }
+          ]
+        },
+        {
+          "id": "mag.workspace.quality",
+          "view_type": "list_detail",
+          "slot": "settings.section",
+          "settings_destination": "resources",
+          "title": {
+            "zh-CN": "基金申请质量",
+            "en-US": "Grant quality"
+          },
+          "data_ref": "mag.workspace.v1#quality",
+          "empty_state": {
+            "zh-CN": "选择基金工作区，查看当前草稿与评审证据",
+            "en-US": "Select a grant workspace to inspect the current draft and review evidence"
+          },
+          "actions": [
+            {
+              "id": "mag.review.note",
+              "label": {
+                "zh-CN": "记录审阅意见",
+                "en-US": "Record review feedback"
+              },
+              "action_ref": "mag.workspace.v1#review.note",
+              "confirm": true,
+              "effect_timing": "immediate"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "distribution": {
+    "oci": "ghcr.io/gaofeng21cn/one-person-lab-packages/mag",
+    "visibility": "public"
+  },
+  "host_hints": {
+    "codex": {
+      "sync_enabled": true,
+      "plugin_name": "med-autogrant",
+      "category": "Research",
+      "brand_color": "#2E6E9E",
+      "capabilities": [
+        "Interactive",
+        "Write"
+      ]
+    }
+  }
 }

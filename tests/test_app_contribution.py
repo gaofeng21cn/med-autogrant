@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
 import os
 import shutil
@@ -111,26 +110,15 @@ def test_wrong_identity_path_escape_and_runtime_symlink_rejected(workspace: Path
         record(workspace, value)
 
 
-def _materialize_carrier_root(tmp_path: Path) -> Path:
-    spec = importlib.util.spec_from_file_location('carrier_test_helper', ROOT / 'tests' / '_carrier_test_helper.py')
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    carrier_root, _ = module.materialize_carrier_in_temp(ROOT, tmp_path / 'materialized-carrier')
-    return carrier_root
-
-
-def test_source_and_carrier_commands_share_owner_and_no_ui_cli(workspace: Path, tmp_path: Path) -> None:
+def test_contribution_cli_and_v2_envelope_share_owner_and_no_ui_cli(workspace: Path) -> None:
     env = {**os.environ, 'OPL_PROFILE_WORKSPACE': str(workspace), 'PYTHONDONTWRITEBYTECODE': '1'}
-    carrier_root = _materialize_carrier_root(tmp_path)
-    for package_root in (ROOT, carrier_root):
-        read = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'route'], cwd=package_root,
-                              input='{}', text=True, capture_output=True, env=env, check=True)
-        item = json.loads(read.stdout)['data']['items'][0]
-        value = {**item['actions'][0]['input'], 'request_id': 'same-source-carrier', 'note': '对比候选'}
-        executed = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'note'], cwd=package_root,
-                                 input=json.dumps(value), text=True, capture_output=True, env=env, check=True)
-        assert json.loads(executed.stdout)['result']['status'] == 'recorded'
+    read = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'route'], cwd=ROOT,
+                          input='{}', text=True, capture_output=True, env=env, check=True)
+    item = json.loads(read.stdout)['data']['items'][0]
+    value = {**item['actions'][0]['input'], 'request_id': 'same-source-carrier', 'note': '对比候选'}
+    executed = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'note'], cwd=ROOT,
+                              input=json.dumps(value), text=True, capture_output=True, env=env, check=True)
+    assert json.loads(executed.stdout)['result']['status'] == 'recorded'
     result = subprocess.run([sys.executable, '-m', 'med_autogrant.cli', 'workspace', 'review-feedback',
                              '--input', str(workspace), '--json'], text=True, capture_output=True, env=env, check=True)
     assert json.loads(result.stdout)['review_notes'][0]['note'] == '对比候选'
@@ -138,6 +126,132 @@ def test_source_and_carrier_commands_share_owner_and_no_ui_cli(workspace: Path, 
                              input=json.dumps({**value, 'workspace_id': 'bad'}), text=True, capture_output=True, env=env, check=True)
     assert json.loads(invalid.stdout)['ok'] is False
     assert json.loads(invalid.stdout)['ref'] == NOTE_ACTION
+
+
+def test_v2_contribution_envelope_dispatch_and_opl_client_discovery(workspace: Path, tmp_path: Path) -> None:
+    fake_sdk_src = tmp_path / 'fake_sdk' / 'src' / 'opl_client'
+    fake_sdk_src.mkdir(parents=True)
+    marker_file = tmp_path / 'used_opl_client.txt'
+    (fake_sdk_src / '__init__.py').write_text('', encoding='utf-8')
+    (fake_sdk_src / 'helpers.py').write_text(
+        f'''import hashlib, json, sys
+from pathlib import Path
+def sha256_bytes(data: bytes) -> str:
+    return "sha256:" + hashlib.sha256(data).hexdigest()
+def read_stdin_json():
+    Path({str(marker_file)!r}).write_text("discovered", encoding="utf-8")
+    raw = sys.stdin.read().strip()
+    return json.loads(raw) if raw else {{}}
+def write_json_stdout(payload):
+    sys.stdout.write(json.dumps(payload, separators=(",", ":")) + "\\n")
+    sys.stdout.flush()
+''',
+        encoding='utf-8',
+    )
+    env = {
+        **{k: v for k, v in os.environ.items() if k not in ('PYTHONPATH', 'OPL_FRAMEWORK_ROOT', 'OPL_OWNER_REPO_ROOT', 'OPL_BIN')},
+        'OPL_PROFILE_WORKSPACE': str(workspace),
+        'OPL_PYTHON_CLIENT_DIR': str(tmp_path / 'fake_sdk'),
+        'PYTHONDONTWRITEBYTECODE': '1',
+    }
+    route_res = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'read',
+            'package_id': 'mag',
+            'ref': 'mag.workspace.v1#route',
+            'input': {},
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=True,
+    )
+    route_payload = json.loads(route_res.stdout)
+    assert route_payload['state'] == 'ready'
+    assert marker_file.read_text(encoding='utf-8') == 'discovered'
+    item = route_payload['data']['items'][0]
+    assert item['workspace_id'] == 'nsfc-demo-001'
+
+    quality_res = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'read',
+            'package_id': 'mag',
+            'ref': 'mag.workspace.v1#quality',
+            'input': {},
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=True,
+    )
+    assert json.loads(quality_res.stdout)['state'] == 'ready'
+
+    note_payload = {**item['actions'][0]['input'], 'request_id': 'v2-envelope-note', 'note': '来自 v2 envelope 的审阅意见'}
+    exec_res = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'execute',
+            'package_id': 'mag',
+            'action_id': NOTE_ACTION,
+            'payload': note_payload,
+            'dry_run': False,
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=True,
+    )
+    exec_json = json.loads(exec_res.stdout)
+    assert exec_json['state'] == 'ready'
+    assert exec_json['result']['status'] == 'recorded'
+    assert exec_json['result']['review_note']['note'] == '来自 v2 envelope 的审阅意见'
+
+    no_ws_env = {k: v for k, v in env.items() if k != 'OPL_PROFILE_WORKSPACE'}
+    err_exec = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'execute',
+            'package_id': 'mag',
+            'action_id': NOTE_ACTION,
+            'payload': note_payload,
+            'dry_run': False,
+        }),
+        text=True,
+        capture_output=True,
+        env=no_ws_env,
+        check=True,
+    )
+    err_json = json.loads(err_exec.stdout)
+    assert err_json['ok'] is False
+    assert err_json['operation'] == 'execute'
+    assert err_json['ref'] == NOTE_ACTION
+
+    bad_read = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'read',
+            'package_id': 'mag',
+            'ref': 'mag.workspace.v1#unknown',
+            'input': {},
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=True,
+    )
+    assert json.loads(bad_read.stdout)['state'] == 'unavailable'
 
 
 def test_handoff_context_binds_supplied_identity_and_exact_source_and_note(workspace: Path) -> None:

@@ -6,7 +6,7 @@ import re
 from datetime import UTC, datetime
 from typing import Any, Callable
 
-from opl_framework.source_transport import fetch_text as fetch_source_text
+from med_autogrant._opl_helpers.source_transport import fetch_text as fetch_source_text
 
 from med_autogrant.funding_landscape_discovery.provenance import (
     _build_source_entry,

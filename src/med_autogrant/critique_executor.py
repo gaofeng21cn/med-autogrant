@@ -19,8 +19,8 @@ from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
-from opl_framework.executor_client import run_agent_execution_request
-from opl_framework.review_provenance import (
+from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
+from med_autogrant._opl_helpers.review_provenance import (
     build_independent_review_evidence as _framework_build_independent_review_evidence,
 )
 

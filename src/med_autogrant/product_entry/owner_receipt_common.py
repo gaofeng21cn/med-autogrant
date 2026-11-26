@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from opl_framework.json_io import write_json_object_atomic
+from med_autogrant._opl_helpers.json_io import write_json_object_atomic
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry.primitives import (

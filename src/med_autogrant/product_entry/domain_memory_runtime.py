@@ -4,9 +4,8 @@ import re
 from pathlib import Path
 from typing import Any, Mapping
 
-import opl_framework
-from opl_framework.json_io import write_json_object_atomic
-from opl_framework.schema_validation import SchemaSubsetValidator
+from med_autogrant._opl_helpers.json_io import write_json_object_atomic
+from med_autogrant._opl_helpers.schema_validation import SchemaSubsetValidator
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry.primitives import (
@@ -172,8 +171,8 @@ def export_framework_knowledge_writeback_proposal(*, proposal_path: str | Path) 
     """Export the exact Framework proposal contract, without MAG envelope metadata."""
     payload = _read_json_mapping(Path(proposal_path).expanduser().resolve(), context="domain_memory_writeback_proposal")
     proposal = _require_proposal_body(payload)
-    framework_root = Path(opl_framework.__file__).resolve().parents[2]
-    store = SchemaStore(root=framework_root / "contracts" / "opl-framework")
+    contracts_schemas_root = Path(__file__).resolve().parents[3] / "contracts" / "schemas"
+    store = SchemaStore(root=contracts_schemas_root)
     schema_file = "knowledge-writeback-proposal.schema.json"
     try:
         schema = store.load_json(schema_file)

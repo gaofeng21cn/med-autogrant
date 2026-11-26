@@ -2,17 +2,62 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import hashlib
 import json
+import os
 from pathlib import Path
+import shutil
+import sys
 import uuid
 from typing import Any
 
-from opl_framework.app_contribution import (
+
+def _ensure_opl_client_path() -> None:
+    try:
+        import opl_client.helpers  # noqa: F401
+        return
+    except ImportError:
+        pass
+    repo_root = Path(__file__).resolve().parents[2]
+    candidates: list[Path] = []
+    py_client_dir = os.environ.get("OPL_PYTHON_CLIENT_DIR", "").strip()
+    if py_client_dir:
+        base = Path(py_client_dir).expanduser()
+        candidates.extend([base / "src", base])
+    fw_root = os.environ.get("OPL_FRAMEWORK_ROOT", "").strip() or os.environ.get("OPL_OWNER_REPO_ROOT", "").strip()
+    if fw_root:
+        candidates.append(Path(fw_root).expanduser() / "sdks" / "python-client" / "src")
+    opl_bin = os.environ.get("OPL_BIN", "").strip() or shutil.which("opl") or ""
+    if opl_bin:
+        try:
+            for parent in Path(opl_bin).expanduser().resolve().parents:
+                sdk_src = parent / "sdks" / "python-client" / "src"
+                if (sdk_src / "opl_client" / "__init__.py").is_file():
+                    candidates.append(sdk_src)
+                    break
+        except OSError:
+            pass
+    candidates.extend([
+        repo_root.parent / "one-person-lab" / "sdks" / "python-client" / "src",
+        repo_root.parent / ".worktrees" / "opl-v2" / "sdks" / "python-client" / "src",
+    ])
+    for candidate in candidates:
+        if (candidate / "opl_client" / "__init__.py").is_file():
+            resolved = str(candidate.resolve())
+            if resolved not in sys.path:
+                sys.path.insert(0, resolved)
+            return
+
+
+_ensure_opl_client_path()
+
+from opl_client.helpers import sha256_bytes  # noqa: E402
+
+from med_autogrant._opl_helpers.app_contribution import (
     AppContributionError,
-    sha256_bytes,
     verify_work_item_identity,
 )
-from opl_framework.review_feedback_store import (
+from med_autogrant._opl_helpers.review_feedback_store import (
     ReviewFeedbackError,
     list_feedback_notes,
     record_feedback_note,

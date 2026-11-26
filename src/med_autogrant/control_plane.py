@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from opl_framework.runtime_state_paths import (
+from med_autogrant._opl_helpers.runtime_state_paths import (
     domain_runtime_state_display_path,
     resolve_domain_runtime_state_root,
 )

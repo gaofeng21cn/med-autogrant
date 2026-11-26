@@ -30,8 +30,6 @@ test-regression:
 
 test-structure:
 	$(MAKE) test-descriptor-contracts
-	$(PYTHON_CLEAN) scripts/sync_carrier.py
-	$(PYTHON_CLEAN) scripts/sync_carrier.py --check
 
 test-full:
 	$(PYTEST_CLEAN) -q

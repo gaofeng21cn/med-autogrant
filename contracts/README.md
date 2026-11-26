@@ -20,9 +20,7 @@ Machine boundary: 本文是人读索引。机器真相归本目录 JSON contract
 - `../agent/stages/manifest.json`
 - `generated_surface_handoff.json`
 - `standard_agent_conformance_profile.json`：MAG-owned golden path 与 physical morphology 声明；OPL 只做通用读取和校验。
-- `opl_agent_package_manifest.json`：声明 `mag` identity、capabilities、dependency intent、
-  Codex carrier 与 `medautogrant` runtime locator。MAG owner 发布完整 GHCR bytes；
-  Framework 聚合 carrier actions 与 fresh readback。
+- `../opl-package.json`：v2 唯一包清单，声明 `mag` identity、permissions、provides（`skills`、`contribution_handler`）及对 `mas-scholar-skills` 的依赖意图；安装时由 OPL Pack `carriers/codex-sync` 零拷贝投影到 Codex App。MAG owner 发布完整 GHCR bytes；Framework 聚合包动作与 fresh readback。
 - `scholar_skill_binding_contract.json`：把 `mas-scholar-skills` 声明为 MAG 的 required hard
   dependency；readiness 只检查 identity presence/callability，缺失时只对 MAG fail
   closed，不做 provider version/ABI/lock/payload/digest 求解。
@@ -44,4 +42,4 @@ OPL Package 的跨仓产品目标见
 
 ## Runtime Boundary
 
-OPL/Temporal 持有 generic stage runtime、queue、attempt ledger、retry/resume、lifecycle transport 与 generated surfaces。MAG runtime state 写入 `$OPL_STATE_DIR/domains/med-autogrant/runtime-state/` 或 workspace/artifact roots，不进入 repo source。
+OPL 持有 generic stage runtime、SQLite WAL 状态机、queue、attempt ledger、retry/resume、lifecycle transport 与 generated surfaces。MAG runtime state 写入 `$OPL_STATE_DIR/domains/med-autogrant/runtime-state/` 或 workspace/artifact roots，不进入 repo source。

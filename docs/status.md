@@ -1,6 +1,6 @@
 # 当前状态
 
-本文只概括仓库实现及其证据边界。版本以 [pyproject.toml](../pyproject.toml) 和 [Package manifest](../contracts/opl_agent_package_manifest.json) 为准，发布与安装须另行回读其 owner。
+本文只概括仓库实现及其证据边界。版本以 [pyproject.toml](../pyproject.toml) 和 [opl-package.json](../opl-package.json) 为准，发布与安装须另行回读其 owner。
 
 ## 仓内实现
 
@@ -13,11 +13,11 @@
 | 直接 authority target | `medautogrant`、`MedAutoGrantDomainEntry` 和 [domain handler contract](../src/med_autogrant/product_entry/domain_handler_contract.py)；不作为 Skill 的默认用户入口 |
 | 通用 transport | [executor client](../src/med_autogrant/domain_executor_client.py) 与 funding source 调用 OPL Python helpers |
 | Package dependency | `mas-scholar-skills` 为 required dependency；manifest 声明不能代替 provider 实际 presence/callability |
-| 原生载荷与环境诊断 | 单源根目录持有唯一受控实现，`plugins/med-autogrant/` 仅跟踪薄 carrier 壳；[carrier projection](../contracts/carrier_projection.json) 与 `scripts/sync_carrier.py` 驱动构建期自包含载体物化与 `--check` 校验；[pack doctor](../contracts/pack_doctor.json) 声明环境诊断与 CLI/模块前置检查 |
+| 原生载荷与环境诊断 | 单源根目录持有唯一受控实现与 [opl-package.json](../opl-package.json)（`opl.package.v2`），仓内零 `plugins/` 镜像；发布期由 `opl pack build` 生成 `opl-release.lock.json`，安装/链接期由 `carriers/codex-sync` 零拷贝投影；[pack doctor](../contracts/pack_doctor.json) 声明环境诊断与 CLI/模块前置检查 |
 | 结构证据 | [conformance profile](../contracts/standard_agent_conformance_profile.json)、[source closure audit](../contracts/source_closure_audit.json)，需 fresh scanner 才能判断当前检查结果 |
-| MCP App 审阅 | [声明式 adapter](../app-contribution-adapter.json) 通过 MAG owner 读取已登记工作区的 canonical `workspace.json`，直接输出通用审阅投影；`workspace_file`、`quality_path` 可显式选择其他 owner 文件。意见绑定 exact source revision，UI/CLI 同源保存、回读，由既有 critique 消费；任务继续仍走原 runtime action，不推断未保存的质量评分 |
+| MCP App 审阅 | [opl-package.json](../opl-package.json) `provides.contribution_handler` 经 `runtime/app_contribution.py` 读取已登记工作区的 canonical `workspace.json`，直接输出通用审阅投影；`workspace_file`、`quality_path` 可显式选择其他 owner 文件。意见绑定 exact source revision，UI/CLI 同源保存、回读，由既有 critique 消费；任务继续仍走原 runtime action，不推断未保存的质量评分 |
 
-当前 critique executor 仅接受 `codex_cli`（通过 OPL Runway `opl_framework.executor_client` 路由），其他 executor kind 一律 fail-closed。详见 [executor 边界](./specs/critique-executor.md)。
+当前 critique executor 仅接受 `codex_cli`（经内化的 `med_autogrant._opl_helpers.executor_client` 路由），其他 executor kind 一律 fail-closed。详见 [executor 边界](./specs/critique-executor.md)。
 
 ## 未闭合证据
 
