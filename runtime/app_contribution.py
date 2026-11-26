@@ -2,7 +2,6 @@
 """Thin contribution handler for MAG's shared owner entry."""
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -87,6 +86,8 @@ from med_autogrant.app_contribution import (  # noqa: E402
 )
 from med_autogrant.workspace_types import WorkspaceError  # noqa: E402
 
+RESPONSE_SCHEMA_VERSION = "opl-package-app-contribution-response.v1"
+
 _READ_REF_TO_VIEW = {
     "mag.workspace.v1#route": "route",
     "mag.workspace.v1#quality": "quality",
@@ -96,6 +97,8 @@ _READ_REF_TO_VIEW = {
 def main() -> int:
     cli_operation = sys.argv[1] if len(sys.argv) > 1 else None
     is_execute = cli_operation == "note"
+    requested_action_id: str | None = NOTE_ACTION if cli_operation == "note" else None
+    exit_code = 0
     try:
         payload = read_stdin_json()
         is_envelope = (
@@ -105,8 +108,17 @@ def main() -> int:
                 or payload.get("operation") in ("read", "execute")
             )
         )
+        raw_envelope_action: object = None
         if is_envelope and payload.get("operation") == "execute":
             is_execute = True
+            raw_envelope_action = payload.get("action_id")
+            if raw_envelope_action is None or raw_envelope_action == "":
+                raw_envelope_action = payload.get("ref")
+            requested_action_id = (
+                raw_envelope_action
+                if isinstance(raw_envelope_action, str) and raw_envelope_action
+                else None
+            )
 
         try:
             root = resolve_workspace_root()
@@ -118,14 +130,17 @@ def main() -> int:
         if is_envelope:
             envelope_op = payload.get("operation")
             if envelope_op == "execute":
-                action_id = payload.get("action_id") or payload.get("ref")
-                if action_id != NOTE_ACTION:
-                    raise ValueError(f"未知 MAG 审阅动作: {action_id!r}")
+                if raw_envelope_action != NOTE_ACTION:
+                    raise ValueError(f"未知 MAG 审阅动作: {raw_envelope_action!r}")
                 raw_input = payload.get("payload")
                 if not isinstance(raw_input, dict):
                     raw_input = payload.get("input") if isinstance(payload.get("input"), dict) else {}
                 source = _selected_source(root, raw_input, "route")
                 result = {
+                    "schema_version": RESPONSE_SCHEMA_VERSION,
+                    "ok": True,
+                    "operation": "execute",
+                    "ref": NOTE_ACTION,
                     "state": "ready",
                     "result": record_review(
                         input_path=source,
@@ -149,6 +164,10 @@ def main() -> int:
             if operation == "note":
                 source = _selected_source(root, payload, "route")
                 result = {
+                    "schema_version": RESPONSE_SCHEMA_VERSION,
+                    "ok": True,
+                    "operation": "execute",
+                    "ref": NOTE_ACTION,
                     "state": "ready",
                     "result": record_review(
                         input_path=source,
@@ -164,17 +183,18 @@ def main() -> int:
                 raise ValueError("未知 MAG 审阅操作。")
     except (AppContributionError, WorkspaceError, OSError, ValueError, TypeError, KeyError) as error:
         if is_execute:
+            exit_code = 2
             result = {
-                "schema_version": "opl-package-app-contribution-response.v1",
+                "schema_version": RESPONSE_SCHEMA_VERSION,
                 "ok": False,
                 "operation": "execute",
-                "ref": NOTE_ACTION,
+                "ref": requested_action_id,
                 "error": {"message": str(error)},
             }
         else:
             result = {"state": "unavailable", "reason": str(error)}
     write_json_stdout(result)
-    return 0
+    return exit_code
 
 
 if __name__ == "__main__":

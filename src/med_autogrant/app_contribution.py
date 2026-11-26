@@ -51,7 +51,11 @@ def _ensure_opl_client_path() -> None:
 
 _ensure_opl_client_path()
 
-from opl_client.helpers import sha256_bytes  # noqa: E402
+try:
+    from opl_client.helpers import sha256_bytes  # noqa: E402
+except ImportError:
+    def sha256_bytes(data: bytes) -> str:
+        return f"sha256:{hashlib.sha256(data).hexdigest()}"
 
 from med_autogrant._opl_helpers.app_contribution import (
     AppContributionError,

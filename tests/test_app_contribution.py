@@ -118,12 +118,17 @@ def test_contribution_cli_and_v2_envelope_share_owner_and_no_ui_cli(workspace: P
     value = {**item['actions'][0]['input'], 'request_id': 'same-source-carrier', 'note': '对比候选'}
     executed = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'note'], cwd=ROOT,
                               input=json.dumps(value), text=True, capture_output=True, env=env, check=True)
-    assert json.loads(executed.stdout)['result']['status'] == 'recorded'
+    executed_json = json.loads(executed.stdout)
+    assert executed_json['schema_version'] == 'opl-package-app-contribution-response.v1'
+    assert executed_json['ok'] is True
+    assert executed_json['state'] == 'ready'
+    assert executed_json['result']['status'] == 'recorded'
     result = subprocess.run([sys.executable, '-m', 'med_autogrant.cli', 'workspace', 'review-feedback',
                              '--input', str(workspace), '--json'], text=True, capture_output=True, env=env, check=True)
     assert json.loads(result.stdout)['review_notes'][0]['note'] == '对比候选'
     invalid = subprocess.run([sys.executable, 'runtime/app_contribution.py', 'note'], cwd=ROOT,
-                             input=json.dumps({**value, 'workspace_id': 'bad'}), text=True, capture_output=True, env=env, check=True)
+                             input=json.dumps({**value, 'workspace_id': 'bad'}), text=True, capture_output=True, env=env, check=False)
+    assert invalid.returncode == 2
     assert json.loads(invalid.stdout)['ok'] is False
     assert json.loads(invalid.stdout)['ref'] == NOTE_ACTION
 
@@ -210,6 +215,8 @@ def write_json_stdout(payload):
         check=True,
     )
     exec_json = json.loads(exec_res.stdout)
+    assert exec_json['schema_version'] == 'opl-package-app-contribution-response.v1'
+    assert exec_json['ok'] is True
     assert exec_json['state'] == 'ready'
     assert exec_json['result']['status'] == 'recorded'
     assert exec_json['result']['review_note']['note'] == '来自 v2 envelope 的审阅意见'
@@ -229,12 +236,54 @@ def write_json_stdout(payload):
         text=True,
         capture_output=True,
         env=no_ws_env,
-        check=True,
+        check=False,
     )
+    assert err_exec.returncode == 2
     err_json = json.loads(err_exec.stdout)
     assert err_json['ok'] is False
     assert err_json['operation'] == 'execute'
     assert err_json['ref'] == NOTE_ACTION
+
+    bad_action = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'execute',
+            'package_id': 'mag',
+            'action_id': 'mag.workspace.v1#evil',
+            'payload': note_payload,
+            'dry_run': False,
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=False,
+    )
+    assert bad_action.returncode == 2
+    bad_action_json = json.loads(bad_action.stdout)
+    assert bad_action_json['ok'] is False
+    assert bad_action_json['operation'] == 'execute'
+    assert bad_action_json['ref'] == 'mag.workspace.v1#evil'
+
+    bad_req_id = subprocess.run(
+        [sys.executable, 'runtime/app_contribution.py'],
+        cwd=ROOT,
+        input=json.dumps({
+            'schema_version': 'opl-package-app-contribution-request.v1',
+            'operation': 'execute',
+            'package_id': 'mag',
+            'action_id': NOTE_ACTION,
+            'payload': {**note_payload, 'request_id': '../escape'},
+            'dry_run': False,
+        }),
+        text=True,
+        capture_output=True,
+        env=env,
+        check=False,
+    )
+    assert bad_req_id.returncode == 2
+    assert json.loads(bad_req_id.stdout)['ok'] is False
 
     bad_read = subprocess.run(
         [sys.executable, 'runtime/app_contribution.py'],
@@ -252,6 +301,105 @@ def write_json_stdout(payload):
         check=True,
     )
     assert json.loads(bad_read.stdout)['state'] == 'unavailable'
+
+
+def test_isolated_stdlib_fallback_without_opl_client_or_sibling_worktree(workspace: Path, tmp_path: Path) -> None:
+    isolated = tmp_path / 'isolated_pkg'
+    (isolated / 'runtime').mkdir(parents=True)
+    pkg_dir = isolated / 'src' / 'med_autogrant'
+    pkg_dir.mkdir(parents=True)
+    shutil.copyfile(ROOT / 'runtime' / 'app_contribution.py', isolated / 'runtime' / 'app_contribution.py')
+    shutil.copyfile(ROOT / 'src' / 'med_autogrant' / '__init__.py', pkg_dir / '__init__.py')
+    shutil.copyfile(ROOT / 'src' / 'med_autogrant' / 'app_contribution.py', pkg_dir / 'app_contribution.py')
+    shutil.copyfile(ROOT / 'src' / 'med_autogrant' / 'workspace_types.py', pkg_dir / 'workspace_types.py')
+    shutil.copytree(ROOT / 'src' / 'med_autogrant' / '_opl_helpers', pkg_dir / '_opl_helpers')
+
+    for extra_env in (
+        {'OPL_PYTHON_CLIENT_DIR': str(tmp_path / 'nonexistent_opl_client')},
+        {},
+    ):
+        stripped_env = {
+            'PATH': '/usr/bin:/bin',
+            'PYTHONDONTWRITEBYTECODE': '1',
+            **extra_env,
+        }
+        mod_res = subprocess.run(
+            [
+                sys.executable,
+                '-c',
+                (
+                    'import sys, med_autogrant.app_contribution as m; '
+                    'assert "opl_client" not in sys.modules; '
+                    'print(m.sha256_bytes(b"mag-fallback"))'
+                ),
+            ],
+            cwd=isolated,
+            env={**stripped_env, 'PYTHONPATH': str(isolated / 'src')},
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert mod_res.returncode == 0, mod_res.stderr
+        assert 'ModuleNotFoundError' not in mod_res.stderr
+        assert mod_res.stdout.strip() == f'sha256:{hashlib.sha256(b"mag-fallback").hexdigest()}'
+
+        read_missing_ws = subprocess.run(
+            [sys.executable, 'runtime/app_contribution.py'],
+            cwd=isolated,
+            env=stripped_env,
+            input=json.dumps({
+                'schema_version': 'opl-package-app-contribution-request.v1',
+                'operation': 'read',
+                'package_id': 'mag',
+                'ref': 'mag.workspace.v1#route',
+                'input': {},
+            }),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert read_missing_ws.returncode == 0, read_missing_ws.stderr
+        assert 'ModuleNotFoundError' not in read_missing_ws.stderr
+        assert json.loads(read_missing_ws.stdout)['state'] == 'unavailable'
+
+        read_ready = subprocess.run(
+            [sys.executable, 'runtime/app_contribution.py'],
+            cwd=isolated,
+            env={**stripped_env, 'OPL_PROFILE_WORKSPACE': str(workspace)},
+            input=json.dumps({
+                'schema_version': 'opl-package-app-contribution-request.v1',
+                'operation': 'read',
+                'package_id': 'mag',
+                'ref': 'mag.workspace.v1#route',
+                'input': {},
+            }),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert read_ready.returncode == 0, read_ready.stderr
+        assert json.loads(read_ready.stdout)['state'] == 'ready'
+
+        bad_exec = subprocess.run(
+            [sys.executable, 'runtime/app_contribution.py'],
+            cwd=isolated,
+            env={**stripped_env, 'OPL_PROFILE_WORKSPACE': str(workspace)},
+            input=json.dumps({
+                'schema_version': 'opl-package-app-contribution-request.v1',
+                'operation': 'execute',
+                'package_id': 'mag',
+                'action_id': 'mag.workspace.v1#evil',
+                'payload': {},
+                'dry_run': False,
+            }),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert bad_exec.returncode == 2, bad_exec.stderr
+        bad_exec_json = json.loads(bad_exec.stdout)
+        assert bad_exec_json['ok'] is False
+        assert bad_exec_json['ref'] == 'mag.workspace.v1#evil'
 
 
 def test_handoff_context_binds_supplied_identity_and_exact_source_and_note(workspace: Path) -> None:
