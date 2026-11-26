@@ -6,7 +6,7 @@ from functools import partial
 from pathlib import Path
 
 from med_autogrant.domain_executor_client import run_domain_executor
-from opl_framework.executor_client import run_agent_execution_request
+from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
 
 def test_domain_executor_consumes_canonical_opl_receipt(tmp_path: Path) -> None:

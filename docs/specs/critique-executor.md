@@ -14,13 +14,13 @@ Machine boundary: 本文冻结 critique 的 domain vocabulary 与 OPL executor-c
 - 默认/唯一允许 executor kind = `codex_cli`
 - 其他 executor kind fail closed
 
-`codex_cli` 是默认 concrete executor，但 Codex transport 不归 MAG。executor 请求通过 `opl_framework.executor_client.run_agent_execution_request` 进入 OPL Runway。
+`codex_cli` 是默认 concrete executor，但 Codex transport 不归 MAG。executor 请求通过内化的 `med_autogrant._opl_helpers.executor_client.run_agent_execution_request`（或 OPL Runway `ExecutorSPI`）路由。
 
 ## Owner Boundary
 
 OPL 持有：
 
-- `opl executor run --request`
+- OPL Runway / `ExecutorSPI` (`executors/codex`)
 - Codex 等 OPL 托管 concrete executor discovery 与 subprocess
 - timeout、process-group cleanup、JSON event/receipt envelope
 - canonical `AgentExecutionReceipt`

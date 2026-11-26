@@ -30,20 +30,20 @@
       "runtime_projection_refs": [
         {
           "ref_kind": "repo_path",
-          "ref": "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+          "ref": "skills/med-autogrant/SKILL.md",
           "role": "codex_plugin_materialized_carrier"
         },
         {
           "ref_kind": "contract_ref",
-          "ref": "contracts/opl_agent_package_manifest.json",
+          "ref": "opl-package.json",
           "role": "plugin_carrier_boundary"
         }
       ],
-      "sync_policy": "repo_local_standard_primary_skill_with_materialized_plugin_carrier",
-      "externalization_reason": "The rich app skill is the canonical standard OPL primary skill source; the plugin path is a byte-identical materialized Codex carrier and does not own MAG truth.",
+      "sync_policy": "repo_local_standard_primary_skill_with_projected_carrier",
+      "externalization_reason": "The rich app skill is the canonical standard OPL primary skill source; the root skill path is projected at install time by carriers/codex-sync and does not own MAG truth.",
       "carrier_projection_contract": {
         "canonical_source": "agent/primary_skill/SKILL.md",
-        "carrier_skill_ref": "plugins/med-autogrant/skills/med-autogrant/SKILL.md",
+        "carrier_skill_ref": "skills/med-autogrant/SKILL.md",
         "carrier_materialization": "materialized_full_skill_copy",
         "codex_install_requires_real_skill_md": true,
         "plugin_skill_must_remain_real_file": true,
@@ -303,7 +303,7 @@
       "runtime_projection_refs": [
         {
           "ref_kind": "contract_ref",
-          "ref": "contracts/opl_agent_package_manifest.json#/capability_dependencies/0",
+          "ref": "opl-package.json#/dependencies/packages/0",
           "role": "required_runtime_dependency"
         },
         {

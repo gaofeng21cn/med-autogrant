@@ -16,7 +16,7 @@ from med_autogrant.domain_entry_contract import (
 )
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace_types import WorkspaceStateError
-from opl_framework.schema_validation import SchemaSubsetValidator
+from med_autogrant._opl_helpers.schema_validation import SchemaSubsetValidator
 
 from .shared import (
     AUTHOR_SIDE_ROUTE_IDS,

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from med_autogrant.workspace_types import WorkspaceStateError
-from opl_framework.executor_client import (
+from med_autogrant._opl_helpers.executor_client import (
     project_agent_execution_receipt_metadata,
     run_agent_execution_request,
 )

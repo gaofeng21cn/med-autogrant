@@ -28,7 +28,7 @@ from med_autogrant.authoring_executor_parts import (  # noqa: E402
     _build_drafting_prompt,
 )
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
-from opl_framework.executor_client import run_agent_execution_request  # noqa: E402
+from med_autogrant._opl_helpers.executor_client import run_agent_execution_request  # noqa: E402
 
 
 def _load(path: Path) -> dict[str, Any]:

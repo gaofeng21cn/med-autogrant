@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from opl_framework.capability_binding import (
+from med_autogrant._opl_helpers.capability_binding import (
     REQUIRED_NON_USABLE_OBSERVATIONS as SCHOLAR_SKILL_REQUIRED_NON_USABLE_OBSERVATIONS,
     CapabilityBindingError,
     select_direct_route_exports,

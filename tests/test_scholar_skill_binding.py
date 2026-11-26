@@ -36,25 +36,17 @@ def _read_json(ref: str) -> dict:
 
 def test_package_declares_required_runtime_dependency_with_install_and_runtime_gate() -> None:
     binding = read_scholar_skill_binding_contract(repo_root=REPO_ROOT)
-    manifest = _read_json("contracts/opl_agent_package_manifest.json")
+    manifest = _read_json("opl-package.json")
 
-    assert manifest["codex_surface"]["bundled_capability_package_ids"] == [
-        "mas-scholar-skills"
-    ]
-    assert len(manifest["capability_dependencies"]) == 1
-    dependency = manifest["capability_dependencies"][0]
-    assert dependency["package_id"] == binding["provider_package_id"]
-    assert dependency["consumer_profile_id"] == binding["consumer_profile_id"]
-    assert dependency["capability_abi"] == binding["capability_abi"]
-    assert dependency["version_requirement"] == ">=0.2.25 <0.3.0"
-    assert dependency["required_export_ids"] == binding["eligible_export_ids"]
-    assert dependency["required_module_ids"] == binding["eligible_module_ids"]
-    assert dependency["required"] is True
-    assert dependency["dependency_kind"] == "hard_runtime_dependency"
-    assert dependency["availability_policy_ref"] == (
-        "contracts/scholar_skill_binding_contract.json#/availability_policy"
-    )
-    assert not any(dependency["authority_boundary"].values())
+    assert manifest["schema_version"] == "opl.package.v2"
+    assert manifest["identity"]["id"] == "mag"
+    assert len(manifest["dependencies"]["packages"]) == 1
+    dependency = manifest["dependencies"]["packages"][0]
+    assert dependency["id"] == binding["provider_package_id"]
+    assert dependency["version"] == ">=0.2.25 <0.3.0"
+    assert dependency["optional"] is False
+    assert dependency["required_capabilities"] == binding["eligible_export_ids"]
+    assert not any(binding["authority_boundary"].values())
 
 
 def test_every_stage_uses_resolvable_overlay_and_single_binding_contract() -> None:

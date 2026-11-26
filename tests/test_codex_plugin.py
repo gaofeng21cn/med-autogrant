@@ -1,71 +1,51 @@
 from __future__ import annotations
 
-import importlib.util
 import json
 import re
 import tomllib
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PLUGIN_ROOT = REPO_ROOT / "plugins" / "med-autogrant"
-PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
-PORTABLE_PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / "plugin.json"
 ROOT_PACKAGE_DESCRIPTOR_PATH = REPO_ROOT / "opl-package.json"
-PLUGIN_ICON_PATH = PLUGIN_ROOT / "assets" / "icon.png"
-PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
-PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "SKILL.md"
-PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "med-autogrant" / "agents" / "openai.yaml"
-PLUGIN_PACKAGE_DESCRIPTOR_PATH = PLUGIN_ROOT / "opl-package.json"
+SKILL_ROOT = REPO_ROOT / "skills" / "med-autogrant"
+SKILL_PATH = SKILL_ROOT / "SKILL.md"
+SKILL_UI_METADATA_PATH = SKILL_ROOT / "agents" / "openai.yaml"
 PRIMARY_SKILL_PATH = REPO_ROOT / "agent" / "primary_skill" / "SKILL.md"
-PACKAGE_MANIFEST_PATH = REPO_ROOT / "contracts" / "opl_agent_package_manifest.json"
 REPO_LOCAL_INSTALLER_PATHS = (
     REPO_ROOT / "scripts" / "install-codex-plugin.sh",
     REPO_ROOT / "src" / "med_autogrant" / "codex_plugin_installer.py",
 )
 
 
-def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
+def test_v2_package_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
-    portable_manifest = json.loads(
-        PORTABLE_PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
-    )
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
+    identity = manifest["identity"]
+    codex = manifest["host_hints"]["codex"]
 
-    assert manifest["name"] == "med-autogrant"
-    assert manifest["version"] == pyproject_data["project"]["version"]
-    assert manifest["repository"] == "https://github.com/gaofeng21cn/med-autogrant"
-    assert manifest["skills"] == "./skills/"
-    assert manifest["interface"]["displayName"] == "Med Auto Grant"
-    assert manifest["interface"]["category"] == "Research"
-    assert manifest["interface"]["composerIcon"] == "./assets/icon.png"
-    assert manifest["interface"]["logo"] == "./assets/icon.png"
-    assert portable_manifest["$schema"] == (
-        "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
-    )
-    assert portable_manifest["name"] == manifest["name"]
-    assert portable_manifest["version"] == manifest["version"]
-    assert portable_manifest["extensions"]["com.openai"]["interface"] == (
-        manifest["interface"]
-    )
-    assert "skills" not in portable_manifest
-    assert not (PLUGIN_ROOT / "mcp.json").exists()
-    assert "medical grant" in manifest["description"].lower()
-    assert "for codex" not in json.dumps(manifest).lower()
-    assert PLUGIN_ICON_PATH.is_file()
-    assert PLUGIN_ICON_SOURCE_PATH.is_file()
-    icon_source = PLUGIN_ICON_SOURCE_PATH.read_text(encoding="utf-8")
-    assert '<rect width="512" height="512" rx="112"' in icon_source
-    assert 'stroke-width="42"' in icon_source
-    assert 'stroke="#FFE08A"' in icon_source
-    assert PLUGIN_SKILL_PATH.is_file()
-    assert PLUGIN_SKILL_UI_METADATA_PATH.is_file()
+    assert manifest["schema_version"] == "opl.package.v2"
+    assert identity["id"] == "mag"
+    assert identity["version"] == pyproject_data["project"]["version"]
+    assert identity["repository"] == "https://github.com/gaofeng21cn/med-autogrant"
+    assert identity["name"]["en-US"] == "Med Auto Grant"
+    assert "medical grant" in identity["summary"]["en-US"].lower()
+    assert (REPO_ROOT / identity["icon"]).is_file()
+    assert codex["plugin_name"] == "med-autogrant"
+    assert codex["category"] == "Research"
+    assert manifest["provides"]["skills"] == [
+        {"id": "med-autogrant", "path": "./skills/med-autogrant", "exposure": "default"}
+    ]
+    assert not (REPO_ROOT / "mcp.json").exists()
+    assert not (REPO_ROOT / "plugins").exists()
+    assert not (REPO_ROOT / ".codex-plugin").exists()
+    assert SKILL_PATH.is_file()
+    assert SKILL_UI_METADATA_PATH.is_file()
 
 
-def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
+def test_package_version_matches_python_package_and_uv_lock() -> None:
     pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     lock_data = tomllib.loads((REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
-    plugin_manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
-    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
     init_text = (REPO_ROOT / "src" / "med_autogrant" / "__init__.py").read_text(
         encoding="utf-8"
     )
@@ -73,69 +53,53 @@ def test_package_version_matches_python_plugin_and_owner_manifest() -> None:
 
     assert re.fullmatch(r"\d+\.\d+\.\d+", version)
     assert f'__version__ = "{version}"' in init_text
-    assert plugin_manifest["version"] == version
-    assert package_manifest["version"] == version
+    assert manifest["identity"]["version"] == version
     assert next(
         package["version"]
         for package in lock_data["package"]
         if package["name"] == "med-autogrant"
     ) == version
-    assert "distribution_payload" not in package_manifest
+    assert "distribution_payload" not in manifest
 
 
 def test_owner_manifest_does_not_define_a_package_lifecycle_manager() -> None:
-    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
 
-    assert "lifecycle" not in package_manifest
+    assert "lifecycle" not in manifest
     assert all(not path.exists() for path in REPO_LOCAL_INSTALLER_PATHS)
 
 
 def test_agent_package_uses_mag_identity_without_relabeling_carriers() -> None:
     pyproject_data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
 
-    assert package_manifest["agent_id"] == "mag"
-    assert package_manifest["package_id"] == "mag"
-    assert package_manifest["version"] == pyproject_data["project"]["version"]
-    assert package_manifest["codex_surface"]["plugin_id"] == "med-autogrant"
-    assert package_manifest["codex_surface"]["configured_codex_plugin_carrier"] == {
-        "kind": "codex_plugin_manager",
-        "plugin_selector": "med-autogrant@med-autogrant",
-        "executor_route": "codex_cli",
-        "marketplace_source": "gaofeng21cn/med-autogrant",
-        "publication_ref": (
-            "ghcr.io/gaofeng21cn/one-person-lab-packages/mag:latest-stable"
-        ),
+    assert manifest["identity"]["id"] == "mag"
+    assert manifest["identity"]["version"] == pyproject_data["project"]["version"]
+    assert manifest["host_hints"]["codex"]["plugin_name"] == "med-autogrant"
+    assert manifest["distribution"] == {
+        "oci": "ghcr.io/gaofeng21cn/one-person-lab-packages/mag",
+        "visibility": "public",
     }
-    assert "lifecycle" not in package_manifest
-    assert "distribution_payload" not in package_manifest
-    assert "opl-agent-med-autogrant" not in json.dumps(package_manifest)
+    assert "lifecycle" not in manifest
+    assert "distribution_payload" not in manifest
+    assert "opl-agent-med-autogrant" not in json.dumps(manifest)
 
 
 def test_owner_dependency_contains_only_presence_callability_and_domain_authority() -> None:
-    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    dependency = package_manifest["capability_dependencies"][0]
-
-    assert set(dependency) == {
-        "module_id",
-        "package_id",
-        "kind",
-        "required",
-        "dependency_kind",
-        "version_requirement",
-        "capability_abi",
-        "consumer_profile_id",
-        "provider_manifest_ref",
-        "required_export_ids",
-        "required_module_ids",
-        "availability_policy_ref",
-        "authority_boundary",
-    }
-    assert dependency["required"] is True
-    assert dependency["dependency_kind"] == "hard_runtime_dependency"
-    assert dependency["availability_policy_ref"] == (
-        "contracts/scholar_skill_binding_contract.json#/availability_policy"
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
+    binding = json.loads(
+        (REPO_ROOT / "contracts" / "scholar_skill_binding_contract.json").read_text(
+            encoding="utf-8"
+        )
     )
+    dependency = manifest["dependencies"]["packages"][0]
+
+    assert dependency == {
+        "id": binding["provider_package_id"],
+        "version": ">=0.2.25 <0.3.0",
+        "optional": False,
+        "required_capabilities": binding["eligible_export_ids"],
+    }
     forbidden_lifecycle_fields = {
         "activation_materialization",
         "codex_distribution",
@@ -154,152 +118,29 @@ def test_owner_dependency_contains_only_presence_callability_and_domain_authorit
     assert forbidden_lifecycle_fields.isdisjoint(dependency)
 
 
-def test_native_carrier_projects_descriptor_neutral_mag_owner_contract() -> None:
-    owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    carrier_descriptor = json.loads(
-        PLUGIN_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8")
-    )
-    plugin_manifest = json.loads(PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8"))
-
-    owner_dependency = owner_manifest["capability_dependencies"][0]
-    expected_presence = "required" if owner_dependency["required"] else "optional"
-    projected_fields = (
-        "surface_kind",
-        "agent_id",
-        "package_id",
-        "display_name",
-        "presentation",
-        "publisher",
-        "version",
-        "source",
-        "carrier_source_role",
-        "schema_ref",
-    )
-    assert {
-        field: carrier_descriptor[field] for field in projected_fields
-    } == {
-        field: owner_manifest[field] for field in projected_fields
-    }
-    assert carrier_descriptor["kind"] == "agent"
-    assert carrier_descriptor["domain_id"] == "med-autogrant"
-    assert carrier_descriptor["domain_descriptor_ref"] == "contracts/domain_descriptor.json"
-    assert carrier_descriptor["task_provider_ref"] == (
-        "contracts/domain_descriptor.json"
-        "#/standard_agent_interface/stage_catalog"
-    )
-    assert carrier_descriptor["action_catalog_ref"] == "contracts/action_catalog.json"
-    assert carrier_descriptor["view_refs"] == []
-    assert carrier_descriptor["entrypoints"] == []
-    assert carrier_descriptor["requires"] == [
-        {
-            "package_id": owner_dependency["package_id"],
-            "presence": expected_presence,
-        }
-    ]
-    assert (
-        carrier_descriptor["capability_dependencies"]
-        == owner_manifest["capability_dependencies"]
-    )
-    carrier_surface = carrier_descriptor["codex_surface"]
-    owner_surface = owner_manifest["codex_surface"]
-    assert carrier_surface["plugin_id"] == owner_surface["plugin_id"]
-    assert carrier_surface["plugin_source_path"] == "."
-    assert (
-        carrier_surface["configured_codex_plugin_carrier"]
-        == owner_surface["configured_codex_plugin_carrier"]
-    )
-    assert carrier_surface["required_skill_ids"] == owner_surface["required_skill_ids"]
-    assert carrier_surface["app_contribution_abi"] == owner_surface["app_contribution_abi"]
-    assert (
-        carrier_surface["app_contribution_adapter"]
-        == owner_surface["app_contribution_adapter"]
-    )
-    assert carrier_descriptor["app_contributions"] == owner_manifest["app_contributions"]
-    assert carrier_descriptor["version"] == plugin_manifest["version"]
-    assert carrier_descriptor["codex_surface"]["plugin_id"] == plugin_manifest["name"]
-    assert (REPO_ROOT / carrier_descriptor["domain_descriptor_ref"]).is_file()
-    assert (REPO_ROOT / carrier_descriptor["action_catalog_ref"]).is_file()
-
-    forbidden_manager_fields = {
-        "content_lock",
-        "distribution_payload",
-        "lifecycle",
-        "lifecycle_receipt",
-        "lock_ref",
-        "managed_policy_surface",
-        "managed_update_source",
-        "opl_managed_surface",
-        "package_core",
-        "registry_entry",
-        "rollback_ref",
-        "transaction",
-    }
-    assert forbidden_manager_fields.isdisjoint(carrier_descriptor)
-    assert all(
-        set(requirement) == {"package_id", "presence"}
-        for requirement in carrier_descriptor["requires"]
-    )
-
-
-def _load_sync_carrier_module():
-    spec = importlib.util.spec_from_file_location(
-        "carrier_test_helper", REPO_ROOT / "tests" / "_carrier_test_helper.py"
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-def test_nested_native_carrier_materializes_domain_runtime_and_stage_resources(
-    tmp_path: Path,
-) -> None:
-    marketplace = json.loads(
-        (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    plugin_source_root = (
-        REPO_ROOT / marketplace["plugins"][0]["source"]["path"]
-    ).resolve()
-    plugin_manifest = json.loads(
-        PLUGIN_MANIFEST_PATH.read_text(encoding="utf-8")
-    )
-    owner_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+def test_v2_manifest_references_resolvable_domain_runtime_and_stage_resources() -> None:
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
     domain_descriptor = json.loads(
-        (REPO_ROOT / owner_manifest["domain_descriptor_ref"]).read_text(
-            encoding="utf-8"
-        )
+        (REPO_ROOT / "contracts" / "domain_descriptor.json").read_text(encoding="utf-8")
     )
     action_catalog = json.loads(
-        (REPO_ROOT / owner_manifest["action_catalog_ref"]).read_text(
-            encoding="utf-8"
-        )
+        (REPO_ROOT / "contracts" / "action_catalog.json").read_text(encoding="utf-8")
     )
 
-    assert plugin_source_root == PLUGIN_ROOT.resolve()
-    assert plugin_manifest["skills"] == "./skills/"
-    assert plugin_manifest["version"] == owner_manifest["version"]
-    assert ROOT_PACKAGE_DESCRIPTOR_PATH.read_bytes() == PACKAGE_MANIFEST_PATH.read_bytes()
-    assert domain_descriptor["domain_id"] == owner_manifest["domain_id"]
     stage_manifest_ref = domain_descriptor["standard_agent_interface"]["stage_catalog"][
         "relative_path"
     ]
+    assert manifest["provides"]["agent"]["stages_ref"] == stage_manifest_ref
+    assert domain_descriptor["domain_id"] == "med-autogrant"
     assert all(
         action["execution_binding"]["stage_manifest_ref"] == stage_manifest_ref
         for action in action_catalog["actions"]
     )
 
-    sync_carrier = _load_sync_carrier_module()
-    materialized_carrier, report = sync_carrier.materialize_carrier_in_temp(
-        REPO_ROOT, tmp_path / "carrier-stage"
-    )
-    assert report["pack_carrier_projection"]["status"] == "passed"
-
     pack = json.loads((REPO_ROOT / "contracts/pack_compiler_input.json").read_text())
     required_resources = (
-        owner_manifest["domain_descriptor_ref"],
-        owner_manifest["action_catalog_ref"],
+        "contracts/domain_descriptor.json",
+        "contracts/action_catalog.json",
         stage_manifest_ref,
         "src/med_autogrant/product_entry/domain_handler.py",
         "src/med_autogrant/product_entry/domain_handler_dispatch.py",
@@ -309,54 +150,48 @@ def test_nested_native_carrier_materializes_domain_runtime_and_stage_resources(
         *pack["required_domain_pack_paths"],
     )
     for resource in required_resources:
-        canonical = REPO_ROOT / resource
-        projected = materialized_carrier / resource
-        assert canonical.is_file(), resource
-        assert projected.is_file(), resource
-        assert projected.read_bytes() == canonical.read_bytes(), resource
+        assert (REPO_ROOT / resource).is_file(), resource
 
 
 def test_mag_package_manifest_declares_owner_home_presentation() -> None:
-    package_manifest = json.loads(PACKAGE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = json.loads(ROOT_PACKAGE_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
+    identity = manifest["identity"]
 
-    assert package_manifest["presentation"] == {
-        "icon_ref": "assets/branding/medautogrant-logo.png",
-        "display_name_i18n": {
-            "zh-CN": "Med Auto Grant",
-            "en-US": "Med Auto Grant",
-        },
-        "description_i18n": {
-            "zh-CN": "医学基金申请规划、撰写、评审与修订。",
-            "en-US": "Medical grant application planning, writing, review, and revision.",
-        },
-        "session_routing_summary_i18n": {
-            "en-US": (
-                "Enter the current MAG grant workflow and continue the same "
-                "funding-call authoring loop."
-            )
-        },
-        "home_shortcuts": [
-            {
-                "shortcut_id": "open_grant_user_loop",
-                "label_i18n": {
-                    "zh-CN": "开展基金申请工作",
-                    "en-US": "Open MAG user loop",
-                },
-                "default_visible": True,
-                "user_configurable": True,
-                "route": {
-                    "route_kind": "agent_package_shortcut",
-                    "executor": "codex_cli",
-                    "codex_visible_entry": "med-autogrant",
-                },
-            }
-        ],
+    assert identity["icon"] == "assets/branding/medautogrant-logo.png"
+    assert identity["name"] == {
+        "zh-CN": "Med Auto Grant",
+        "en-US": "Med Auto Grant",
     }
+    assert identity["summary"] == {
+        "zh-CN": "医学基金申请规划、撰写、评审与修订。",
+        "en-US": "Medical grant application planning, writing, review, and revision.",
+    }
+    assert identity["routing_summary"] == {
+        "zh-CN": "医学基金申请规划、撰写、评审与修订。",
+        "en-US": (
+            "Enter the current MAG grant workflow and continue the same "
+            "funding-call authoring loop."
+        ),
+    }
+    assert identity["home_shortcuts"] == [
+        {
+            "id": "open_grant_user_loop",
+            "label": {
+                "zh-CN": "开展基金申请工作",
+                "en-US": "Open MAG user loop",
+            },
+            "default_visible": True,
+            "target": {
+                "kind": "agent",
+                "ref": "mag",
+            },
+        }
+    ]
 
 
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
-    skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
-    metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
+    skill_text = SKILL_PATH.read_text(encoding="utf-8")
+    metadata_text = SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
     pack_input = json.loads((REPO_ROOT / "contracts/pack_compiler_input.json").read_text())
     capability_map = json.loads((REPO_ROOT / "contracts/capability_map.json").read_text())
     action_catalog = json.loads((REPO_ROOT / "contracts/action_catalog.json").read_text())
@@ -374,8 +209,8 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     )
     carrier = primary_skill["carrier_projection_contract"]
     assert carrier["canonical_source"] == "agent/primary_skill/SKILL.md"
-    assert carrier["carrier_skill_ref"] == "plugins/med-autogrant/skills/med-autogrant/SKILL.md"
-    assert PRIMARY_SKILL_PATH.read_bytes() == PLUGIN_SKILL_PATH.read_bytes()
+    assert carrier["carrier_skill_ref"] == "skills/med-autogrant/SKILL.md"
+    assert PRIMARY_SKILL_PATH.read_bytes() == SKILL_PATH.read_bytes()
 
     for action in action_catalog["actions"]:
         assert action["execution_binding"] == {

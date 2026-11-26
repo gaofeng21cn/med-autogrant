@@ -17,17 +17,17 @@ User -> primary Skill / OPL-generated action
 | `agent/` | Stage、prompt、professional skill、quality gate 与知识边界的声明式语义源 |
 | `contracts/`、`schemas/` | Package、action、workspace、artifact、memory、review 和 receipt 的机器接口 |
 | `src/med_autogrant/` | direct domain entry、authority function、refs adapter 与 grant-native helper |
-| `runtime/` | runtime-facing descriptor/declaration；不保存运行输出或执行通用 scheduler |
-| `plugins/med-autogrant/` | 单源仓库中的薄 carrier 壳（manifest、adapter、图标与主 Skill 入口）；其余领域代码、合同、Schema、文档与资源在构建/打包期按根目录单源物化，不入 Git 镜像 |
+| `runtime/` | runtime-facing descriptor/declaration 与 `app_contribution.py` 宿主桥入口；不保存运行输出或执行通用 scheduler |
+| `skills/` | `opl-package.json` v2 声明的 Skill 目录（`skills/med-autogrant/SKILL.md`），由 `carriers/codex-sync` 在安装/链接期零拷贝符号链接投影至 Codex App |
 
 [pack compiler input](../contracts/pack_compiler_input.json) 与 [source closure audit](../contracts/source_closure_audit.json) 声明实际 pack/source 分类。Framework 从 Stage manifest 和 action catalog 生成入口和 read model；MAG 不保存第二份 generated stage control plane。
 
 ## Package、Carrier 与 Executor
 
-MAG owner 定义 Package identity、capability/dependency intent、grant task 和 typed views。配置的 Codex carrier 与 GHCR publication locator 在 [Package manifest](../contracts/opl_agent_package_manifest.json)；安装字节、完整 runtime health 与 publication currentness 由实际 carrier/owner 回读。
+MAG owner 定义 Package identity、permissions、dependency intent、grant task 和 declarative views。根目录唯一清单 [opl-package.json](../opl-package.json)（`opl.package.v2`）声明 `identity`、`provides`、`ui.declarative`、`distribution` 与 `host_hints.codex`；构建期通过 `opl pack build` 生成不可变 `opl-release.lock.json`（不入 Git），安装字节、完整 runtime health 与 publication currentness 由 `opld` / `OPL Pack` 实际回读。
 
-- **Primary Skill 与 Carrier 单源边界**：`agent/primary_skill/SKILL.md` 是 `contracts/capability_map.json` 声明的 canonical source；`plugins/med-autogrant/skills/med-autogrant/SKILL.md` 是满足 Codex plugin 安装发现所需的实体完整投影副本（`carrier_role=transport_install_detail_not_agent_membership_or_status`、`authority=false`），不构成第二套业务真相、agent membership 权威或 readiness 证据。
-- **单源布局与构建期载体物化**：仓库根目录 `agent/`、`contracts/`、`schemas/`、`runtime/`、`src/med_autogrant/`、`docs/` 是唯一受控源；Git 下 `plugins/med-autogrant/` 仅跟踪薄 carrier 壳文件（`plugin.json`、`.codex-plugin/plugin.json`、`opl-package.json`、`app-contribution-adapter.json`、`assets/icon.{png,svg}` 与 `skills/med-autogrant/`），所有镜像子目录均列入 `.gitignore`。运行 `python3 scripts/sync_carrier.py` 依据 [carrier projection](../contracts/carrier_projection.json) 调用 Framework CLI 在构建/打包期物化完整自包含载体；`scripts/verify.sh structure` 先按需物化再运行 `python3 scripts/sync_carrier.py --check` 校验字节一致性，并由 `tests/test_repository_hygiene.py` 守护零受控镜像残留。[pack doctor](../contracts/pack_doctor.json) 声明该包的本机环境依赖前置检查。
+- **Primary Skill 与根 Skill 单源边界**：`agent/primary_skill/SKILL.md` 是 `contracts/capability_map.json` 声明的 canonical source；`skills/med-autogrant/SKILL.md` 是满足 OPL Pack 与 Codex App 安装发现所需的实体投影副本（`carrier_role=transport_install_detail_not_agent_membership_or_status`、`authority=false`），不构成第二套业务真相、agent membership 权威或 readiness 证据。
+- **单源布局与零镜像投影**：仓库根目录 `agent/`、`contracts/`、`schemas/`、`runtime/`、`skills/`、`src/med_autogrant/`、`docs/` 是唯一受控源；仓内不保留 `plugins/` 源码镜像、`.codex-plugin/` 或 `.agents/` 本地 marketplace。安装或 `opl pack link` 时由 OPL Pack `carriers/codex-sync` 自动符号链接投影到 Codex App 并通过 `plugin/list` 回读；`tests/test_repository_hygiene.py` 守护零受控镜像残留。[pack doctor](../contracts/pack_doctor.json) 声明该包的本机环境依赖前置检查。
 
 `mas-scholar-skills` 是 required dependency。普通组合按 identity presence/callability 判断；缺失只阻断 MAG。manifest 仍携带 `version_requirement` 与 `capability_abi` 等 provider 描述字段，其存在不是跨包版本求解或已安装状态的证明。具体调用要求由 [Scholar binding](../contracts/scholar_skill_binding_contract.json) 持有。
 
@@ -43,7 +43,7 @@ Hosted action 同时要求正式 `workspace_root` 与 `project_id`；Framework �
 
 Repo-local CLI 由声明式 parser metadata 与显式静态 dispatch 组成，最终调用同一 MAG authority target。`domain-handler export` 只输出 workspace identity/locator、action/Stage/handoff 与 authority/receipt refs；`domain-handler dispatch` 的允许动作由 [current-program](../contracts/runtime-program/current-program.json) 和 [handler contract](../src/med_autogrant/product_entry/domain_handler_contract.py)持有，当前为 memory propose、memory decide 和 Stage closeout。
 
-MAG 只构造 grant prompt/domain payload 并解析 typed closeout。所有 executor request 经 `opl_framework.executor_client.run_agent_execution_request`；临时请求文件、subprocess、timeout/cleanup 和 canonical receipt envelope 由 OPL 持有。MAG 构建只收集 `med_autogrant*`，验证环境经 clean runner 定位 Framework helpers。Funding source 也调用 `opl_framework.source_transport.fetch_text`；MAG 持有 NIH/NSFC 官方 URL allowlist、User-Agent、HTML 解析与领域 provenance。
+MAG 只构造 grant prompt/domain payload 并解析 typed closeout。executor request 经内化的 `med_autogrant._opl_helpers.executor_client.run_agent_execution_request` 构造并执行；临时请求文件、subprocess、timeout/cleanup 和 canonical receipt envelope 遵循 OPL 约定。App 贡献协议由 `opl_client.helpers`（`opld` Python SDK）与 `runtime/app_contribution.py` 对接。Funding source 也调用内化的 `med_autogrant._opl_helpers.source_transport.fetch_text`；MAG 持有 NIH/NSFC 官方 URL allowlist、User-Agent、HTML 解析与领域 provenance。
 
 ## 领域 Authority
 

@@ -54,15 +54,14 @@ def test_clean_python_runners_route_caches_outside_checkout() -> None:
     assert 'venv_python="${repo_root}/.venv/bin/python"' not in python_runner
 
 
-def test_clean_python_runner_resolves_framework_from_installed_opl(
+def test_clean_python_runner_resolves_opl_client_from_installed_opl(
     tmp_path: Path,
 ) -> None:
     framework_root = tmp_path / "framework"
-    framework_package = framework_root / "python" / "opl_framework"
-    framework_package.mkdir(parents=True)
-    (framework_package / "__init__.py").write_text("", encoding="utf-8")
-    (framework_package / "executor_client.py").write_text(
-        'INSTALL_MARKER = "installed-opl-framework"\n',
+    sdk_package = framework_root / "sdks" / "python-client" / "src" / "opl_client"
+    sdk_package.mkdir(parents=True)
+    (sdk_package / "__init__.py").write_text(
+        'SDK_MARKER = "installed-opl-client"\n',
         encoding="utf-8",
     )
     framework_bin = framework_root / "bin"
@@ -79,6 +78,7 @@ def test_clean_python_runner_resolves_framework_from_installed_opl(
     opl_launcher.symlink_to("../lib/node_modules/opl-framework/bin/opl")
 
     env = os.environ.copy()
+    env.pop("OPL_PYTHON_CLIENT_DIR", None)
     env.pop("OPL_FRAMEWORK_ROOT", None)
     env.pop("OPL_OWNER_REPO_ROOT", None)
     env.pop("PYTHONPATH", None)
@@ -89,7 +89,7 @@ def test_clean_python_runner_resolves_framework_from_installed_opl(
         [
             "scripts/run-python-clean.sh",
             "-c",
-            "from opl_framework.executor_client import INSTALL_MARKER; print(INSTALL_MARKER)",
+            "from opl_client import SDK_MARKER; print(SDK_MARKER)",
         ],
         cwd=REPO_ROOT,
         env=env,
@@ -99,7 +99,7 @@ def test_clean_python_runner_resolves_framework_from_installed_opl(
         stderr=subprocess.PIPE,
     )
 
-    assert result.stdout.strip() == "installed-opl-framework"
+    assert result.stdout.strip() == "installed-opl-client"
 
 
 def test_pyproject_registers_cli_scripts_and_external_cache() -> None:

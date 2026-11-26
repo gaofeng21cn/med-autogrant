@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Annotated, Any, Literal
 
 from jsonschema import Draft202012Validator, FormatChecker
-from opl_framework.json_io import (
+from med_autogrant._opl_helpers.json_io import (
     ExistingJsonIdentityMismatch,
     JsonObjectReadError,
     guard_existing_json_identity,

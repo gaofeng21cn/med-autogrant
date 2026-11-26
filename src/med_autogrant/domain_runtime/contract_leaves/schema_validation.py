@@ -4,7 +4,7 @@ from typing import Any
 
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace_types import WorkspaceStateError
-from opl_framework.schema_validation import SchemaSubsetValidator
+from med_autogrant._opl_helpers.schema_validation import SchemaSubsetValidator
 
 
 def validate_contract_schema(

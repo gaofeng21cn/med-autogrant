@@ -123,7 +123,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
             build_critique_execution_document,
         )
         from med_autogrant.workspace import WorkspaceStateError
-        from opl_framework.executor_client import run_agent_execution_request
+        from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
         self.assertIs(
             build_critique_execution_document.__kwdefaults__["executor_runner"],
