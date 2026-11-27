@@ -24,7 +24,7 @@
           "const": "MCP_DESCRIPTOR_ONLY"
         },
         "hosted_action_command": {
-          "const": "opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>"
+          "const": "opl runway start --workspace <workspace_id> --title <title> --goal <goal>"
         }
       }
     },

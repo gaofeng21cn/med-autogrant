@@ -133,7 +133,7 @@ def _assert_hosted_contract_bundle_header(
     test_case.assertEqual(formal_entry_matrix["supported_protocol_layer"], "MCP_DESCRIPTOR_ONLY")
     test_case.assertEqual(
         formal_entry_matrix["hosted_action_command"],
-        "opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>",
+        "opl runway start --workspace <workspace_id> --title <title> --goal <goal>",
     )
     execution_identity = contract_bundle["execution_identity"]
     test_case.assertEqual(execution_identity["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")

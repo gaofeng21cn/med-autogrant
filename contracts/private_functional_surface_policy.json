@@ -33,7 +33,7 @@
   ],
   "canonical_source_behavior_gate": {
     "owner": "one-person-lab",
-    "command": "opl agents conformance --agent mag=<repo> --json",
+    "command": "opl pack inspect <repo-dir> --json",
     "audit_ref": "contracts/functional_privatization_audit.json",
     "required_status": "passed",
     "required_matched_source_behavior_count": 0,
