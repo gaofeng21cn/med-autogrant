@@ -65,6 +65,14 @@
           "medical-evidence-integrity-reviewer",
           "medical-evidence-synthesis-and-claim-map",
           "medical-reference-integrity-auditor"
+        ],
+        "required_module_ids": [
+          "mas-scholar-skills.lit",
+          "mas-scholar-skills.stats",
+          "mas-scholar-skills.review",
+          "mas-scholar-skills.data",
+          "mas-scholar-skills.reference-provider-adapters",
+          "mas-scholar-skills.scientific-search-adapters"
         ]
       }
     ],
