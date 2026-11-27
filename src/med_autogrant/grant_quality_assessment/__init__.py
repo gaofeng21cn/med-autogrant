@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, TypeAlias
 
-from med_autogrant.grant_quality_parts import REVIEW_CONTEXT_STAGES
+from med_autogrant.grant_quality_support.primitives import REVIEW_CONTEXT_STAGES
 
 QualityContext: TypeAlias = dict[str, Any]
 
@@ -46,7 +46,7 @@ _QUALITY_DIMENSION_SPECS: tuple[dict[str, str], ...] = (
 
 from typing import Any, Mapping
 
-from med_autogrant.grant_quality_parts import (
+from med_autogrant.grant_quality_support.primitives import (
     _dedupe_preserve_order,
     _ensure_mapping,
     _flatten_to_strings,

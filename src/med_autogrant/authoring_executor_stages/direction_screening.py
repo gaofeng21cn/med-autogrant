@@ -8,7 +8,7 @@ from typing import Any
 
 from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
-from med_autogrant.authoring_executor_parts import (
+from med_autogrant.authoring_executor_helpers import (
     _allocate_sequence_ids,
     _build_direction_screening_prompt,
     _finalize_execution_workspace,

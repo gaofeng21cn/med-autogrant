@@ -12,17 +12,21 @@ from med_autogrant.grant_quality_assessment import (
     _resolve_quality_progression,
 )
 from med_autogrant.grant_quality_closure import _build_quality_closure_packages
-from med_autogrant.grant_quality_parts import (
+from med_autogrant.grant_quality_support.evidence_supply import (
     _build_evidence_supply_progress,
     _build_evidence_supply_queue,
     _build_funding_profile_mismatch_gap,
+)
+from med_autogrant.grant_quality_support.issue_closure import (
     _build_issue_closure_progress_entries,
+    _open_issue_lineage_map,
+)
+from med_autogrant.grant_quality_support.primitives import (
+    REVIEW_CONTEXT_STAGES,
     _dedupe_preserve_order,
     _ensure_mapping,
     _nonempty_string,
-    _open_issue_lineage_map,
     _read_active_draft_id,
-    _read_critique_summary,
     _read_nonempty_string_list,
 )
 
@@ -31,7 +35,7 @@ from med_autogrant.workspace import (
     build_grant_evidence_grounding,
     build_grant_intake_audit,
 )
-from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_projection import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
@@ -315,3 +319,13 @@ def _build_supply_kind_counts(evidence_supply_queue: list[dict[str, Any]]) -> li
         }
         for gap_kind in ordered_kinds
     ]
+
+
+def _read_critique_summary(document: dict[str, Any]) -> dict[str, Any] | None:
+    lifecycle_stage = _nonempty_string(document.get("lifecycle_stage"))
+    if lifecycle_stage not in REVIEW_CONTEXT_STAGES:
+        return None
+    try:
+        return build_critique_summary(document)
+    except WorkspaceStateError:
+        return None

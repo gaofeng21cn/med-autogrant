@@ -151,7 +151,7 @@
       "code_paths": [
         "src/med_autogrant/domain_executor_client.py",
         "src/med_autogrant/authoring_executor.py",
-        "src/med_autogrant/authoring_executor_parts.py",
+        "src/med_autogrant/authoring_executor_helpers.py",
         "src/med_autogrant/critique_executor.py",
         "src/med_autogrant/product_entry/domain_handler.py",
         "src/med_autogrant/product_entry/domain_handler_contract.py",

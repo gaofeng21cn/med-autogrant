@@ -8,7 +8,7 @@ from typing import Any
 
 from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
-from med_autogrant.authoring_executor_parts import (
+from med_autogrant.authoring_executor_helpers import (
     _build_drafting_prompt,
     _bump_version_label,
     _finalize_execution_workspace,
@@ -20,7 +20,7 @@ from med_autogrant.authoring_executor_parts import (
     _run_executor_generation,
     _validate_schema_payload,
 )
-from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_projection import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 

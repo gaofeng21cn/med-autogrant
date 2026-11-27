@@ -53,7 +53,7 @@ def _codex_receipt(packet: dict[str, object]) -> dict[str, object]:
 class CritiqueExecutionDocumentTest(unittest.TestCase):
     def test_prompt_keeps_grant_review_policy_and_profile_resolution(self) -> None:
         from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
-        from med_autogrant.workspace_projection_parts import _build_workspace_state
+        from med_autogrant.workspace_projection import _build_workspace_state
 
         cases = (
             (

@@ -8,7 +8,7 @@ from med_autogrant.domain_runtime.io import (
     _guard_artifact_bundle_output_identity,
     _write_artifact_bundle_output,
 )
-from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_projection import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
 
 

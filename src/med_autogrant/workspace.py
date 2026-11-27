@@ -9,7 +9,7 @@ from med_autogrant._opl_helpers.workspace_boundary import (
     resolve_workspace_document_path,
 )
 
-from med_autogrant.workspace_projection_parts import (
+from med_autogrant.workspace_projection import (
     _build_workspace_state,
     _serialize_argument_chain,
     _serialize_critique,

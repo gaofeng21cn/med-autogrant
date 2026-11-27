@@ -4,7 +4,7 @@ import copy
 from collections import Counter
 from typing import Any
 
-from med_autogrant.workspace_projection_parts import (
+from med_autogrant.workspace_projection import (
     _EVIDENCE_TRUST_LEVELS,
     _active_argument_chain_evidence_ids,
     _active_fit_mapping_evidence_ids,

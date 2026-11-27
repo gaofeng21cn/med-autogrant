@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.grant_quality_parts import _dedupe_preserve_order
+from med_autogrant.grant_quality_support.primitives import _dedupe_preserve_order
 
 from . import REVIEW_CONTEXT_STAGES, QualityContext, _QUALITY_DIMENSION_SPECS
 from .issue_lineage import _build_issue

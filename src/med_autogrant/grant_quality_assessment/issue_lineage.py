@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.grant_quality_parts import (
+from med_autogrant.grant_quality_support.primitives import (
     _dedupe_preserve_order,
     _nonempty_string,
     _read_nonempty_string_list,

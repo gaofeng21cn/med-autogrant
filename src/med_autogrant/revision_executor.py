@@ -10,7 +10,7 @@ from med_autogrant.domain_runtime.io import (
     _guard_revision_output_identity,
     _write_revised_workspace_output,
 )
-from med_autogrant.workspace_projection_parts import _require_workspace_context, _serialize_reviewed_revision_evidence
+from med_autogrant.workspace_projection import _require_workspace_context, _serialize_reviewed_revision_evidence
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 

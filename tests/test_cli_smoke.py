@@ -13,7 +13,7 @@ import pytest
 import med_autogrant.__main__ as main_module
 import med_autogrant.cli as cli_module
 from med_autogrant.cli import main
-from med_autogrant.cli_rendering_parts import _human_token_label
+from med_autogrant.cli_rendering import _human_token_label
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]

@@ -22,7 +22,7 @@ from med_autogrant.critique_executor import (
     _build_critique_prompt,
 )
 from med_autogrant.domain_entry import dispatch_domain_request
-from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_projection import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -22,7 +22,7 @@ from med_autogrant.authoring_executor import (  # noqa: E402
     build_question_refinement_execution_document,
     build_strategy_authoring_execution_document,
 )
-from med_autogrant.authoring_executor_parts import (  # noqa: E402
+from med_autogrant.authoring_executor_helpers import (  # noqa: E402
     _build_argument_building_prompt,
     _build_direction_screening_prompt,
     _build_drafting_prompt,

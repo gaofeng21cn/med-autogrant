@@ -3,11 +3,11 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
-from med_autogrant.authoring_executor_parts import (
+from med_autogrant.authoring_executor_helpers import (
     _finalize_execution_workspace,
     _fresh_metadata,
 )
-from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_projection import _build_workspace_state
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 

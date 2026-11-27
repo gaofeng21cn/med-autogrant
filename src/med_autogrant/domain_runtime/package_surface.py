@@ -9,7 +9,7 @@ from med_autogrant.final_package_validation import _validate_required_final_pack
 from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_document
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
-from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_projection import _require_workspace_context
 
 from med_autogrant.domain_runtime.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,

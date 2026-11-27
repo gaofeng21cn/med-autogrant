@@ -6,7 +6,7 @@ from typing import Any
 
 from med_autogrant._opl_helpers.executor_client import run_agent_execution_request
 
-from med_autogrant.authoring_executor_parts import (
+from med_autogrant.authoring_executor_helpers import (
     _build_strategy_authoring_prompt,
     _require_mapping,
     _run_executor_generation,

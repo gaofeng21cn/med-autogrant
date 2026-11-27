@@ -4,7 +4,7 @@ from typing import Any
 
 from med_autogrant.grant_quality import build_grant_quality_scorecard
 from med_autogrant.opl_execution_boundary import build_ai_route_boundary
-from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_projection import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 

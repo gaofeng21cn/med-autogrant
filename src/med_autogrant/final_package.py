@@ -10,7 +10,7 @@ from med_autogrant.domain_runtime.io import (
     _write_final_package_output,
 )
 from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_projection import _require_workspace_context
 
 
 FINAL_PACKAGE_VERSION = 1

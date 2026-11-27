@@ -6,7 +6,7 @@ import json
 import sys
 from typing import Any
 
-from med_autogrant.cli_rendering_parts import _render_text
+from med_autogrant.cli_rendering import _render_text
 from med_autogrant.domain_entry import dispatch_domain_request
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.product_entry.domain_handler import build_domain_handler_export
