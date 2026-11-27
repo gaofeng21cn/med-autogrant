@@ -46,6 +46,7 @@ def test_package_declares_required_runtime_dependency_with_install_and_runtime_g
     assert dependency["version"] == ">=0.2.25 <0.3.0"
     assert dependency["optional"] is False
     assert dependency["required_capabilities"] == binding["eligible_export_ids"]
+    assert dependency["required_module_ids"] == binding["eligible_module_ids"]
     assert not any(binding["authority_boundary"].values())
 
 

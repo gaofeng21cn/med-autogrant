@@ -99,6 +99,7 @@ def test_owner_dependency_contains_only_presence_callability_and_domain_authorit
         "version": ">=0.2.25 <0.3.0",
         "optional": False,
         "required_capabilities": binding["eligible_export_ids"],
+        "required_module_ids": binding["eligible_module_ids"],
     }
     forbidden_lifecycle_fields = {
         "activation_materialization",
