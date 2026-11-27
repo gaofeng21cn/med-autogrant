@@ -41,7 +41,7 @@ Machine boundary: 本文是人读约束集。可执行约束归 contracts、sche
   MAG install/activation/operational readiness 必须 fail closed 并暴露修复动作。该
   blocker 不得传播给无关 Package，也不得转化为 provider version/ABI/lock/payload/digest
   求解。
-- 公共 install/update/uninstall 入口固定为 `opl packages ...` 聚合动作，不得回退到
+- 公共 install/update/uninstall 入口固定为 `opl pack ...` 聚合动作，不得回退到
   `opl connect ... --module medautogrant`；动作实现委托实际 carrier，Framework 不保存
   第二份 currentness 或完整 installed truth。
 - Codex Plugin 只投影 Plugin/config/cache。完整 MAG runtime 必须由所有实际 carrier 的

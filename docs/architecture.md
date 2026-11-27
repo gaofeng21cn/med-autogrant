@@ -31,7 +31,7 @@ MAG owner 定义 Package identity、permissions、dependency intent、grant task
 
 `mas-scholar-skills` 是 required dependency。普通组合按 identity presence/callability 判断；缺失只阻断 MAG。manifest 仍携带 `version_requirement` 与 `capability_abi` 等 provider 描述字段，其存在不是跨包版本求解或已安装状态的证明。具体调用要求由 [Scholar binding](../contracts/scholar_skill_binding_contract.json) 持有。
 
-Framework 聚合 `opl packages install|update|uninstall mag` 动作和 carrier readback，App 消费该投影。MAG owner 独立推进本包 publication；本仓不维护用户 marketplace/symlink installer。Package 组合与 MAG submission artifact 的 exact-byte integrity 是不同边界，后者仍须独立验证。
+Framework 聚合 `opl pack install|update|uninstall mag` 动作和 carrier readback，App 消费该投影。MAG owner 独立推进本包 publication；本仓不维护用户 marketplace/symlink installer。Package 组合与 MAG submission artifact 的 exact-byte integrity 是不同边界，后者仍须独立验证。
 
 跨仓平台实现和迁移由 [App 文档](https://github.com/gaofeng21cn/one-person-lab-app/tree/main/docs)与 [Framework 文档](https://github.com/gaofeng21cn/one-person-lab/tree/main/docs)各自持有，本仓不复制其他仓的兼容清单、阶段状态或删除授权。
 

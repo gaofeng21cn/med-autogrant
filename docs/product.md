@@ -11,7 +11,7 @@
 请求同时携带正式 `workspace_root` 和 `project_id`，项目必须存在于该工作区的 `workspace_index.json`。Framework 据此解析项目与可用知识范围；`input_path` 只定位本次申请材料，不代替项目身份。
 
 ```text
-opl agents run --domain med-autogrant --action <action_id> --workspace <absolute_path>
+opl runway start --workspace <workspace_id> --title <title> --goal <goal>
 ```
 
 具体附加输入和 executor readiness 以当前安装的 OPL action surface 回读为准。MCP 在 MAG catalog 中仍为 `descriptor_only=true`、`public_runtime=false`，不能推断 public MCP server 已开放。
