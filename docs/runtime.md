@@ -4,7 +4,7 @@
 
 ## Durable Execution 与状态分层
 
-OPL/Temporal 持有 StageRun、Attempt lifecycle、session、scheduler、queue、wakeup、retry/resume、dead-letter 和 attempt ledger。MAG 提供 single-pass domain handler、authority function、closeout 和 receipt/blocker refs。MAG 不写 OPL current/terminal state，也不将本地 bounded helper 扩为第二个 durable loop。
+OPL Framework Runway（`opld` / `@opl/runway`）持有 StageRun、Attempt lifecycle、session、scheduler、queue、wakeup、retry/resume、dead-letter 和 attempt ledger。MAG 提供 single-pass domain handler、authority function、closeout 和 receipt/blocker refs。MAG 不写 OPL current/terminal state，也不将本地 bounded helper 扩为第二个 durable loop。
 
 Decisive Codex Attempt 决定语义 route，OPL controller 校验并物化 transition。Formal Review 的角色、quality budget 和 terminal decision 由 [quality cycle](../contracts/stage_quality_cycle_policy.json) 声明；执行 transport 的异常关闭由 [executor 规格](./specs/critique-executor.md) 解释。
 
